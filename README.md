@@ -1,0 +1,2 @@
+# CinderBot
+Desktop twitch bot.
