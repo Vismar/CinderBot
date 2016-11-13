@@ -7,7 +7,8 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    if (ConfigurationManager::Instance().Initialize())
+    QString error = ConfigurationManager::Instance().Initialize();
+    if (error.isEmpty())
     {
         UserData::Instance().Initialize();
         Ui::MainWindow w;
@@ -15,11 +16,11 @@ int main(int argc, char *argv[])
 
         return a.exec();
     }
-    // If configuration manager do not initialized, just show a error message.
+    // If configuration manager do not initialized, just show an error message.
     else
     {
         QMessageBox msgBox;
-        msgBox.setText("Configuration manager can not be initialized! Check your config.cfg file!");
+        msgBox.setText(error);
         msgBox.exec();
     }
 

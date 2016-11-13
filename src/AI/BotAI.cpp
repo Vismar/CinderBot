@@ -11,11 +11,11 @@ BotAI::BotAI(QObject* parent) : QObject(parent)
     // Load IgnoreList
     ConfigurationManager& configMng = ConfigurationManager::Instance();
     QString param;
-    if (configMng.GetStringParam(CONFIG_UD_IGNORE_LIST, param))
+    if (configMng.GetStringParam(CFGS_IGNORE, param))
     {
         _ignoreList = param.split(',');
     }
-    if (configMng.GetStringParam(CONFIG_LOGIN_NAME, param))
+    if (configMng.GetStringParam(CFGP_LOGIN_NAME, param))
     {
         _ignoreList += param;
     }

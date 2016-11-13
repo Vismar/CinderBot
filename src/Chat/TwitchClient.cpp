@@ -31,11 +31,11 @@ void TwitchClient::Login()
 {
     QString param;
     QString line;
-    if (ConfigurationManager::Instance().GetStringParam(CONFIG_LOGIN_OATH_KEY, param))
+    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_OATH_KEY, param))
     {
         line = "PASS " + param + "\r\n";
         _SendIrcMessage(line);
-        if (ConfigurationManager::Instance().GetStringParam(CONFIG_LOGIN_NAME, param))
+        if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
         {
             line = "NICK " + param + "\r\n";
            _SendIrcMessage(line);
@@ -50,7 +50,7 @@ void TwitchClient::Login()
 void TwitchClient::JoinChannel()
 {
     QString param;
-    if (ConfigurationManager::Instance().GetStringParam(CONFIG_LOGIN_CHANNEL, param))
+    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
     {
         param.push_front("JOIN #");
         param.push_back("\r\n");
@@ -66,7 +66,7 @@ void TwitchClient::_SendIrcMessage(const QString& message)
 void TwitchClient::_SendChatMessage(const QString& message)
 {
     QString param;
-    if (ConfigurationManager::Instance().GetStringParam(CONFIG_LOGIN_CHANNEL, param))
+    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
     {
         param.push_front("PRIVMSG #");
         param.push_back(" :");
@@ -138,7 +138,7 @@ void TwitchClient::NewBotMessage(QString message)
     _SendChatMessage(message);
     ChatMessage botMessage;
     QString param;
-    if (ConfigurationManager::Instance().GetStringParam(CONFIG_LOGIN_NAME, param))
+    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
     {
         botMessage.SetAuthor(param);
         botMessage.SetColor("Green");
