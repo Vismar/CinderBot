@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+<LoginData>
+	<LoginName>BotName</LoginName>
+	<LoginOauthKey>oath:YourKey</LoginOauthKey>
+	<LoginChannel>ChannelNameToConnect</LoginChannel>
+</LoginData>
+<ConfigData>
+	<IgnoreList>
+		<User>nightbot</User>
+		<User>moobot</User>
+		<User>system message</User>
+	</IgnoreList>
+	<CovenantList>
+		<Covenant>CovenantName</Covenant>
+	</CovenantList>
+</ConfigData>
+</Configuration>
