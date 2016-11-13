@@ -6,6 +6,7 @@
 	<LoginChannel>ChannelNameToConnect</LoginChannel>
 </LoginData>
 <ConfigData>
+	<Currency>YourCurrency</Currency>
 	<IgnoreList>
 		<User>nightbot</User>
 		<User>moobot</User>
