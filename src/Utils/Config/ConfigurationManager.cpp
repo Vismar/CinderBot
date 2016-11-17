@@ -3,12 +3,7 @@
 #include <QFile>
 #include <QTextStream>
 
-#include <QDebug>
-
-#define CONFIG_READER_FILE_PATH "./data/config/"
-#define CONFIG_READER_FILE_NAME "config.cfg"
-#define CONFIG_READER_COMMENT '#'
-#define CONFIG_READER_SEPARATOR ' '
+#define CFG_FILE_NAME "./data/config/config.xml"
 
 ConfigurationManager& ConfigurationManager::Instance()
 {
@@ -19,7 +14,7 @@ ConfigurationManager& ConfigurationManager::Instance()
 QString ConfigurationManager::Initialize()
 {
     QString error;
-    QFile configFile("./data/config/config.xml");
+    QFile configFile(CFG_FILE_NAME);
     if (configFile.open(QIODevice::ReadOnly))
     {
         _xmlReader.setDevice(&configFile);
@@ -48,6 +43,7 @@ QString ConfigurationManager::Initialize()
     {
         error = "No config xml file!";
     }
+    configFile.close();
 
     return error;
 }
