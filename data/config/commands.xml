@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands>
+<Command>
+	<Name>#test</Name>
+	<Answer>Here is the test answer number 1!</Answer>
+	<Answer>And here us the second test answer, where @ - name of user, who typed this command in chat!</Answer>
+</Command>
+</Commands>

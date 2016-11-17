@@ -4,63 +4,37 @@
 #include <QtGlobal>
 #include <QTime>
 
-#define BASE_FILE_COMMAND_PATH     "./data/data/"
-#define BASE_FILE_COMMAND_NAME     "baseFile.data"
-#define BASE_FILE_COMMAND_START    "#"
-#define BASE_FILE_COMMAND_ANSWER_S "["
-#define BASE_FILE_COMMAND_ANSWER_E "]"
-#define BASE_FILE_COMMAND_AUTHOR   "@"
+#define BFCC_FILE_NAME       "./data/config/commands.xml"
+#define BFCC_SECTION_COMMAND "Command"
+#define BFCC_SECTION_NAME    "Name"
+#define BFCC_SECTION_ANSWER  "Answer"
+#define BFCC_SYMBOL_AUTHOR   "@"
 
 bool BaseFileChatCommand::Initialize()
 {
-    qsrand(QDateTime::currentMSecsSinceEpoch());
-    bool result(false);
-    QVector<QString> answers;
-    QString line;
-    QString commandName;
-    QString answer;
-    QString fileName = BASE_FILE_COMMAND_PATH;
-    fileName.append(BASE_FILE_COMMAND_NAME);
-    QFile file(fileName);
-    if (file.open(QIODevice::ReadOnly))
+    bool result(true);
+    QFile commandsFile(BFCC_FILE_NAME);
+    if (commandsFile.open(QIODevice::ReadOnly))
     {
-        QTextStream in(&file);
-        while (!in.atEnd())
+        _xmlReader.setDevice(&commandsFile);
+
+        while (!_xmlReader.atEnd())
         {
-            answers.clear();
-            line = in.readLine();
-            int positionStart, positionEnd(-1);
-            positionStart = line.indexOf(BASE_FILE_COMMAND_START);
-            if (positionStart != -1)
+            _xmlReader.readNext();
+            if (_xmlReader.isStartElement())
             {
-                positionEnd = line.indexOf(" ");
-                if (positionEnd != -1)
+                if (_xmlReader.name() == BFCC_SECTION_COMMAND)
                 {
-                    commandName = line.mid(positionStart, positionEnd - positionStart);
-                    positionStart = line.indexOf(BASE_FILE_COMMAND_ANSWER_S,
-                                                 positionEnd);
-                    positionEnd = line.indexOf(BASE_FILE_COMMAND_ANSWER_E,
-                                               positionStart);
-                    while ((positionStart != -1) && (positionEnd != -1))
-                    {
-                        answer = line.mid(positionStart + 1,
-                                          positionEnd - positionStart - 1);
-                        answers.push_back(answer);
-                        positionStart = line.indexOf(BASE_FILE_COMMAND_ANSWER_S,
-                                                     positionEnd);
-                        positionEnd = line.indexOf(BASE_FILE_COMMAND_ANSWER_E,
-                                                   positionStart);
-                    }
-                    if (answers.size() > 0)
-                    {
-                        _commands.push_back(QPair<QString, QVector<QString> >(commandName, answers));
-                        result = true;
-                    }
+                    _ReadCommand();
                 }
             }
         }
     }
-    file.close();
+    else
+    {
+        result = false;
+    }
+    commandsFile.close();
 
     return result;
 }
@@ -75,9 +49,9 @@ bool BaseFileChatCommand::GetAnswer(ChatMessage& message, QString& answer)
             result = true;
             int k = qrand() % _commands.at(i).second.size();
             answer = _commands.at(i).second.at(k);
-            if (answer.contains(BASE_FILE_COMMAND_AUTHOR))
+            if (answer.contains(BFCC_SYMBOL_AUTHOR))
             {
-                answer.insert(answer.indexOf(BASE_FILE_COMMAND_AUTHOR) + 1,
+                answer.insert(answer.indexOf(BFCC_SYMBOL_AUTHOR) + 1,
                               message.GetAuthor());
             }
             break;
@@ -85,4 +59,42 @@ bool BaseFileChatCommand::GetAnswer(ChatMessage& message, QString& answer)
     }
 
     return result;
+}
+
+void BaseFileChatCommand::_ReadCommand()
+{
+    QString name;
+    QVector<QString> answers;
+    while (!_xmlReader.atEnd())
+    {
+        _xmlReader.readNext();
+        if (_xmlReader.isEndElement())
+        {
+            if (_xmlReader.name() == BFCC_SECTION_COMMAND)
+            {
+                break;
+            }
+        }
+        if (_xmlReader.isStartElement())
+        {
+            if((_xmlReader.name() == BFCC_SECTION_NAME) && (name.isEmpty()))
+            {
+                name = _xmlReader.readElementText();
+            }
+            else if (_xmlReader.name() == BFCC_SECTION_ANSWER)
+            {
+                QString answer = _xmlReader.readElementText();
+                answer.replace("\n", "");
+                answer.replace("\t", "");
+                if (!answer.isEmpty())
+                {
+                    answers.push_back(answer);
+                }
+            }
+        }
+    }
+    if (!name.isEmpty() && !answers.isEmpty())
+    {
+        _commands.push_back(QPair<QString, QVector<QString> >(name, answers));
+    }
 }
