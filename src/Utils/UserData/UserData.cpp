@@ -1,7 +1,5 @@
 #include "UserData.hpp"
 #include <QFile>
-#include <QTextStream>
-#include <QXmlStreamWriter>
 
 #define UD_FILE_NAME         "./data/data/UserData.xml"
 #define UD_SECTION_USER_DATA "UserData"

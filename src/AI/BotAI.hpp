@@ -1,7 +1,6 @@
 #pragma once
 #include <QObject>
 #include <QVector>
-//#include <QString>
 #include <QStringList>
 #include "../Chat/ChatMessage.hpp"
 #include "./ChatCommands/BaseChatCommand.hpp"

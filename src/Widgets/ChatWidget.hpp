@@ -1,8 +1,8 @@
 #pragma once
-#include <QListWidget>
-#include <QScrollArea>
-#include <QVBoxLayout>
 #include "../Chat/ChatMessage.hpp"
+#include <QScrollArea>
+#include <QWidget>
+#include <QVBoxLayout>
 
 namespace Ui
 {

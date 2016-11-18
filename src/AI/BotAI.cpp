@@ -4,7 +4,6 @@
 #include "../Utils/Config/ConfigurationParameters.hpp"
 #include "./ChatCommands/BaseFileChatCommand.hpp"
 #include "./ChatCommands/UserDataChatCommand.hpp"
-#include <QDebug>
 
 BotAI::BotAI(QObject* parent) : QObject(parent)
 {

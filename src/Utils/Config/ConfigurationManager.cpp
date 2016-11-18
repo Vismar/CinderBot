@@ -1,7 +1,6 @@
 #include "ConfigurationManager.hpp"
 #include "ConfigurationParameters.hpp"
 #include <QFile>
-#include <QTextStream>
 
 #define CFG_FILE_NAME "./data/config/config.xml"
 
