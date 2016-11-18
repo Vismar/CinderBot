@@ -24,7 +24,7 @@ QString ConfigurationManager::Initialize()
             _xmlReader.readNext();
             if (_xmlReader.isStartElement())
             {
-                if(_xmlReader.name() == CFGS_LOGIN)
+                if (_xmlReader.name() == CFGS_LOGIN)
                 {
                     _ReadLoginData();
                 }
