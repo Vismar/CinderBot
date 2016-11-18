@@ -20,6 +20,7 @@ private:
     QString _color;
     QString _timeStamp;
     QString _message;
+    bool    _isModerator;
 
     bool _IsNetworkMsg(const QString& message);
     bool _IsPingCommand(const QString& message);
@@ -34,6 +35,7 @@ public:
     const QString& GetColor() const;
     const QString& GetTimeStamp() const;
     const QString& GetMessage() const;
+    bool           IsModerator() const;
 
     void SetAuthor(const QString& author);
     void SetColor(const QString& color);
