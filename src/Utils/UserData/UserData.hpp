@@ -2,6 +2,7 @@
 #include <QString>
 #include <QHash>
 #include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 enum UserDataParam
 {
