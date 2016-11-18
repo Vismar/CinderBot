@@ -29,7 +29,7 @@ bool ChatMessage::_IsConnectedToRoom(const QString& message)
 {
     bool result(false);
     QString param;
-    if (ConfigurationManager::Instance().GetStringParam(CONFIG_LOGIN_NAME, param))
+    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
     {
         result = message.contains("JOIN") &&
                  !message.mid(1).contains(":") &&
@@ -144,7 +144,7 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
             _color = "<font color=\"" + color + "\">";
             _author = name;
             name.clear();
-            ConfigurationManager::Instance().GetStringParam(CONFIG_LOGIN_CHANNEL, name);
+            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
             _message = message.right(message.length() -
                        (message.indexOf("PRIVMSG #") +
                        name.length() + 11));

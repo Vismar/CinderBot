@@ -1,70 +1,20 @@
 #include "UserData.hpp"
-#include <QDebug>
 #include <QFile>
 #include <QTextStream>
+#include <QXmlStreamWriter>
 
-#define USER_DATA_FILE_PATH "./data/data/"
-#define USER_DATA_FILE_NAME "userData.data"
-#define USER_DATA_PARSER_SS '['
-#define USER_DATA_PARSER_ES ']'
+#define UD_FILE_NAME         "./data/data/UserData.xml"
+#define UD_SECTION_USER_DATA "UserData"
+#define UD_SECTION_NAME      "Name"
 
-void UserData::_SetUserData(const QString& userName,
-                            const QString& rawLine)
+void UserData::_AddUserData(const QString& userName, const QHash<QString, QString>& params)
 {
-    int startPos(-1), endPos(-1);
-    startPos = rawLine.indexOf(USER_DATA_PARSER_SS);
-    QHash<QString, QString> params;
-    if (startPos != -1)
-    {
-        endPos = rawLine.indexOf(USER_DATA_PARSER_ES, startPos);
-        while ((startPos != -1) && (endPos != -1))
-        {
-            QString parameter;
-            parameter = rawLine.mid(startPos + 1, endPos - startPos - 1);
-            int index = parameter.indexOf(',');
-            params.insert(parameter.left(index),
-                          parameter.right(parameter.length() - index - 1));
-            startPos = rawLine.indexOf(USER_DATA_PARSER_SS, endPos);
-            endPos = rawLine.indexOf(USER_DATA_PARSER_ES, startPos);
-        }
-        if (params.size() != _defaultParams.size())
-        {
-            _SetDefaultUserData(userName, params);
-        }
-        else
-        {
-            _AddUserData(userName, params);
-        }
-    }
-}
-
-void UserData::_SetDefaultUserData(const QString& userName,
-                                   const QHash<QString, QString>& params)
-{
-    QHash<QString, QString> newParams;
-    for (auto it = _defaultParams.begin(); it != _defaultParams.end(); ++ it)
-    {
-        if (params.contains(it.key()))
-        {
-            newParams.insert(it.key(), params.value(it.key()));
-        }
-        else
-        {
-            newParams.insert(it.key(), it.value());
-        }
-    }
-    _AddUserData(userName, newParams);
+    _userData.insert(userName.toLower(), params);
 }
 
 void UserData::_ResetToDefaultUserData(const QString& userName)
 {
     _AddUserData(userName, _defaultParams);
-}
-
-void UserData::_AddUserData(const QString& userName,
-                            const QHash<QString, QString>& params)
-{
-    _userData.insert(userName.toLower(), params);
 }
 
 void UserData::_InitializeDefaultUserData()
@@ -96,6 +46,83 @@ QString UserData::_GetUDPParam(UserDataParam UDP)
     return param;
 }
 
+void UserData::_ReadUserData()
+{
+    while (!_xmlReader.atEnd())
+    {
+        _xmlReader.readNext();
+        if (_xmlReader.isEndElement())
+        {
+            if (_xmlReader.name() == UD_SECTION_USER_DATA)
+            {
+                break;
+            }
+        }
+        if (_xmlReader.isStartElement())
+        {
+            if (_xmlReader.name() == UD_SECTION_NAME)
+            {
+                QString name = _xmlReader.readElementText().toLower();
+                _userData.insert(name, _ReadUserParams());
+            }
+        }
+    }
+}
+
+void UserData::_WriteUserData()
+{
+    for (auto it = _userData.begin(); it != _userData.end(); ++it)
+    {
+        _xmlWriter.writeStartElement(UD_SECTION_USER_DATA);
+        _xmlWriter.writeTextElement(UD_SECTION_NAME, it.key());
+        for (auto itParam = it.value().begin(); itParam != it.value().end(); ++itParam)
+        {
+            _xmlWriter.writeTextElement(itParam.key(), itParam.value());
+        }
+        _xmlWriter.writeEndElement();
+    }
+}
+
+QHash<QString, QString> UserData::_ReadUserParams()
+{
+    QHash<QString, QString> params;
+    while (!_xmlReader.atEnd())
+    {
+        _xmlReader.readNext();
+        if (_xmlReader.isEndElement())
+        {
+            if (_xmlReader.name() == UD_SECTION_USER_DATA)
+            {
+                break;
+            }
+        }
+        if (_xmlReader.isStartElement())
+        {
+            QString param;
+            for (int i = 0; i < UDP_End; ++i)
+            {
+                param = _GetUDPParam(static_cast<UserDataParam>(i));
+                if (_xmlReader.name() == param)
+                {
+                    params.insert(param, _xmlReader.readElementText());
+                }
+            }
+        }
+    }
+    if (params.size() != _defaultParams.size())
+    {
+        for (auto it = _defaultParams.begin(); it != _defaultParams.end(); ++it)
+        {
+            if (!params.contains(it.key()) || params[it.key()] != "")
+            {
+                params.insert(it.key(), it.value());
+            }
+        }
+    }
+
+    return params;
+}
+
 UserData& UserData::Instance()
 {
     static UserData instance;
@@ -104,56 +131,40 @@ UserData& UserData::Instance()
 
 UserData::~UserData()
 {
-    QString fileName = USER_DATA_FILE_PATH;
-    fileName.append(USER_DATA_FILE_NAME);
-    QFile file(fileName);
-    if (file.open(QIODevice::WriteOnly))
+    QFile userDataFile(UD_FILE_NAME);
+    if (userDataFile.open(QIODevice::WriteOnly))
     {
-        QTextStream in(&file);
-        for (auto itKey = _userData.begin(); itKey != _userData.end(); ++itKey)
-        {
-            in << "@" << itKey.key() << " ";
-            for (auto itValue = itKey.value().begin();
-                 itValue != itKey.value().end();
-                 ++ itValue)
-            {
-                in << "[" << itValue.key() << "," << itValue.value() << "]";
-            }
-            in << endl;
-        }
+        _xmlWriter.setDevice(&userDataFile);
+        _xmlWriter.setAutoFormatting(true);
+        _xmlWriter.writeStartDocument();
+        _xmlWriter.writeStartElement("DataTable");
+        _WriteUserData();
+        _xmlWriter.writeEndElement();
+        _xmlWriter.writeEndDocument();
     }
+    userDataFile.close();
 }
 
 void UserData::Initialize()
 {
-    _InitializeDefaultUserData();
-    QString line;
-    QString fileName = USER_DATA_FILE_PATH;
-    fileName.append(USER_DATA_FILE_NAME);
-    QFile file(fileName);
-    if (file.open(QIODevice::ReadOnly))
+    QFile userDataFile(UD_FILE_NAME);
+    if (userDataFile.open(QIODevice::ReadOnly))
     {
-        QTextStream in(&file);
-        while (!in.atEnd())
+        _xmlReader.setDevice(&userDataFile);
+
+        while (!_xmlReader.atEnd())
         {
-            line = in.readLine();
-            if (line.startsWith('@'))
+            _xmlReader.readNext();
+            if (_xmlReader.isStartElement())
             {
-                int index = line.indexOf(' ');
-                if (index != -1)
+                if (_xmlReader.name() == UD_SECTION_USER_DATA)
                 {
-                    QString userName = line.mid(1, index - 1);
-                    QString rawLine = line.right(line.size() - index - 1);
-                    _SetUserData(userName, rawLine);
+                    _ReadUserData();
                 }
             }
         }
     }
-    else
-    {
-        qDebug() << "No user data file!";
-    }
-    file.close();
+    userDataFile.close();
 }
 
 QString UserData::GetUserDataParam(const QString& userName, UserDataParam UDP)
