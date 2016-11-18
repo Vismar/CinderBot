@@ -68,6 +68,11 @@ const QString& ChatMessage::GetMessage() const
     return _message;
 }
 
+bool ChatMessage::IsModerator() const
+{
+    return _isModerator;
+}
+
 void ChatMessage::SetAuthor(const QString& author)
 {
     _author = author;
@@ -146,6 +151,8 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
             _message = message.right(message.length() -
                        (message.indexOf("PRIVMSG #") +
                        name.length() + 11));
+            int index = message.indexOf("mod=");
+            _isModerator = message.mid(index + 4,1).toInt();
         }
     }
     _SetTimeStamp();
