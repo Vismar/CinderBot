@@ -1,8 +1,8 @@
 #include "ChatWidget.hpp"
-#include <QListWidgetItem>
-#include <QScrollBar>
-#include <QTimer>
 #include "ChatMessageWidget.hpp"
+#include <QListWidgetItem>
+#include <QTimer>
+#include <QScrollBar>
 
 #define MAX_NUMBER_OF_ENTRIES 15
 

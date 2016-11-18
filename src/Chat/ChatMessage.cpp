@@ -2,7 +2,6 @@
 #include "../Utils/Config/ConfigurationManager.hpp"
 #include "../Utils/Config/ConfigurationParameters.hpp"
 #include <QTime>
-#include <QDebug>
 
 bool ChatMessage::_IsNetworkMsg(const QString& message)
 {
@@ -137,7 +136,6 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
             if (nameLength < 1)
             {
                 startOfTheName = message.indexOf("!") + 1;
-                qDebug() << startOfTheName;
                 nameLength = message.indexOf("@", startOfTheName) - startOfTheName;
             }
             QString name(message.mid(startOfTheName, nameLength));
