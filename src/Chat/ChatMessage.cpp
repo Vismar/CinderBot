@@ -3,17 +3,22 @@
 #include "../Utils/Config/ConfigurationParameters.hpp"
 #include <QTime>
 
-bool ChatMessage::_IsNetworkMsg(const QString& message)
+bool ChatMessage::_IsNetworkMsg(const QString& message) const
 {
     return message.startsWith("INFO");
 }
 
-bool ChatMessage::_IsPingCommand(const QString& message)
+bool ChatMessage::_IsPingCommand(const QString& message) const
 {
     return message.startsWith("PING");
 }
 
-int ChatMessage::_IsIrcComand(const QString& message)
+bool ChatMessage::_IsPongCommand(const QString& message) const
+{
+    return message.startsWith("PONG");
+}
+
+int ChatMessage::_IsIrcComand(const QString& message) const
 {
     int result(-1);
     if (message.startsWith(":tmi.twitch.tv "))
@@ -24,7 +29,7 @@ int ChatMessage::_IsIrcComand(const QString& message)
     return result;
 }
 
-bool ChatMessage::_IsConnectedToRoom(const QString& message)
+bool ChatMessage::_IsConnectedToRoom(const QString& message) const
 {
     bool result(false);
     QString param;
@@ -38,7 +43,12 @@ bool ChatMessage::_IsConnectedToRoom(const QString& message)
     return result;
 }
 
-bool ChatMessage::_IsPrivMsg(const QString& message)
+bool ChatMessage::_IsUserState(const QString& message) const
+{
+    return message.contains("USERSTATE");
+}
+
+bool ChatMessage::_IsPrivMsg(const QString& message) const
 {
     return message.startsWith("@badges=");
 }
@@ -104,6 +114,10 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
     {
         msgType = PING;
     }
+    else if (_IsPongCommand(message))
+    {
+        msgType = PONG;
+    }
     else
     {
         int ircCommand = _IsIrcComand(message);
@@ -124,6 +138,10 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
             _author = SYSTEM_MESSAGE;
             _color = "<font color=\"Red\">";
             _message = SYSTEM_MESSAGE_CR;
+        }
+        else if (_IsUserState(message))
+        {
+            msgType = USERSTATE;
         }
         else if (_IsPrivMsg(message))
         {

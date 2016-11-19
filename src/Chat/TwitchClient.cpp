@@ -4,6 +4,16 @@
 
 TwitchClient::TwitchClient(QObject *parent) : QObject(parent)
 {
+    /*** Timers ***/
+    // Msg timer. Starts when messages was received
+    _msgTimer = new QTimer(this);
+    connect(_msgTimer, &QTimer::timeout,
+            this,      &TwitchClient::PingTwitch);
+    // Ping timer. Start when bot has sent ping command
+    _pingTimer = new QTimer(this);
+    connect(_pingTimer, &QTimer::timeout,
+            this,       &TwitchClient::Disconnect);
+
     _socket = new QTcpSocket();
     _bot = new BotAI(this);
     Connect();
@@ -43,6 +53,7 @@ void TwitchClient::Login()
             _SendIrcMessage(line);
             _SendIrcMessage("CAP REQ :twitch.tv/membership\r\n");
             _SendIrcMessage("CAP REQ :twitch.tv/tags\r\n");
+            _SendIrcMessage("CAP REQ :twitch.tv/commands\r\n");
         }
     }
 }
@@ -76,8 +87,21 @@ void TwitchClient::_SendChatMessage(const QString& message)
     }
 }
 
+void TwitchClient::Disconnect()
+{
+    _socket->disconnectFromHost();
+}
+
+void TwitchClient::PingTwitch()
+{
+    // Try to ping twitch to prevent lost ceonnection when chat is inactive
+    _SendIrcMessage("PING\r\n");
+}
+
 void TwitchClient::ReadLine()
 {
+    // If message was received, timer should be stoped
+    _msgTimer->stop();
     QString line;
     while (_socket->canReadLine())
     {
@@ -98,16 +122,23 @@ void TwitchClient::ReadLine()
         case PING:
             _SendIrcMessage("PONG tmi.twitch.tv\r\n");
             break;
-        case PRIVMSG:
-            emit NewMessage(message, false);
+        case PONG:
+            _pingTimer->stop();
+            break;
+        case USERSTATE:
             break;
         case LOGIN_OK:
             JoinChannel();
+            break;
+        case PRIVMSG:
+            emit NewMessage(message, false);
             break;
         default:
             break;
         }
     }
+    // Start timer before sending PING command, that will prevent lost connection if chat is inactive
+    _msgTimer->start(45000); // 45 sec
 }
 
 void TwitchClient::HandleStateChange(QAbstractSocket::SocketState state)
@@ -131,7 +162,6 @@ void TwitchClient::HandleStateChange(QAbstractSocket::SocketState state)
         break;
     }
 }
-
 
 void TwitchClient::NewBotMessage(QString message)
 {
