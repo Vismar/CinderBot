@@ -9,7 +9,9 @@ enum MessageType
     Undefined = -1,
     INFO,
     PING,
+    PONG,
     LOGIN_OK,
+    USERSTATE,
     PRIVMSG
 };
 
@@ -22,11 +24,13 @@ private:
     QString _message;
     bool    _isModerator;
 
-    bool _IsNetworkMsg(const QString& message);
-    bool _IsPingCommand(const QString& message);
-    int  _IsIrcComand(const QString& message);
-    bool _IsConnectedToRoom(const QString& message);
-    bool _IsPrivMsg(const QString& message);
+    bool _IsNetworkMsg(const QString& message) const;
+    bool _IsPingCommand(const QString& message) const;
+    bool _IsPongCommand(const QString& message) const;
+    int  _IsIrcComand(const QString& message) const;
+    bool _IsConnectedToRoom(const QString& message) const;
+    bool _IsUserState(const QString& message) const;
+    bool _IsPrivMsg(const QString& message) const;
 
     void _SetTimeStamp();
 

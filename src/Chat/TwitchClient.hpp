@@ -2,6 +2,7 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QString>
+#include <QTimer>
 #include "ChatMessage.hpp"
 #include "../AI/BotAI.hpp"
 
@@ -14,6 +15,8 @@ private:
     QString     _address;
     int         _port;
     QString     _room;
+    QTimer*     _msgTimer;
+    QTimer*     _pingTimer;
 
 public:
     explicit TwitchClient(QObject *parent = 0);
@@ -31,9 +34,9 @@ signals:
     void NewMessage(ChatMessage message, bool botMessage);
 
 public slots:
-    /*void DisconnectChannel();
+    /*void LeaveChannel();*/
     void Disconnect();
-    */
+    void PingTwitch();
     void ReadLine();
     void HandleStateChange(QAbstractSocket::SocketState state);
     void NewBotMessage(QString message);
