@@ -7,11 +7,17 @@
 namespace Ui
 {
 
+/*!
+ * Class ChatWidget
+ * Stores chat messages in vertical scrollable area.
+ */
 class ChatWidget : public QScrollArea
 {
     Q_OBJECT
 private:
+    /*! Vertical layout */
     QVBoxLayout* _layout;
+    /*! Simple container to store scrol layout */
     QWidget*     _container;
 
 public:
@@ -19,9 +25,17 @@ public:
     ~ChatWidget();
 
 public slots:
+    /*!
+     * Adds message entry.
+     * \param(IN) message
+     * \param(IN) botMessage
+     */
     void AddEntry(ChatMessage message, bool botMessage);
 
 private slots:
+    /*!
+     * Scrolls area to the bottom.
+     */
     void _AutoScrollDown();
 };
 
