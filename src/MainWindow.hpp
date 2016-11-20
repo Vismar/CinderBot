@@ -7,8 +7,7 @@ namespace Ui
 {
 
 /*!
- * \class MainWindow
- *
+ * Class MainWindow
  * The MainWindow class contains all widgets and TwtichClient
  */
 class MainWindow : public QMainWindow
