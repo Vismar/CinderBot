@@ -3,6 +3,8 @@
 
 using namespace Ui;
 
+///////////////////////////////////////////////////////////////////////////
+
 ChatMessageWidget::ChatMessageWidget(const QString& text, QWidget* parent) : QTextEdit(text, parent)
 {
     // Make it look and feel like an ordinary label
@@ -19,6 +21,8 @@ ChatMessageWidget::ChatMessageWidget(const QString& text, QWidget* parent) : QTe
             this, SLOT(_AdjustMinimumSize(QSizeF)));
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void ChatMessageWidget::_AdjustMinimumSize(const QSizeF& size)
 {
     // Sets maximum size of widget, prevents it from squeezing
@@ -26,3 +30,5 @@ void ChatMessageWidget::_AdjustMinimumSize(const QSizeF& size)
     // Sets maximum size of widget, prevents it from stretching
     setMaximumHeight(size.height() + 2 * frameWidth());
 }
+
+///////////////////////////////////////////////////////////////////////////

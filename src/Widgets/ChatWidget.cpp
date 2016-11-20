@@ -8,6 +8,8 @@
 
 using namespace Ui;
 
+///////////////////////////////////////////////////////////////////////////
+
 ChatWidget::ChatWidget(QWidget *parent) : QScrollArea(parent)
 {
     // Set params to layout
@@ -19,7 +21,11 @@ ChatWidget::ChatWidget(QWidget *parent) : QScrollArea(parent)
     _layout->setMargin(10);
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 ChatWidget::~ChatWidget() {}
+
+///////////////////////////////////////////////////////////////////////////
 
 void ChatWidget::AddEntry(ChatMessage message, bool botMessage)
 {
@@ -49,8 +55,12 @@ void ChatWidget::AddEntry(ChatMessage message, bool botMessage)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void ChatWidget::_AutoScrollDown()
 {
     // Scroll to the botton of scroll area
     verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
+
+///////////////////////////////////////////////////////////////////////////

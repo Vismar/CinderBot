@@ -2,6 +2,8 @@
 
 using namespace Ui;
 
+///////////////////////////////////////////////////////////////////////////
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     // Initialize UI
@@ -19,9 +21,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
             _chat, &ChatWidget::AddEntry);
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 MainWindow::~MainWindow()
 {
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 void MainWindow::InitUi()
 {
@@ -31,3 +37,5 @@ void MainWindow::InitUi()
     // TODO: Should be changed to resizeable
     this->setFixedSize(640, 400);
 }
+
+///////////////////////////////////////////////////////////////////////////
