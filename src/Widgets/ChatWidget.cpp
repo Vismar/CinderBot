@@ -14,6 +14,7 @@ ChatWidget::ChatWidget(QWidget *parent) : QScrollArea(parent)
     _container = new QWidget();
     this->setWidget(_container);
     _layout = new QVBoxLayout(_container);
+    _layout->setAlignment(Qt::AlignTop);
     _layout->setMargin(10);
 }
 
@@ -35,7 +36,7 @@ void ChatWidget::AddEntry(ChatMessage message, bool botMessage)
     }
     ChatMessageWidget* newEntry = new ChatMessageWidget("");
     newEntry->insertHtml("<b>" + message.GetColor() + message.GetAuthor() + " | "
-                         + message.GetTimeStamp() + "</b></font><br>"
+                         + message.GetTimeStamp() + "</b></font><hr>"
                          + message.GetMessage());
     _layout->addWidget(newEntry);
     if (verticalScrollBar()->value() == verticalScrollBar()->maximum())
