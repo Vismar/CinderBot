@@ -3,20 +3,28 @@
 #include "../Utils/Config/ConfigurationParameters.hpp"
 #include <QTime>
 
+///////////////////////////////////////////////////////////////////////////
+
 bool ChatMessage::_IsNetworkMsg(const QString& message) const
 {
     return message.startsWith("INFO");
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsPingCommand(const QString& message) const
 {
     return message.startsWith("PING");
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 bool ChatMessage::_IsPongCommand(const QString& message) const
 {
     return message.startsWith("PONG");
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 int ChatMessage::_IsIrcComand(const QString& message) const
 {
@@ -28,6 +36,8 @@ int ChatMessage::_IsIrcComand(const QString& message) const
 
     return result;
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsConnectedToRoom(const QString& message) const
 {
@@ -43,61 +53,85 @@ bool ChatMessage::_IsConnectedToRoom(const QString& message) const
     return result;
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 bool ChatMessage::_IsUserState(const QString& message) const
 {
     return message.contains("USERSTATE");
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsPrivMsg(const QString& message) const
 {
     return message.startsWith("@badges=");
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void ChatMessage::_SetTimeStamp()
 {
     _timeStamp = QTime::currentTime().toString("h:mm:ss");
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 const QString& ChatMessage::GetAuthor() const
 {
     return _author;
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 const QString& ChatMessage::GetColor() const
 {
     return _color;
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 const QString& ChatMessage::GetTimeStamp() const
 {
     return _timeStamp;
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 const QString& ChatMessage::GetMessage() const
 {
     return _message;
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::IsModerator() const
 {
     return _isModerator;
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void ChatMessage::SetAuthor(const QString& author)
 {
     _author = author;
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 void ChatMessage::SetColor(const QString& color)
 {
     _color = "<font color=\"" + color + "\">";
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void ChatMessage::SetMessage(const QString& message)
 {
     _message = message;
     _SetTimeStamp();
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 MessageType ChatMessage::ParseRawMessage(const QString& message)
 {
@@ -108,6 +142,7 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
         msgType = INFO;        
         _author = SYSTEM_MESSAGE;
         _color = "<font color=\"Red\">";
+        // Network messages comes only from bot itself, so just copy almost full message
         _message = message.mid(5);
     }
     else if (_IsPingCommand(message))
@@ -121,6 +156,7 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
     else
     {
         int ircCommand = _IsIrcComand(message);
+        // If it is an IRC commands, check IRC code
         if (ircCommand != -1)
         {
             switch(ircCommand)
@@ -134,6 +170,7 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
         }
         else if (_IsConnectedToRoom(message))
         {
+            // Notify about connection to the room
             msgType = INFO;
             _author = SYSTEM_MESSAGE;
             _color = "<font color=\"Red\">";
@@ -147,12 +184,16 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
         {
             msgType = PRIVMSG;
             QString color = "Black";
+
+            /* Get custom name color */
             int colorTagPosition = message.indexOf("color=");
             // 6 = length of "color="
             if (message.at(colorTagPosition + 6) != ';')
             {
                 color = (message.mid(colorTagPosition + 6, 7));
             }
+
+            /* Get author's name */
             // 13 = length of "display-name="
             int startOfTheName = message.indexOf("display-name=") + 13;
             int nameLength = message.indexOf("emotes") - startOfTheName - 1;
@@ -162,18 +203,25 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
                 nameLength = message.indexOf("@", startOfTheName) - startOfTheName;
             }
             QString name(message.mid(startOfTheName, nameLength));
+
+            /* Set params */
             _color = "<font color=\"" + color + "\">";
             _author = name;
             name.clear();
+
+            /* Get chat message */
             ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
-            _message = message.right(message.length() -
-                       (message.indexOf("PRIVMSG #") +
-                       name.length() + 11));
+            _message = message.right(message.length() - (message.indexOf("PRIVMSG #") + name.length() + 11));
+
+            /* Get moderator flag */
             int index = message.indexOf("mod=");
             _isModerator = message.mid(index + 4,1).toInt();
         }
     }
+    // Set timestamp
     _SetTimeStamp();
 
     return msgType;
 }
+
+///////////////////////////////////////////////////////////////////////////
