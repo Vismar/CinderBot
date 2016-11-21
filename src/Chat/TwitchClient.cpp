@@ -2,9 +2,11 @@
 #include "../Utils/Config/ConfigurationManager.hpp"
 #include "../Utils/Config/ConfigurationParameters.hpp"
 
+///////////////////////////////////////////////////////////////////////////
+
 TwitchClient::TwitchClient(QObject *parent) : QObject(parent)
 {
-    /*** Timers ***/
+    /* Timers */
     // Msg timer. Starts when messages was received
     _msgTimer = new QTimer(this);
     connect(_msgTimer, &QTimer::timeout,
@@ -14,22 +16,30 @@ TwitchClient::TwitchClient(QObject *parent) : QObject(parent)
     connect(_pingTimer, &QTimer::timeout,
             this,       &TwitchClient::Disconnect);
 
+    // Create socket and botAi
     _socket = new QTcpSocket();
     _bot = new BotAI(this);
+    // Try to connect to twitch
     Connect();
+    // Connections between socket and twitch client
     connect(_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
             this,    SLOT(HandleStateChange(QAbstractSocket::SocketState)));
     connect(_socket, &QTcpSocket::disconnected,
             this,    &TwitchClient::Connect);
     connect(_socket, &QTcpSocket::readyRead,
             this,    &TwitchClient::ReadLine);
+    // Connection between botAi and twitch client
     connect(_bot,    &BotAI::NewBotMessage,
             this,    &TwitchClient::NewBotMessage);
     connect(this,    &TwitchClient::NewMessage,
             _bot,    &BotAI::ReadNewMessage);
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 TwitchClient::~TwitchClient() {}
+
+///////////////////////////////////////////////////////////////////////////
 
 void TwitchClient::Connect()
 {
@@ -37,20 +47,27 @@ void TwitchClient::Connect()
     _socket->connectToHost("irc.twitch.tv", 6667);
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void TwitchClient::Login()
 {
     QString param;
     QString line;
+    // Try to get oathkey
     if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_OATH_KEY, param))
     {
+        // Send oath key
         line = "PASS " + param + "\r\n";
         _SendIrcMessage(line);
+        // Try to get login name
         if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
         {
+            // Send login name
             line = "NICK " + param + "\r\n";
            _SendIrcMessage(line);
             line = "USER " + param + " 8 * :" + param + "\r\n";
             _SendIrcMessage(line);
+            // Requst useful things
             _SendIrcMessage("CAP REQ :twitch.tv/membership\r\n");
             _SendIrcMessage("CAP REQ :twitch.tv/tags\r\n");
             _SendIrcMessage("CAP REQ :twitch.tv/commands\r\n");
@@ -58,9 +75,12 @@ void TwitchClient::Login()
     }
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void TwitchClient::JoinChannel()
 {
     QString param;
+    // Try to get channel name
     if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
     {
         param.push_front("JOIN #");
@@ -69,14 +89,19 @@ void TwitchClient::JoinChannel()
     }
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void TwitchClient::_SendIrcMessage(const QString& message)
 {
     _socket->write(message.toStdString().c_str());
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void TwitchClient::_SendChatMessage(const QString& message)
 {
     QString param;
+    // Try to get channel name
     if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
     {
         param.push_front("PRIVMSG #");
@@ -87,16 +112,22 @@ void TwitchClient::_SendChatMessage(const QString& message)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void TwitchClient::Disconnect()
 {
     _socket->disconnectFromHost();
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 void TwitchClient::PingTwitch()
 {
     // Try to ping twitch to prevent lost ceonnection when chat is inactive
     _SendIrcMessage("PING\r\n");
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 void TwitchClient::ReadLine()
 {
@@ -108,6 +139,7 @@ void TwitchClient::ReadLine()
         line = _socket->readLine();
         qDebug() << line;
         ChatMessage message;
+        // Parse message and get type of it
         MessageType msgType = message.ParseRawMessage(line);
         switch(msgType)
         {
@@ -141,6 +173,8 @@ void TwitchClient::ReadLine()
     _msgTimer->start(45000); // 45 sec
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void TwitchClient::HandleStateChange(QAbstractSocket::SocketState state)
 {
     ChatMessage message;
@@ -163,11 +197,14 @@ void TwitchClient::HandleStateChange(QAbstractSocket::SocketState state)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void TwitchClient::NewBotMessage(QString message)
 {
     _SendChatMessage(message);
     ChatMessage botMessage;
     QString param;
+    // Try to get login name
     if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
     {
         botMessage.SetAuthor(param);
