@@ -5,22 +5,31 @@
 #define UD_SECTION_USER_DATA "UserData"
 #define UD_SECTION_NAME      "Name"
 
+///////////////////////////////////////////////////////////////////////////
+
 void UserData::_AddUserData(const QString& userName, const QHash<QString, QString>& params)
 {
     _userData.insert(userName.toLower(), params);
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 void UserData::_ResetToDefaultUserData(const QString& userName)
 {
     _AddUserData(userName, _defaultParams);
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void UserData::_InitializeDefaultUserData()
 {
+    /* Create default values of UDP */
     _defaultParams.insert(_GetUDPParam(UDP_Messages), "0");
     _defaultParams.insert(_GetUDPParam(UDP_Currency), "0");
     _defaultParams.insert(_GetUDPParam(UDP_Covenant), "Viewer");
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 QString UserData::_GetUDPParam(UserDataParam UDP)
 {
@@ -44,6 +53,8 @@ QString UserData::_GetUDPParam(UserDataParam UDP)
     return param;
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void UserData::_ReadUserData()
 {
     while (!_xmlReader.atEnd())
@@ -51,6 +62,7 @@ void UserData::_ReadUserData()
         _xmlReader.readNext();
         if (_xmlReader.isEndElement())
         {
+            // If we reach end of user data section, break the loop
             if (_xmlReader.name() == UD_SECTION_USER_DATA)
             {
                 break;
@@ -67,6 +79,8 @@ void UserData::_ReadUserData()
     }
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void UserData::_WriteUserData()
 {
     for (auto it = _userData.begin(); it != _userData.end(); ++it)
@@ -81,6 +95,8 @@ void UserData::_WriteUserData()
     }
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 QHash<QString, QString> UserData::_ReadUserParams()
 {
     QHash<QString, QString> params;
@@ -89,6 +105,7 @@ QHash<QString, QString> UserData::_ReadUserParams()
         _xmlReader.readNext();
         if (_xmlReader.isEndElement())
         {
+            // If we reach end of user data section, break the loop
             if (_xmlReader.name() == UD_SECTION_USER_DATA)
             {
                 break;
@@ -100,6 +117,7 @@ QHash<QString, QString> UserData::_ReadUserParams()
             for (int i = 0; i < UDP_End; ++i)
             {
                 param = _GetUDPParam(static_cast<UserDataParam>(i));
+                // If need parameter was found, save it
                 if (_xmlReader.name() == param)
                 {
                     params.insert(param, _xmlReader.readElementText());
@@ -109,6 +127,7 @@ QHash<QString, QString> UserData::_ReadUserParams()
     }
     if (params.size() != _defaultParams.size())
     {
+        // Check if all UDP were found. If not, add it and set to default value
         for (auto it = _defaultParams.begin(); it != _defaultParams.end(); ++it)
         {
             if (!params.contains(it.key()) || params[it.key()] != "")
@@ -121,11 +140,15 @@ QHash<QString, QString> UserData::_ReadUserParams()
     return params;
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 UserData& UserData::Instance()
 {
     static UserData instance;
     return instance;
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 UserData::~UserData()
 {
@@ -142,6 +165,8 @@ UserData::~UserData()
     }
     userDataFile.close();
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 void UserData::Initialize()
 {
@@ -165,8 +190,11 @@ void UserData::Initialize()
     userDataFile.close();
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 QString UserData::GetUserDataParam(const QString& userName, UserDataParam UDP)
 {
+    // If user do not exist, add him to the hash table
     if (!_userData.contains(userName.toLower()))
     {
         _AddUserData(userName.toLower(), _defaultParams);
@@ -174,13 +202,18 @@ QString UserData::GetUserDataParam(const QString& userName, UserDataParam UDP)
     return _userData[userName.toLower()][_GetUDPParam(UDP)];
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void UserData::UpdateUserData(const QString& userName,
                               UserDataParam UDP,
                               const QString& newValue)
 {
+    // If user do not exist, add him to the hash table
     if (!_userData.contains(userName.toLower()))
     {
         _AddUserData(userName.toLower(), _defaultParams);
     }
     _userData[userName.toLower()].insert(_GetUDPParam(UDP), newValue);
 }
+
+///////////////////////////////////////////////////////////////////////////
