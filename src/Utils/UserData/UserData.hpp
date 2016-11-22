@@ -66,7 +66,7 @@ private:
     /*!
      * Save stored user data to file
      */
-    void _WriteUserData();
+    void _SaveUserData();
 
 public:
     static UserData& Instance();

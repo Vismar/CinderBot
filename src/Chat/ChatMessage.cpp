@@ -214,8 +214,18 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
             _message = message.right(message.length() - (message.indexOf("PRIVMSG #") + name.length() + 11));
 
             /* Get moderator flag */
-            int index = message.indexOf("mod=");
-            _isModerator = message.mid(index + 4,1).toInt();
+            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
+            // If author is a broadcaster set mod flag true
+            if (_author.toLower() == name)
+            {
+                _isModerator = true;
+            }
+            // If author not broadcaster, check status in message
+            else
+            {
+                int index = message.indexOf("mod=");
+                _isModerator = message.mid(index + 4,1).toInt();
+            }
         }
     }
     // Set timestamp

@@ -4,6 +4,7 @@
 #include "../Utils/Config/ConfigurationParameters.hpp"
 #include "./ChatCommands/BaseFileChatCommand.hpp"
 #include "./ChatCommands/UserDataChatCommand.hpp"
+#include "./ChatCommands/QuoteChatCommand.hpp"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -38,6 +39,17 @@ BotAI::BotAI(QObject* parent) : QObject(parent)
 
     /* Load predefined commands */
     _chatCommands.push_back(new UserDataChatCommand());
+    _chatCommands.push_back(new QuoteChatCommand());
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+BotAI::~BotAI()
+{
+    for (int i = 0; i < _chatCommands.size(); ++i)
+    {
+        delete _chatCommands[i];
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
