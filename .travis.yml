@@ -1,0 +1,16 @@
+language: cpp
+sudo: required
+dist: trusty
+
+before_install:
+  - sudo add-apt-repository --yes ppa:beineri/opt-qt57-trusty
+  - sudo apt-get update -qq
+
+install:
+  - sudo apt-get -y install qt57[QTPACKAGE]
+
+script:
+  - source /opt/qt57/bin/qt57-env.sh
+  - /opt/qt57/bin/qmake -project
+  - /opt/qt57/bin/qmake ./src/ChatBot.pro
+  - make
