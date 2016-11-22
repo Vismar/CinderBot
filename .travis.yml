@@ -1,23 +1,15 @@
 language: cpp
+sudo: required
 dist: trusty
 
 before_install:
-    # g++6
-    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  
-    # Qt5
-    - sudo apt-add-repository --yes ppa:canonical-qt5-edgers/ubuntu1204-qt5
-    - sudo apt-get update -qq
+  - sudo add-apt-repository --yes ppa:beineri/opt-qt551-trusty
+  - sudo apt-get update -qq
 
 install:
-    # g++6
-    - sudo apt-get remove g++
-    - sudo apt-get install -qq g++-6
-    
-    # Qt5
-    - yes | sudo apt-get install -qq --force-yes qtdeclarative5-dev
+  - sudo apt-get -y install qt55[QTPACKAGE]
 
 script:
-    - qmake -project
-    - qmake ./src/ChatBot.pro
-    - make
+  - source /opt/qt55/bin/qt55-env.sh
+  - /opt/qt55/bin/qmake
+  - make
