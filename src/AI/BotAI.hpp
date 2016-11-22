@@ -43,7 +43,7 @@ private:
 
 public:
     explicit BotAI(QObject* parent = 0);
-    ~BotAI() {}
+    ~BotAI();
 
 signals:
     /*!

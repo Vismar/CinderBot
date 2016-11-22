@@ -81,7 +81,7 @@ void UserData::_ReadUserData()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void UserData::_WriteUserData()
+void UserData::_SaveUserData()
 {
     for (auto it = _userData.begin(); it != _userData.end(); ++it)
     {
@@ -159,7 +159,7 @@ UserData::~UserData()
         _xmlWriter.setAutoFormatting(true);
         _xmlWriter.writeStartDocument();
         _xmlWriter.writeStartElement("DataTable");
-        _WriteUserData();
+        _SaveUserData();
         _xmlWriter.writeEndElement();
         _xmlWriter.writeEndDocument();
     }
