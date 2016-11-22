@@ -1,6 +1,5 @@
 #include "BaseFileChatCommand.hpp"
 #include <QFile>
-#include <QTextStream>
 #include <QtGlobal>
 #include <QTime>
 
@@ -27,7 +26,7 @@ bool BaseFileChatCommand::Initialize()
             _xmlReader.readNext();
             if (_xmlReader.isStartElement())
             {
-                // If it is start section of cammand, read it
+                // If it is start section of command, read it
                 if (_xmlReader.name() == BFCC_SECTION_COMMAND)
                 {
                     _ReadCommand();
