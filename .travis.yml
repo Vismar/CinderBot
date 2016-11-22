@@ -11,5 +11,6 @@ install:
 
 script:
   - source /opt/qt55/bin/qt55-env.sh
-  - /opt/qt55/bin/qmake
+  - /opt/qt55/bin/qmake -project
+  - /opt/qt55/bin/qmake ./src/ChatBot.pro
   - make
