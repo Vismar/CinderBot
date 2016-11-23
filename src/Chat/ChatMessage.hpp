@@ -86,6 +86,7 @@ private:
     void _SetTimeStamp();
 
 public:
+    ChatMessage();
     /*!
      * Returns author name
      * \return author name

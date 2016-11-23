@@ -76,6 +76,16 @@ void ChatMessage::_SetTimeStamp()
 
 ///////////////////////////////////////////////////////////////////////////
 
+ChatMessage::ChatMessage()
+{
+    _author = "NoAuthor";
+    _color = "Black";
+    _message = "No message";
+    _isModerator = false;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 const QString& ChatMessage::GetAuthor() const
 {
     return _author;
