@@ -170,6 +170,7 @@ UserData::~UserData()
 
 void UserData::Initialize()
 {
+    _InitializeDefaultUserData();
     QFile userDataFile(UD_FILE_NAME);
     if (userDataFile.open(QIODevice::ReadOnly))
     {
