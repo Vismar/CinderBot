@@ -27,17 +27,10 @@ BotAI::BotAI(QObject* parent) : QObject(parent)
         }
     }
 
-    // Load custom commands
+    /* Load commands */
+    // Custom commands
     _chatCommands.push_back(new BaseFileChatCommand());
-    BaseFileChatCommand* command = static_cast<BaseFileChatCommand*> (_chatCommands.last());
-    // If some error appear, delete custom commnds
-    if (!command->Initialize())
-    {
-        delete _chatCommands.last();
-        _chatCommands.pop_back();
-    }
-
-    /* Load predefined commands */
+    // Predefined commands
     _chatCommands.push_back(new UserDataChatCommand());
     _chatCommands.push_back(new QuoteChatCommand());
 }
