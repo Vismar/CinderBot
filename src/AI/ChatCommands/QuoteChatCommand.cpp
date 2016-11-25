@@ -130,21 +130,16 @@ bool QuoteChatCommand::GetAnswer(ChatMessage &message, QString &answer)
             {
                 result = true;
                 answer = _quotes.at(number);
-            }
-            // If check failed return random quote
-            if (!result)
-            {
-                result = true;
-                int k = qrand() % _quotes.size();
-                answer = _quotes.at(k);
+                answer.append(" - #" + QString::number(number + 1));
             }
         }
-        // If number is not exist
-        else
+        // If check failed return random quote
+        if (!result)
         {
             result = true;
             int k = qrand() % _quotes.size();
             answer = _quotes.at(k);
+            answer.append(" - #" + QString::number(k + 1));
         }
     }
     else if (msg.contains(QCC_COMMAND_ADD) && (message.IsModerator()))
