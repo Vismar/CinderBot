@@ -98,10 +98,10 @@ QuoteChatCommand::QuoteChatCommand()
 
 QuoteChatCommand::~QuoteChatCommand()
 {
-    QFile userDataFile(QCC_FILE_NAME);
-    if (userDataFile.open(QIODevice::WriteOnly))
+    QFile commandsFile(QCC_FILE_NAME);
+    if (commandsFile.open(QIODevice::WriteOnly))
     {
-        _xmlWriter.setDevice(&userDataFile);
+        _xmlWriter.setDevice(&commandsFile);
         _xmlWriter.setAutoFormatting(true);
         _xmlWriter.writeStartDocument();
         _xmlWriter.writeStartElement("Quotes");
@@ -109,7 +109,7 @@ QuoteChatCommand::~QuoteChatCommand()
         _xmlWriter.writeEndElement();
         _xmlWriter.writeEndDocument();
     }
-    userDataFile.close();
+    commandsFile.close();
 }
 
 ///////////////////////////////////////////////////////////////////////////
