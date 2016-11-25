@@ -12,11 +12,7 @@
 class BaseFileChatCommand : public BaseChatCommand
 {
 public:
-    /*!
-     * Try to initialize custom commands from file
-     * \return true if custom commands were found
-     */
-    bool Initialize();
+    BaseFileChatCommand();
     ////////////////////////////////
     /// BaseChatCommand override
     bool GetAnswer(ChatMessage& message, QString& answer);
@@ -28,6 +24,10 @@ protected:
     QXmlStreamReader _xmlReader;
 
 private:
+    /*!
+     * Try to initialize custom commands from file
+     */
+    void _Initialize();
     /*!
      * Try to read command and add it to the list
      */
