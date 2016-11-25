@@ -11,9 +11,15 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BaseFileChatCommand::Initialize()
+BaseFileChatCommand::BaseFileChatCommand()
 {
-    bool result(true);
+    _Initialize();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void BaseFileChatCommand::_Initialize()
+{
     QFile commandsFile(BFCC_FILE_NAME);
     // Try to open file
     if (commandsFile.open(QIODevice::ReadOnly))
@@ -34,13 +40,7 @@ bool BaseFileChatCommand::Initialize()
             }
         }
     }
-    else
-    {
-        result = false;
-    }
     commandsFile.close();
-
-    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////
