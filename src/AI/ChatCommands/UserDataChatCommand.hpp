@@ -10,5 +10,5 @@ class UserDataChatCommand : public BaseChatCommand
 public:
     ////////////////////////////////
     /// BaseChatCommand override
-    bool GetAnswer(ChatMessage& message, QString& answer);
+    bool GetAnswer(const ChatMessage& message, QString& answer);
 };

@@ -1,13 +1,13 @@
 #include "BaseFileChatCommand.hpp"
 #include <QFile>
-#include <QtGlobal>
 #include <QTime>
 
-#define BFCC_FILE_NAME       "./data/config/commands.xml"
-#define BFCC_SECTION_COMMAND "Command"
-#define BFCC_SECTION_NAME    "Name"
-#define BFCC_SECTION_ANSWER  "Answer"
-#define BFCC_SYMBOL_AUTHOR   "@"
+#define BFCC_FILE_NAME        "./data/config/commands.xml"
+#define BFCC_SECTION_COMMAND  "Command"
+#define BFCC_SECTION_NAME     "Name"
+#define BFCC_SECTION_ANSWER   "Answer"
+#define BFCC_SECTION_COOLDOWN "Cooldown"
+#define BFCC_SYMBOL_AUTHOR    "@"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -45,24 +45,17 @@ void BaseFileChatCommand::_Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BaseFileChatCommand::GetAnswer(ChatMessage& message, QString& answer)
+bool BaseFileChatCommand::GetAnswer(const ChatMessage& message, QString& answer)
 {
     bool result(false);
+    // Check all commands
     for (int i = 0; i < _commands.size(); ++i)
     {
-        // If message contains commnd from list, execute it
-        if (message.GetMessage().contains(_commands.at(i).first))
+        answer = _commands[i].GetRandomAnswer(message);
+        // If answer is empty, that means command not executed
+        if (!answer.isEmpty())
         {
             result = true;
-            // Pick random answer
-            int k = qrand() % _commands.at(i).second.size();
-            answer = _commands.at(i).second.at(k);
-            // if answer contains special symbol, replace with username, who typed this command
-            if (answer.contains(BFCC_SYMBOL_AUTHOR))
-            {
-                answer.insert(answer.indexOf(BFCC_SYMBOL_AUTHOR) + 1,
-                              message.GetAuthor());
-            }
             break;
         }
     }
@@ -75,6 +68,8 @@ bool BaseFileChatCommand::GetAnswer(ChatMessage& message, QString& answer)
 void BaseFileChatCommand::_ReadCommand()
 {
     QString name;
+    QTime cooldown;
+    cooldown.setHMS(0, 0, 0, 0);
     QVector<QString> answers;
     while (!_xmlReader.atEnd())
     {
@@ -93,6 +88,12 @@ void BaseFileChatCommand::_ReadCommand()
             if((_xmlReader.name() == BFCC_SECTION_NAME) && (name.isEmpty()))
             {
                 name = _xmlReader.readElementText();
+            }
+            // If we found a cooldown section for the first time, save it
+            else if (_xmlReader.name() == BFCC_SECTION_COOLDOWN)
+            {
+                QString textCooldown = _xmlReader.readElementText();
+                cooldown = QTime::fromString(textCooldown, "h:m:s:z");
             }
             // If we found a answer section, should try to get text
             else if (_xmlReader.name() == BFCC_SECTION_ANSWER)
@@ -113,7 +114,9 @@ void BaseFileChatCommand::_ReadCommand()
     // If name of command and possible answer(or answers) were found, add it to commands list
     if (!name.isEmpty() && !answers.isEmpty())
     {
-        _commands.push_back(QPair<QString, QVector<QString> >(name, answers));
+        BFChatCommand newChatCommand;
+        newChatCommand.InitializeCommand(name, answers, cooldown);
+        _commands.push_back(newChatCommand);
     }
 }
 
