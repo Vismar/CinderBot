@@ -114,7 +114,7 @@ QuoteChatCommand::~QuoteChatCommand()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool QuoteChatCommand::GetAnswer(ChatMessage &message, QString &answer)
+bool QuoteChatCommand::GetAnswer(const ChatMessage& message, QString& answer)
 {
     bool result(false);
     QString msg = message.GetMessage();
