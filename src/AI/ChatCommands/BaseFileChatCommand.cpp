@@ -56,6 +56,11 @@ bool BaseFileChatCommand::GetAnswer(const ChatMessage& message, QString& answer)
         // If answer is empty, that means command not executed
         if (!answer.isEmpty())
         {
+            // if answer contains special symbol, replace with username, who typed this command
+            if (answer.contains(BFCC_SYMBOL_AUTHOR))
+            {
+                answer.insert(answer.indexOf(BFCC_SYMBOL_AUTHOR) + 1, message.GetAuthor());
+            }
             result = true;
             break;
         }
