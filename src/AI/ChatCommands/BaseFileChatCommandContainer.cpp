@@ -2,13 +2,14 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BFChatCommand::InitializeCommand(const QString& command, const QVector<QString>& answers, QTime cooldown)
+void BFChatCommand::InitializeCommand(const QString& command, const QVector<QString>& answers, QTime cooldown, bool moderatorOnly)
 {
     _command = command;
     _answers = answers;
     _cooldown = cooldown;
     // Set it to absolute zero
     _lastTimeUsed.setHMS(0, 0, 0, 0);
+    _moderatorOnly = moderatorOnly;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -27,12 +28,27 @@ QString BFChatCommand::GetRandomAnswer(const ChatMessage& message)
         // Compare time when command can be used and time when command trying to be executed
         if (timeToUse < QTime::currentTime())
         {
-            // Save time of exection
-            _lastTimeUsed = QTime::currentTime();
-            // Get random id for answer
-            int id = qrand() % _answers.size();
-            // Set returning answer
-            answer = _answers.at(id);
+            bool returnAnswer(false);
+            if (_moderatorOnly)
+            {
+                if (message.IsModerator())
+                {
+                    returnAnswer = true;
+                }
+            }
+            else
+            {
+                returnAnswer = true;
+            }
+            if (returnAnswer)
+            {
+                // Save time of exection
+                _lastTimeUsed = QTime::currentTime();
+                // Get random id for answer
+                int id = qrand() % _answers.size();
+                // Set returning answer
+                answer = _answers.at(id);
+            }
         }
     }
 

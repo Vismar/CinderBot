@@ -7,6 +7,7 @@
 #define BFCC_SECTION_NAME     "Name"
 #define BFCC_SECTION_ANSWER   "Answer"
 #define BFCC_SECTION_COOLDOWN "Cooldown"
+#define BFCC_SECTION_MODONLY  "ModeratorOnly"
 #define BFCC_SYMBOL_AUTHOR    "@"
 
 ///////////////////////////////////////////////////////////////////////////
@@ -70,6 +71,7 @@ void BaseFileChatCommand::_ReadCommand()
     QString name;
     QTime cooldown;
     cooldown.setHMS(0, 0, 0, 0);
+    bool modOnly(false);
     QVector<QString> answers;
     while (!_xmlReader.atEnd())
     {
@@ -95,6 +97,18 @@ void BaseFileChatCommand::_ReadCommand()
                 QString textCooldown = _xmlReader.readElementText();
                 cooldown = QTime::fromString(textCooldown, "h:m:s:z");
             }
+            // If we found modonly section for the fiest time, save it
+            else if (_xmlReader.name() == BFCC_SECTION_MODONLY)
+            {
+                QString textModOnly = _xmlReader.readElementText();
+                textModOnly.replace(" ", "");
+                textModOnly.replace("\n", "");
+                textModOnly.replace("\t", "");
+                if (textModOnly.toLower() == "true")
+                {
+                    modOnly = true;
+                }
+            }
             // If we found a answer section, should try to get text
             else if (_xmlReader.name() == BFCC_SECTION_ANSWER)
             {
@@ -115,7 +129,7 @@ void BaseFileChatCommand::_ReadCommand()
     if (!name.isEmpty() && !answers.isEmpty())
     {
         BFChatCommand newChatCommand;
-        newChatCommand.InitializeCommand(name, answers, cooldown);
+        newChatCommand.InitializeCommand(name, answers, cooldown, modOnly);
         _commands.push_back(newChatCommand);
     }
 }
