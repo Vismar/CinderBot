@@ -19,6 +19,8 @@ private:
     QTime            _lastTimeUsed;
     /*! Command cooldown */
     QTime            _cooldown;
+    /*! If command can be executed only be moderators */
+    bool             _moderatorOnly;
 
 public:
     /*!
@@ -26,8 +28,9 @@ public:
      * \param(IN) command - command name
      * \param(IN) answers - list of answers
      * \param(IN) cooldown - command cooldown
+     * \param(IN) moderatorOnly - of command should be exectued only be moderators
      */
-    void InitializeCommand(const QString& command, const QVector<QString>& answers, QTime cooldown);
+    void InitializeCommand(const QString& command, const QVector<QString>& answers, QTime cooldown, bool moderatorOnly);
     /*!
      * Try to execute command and return random answer
      * \param(IN) message - chat message
