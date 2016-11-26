@@ -45,5 +45,5 @@ public:
     ~QuoteChatCommand();
     ////////////////////////////////
     /// BaseChatCommand override
-    bool GetAnswer(ChatMessage& message, QString& answer);
+    bool GetAnswer(const ChatMessage& message, QString& answer);
 };

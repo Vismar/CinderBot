@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseChatCommand.hpp"
+#include "BaseFileChatCommandContainer.hpp"
 #include <QPair>
 #include <QString>
 #include <QVector>
@@ -15,11 +16,11 @@ public:
     BaseFileChatCommand();
     ////////////////////////////////
     /// BaseChatCommand override
-    bool GetAnswer(ChatMessage& message, QString& answer);
+    bool GetAnswer(const ChatMessage& message, QString& answer);
 
 protected:
     /*! List of custom commands */
-    QVector<QPair<QString, QVector<QString> > > _commands;
+    QVector<BFChatCommand> _commands;
     /*! Xml stream reader */
     QXmlStreamReader _xmlReader;
 

@@ -14,7 +14,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool UserDataChatCommand::GetAnswer(ChatMessage& message, QString& answer)
+bool UserDataChatCommand::GetAnswer(const ChatMessage& message, QString& answer)
 {
     bool result(true);
     UserData& userData = UserData::Instance();

@@ -16,7 +16,7 @@ public:
      * \param(OUT) answer - answer of command if it was executed
      * \return true if command was executed
      */
-    virtual bool GetAnswer(ChatMessage& message, QString& answer)
+    virtual bool GetAnswer(const ChatMessage& message, QString& answer)
     {
         Q_UNUSED(message);
         Q_UNUSED(answer);
