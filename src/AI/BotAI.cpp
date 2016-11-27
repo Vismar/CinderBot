@@ -5,6 +5,7 @@
 #include "./ChatCommands/BaseFileChatCommand.hpp"
 #include "./ChatCommands/UserDataChatCommand.hpp"
 #include "./ChatCommands/QuoteChatCommand.hpp"
+#include "./ChatCommands/CovenantChatCommand.hpp"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +34,7 @@ BotAI::BotAI(QObject* parent) : QObject(parent)
     // Predefined commands
     _chatCommands.push_back(new UserDataChatCommand());
     _chatCommands.push_back(new QuoteChatCommand());
+    _chatCommands.push_back(new CovenantChatCommand());
 }
 
 ///////////////////////////////////////////////////////////////////////////
