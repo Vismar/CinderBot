@@ -13,7 +13,9 @@
 		<User>system message</User>
 	</IgnoreList>
 	<CovenantList>
-		<Covenant>CovenantName</Covenant>
+		<Covenant>Covenant Name,Another Covenant Name</Covenant>
 	</CovenantList>
+	<!-- Covenant params -->
+	<CovJoinPrice>100</CovJoinPrice>
 </ConfigData>
 </Configuration>

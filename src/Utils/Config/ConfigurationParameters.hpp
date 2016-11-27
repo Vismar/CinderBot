@@ -17,3 +17,5 @@
 #define CFGP_LOGIN_CHANNEL    "LoginChannel"
 /* Other params */
 #define CFGP_CURRENCY         "Currency"
+/* Covenant params */
+#define CFGP_COV_JOIN_PRICE   "CovJoinPrice"
