@@ -36,7 +36,7 @@ bool UserDataChatCommand::GetAnswer(const ChatMessage& message, QString& answer)
         QString param;
         ConfigurationManager& configMng = ConfigurationManager::Instance();
         // Get custom currency name
-        if (configMng.GetStringParam(CFGS_CURRENCY, param))
+        if (configMng.GetStringParam(CFGP_CURRENCY, param))
         {
             answer.append(param);
         }
@@ -64,7 +64,7 @@ bool UserDataChatCommand::GetAnswer(const ChatMessage& message, QString& answer)
         answer.append("; 2) ");
         QString param;
         ConfigurationManager& configMng = ConfigurationManager::Instance();
-        if (configMng.GetStringParam(CFGS_CURRENCY, param))
+        if (configMng.GetStringParam(CFGP_CURRENCY, param))
         {
             answer.append(param);
         }
