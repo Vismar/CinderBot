@@ -108,13 +108,8 @@ void ConfigurationManager::_ReadConfigData()
         }
         if (_xmlReader.isStartElement())
         {
-            // If found currency parameter, save it
-            if (_xmlReader.name() == CFGS_CURRENCY)
-            {
-                _params.insert(_xmlReader.name().toString(), _xmlReader.readElementText());
-            }
             // If we found ignore list section, read it
-            else if (_xmlReader.name() == CFGS_IGNORE)
+            if (_xmlReader.name() == CFGS_IGNORE)
             {
                 _ReadIgnoreList();
             }
@@ -122,6 +117,15 @@ void ConfigurationManager::_ReadConfigData()
             else if (_xmlReader.name() == CFGS_COVENANTS)
             {
                 _ReadCovenantList();
+            }
+            // If we found any other parameter, save it
+            else
+            {
+                QString value = _xmlReader.readElementText();
+                if (!value.isEmpty())
+                {
+                    _params.insert(_xmlReader.name().toString(), value);
+                }
             }
         }
     }
