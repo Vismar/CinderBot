@@ -12,10 +12,13 @@
 #define UD_COMMAND_COVENANT "#covenant"
 #define UD_COMMAND_FULL     "#me"
 
-bool UserDataChatCommand::GetAnswer(ChatMessage& message, QString& answer)
+///////////////////////////////////////////////////////////////////////////
+
+bool UserDataChatCommand::GetAnswer(const ChatMessage& message, QString& answer)
 {
     bool result(true);
     UserData& userData = UserData::Instance();
+    // Handle message counter command
     if (message.GetMessage().contains(UD_COMMAND_MESSAGES) ||
         message.GetMessage().contains(UD_COMMAND_MSG))
     {
@@ -23,6 +26,7 @@ bool UserDataChatCommand::GetAnswer(ChatMessage& message, QString& answer)
         answer.append(userData.GetUserDataParam(message.GetAuthor(), UDP_Messages));
         answer.append(" сообщений!");
     }
+    // Handle currency command
     else if (message.GetMessage().contains(UD_COMMAND_CURRENCY) ||
              message.GetMessage().contains(UD_COMMAND_CUR))
     {
@@ -31,16 +35,19 @@ bool UserDataChatCommand::GetAnswer(ChatMessage& message, QString& answer)
         answer.append(" ");
         QString param;
         ConfigurationManager& configMng = ConfigurationManager::Instance();
-        if (configMng.GetStringParam(CONFIG_UD_CURRENCY_NAME, param))
+        // Get custom currency name
+        if (configMng.GetStringParam(CFGP_CURRENCY, param))
         {
             answer.append(param);
         }
+        //If it was not found, set default name
         else
         {
             answer.append(UD_CURRNECY_DEFAULT);
         }
         answer.append(" !");
     }
+    // Handle covenant command
     else if (message.GetMessage().contains(UD_COMMAND_COVENANT) ||
              message.GetMessage().contains(UD_COMMAND_COV))
     {
@@ -48,6 +55,7 @@ bool UserDataChatCommand::GetAnswer(ChatMessage& message, QString& answer)
         answer.append(userData.GetUserDataParam(message.GetAuthor(), UDP_Covenant));
         answer.append("\"!");
     }
+    // Handle full statistics command
     else if (message.GetMessage().contains(UD_COMMAND_FULL))
     {
         answer = message.GetAuthor();
@@ -56,7 +64,7 @@ bool UserDataChatCommand::GetAnswer(ChatMessage& message, QString& answer)
         answer.append("; 2) ");
         QString param;
         ConfigurationManager& configMng = ConfigurationManager::Instance();
-        if (configMng.GetStringParam(CONFIG_UD_CURRENCY_NAME, param))
+        if (configMng.GetStringParam(CFGP_CURRENCY, param))
         {
             answer.append(param);
         }
@@ -76,3 +84,5 @@ bool UserDataChatCommand::GetAnswer(ChatMessage& message, QString& answer)
 
     return result;
 }
+
+///////////////////////////////////////////////////////////////////////////

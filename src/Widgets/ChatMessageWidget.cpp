@@ -1,6 +1,9 @@
 #include "ChatMessageWidget.hpp"
+#include <QAbstractTextDocumentLayout>
 
 using namespace Ui;
+
+///////////////////////////////////////////////////////////////////////////
 
 ChatMessageWidget::ChatMessageWidget(const QString& text, QWidget* parent) : QTextEdit(text, parent)
 {
@@ -18,7 +21,14 @@ ChatMessageWidget::ChatMessageWidget(const QString& text, QWidget* parent) : QTe
             this, SLOT(_AdjustMinimumSize(QSizeF)));
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void ChatMessageWidget::_AdjustMinimumSize(const QSizeF& size)
 {
+    // Sets maximum size of widget, prevents it from squeezing
     setMinimumHeight(size.height() + 2 * frameWidth());
+    // Sets maximum size of widget, prevents it from stretching
+    setMaximumHeight(size.height() + 2 * frameWidth());
 }
+
+///////////////////////////////////////////////////////////////////////////

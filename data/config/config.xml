@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+<LoginData>
+	<LoginName>BotName</LoginName>
+	<LoginOauthKey>oath:YourKey</LoginOauthKey>
+	<LoginChannel>ChannelNameToConnect</LoginChannel>
+</LoginData>
+<ConfigData>
+	<Currency>YourCurrency</Currency>
+	<IgnoreList>
+		<User>nightbot</User>
+		<User>moobot</User>
+		<User>system message</User>
+	</IgnoreList>
+	<CovenantList>
+		<Covenant>Covenant Name,Another Covenant Name</Covenant>
+	</CovenantList>
+	<!-- Covenant params -->
+	<CovJoinPrice>100</CovJoinPrice>
+</ConfigData>
+</Configuration>

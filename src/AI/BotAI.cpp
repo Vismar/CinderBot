@@ -4,42 +4,61 @@
 #include "../Utils/Config/ConfigurationParameters.hpp"
 #include "./ChatCommands/BaseFileChatCommand.hpp"
 #include "./ChatCommands/UserDataChatCommand.hpp"
-#include <QDebug>
+#include "./ChatCommands/QuoteChatCommand.hpp"
+#include "./ChatCommands/CovenantChatCommand.hpp"
+
+///////////////////////////////////////////////////////////////////////////
 
 BotAI::BotAI(QObject* parent) : QObject(parent)
 {
     // Load IgnoreList
     ConfigurationManager& configMng = ConfigurationManager::Instance();
     QString param;
-    if (configMng.GetStringParam(CONFIG_UD_IGNORE_LIST, param))
+    // Fill ignore list
+    if (configMng.GetStringParam(CFGS_IGNORE, param))
     {
         _ignoreList = param.split(',');
     }
-    if (configMng.GetStringParam(CONFIG_LOGIN_NAME, param))
+    if (configMng.GetStringParam(CFGP_LOGIN_NAME, param))
     {
-        _ignoreList += param;
+        // If botname not added to the list, add it
+        if (!_ignoreList.contains(param))
+        {
+            _ignoreList += param;
+        }
     }
 
-    // Load custom commands
+    /* Load commands */
+    // Custom commands
     _chatCommands.push_back(new BaseFileChatCommand());
-    BaseFileChatCommand* command = static_cast<BaseFileChatCommand*> (_chatCommands.last());
-    if (!command->Initialize())
-    {
-        delete _chatCommands.last();
-        _chatCommands.pop_back();
-    }
-
-    // Load predefined commands
+    // Predefined commands
     _chatCommands.push_back(new UserDataChatCommand());
+    _chatCommands.push_back(new QuoteChatCommand());
+    _chatCommands.push_back(new CovenantChatCommand());
 }
+
+///////////////////////////////////////////////////////////////////////////
+
+BotAI::~BotAI()
+{
+    for (int i = 0; i < _chatCommands.size(); ++i)
+    {
+        delete _chatCommands[i];
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
 
 bool BotAI::_CheckIgnoreList(const QString& userName)
 {
     return _ignoreList.contains(userName.toLower());
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void BotAI::_UpdateUserData(const ChatMessage& message)
 {
+    // If user is not in ignore list, update info
     if (!_CheckIgnoreList(message.GetAuthor()))
     {
         _IncrementMessageCounter(message.GetAuthor());
@@ -47,33 +66,48 @@ void BotAI::_UpdateUserData(const ChatMessage& message)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void BotAI::_IncrementMessageCounter(const QString& userName)
 {
     UserData& userData = UserData::Instance();
     QString param;
+    // Get message counter
     param = userData.GetUserDataParam(userName, UDP_Messages);
+    // Increment counter
     param = QString::number(param.toInt() + 1);
+    // Set new value
     userData.UpdateUserData(userName, UDP_Messages, param);
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 void BotAI::_AddCurrency(const QString& userName, const int value)
 {
     UserData& userData = UserData::Instance();
     QString param;
+    // Get currency value
     param = userData.GetUserDataParam(userName, UDP_Currency);
+    // Update value
     param = QString::number(param.toInt() + value);
+    // Set new value
     userData.UpdateUserData(userName, UDP_Currency, param);
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
 {
+    // Update user data
     _UpdateUserData(message);
+    // If new message is not created by bot, parse it.
     if (!botMessage)
     {
         QString answer;
 
         for (int i = 0; i < _chatCommands.size(); ++i)
         {
+            // If we found a command, emit event with result and break the loop
             if (_chatCommands[i]->GetAnswer(message, answer))
             {
                 emit NewBotMessage(answer);
@@ -82,3 +116,5 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
         }
     }
 }
+
+///////////////////////////////////////////////////////////////////////////
