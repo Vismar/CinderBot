@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     AI/ChatCommands/UserDataChatCommand.cpp \
     AI/ChatCommands/QuoteChatCommand.cpp \
     AI/ChatCommands/BaseFileChatCommandContainer.cpp \
-    AI/ChatCommands/CovenantChatCommand.cpp
+    AI/ChatCommands/CovenantChatCommand.cpp \
+    AI/ChatCommands/ChatCommand.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -42,6 +43,7 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/UserDataChatCommand.hpp \
     AI/ChatCommands/QuoteChatCommand.hpp \
     AI/ChatCommands/BaseFileChatCommandContainer.hpp \
-    AI/ChatCommands/CovenantChatCommand.hpp
+    AI/ChatCommands/CovenantChatCommand.hpp \
+    AI/ChatCommands/ChatCommand.hpp
 
 FORMS    +=

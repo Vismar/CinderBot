@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseChatCommand.hpp"
-#include "BaseFileChatCommandContainer.hpp"
+#include "ChatCommand.hpp"
 #include <QPair>
 #include <QString>
 #include <QVector>
@@ -20,7 +20,7 @@ public:
 
 protected:
     /*! List of custom commands */
-    QVector<BFChatCommand> _commands;
+    QVector<ChatCommand> _commands;
     /*! Xml stream reader */
     QXmlStreamReader _xmlReader;
 
@@ -29,8 +29,4 @@ private:
      * Try to initialize custom commands from file
      */
     void _Initialize();
-    /*!
-     * Try to read command and add it to the list
-     */
-    void _ReadCommand();
 };
