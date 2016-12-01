@@ -5,6 +5,9 @@
 #include <QTime>
 #include <QXmlStreamReader>
 
+namespace Command
+{
+
 enum CmdSection
 {
     Start,
@@ -21,29 +24,6 @@ enum CmdSection
  */
 class ChatCommand
 {
-protected:
-    /*! Command name */
-    QString _name;
-    /*! List of answers */
-    QVector<QString> _answers;
-    /*! Time, when command was executed for a last time */
-    QTime _lastTimeUsed;
-    /*! Command cooldown */
-    QTime _cooldown;
-    /*! If command can be executed only be moderators */
-    bool _moderatorOnly;
-
-    /*!
-     * Clears all saved data
-     */
-    void _Clear();
-    /*!
-     * Try to find "@" symbol and attach author name to it
-     * \param(IN) answer - selected answer that will be parsed to add author name
-     * \param(IN) author - author name
-     */
-    void _AddAuthorName(QString& answer, const QString& author);
-
 public:
     /*!
      * Get section name
@@ -67,4 +47,29 @@ public:
      * \return answer, if command was exectued. If command was not executed, string will be empty.
      */
     virtual QString GetRandomAnswer(const ChatMessage& message);
+
+protected:
+    /*!
+     * Clears all saved data
+     */
+    void _Clear();
+    /*!
+     * Try to find "@" symbol and attach author name to it
+     * \param(IN) answer - selected answer that will be parsed to add author name
+     * \param(IN) author - author name
+     */
+    void _AddAuthorName(QString& answer, const QString& author);
+
+    /*! Command name */
+    QString _name;
+    /*! List of answers */
+    QVector<QString> _answers;
+    /*! Time, when command was executed for a last time */
+    QTime _lastTimeUsed;
+    /*! Command cooldown */
+    QTime _cooldown;
+    /*! If command can be executed only be moderators */
+    bool _moderatorOnly;
 };
+
+}
