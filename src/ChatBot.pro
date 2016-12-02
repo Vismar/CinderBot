@@ -18,24 +18,22 @@ SOURCES += main.cpp\
     Widgets/ChatWidget.cpp \
     Widgets/ChatMessageWidget.cpp \
     AI/BotAI.cpp \
-    AI/ChatCommands/BaseFileChatCommand.cpp \
     Chat/ChatMessage.cpp \
     Chat/TwitchClient.cpp \
     Utils/Config/ConfigurationManager.cpp \
     Utils/UserData/UserData.cpp \
     AI/ChatCommands/UserDataChatCommand.cpp \
     AI/ChatCommands/QuoteChatCommand.cpp \
-    AI/ChatCommands/BaseFileChatCommandContainer.cpp \
     AI/ChatCommands/CovenantChatCommand.cpp \
     AI/ChatCommands/ChatCommand.cpp \
-    AI/ChatCommands/CommandList.cpp
+    AI/ChatCommands/CommandList.cpp \
+    AI/ChatCommands/CustomCommanLlist.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
     Widgets/ChatMessageWidget.hpp \
     AI/BotAI.hpp \
     AI/ChatCommands/BaseChatCommand.hpp \
-    AI/ChatCommands/BaseFileChatCommand.hpp \
     Chat/ChatMessage.hpp \
     Chat/TwitchClient.hpp \
     Utils/Config/ConfigurationManager.hpp \
@@ -43,9 +41,9 @@ HEADERS  += MainWindow.hpp \
     Utils/UserData/UserData.hpp \
     AI/ChatCommands/UserDataChatCommand.hpp \
     AI/ChatCommands/QuoteChatCommand.hpp \
-    AI/ChatCommands/BaseFileChatCommandContainer.hpp \
     AI/ChatCommands/CovenantChatCommand.hpp \
     AI/ChatCommands/ChatCommand.hpp \
-    AI/ChatCommands/CommandList.hpp
+    AI/ChatCommands/CommandList.hpp \
+    AI/ChatCommands/CustomCommandList.hpp
 
 FORMS    +=
