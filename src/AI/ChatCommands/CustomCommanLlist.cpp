@@ -31,8 +31,8 @@ void CustomCommandList::_Initialize()
                 // If it is start section of command, read it
                 if (xmlReader.name() == ChatCommand::GetSectionName(Start))
                 {
-                    ChatCommand command;
-                    if (command.Initialize(xmlReader))
+                    ChatCommand* command = new ChatCommand();
+                    if (command->Initialize(xmlReader))
                     {
                         _commands.push_back(command);
                     }

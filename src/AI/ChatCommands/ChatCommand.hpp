@@ -25,6 +25,8 @@ enum CmdSection
 class ChatCommand
 {
 public:
+    /*! Desctructor */
+    virtual ~ChatCommand();
     /*!
      * Get section name
      * \param(IN) cmdSection - section type
@@ -32,10 +34,15 @@ public:
      */
     static QString GetSectionName(CmdSection cmdSection);
     /*!
+     * Initialize command from xml file
      * \param(IN) xmlReader - xml stream reader
      * \return true if all needed params were found
      */
     bool Initialize(QXmlStreamReader& xmlReader);
+    /*!
+     * Initialize command by your own way. Should be implemented in inherited class
+     */
+    virtual void Initialize();
     /*!
      * Check if chat command was inititalized
      * \return true if command was already initialized

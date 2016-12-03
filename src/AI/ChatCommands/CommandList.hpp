@@ -10,8 +10,6 @@ namespace Command
 class CommandList
 {
 public:
-    /*! Constructor */
-    CommandList();
     /*! Destructor */
     virtual ~CommandList();
     /*!
@@ -29,7 +27,7 @@ protected:
     virtual void _Initialize();
 
     /*! List of commands */
-    QVector<ChatCommand> _commands;
+    QVector<ChatCommand*> _commands;
 };
 
 }

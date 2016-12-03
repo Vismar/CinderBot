@@ -4,10 +4,6 @@ using namespace Command;
 
 ///////////////////////////////////////////////////////////////////////////
 
-CommandList::CommandList() { }
-
-///////////////////////////////////////////////////////////////////////////
-
 CommandList::~CommandList() { }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -18,7 +14,7 @@ bool CommandList::TryGetAnswer(const ChatMessage& message, QString& answer)
     // Check all commands
     for (int i = 0; i < _commands.size(); ++i)
     {
-        answer = _commands[i].GetRandomAnswer(message);
+        answer = _commands[i]->GetRandomAnswer(message);
         // If answer is empty, that means command not executed
         if (!answer.isEmpty())
         {
@@ -32,6 +28,12 @@ bool CommandList::TryGetAnswer(const ChatMessage& message, QString& answer)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CommandList::_Initialize() { }
+void CommandList::_Initialize()
+{
+    for (int i = 0; i < _commands.size(); ++i)
+    {
+        delete _commands[i];
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////
