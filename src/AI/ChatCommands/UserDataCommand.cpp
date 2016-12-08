@@ -2,7 +2,6 @@
 #include "../../Utils/UserData/UserData.hpp"
 #include "../../Utils/Config/ConfigurationManager.hpp"
 #include "../../Utils/Config/ConfigurationParameters.hpp"
-#include <QDebug>
 
 using namespace Command;
 
@@ -18,7 +17,6 @@ void UserDataCommand::SetCommandType(UDCommandType cmdType)
 
 QString UserDataCommand::GetRandomAnswer(const ChatMessage& message)
 {
-    qDebug() << "LOL";
     QString answer;
     if (message.GetMessage().contains(_name))
     {

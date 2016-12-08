@@ -5,14 +5,14 @@ namespace Command
 {
 
 /*!
- * Class UserDataCommandList
- * Store all UD commands
+ * Class CovenantCommandList
+ * Store all covenant commands
  */
-class UserDataCommandList : public CommandList
+class CovenantCommandList : public CommandList
 {
 public:
     /*! Constructor */
-    UserDataCommandList();
+    CovenantCommandList();
 
 protected:
     ////////////////////////////////

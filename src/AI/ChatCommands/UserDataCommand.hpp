@@ -4,6 +4,10 @@
 namespace Command
 {
 
+/*!
+ * UDCommandType enumeration.
+ * Simple enum of UD command types.
+ */
 enum UDCommandType
 {
     UDC_Messages = 0,

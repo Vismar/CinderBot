@@ -5,6 +5,7 @@
 /*** Command lists ***/
 #include "./ChatCommands/CustomCommandList.hpp"
 #include "./ChatCommands/UserDataCommandList.hpp"
+#include "./ChatCommands/CovenantCommandList.hpp"
 
 using namespace Command;
 
@@ -34,6 +35,7 @@ BotAI::BotAI(QObject* parent) : QObject(parent)
     _chatCommands.push_back(new CustomCommandList());
     // Predefined commands
     _chatCommands.push_back(new UserDataCommandList());
+    _chatCommands.push_back(new CovenantCommandList());
 }
 
 ///////////////////////////////////////////////////////////////////////////
