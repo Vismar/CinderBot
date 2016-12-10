@@ -4,7 +4,13 @@ using namespace Command;
 
 ///////////////////////////////////////////////////////////////////////////
 
-CommandList::~CommandList() { }
+CommandList::~CommandList()
+{
+    for (int i = 0; i < _commands.size(); ++i)
+    {
+        delete _commands[i];
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -28,12 +34,6 @@ bool CommandList::TryGetAnswer(const ChatMessage& message, QString& answer)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CommandList::_Initialize()
-{
-    for (int i = 0; i < _commands.size(); ++i)
-    {
-        delete _commands[i];
-    }
-}
+void CommandList::_Initialize() { }
 
 ///////////////////////////////////////////////////////////////////////////

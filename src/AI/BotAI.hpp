@@ -3,7 +3,6 @@
 #include <QVector>
 #include <QStringList>
 #include "../Chat/ChatMessage.hpp"
-#include "./ChatCommands/BaseChatCommand.hpp"
 #include "./ChatCommands/CommandList.hpp"
 
 /*!

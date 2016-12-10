@@ -31,7 +31,7 @@ public:
     void SetCommandType(UDCommandType cmdType);
     ////////////////////////////////
     /// ChatCommand overrides
-    QString GetRandomAnswer(const ChatMessage& message) override;
+    QString GetRandomAnswer(const ChatMessage& message);
     void Initialize();
 
 private:
