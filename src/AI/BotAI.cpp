@@ -2,10 +2,13 @@
 #include "../Utils/UserData/UserData.hpp"
 #include "../Utils/Config/ConfigurationManager.hpp"
 #include "../Utils/Config/ConfigurationParameters.hpp"
-#include "./ChatCommands/BaseFileChatCommand.hpp"
-#include "./ChatCommands/UserDataChatCommand.hpp"
-#include "./ChatCommands/QuoteChatCommand.hpp"
-#include "./ChatCommands/CovenantChatCommand.hpp"
+/*** Command lists ***/
+#include "./ChatCommands/CustomCommandList.hpp"
+#include "./ChatCommands/UserDataCommandList.hpp"
+#include "./ChatCommands/CovenantCommandList.hpp"
+#include "./ChatCommands/QuoteCommands/QuoteCommandList.hpp"
+
+using namespace Command;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -30,11 +33,11 @@ BotAI::BotAI(QObject* parent) : QObject(parent)
 
     /* Load commands */
     // Custom commands
-    _chatCommands.push_back(new BaseFileChatCommand());
+    _chatCommands.push_back(new CustomCommandList());
     // Predefined commands
-    _chatCommands.push_back(new UserDataChatCommand());
-    _chatCommands.push_back(new QuoteChatCommand());
-    _chatCommands.push_back(new CovenantChatCommand());
+    _chatCommands.push_back(new UserDataCommandList());
+    _chatCommands.push_back(new CovenantCommandList());
+    _chatCommands.push_back(new QuoteCommandList());
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -108,7 +111,7 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
         for (int i = 0; i < _chatCommands.size(); ++i)
         {
             // If we found a command, emit event with result and break the loop
-            if (_chatCommands[i]->GetAnswer(message, answer))
+            if (_chatCommands[i]->TryGetAnswer(message, answer))
             {
                 emit NewBotMessage(answer);
                 break;
