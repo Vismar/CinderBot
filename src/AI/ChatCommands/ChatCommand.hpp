@@ -14,7 +14,8 @@ enum CmdSection
     Name,
     Answer,
     Cooldown,
-    ModOnly
+    ModOnly,
+    Price
 };
 
 /*!
@@ -77,6 +78,8 @@ protected:
     QTime _cooldown;
     /*! If command can be executed only be moderators */
     bool _moderatorOnly;
+    /*! Price for executing command */
+    int _price;
 };
 
 }

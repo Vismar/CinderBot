@@ -6,6 +6,8 @@
 	<Cooldown>0:0:30:0</Cooldown>
 	<!-- This tag is may not exist. But if you use it, please use "true" or "false" values, any other value will be equivalent to "false" -->
 	<ModeratorOnly>true</ModeratorOnly>
+	<!-- This tag is may not exist. But if you use it, please set it more or equal to 0, if value will be less than 0, so it will be automaticaly setted to 0. Same to if tag was not used -->
+	<Price>1</Price>
 	<Answer>Here is the test answer number 1!</Answer>
 	<Answer>And here us the second test answer, where @ - name of user, who typed this command in chat!</Answer>
 </Command>

@@ -1,4 +1,5 @@
 #include "ChatCommand.hpp"
+#include "../../Utils/UserData/UserData.hpp"
 
 using namespace Command;
 
@@ -29,6 +30,9 @@ QString ChatCommand::GetSectionName(CmdSection cmdSection)
     case ModOnly:
         sectionName = "ModeratorOnly";
         break;
+    case Price:
+        sectionName = "Price";
+        break;
     }
 
     return sectionName;
@@ -44,6 +48,7 @@ void ChatCommand::_Clear()
     _lastTimeUsed.setHMS(0, 0, 0, 0);
     _cooldown.setHMS(0, 0, 0, 0);
     _moderatorOnly = false;
+    _price = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -111,6 +116,17 @@ bool ChatCommand::Initialize(QXmlStreamReader& xmlReader)
                     _answers.push_back(answer);
                 }
             }
+            // If we found a price section, should try to get value
+            else if (xmlReader.name() == GetSectionName(Price))
+            {
+                QString price = xmlReader.readElementText();
+                int tempPrice = price.toInt();
+                // Check price value after converting it from strign
+                if (tempPrice >= 0)
+                {
+                    _price = tempPrice;
+                }
+            }
         }
     }
 
@@ -144,26 +160,49 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
         // Compare time when command can be used and time when command trying to be executed
         if (timeToUse < QTime::currentTime())
         {
-            bool returnAnswer(false);
-            if (_moderatorOnly)
+            // Get user currency value
+            UserData& userData = UserData::Instance();
+            QString tempUserCurrency = userData.GetUserDataParam(message.GetAuthor() ,UDP_Currency);
+            int userCurrency = tempUserCurrency.toInt();
+            // Set user currency value to 0 if converting was failed
+            if (userCurrency < 0)
             {
-                if (message.IsModerator())
+                userCurrency = 0;
+            }
+            // If user have enough of currency to execute command, try to execute it
+            if (userCurrency >= _price)
+            {
+                userCurrency -= _price;
+                QString newUserCurrencyValue = QString::number(userCurrency);
+                userData.UpdateUserData(message.GetAuthor(), UDP_Currency, newUserCurrencyValue);
+                bool returnAnswer(false);
+                // Check if command only for moderators
+                if (_moderatorOnly)
+                {
+                    if (message.IsModerator())
+                    {
+                        returnAnswer = true;
+                    }
+                }
+                else
                 {
                     returnAnswer = true;
                 }
+                // If all conditions were passed, get random answer
+                if (returnAnswer)
+                {
+                    // Save time of exection
+                    _lastTimeUsed = QTime::currentTime();
+                    // Get random id for answer
+                    int id = qrand() % _answers.size();
+                    // Set returning answer
+                    answer = _answers.at(id);
+                }
             }
+            // Notify user that he/she do not have enough currency
             else
             {
-                returnAnswer = true;
-            }
-            if (returnAnswer)
-            {
-                // Save time of exection
-                _lastTimeUsed = QTime::currentTime();
-                // Get random id for answer
-                int id = qrand() % _answers.size();
-                // Set returning answer
-                answer = _answers.at(id);
+                answer = "Not enough currency! @";
             }
         }
     }
