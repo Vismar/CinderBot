@@ -207,9 +207,11 @@ void TwitchClient::NewBotMessage(QString message)
     // Try to get login name
     if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
     {
+        // Prepare chat message
         botMessage.SetAuthor(param);
         botMessage.SetColor("Green");
         botMessage.SetMessage(message);
-        emit NewMessage(botMessage, true);
+        // Create single shot timer to emit signal to display bot message with small delay
+        QTimer::singleShot(50, this, [this, botMessage](){ emit NewMessage(botMessage, true); });
     }
 }
