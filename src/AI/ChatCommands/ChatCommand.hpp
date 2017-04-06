@@ -15,7 +15,8 @@ enum CmdSection
     Answer,
     Cooldown,
     ModOnly,
-    Price
+    Price,
+    Covenant
 };
 
 /*!
@@ -80,6 +81,8 @@ protected:
     bool _moderatorOnly;
     /*! Price for executing command */
     int _price;
+    /*! Specific covenant, user of which can use this command */
+    QString _covenant;
 };
 
 }

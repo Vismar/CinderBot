@@ -33,6 +33,9 @@ QString ChatCommand::GetSectionName(CmdSection cmdSection)
     case Price:
         sectionName = "Price";
         break;
+    case Covenant:
+        sectionName = "Covenant";
+        break;
     }
 
     return sectionName;
@@ -127,6 +130,11 @@ bool ChatCommand::Initialize(QXmlStreamReader& xmlReader)
                     _price = tempPrice;
                 }
             }
+            // If we found covenant section, try to get and save it
+            else if(xmlReader.name() == GetSectionName(Covenant))
+            {
+                _covenant = xmlReader.readElementText();
+            }
         }
     }
 
@@ -152,16 +160,24 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
     // Check if message contains command
     if (message.GetMessage().contains(_name))
     {
+        UserData& userData = UserData::Instance();
+        bool covenantIsOk = true;
+        //Check covenant
+        QString userCovenantName = userData.GetUserDataParam(message.GetAuthor(), UDP_Covenant);
+        if (_covenant != userCovenantName)
+        {
+            covenantIsOk = false;
+        }
         // Get time when command can be executed
         QTime timeToUse(_lastTimeUsed.hour() + _cooldown.hour(),
                          _lastTimeUsed.minute() + _cooldown.minute(),
                          _lastTimeUsed.second() + _cooldown.second(),
                          _lastTimeUsed.msec() + _cooldown.msec());
         // Compare time when command can be used and time when command trying to be executed
-        if (timeToUse < QTime::currentTime())
+        if (covenantIsOk && (timeToUse < QTime::currentTime()))
         {
             // Get user currency value
-            UserData& userData = UserData::Instance();
+
             QString tempUserCurrency = userData.GetUserDataParam(message.GetAuthor() ,UDP_Currency);
             int userCurrency = tempUserCurrency.toInt();
             // Set user currency value to 0 if converting was failed
