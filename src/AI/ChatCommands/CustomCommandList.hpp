@@ -18,6 +18,12 @@ protected:
     ////////////////////////////////
     /// CommandList override
     void _Initialize();
+
+    /*!
+     * Read specified xml file and store found commands
+     * \param(IN) filePath - path to a xml file
+     */
+    void _ReadXml(const QString& filePath);
 };
 
 }

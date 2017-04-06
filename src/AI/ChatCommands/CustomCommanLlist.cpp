@@ -1,6 +1,8 @@
 #include "CustomCommandList.hpp"
 #include <QFile>
 #include <QXmlStreamReader>
+#include "../../Utils/Config/ConfigurationManager.hpp"
+#include "../../Utils/Config/ConfigurationParameters.hpp"
 
 using namespace Command;
 
@@ -15,9 +17,27 @@ CustomCommandList::CustomCommandList()
 
 void CustomCommandList::_Initialize()
 {
+    // Custom commands
+    _ReadXml("./data/config/Commands.xml");
+    // Covenant commands
+    ConfigurationManager& configMng = ConfigurationManager::Instance();
+    QString covenantListString;
+    configMng.GetStringParam(CFGS_COVENANTS, covenantListString);
+    QStringList covenantList = covenantListString.split(",");
+    for (int i = 0; i < covenantList.size(); ++i)
+    {
+        covenantListString = QString("./data/config/%1.xml").arg(covenantList[i]);
+        _ReadXml(covenantListString);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomCommandList::_ReadXml(const QString& filePath)
+{
     QXmlStreamReader xmlReader;
     // Should be changed when global strings will be implemented
-    QFile commandsFile("./data/config/Commands.xml");
+    QFile commandsFile(filePath);
     // Try to open file
     if (commandsFile.open(QIODevice::ReadOnly))
     {

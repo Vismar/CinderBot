@@ -32,12 +32,12 @@ BotAI::BotAI(QObject* parent) : QObject(parent)
     }
 
     /* Load commands */
-    // Custom commands
-    _chatCommands.push_back(new CustomCommandList());
     // Predefined commands
     _chatCommands.push_back(new UserDataCommandList());
     _chatCommands.push_back(new CovenantCommandList());
     _chatCommands.push_back(new QuoteCommandList());
+    // Custom commands for all users and covenants
+    _chatCommands.push_back(new CustomCommandList());
 }
 
 ///////////////////////////////////////////////////////////////////////////
