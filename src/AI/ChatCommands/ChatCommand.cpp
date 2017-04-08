@@ -164,7 +164,7 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
         bool covenantIsOk = true;
         //Check covenant
         QString userCovenantName = userData.GetUserDataParam(message.GetAuthor(), UDP_Covenant);
-        if (_covenant != userCovenantName)
+        if ((!_covenant.isEmpty()) && (_covenant != userCovenantName))
         {
             covenantIsOk = false;
         }
