@@ -14,13 +14,11 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private:
-    /*!
-     * Scrollable chat widget
-     */
+    /*! Horizontal layout */
+    QHBoxLayout*  _layout;
+    /*! Scrollable chat widget */
     ChatWidget*   _chat;
-    /*!
-     * Twitch client. Handles all network stuff.
-     */
+    /*! Twitch client. Handles all network stuff. */
     TwitchClient* _twitchClient;
 
 public:

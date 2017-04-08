@@ -11,9 +11,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     // Create chat widget
     _chat = new ChatWidget(this);
-    // Set chat widget parameters
-    // TODO: May be constant size should be changed to variable
-    _chat->setFixedSize(300, 400);
+    // Set chat widget size
+    _chat->setFixedWidth(300);
+    _chat->setMinimumHeight(370);
+    // Add widget to layout
+    _layout->addWidget(_chat);
 
     // Initialize twitch client
     _twitchClient = new TwitchClient(this);
@@ -33,9 +35,14 @@ void MainWindow::InitUi()
 {
     // Title of app
     this->setWindowTitle("Cinder Bot");
-    // Size of app
-    // TODO: Should be changed to resizeable
-    this->setFixedSize(640, 400);
+    // Setting up layout
+    _layout = new QHBoxLayout(this);
+    _layout->setAlignment(Qt::AlignLeft);
+    QWidget* window = new QWidget();
+    window->setLayout(_layout);
+    this->setCentralWidget(window);
+    // Set minimum size for main window
+    this->setMinimumSize(640, 400);
 }
 
 ///////////////////////////////////////////////////////////////////////////

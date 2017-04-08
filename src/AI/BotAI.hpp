@@ -3,7 +3,7 @@
 #include <QVector>
 #include <QStringList>
 #include "../Chat/ChatMessage.hpp"
-#include "./ChatCommands/BaseChatCommand.hpp"
+#include "./ChatCommands/CommandList.hpp"
 
 /*!
  * Class BotAI
@@ -14,7 +14,7 @@ class BotAI : public QObject
     Q_OBJECT
 private:
     /*! Array of commands */
-    QVector<BaseChatCommand*> _chatCommands;
+    QVector<Command::CommandList*> _chatCommands;
     /*! Ignore list. Commands from users that stored in this list will not be executed */
     QStringList               _ignoreList;
 

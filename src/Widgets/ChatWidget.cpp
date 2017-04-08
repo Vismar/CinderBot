@@ -4,7 +4,7 @@
 #include <QTimer>
 #include <QScrollBar>
 
-#define MAX_NUMBER_OF_ENTRIES 15
+#define MAX_NUMBER_OF_ENTRIES 50
 
 using namespace Ui;
 
