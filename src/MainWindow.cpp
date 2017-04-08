@@ -35,6 +35,7 @@ void MainWindow::InitUi()
 {
     // Title of app
     this->setWindowTitle("Cinder Bot");
+    this->setWindowIcon(QIcon(":/Resources/Icons/IconEmber.ico"));
     // Setting up layout
     _layout = new QHBoxLayout(this);
     _layout->setAlignment(Qt::AlignLeft);

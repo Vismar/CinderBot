@@ -60,3 +60,8 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/QuoteCommands/EditQuoteCommand.hpp
 
 FORMS    +=
+
+RESOURCES += \
+    Resources.qrc
+
+win32: RC_ICONS = Resources/Icons/IconEmber.ico
