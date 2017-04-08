@@ -1,5 +1,6 @@
-<!DOCTYPE RCC><RCC version="1.0">
- <qresource>
-     <file>Resources/Icons/IconEmber.ico</file>
- </qresource>
- </RCC>
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/Icons/IconEmber.ico</file>
+        <file>Resources/Icons/modIcon.ico</file>
+    </qresource>
+</RCC>
