@@ -16,6 +16,8 @@ enum MessageType
     PONG,
     LOGIN_OK,
     USERSTATE,
+    JOIN,
+    PART,
     PRIVMSG
 };
 
@@ -25,66 +27,6 @@ enum MessageType
  */
 class ChatMessage
 {
-private:
-    /*! Author of message*/
-    QString _author;
-    /*! Custom name color of author if it was set */
-    QString _color;
-    /*! Timestamp of a moment when message was received */
-    QString _timeStamp;
-    /*! Message itself */
-    QString _message;
-    /*! Moderator flag */
-    bool    _isModerator;
-
-    /*!
-     * Check message if it is a network message
-     * \param(IN) message - message to check
-     * \return true, if it is a network message
-     */
-    bool _IsNetworkMsg(const QString& message) const;
-    /*!
-     * Check message if it is a ping command
-     * \param(IN) message - message to check
-     * \return true, if it is a ping command
-     */
-    bool _IsPingCommand(const QString& message) const;
-    /*!
-     * Check message if it is a pong command
-     * \param(IN) message - message to check
-     * \return true, if it is a pong command
-     */
-    bool _IsPongCommand(const QString& message) const;
-
-    /*!
-     * Check message if it is an IRC command
-     * \param(IN) message - message to check
-     * \return IRC code
-     */
-    int  _IsIrcComand(const QString& message) const;
-    /*!
-     * Check message if it about connection to room
-     * \param(IN) message - message to check
-     * \return true, if it about connection to room
-     */
-    bool _IsConnectedToRoom(const QString& message) const;
-    /*!
-     * Check message if it is a userstate message
-     * \param(IN) message - message to check
-     * \return true, if it is a userstate message
-     */
-    bool _IsUserState(const QString& message) const;
-    /*!
-     * Check message if it is a channel message
-     * \param(IN) message - message to check
-     * \return true, if it is a channel message
-     */
-    bool _IsPrivMsg(const QString& message) const;
-    /*!
-     * Set timestamp
-     */
-    void _SetTimeStamp();
-
 public:
     ChatMessage();
     /*!
@@ -134,4 +76,81 @@ public:
      * \return message type
      */
     MessageType ParseRawMessage(const QString& message);
+
+private:
+    /*!
+     * Check message if it is a network message
+     * \param(IN) message - message to check
+     * \return true, if it is a network message
+     */
+    bool _IsNetworkMsg(const QString& message) const;
+    /*!
+     * Check message if it is a ping command
+     * \param(IN) message - message to check
+     * \return true, if it is a ping command
+     */
+    bool _IsPingCommand(const QString& message) const;
+    /*!
+     * Check message if it is a pong command
+     * \param(IN) message - message to check
+     * \return true, if it is a pong command
+     */
+    bool _IsPongCommand(const QString& message) const;
+
+    /*!
+     * Check message if it is an IRC command
+     * \param(IN) message - message to check
+     * \return IRC code
+     */
+    int  _IsIrcComand(const QString& message) const;
+    /*!
+     * Check message if it about connection to room
+     * \param(IN) message - message to check
+     * \return true, if it about connection to room
+     */
+    bool _IsConnectedToRoom(const QString& message) const;
+    /*!
+     * Check message if it is a userstate message
+     * \param(IN) message - message to check
+     * \return true, if it is a userstate message
+     */
+    bool _IsUserState(const QString& message) const;
+    /*!
+     * Check message if it is a channel message
+     * \param(IN) message - message to check
+     * \return true, if it is a channel message
+     */
+    bool _IsPrivMsg(const QString& message) const;
+    /*!
+     * Check message if it is a join message
+     * \param(IN) message - message to check
+     * \return true, if it is a join message
+     */
+    bool _IsJoinMsg(const QString& message) const;
+    /*!
+     * Check message if it is a part message
+     * \param(IN) message - message to check
+     * \return true, if it is a part message
+     */
+    bool _isPartMsg(const QString& message) const;
+    /*!
+     * Set timestamp
+     */
+    void _SetTimeStamp();
+
+    void _GetAndSetNameColor(const QString& message);
+    void _GetAndSetAuthor(const QString& message);
+    void _GetAndSetChatMessage(const QString& message);
+    void _GetAndSetModeratorFlag(const QString& message);
+
+    /*! Author of message*/
+    QString _author;
+    /*! Custom name color of author if it was set */
+    QString _color;
+    /*! Timestamp of a moment when message was received */
+    QString _timeStamp;
+    /*! Message itself */
+    QString _message;
+    /*! Moderator flag */
+    bool    _isModerator;
 };

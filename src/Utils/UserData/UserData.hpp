@@ -22,16 +22,30 @@ enum UserDataParam
  */
 class UserData
 {
-private:
-    /*! Hash table of user data */
-    QHash<QString, QHash<QString, QString> > _userData;
-    /*! Hash table if default parameters of user data */
-    QHash<QString, QString>                  _defaultParams;
-    /*! Xml stream reader */
-    QXmlStreamReader _xmlReader;
-    /*! Xml stream writer */
-    QXmlStreamWriter _xmlWriter;
+public:
+    static UserData& Instance();
+    ~UserData();
 
+    /*!
+     * Initialize UDP if it exist
+     */
+    void Initialize();
+    /*!
+     * Get string value of a parameter
+     * \param(IN) userName - name of a user
+     * \param(IN) UDP - user data parameter
+     * \return string value of UDP
+     */
+    QString GetUserDataParam(const QString& userName, UserDataParam UDP);
+    /*!
+     * Update user data. If user do not exist, add him to the hash table with default values of UDP
+     * \param(IN) userName - name of a user
+     * \param(IN) UDP - user data parameter
+     * \param(IN) newValue - new value of UDP
+     */
+    void UpdateUserData(const QString& userName, UserDataParam UDP, const QString& newValue);
+
+private:
     /*!
      * Get UDP parameter in string format
      * \param(IN) UDP - user data parameter
@@ -68,26 +82,12 @@ private:
      */
     void _SaveUserData();
 
-public:
-    static UserData& Instance();
-    ~UserData();
-
-    /*!
-     * Initialize UDP if it exist
-     */
-    void Initialize();
-    /*!
-     * Get string value of a parameter
-     * \param(IN) userName - name of a user
-     * \param(IN) UDP - user data parameter
-     * \return string value of UDP
-     */
-    QString GetUserDataParam(const QString& userName, UserDataParam UDP);
-    /*!
-     * Update user data. If user do not exist, add him to the hash table with default values of UDP
-     * \param(IN) userName - name of a user
-     * \param(IN) UDP - user data parameter
-     * \param(IN) newValue - new value of UDP
-     */
-    void UpdateUserData(const QString& userName, UserDataParam UDP, const QString& newValue);
+    /*! Hash table of user data */
+    QHash<QString, QHash<QString, QString> > _userData;
+    /*! Hash table if default parameters of user data */
+    QHash<QString, QString>                  _defaultParams;
+    /*! Xml stream reader */
+    QXmlStreamReader _xmlReader;
+    /*! Xml stream writer */
+    QXmlStreamWriter _xmlWriter;
 };
