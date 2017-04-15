@@ -1,6 +1,7 @@
 #pragma once
 #include <QGroupBox>
 #include <QHBoxLayout>
+#include "ViewerCounterWidget.hpp"
 
 namespace Ui
 {
@@ -13,8 +14,15 @@ public:
     ~ViewerStatisticsWidget();
 
 private:
+    /*!
+     * Add and initialize ViewerCounter widget
+     */
+    void _AddViewerCounterWidget();
+
     /*! Horizontal layout */
     QHBoxLayout* _layout;
+    /*! ViewerCounter widget*/
+    ViewerCounterWidget* _viewerCounter;
 };
 
 }

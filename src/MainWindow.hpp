@@ -2,7 +2,7 @@
 #include <QMainWindow>
 #include <QTabWidget>
 #include "./Widgets/ChatWidget.hpp"
-#include "./Widgets/StatisticsWidget.hpp"
+#include "./Widgets/Statistics/StatisticsWidget.hpp"
 #include "./Chat/TwitchClient.hpp"
 
 namespace Ui
