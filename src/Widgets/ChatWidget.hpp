@@ -14,12 +14,6 @@ namespace Ui
 class ChatWidget : public QScrollArea
 {
     Q_OBJECT
-private:
-    /*! Vertical layout */
-    QVBoxLayout* _layout;
-    /*! Simple container to store scrol layout */
-    QWidget*     _container;
-
 public:
     explicit ChatWidget(QWidget* parent = 0);
     ~ChatWidget();
@@ -37,6 +31,12 @@ private slots:
      * Scrolls area to the bottom.
      */
     void _AutoScrollDown();
+
+private:
+    /*! Vertical layout */
+    QVBoxLayout* _layout;
+    /*! Simple container to store scrol layout */
+    QWidget*     _container;
 };
 
 }

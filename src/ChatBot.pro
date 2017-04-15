@@ -34,7 +34,10 @@ SOURCES += main.cpp\
     AI/ChatCommands/QuoteCommands/QuoteCommandList.cpp \
     AI/ChatCommands/QuoteCommands/AddQuoteCommand.cpp \
     AI/ChatCommands/QuoteCommands/DeleteQuoteCommand.cpp \
-    AI/ChatCommands/QuoteCommands/EditQuoteCommand.cpp
+    AI/ChatCommands/QuoteCommands/EditQuoteCommand.cpp \
+    Widgets/Statistics/StatisticsWidget.cpp \
+    Widgets/Statistics/ViewerStatisticsWidget.cpp \
+    Widgets/Statistics/ViewerCounterWidget.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -57,7 +60,10 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp \
     AI/ChatCommands/QuoteCommands/AddQuoteCommand.hpp \
     AI/ChatCommands/QuoteCommands/DeleteQuoteCommand.hpp \
-    AI/ChatCommands/QuoteCommands/EditQuoteCommand.hpp
+    AI/ChatCommands/QuoteCommands/EditQuoteCommand.hpp \
+    Widgets/Statistics/StatisticsWidget.hpp \
+    Widgets/Statistics/ViewerStatisticsWidget.hpp \
+    Widgets/Statistics/ViewerCounterWidget.hpp
 
 FORMS    +=
 
