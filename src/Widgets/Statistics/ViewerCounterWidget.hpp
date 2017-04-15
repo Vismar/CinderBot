@@ -2,6 +2,7 @@
 #include <QGroupBox>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <Utils/UserData/RealTimeUserData.hpp>
 
 namespace Ui
 {
@@ -14,7 +15,7 @@ public:
     ~ViewerCounterWidget();
 
 public slots:
-    void UpdateLabels(int newCurViewers);
+    void UpdateLabels();
 
 private:
     /*!

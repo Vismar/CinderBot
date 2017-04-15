@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "./Utils/Config/ConfigurationManager.hpp"
 #include "./Utils/UserData/UserData.hpp"
+#include "./Utils/UserData/RealTimeUserData.hpp"
 #include <QApplication>
 #include <QMessageBox>
 #include <QtGlobal>
@@ -18,6 +19,8 @@ int main(int argc, char *argv[])
     {
         // Initialize user data
         UserData::Instance().Initialize();
+        // Initialize real time user data
+        RealTimeUserData::Instance();
         // Create main window
         Ui::MainWindow w;
         w.show();

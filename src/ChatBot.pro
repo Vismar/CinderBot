@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     AI/ChatCommands/QuoteCommands/EditQuoteCommand.cpp \
     Widgets/Statistics/StatisticsWidget.cpp \
     Widgets/Statistics/ViewerStatisticsWidget.cpp \
-    Widgets/Statistics/ViewerCounterWidget.cpp
+    Widgets/Statistics/ViewerCounterWidget.cpp \
+    Utils/UserData/RealTimeUserData.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -63,7 +64,8 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/QuoteCommands/EditQuoteCommand.hpp \
     Widgets/Statistics/StatisticsWidget.hpp \
     Widgets/Statistics/ViewerStatisticsWidget.hpp \
-    Widgets/Statistics/ViewerCounterWidget.hpp
+    Widgets/Statistics/ViewerCounterWidget.hpp \
+    Utils/UserData/RealTimeUserData.hpp
 
 FORMS    +=
 

@@ -1,6 +1,7 @@
 #include "TwitchClient.hpp"
 #include "../Utils/Config/ConfigurationManager.hpp"
 #include "../Utils/Config/ConfigurationParameters.hpp"
+#include "../Utils/UserData/RealTimeUserData.hpp"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -157,10 +158,16 @@ void TwitchClient::ReadLine()
         case PONG:
             _pingTimer->stop();
             break;
-        case USERSTATE:
-            break;
         case LOGIN_OK:
             JoinChannel();
+            break;
+        case USERSTATE:
+            break;
+        case JOIN:
+            RealTimeUserData::Instance()->AddUserToList(message);
+            break;
+        case PART:
+            RealTimeUserData::Instance()->RemoveUserFromList(message);
             break;
         case PRIVMSG:
             emit NewMessage(message, false);

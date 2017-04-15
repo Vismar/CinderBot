@@ -5,77 +5,6 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsNetworkMsg(const QString& message) const
-{
-    return message.startsWith("INFO");
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-bool ChatMessage::_IsPingCommand(const QString& message) const
-{
-    return message.startsWith("PING");
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-bool ChatMessage::_IsPongCommand(const QString& message) const
-{
-    return message.startsWith("PONG");
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-int ChatMessage::_IsIrcComand(const QString& message) const
-{
-    int result(-1);
-    if (message.startsWith(":tmi.twitch.tv "))
-    {
-        result = message.mid(15, 3).toInt();
-    }
-
-    return result;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-bool ChatMessage::_IsConnectedToRoom(const QString& message) const
-{
-    bool result(false);
-    QString param;
-    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
-    {
-        result = message.contains("JOIN") &&
-                 !message.mid(1).contains(":") &&
-                 message.contains(param);
-    }
-
-    return result;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-bool ChatMessage::_IsUserState(const QString& message) const
-{
-    return message.contains("USERSTATE");
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-bool ChatMessage::_IsPrivMsg(const QString& message) const
-{
-    return message.startsWith("@badges=");
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void ChatMessage::_SetTimeStamp()
-{
-    _timeStamp = QTime::currentTime().toString("h:mm:ss");
-}
-
-///////////////////////////////////////////////////////////////////////////
-
 ChatMessage::ChatMessage()
 {
     _author = "NoAuthor";
@@ -149,7 +78,7 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
 
     if (_IsNetworkMsg(message))
     {
-        msgType = INFO;        
+        msgType = INFO;
         _author = SYSTEM_MESSAGE;
         _color = "<font color=\"Red\">";
         // Network messages comes only from bot itself, so just copy almost full message
@@ -190,58 +119,173 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
         {
             msgType = USERSTATE;
         }
+        else if (_IsJoinMsg(message))
+        {
+            msgType = JOIN;
+            _GetAndSetAuthor(message);
+        }
+        else if (_isPartMsg(message))
+        {
+            msgType = PART;
+            _GetAndSetAuthor(message);
+        }
         else if (_IsPrivMsg(message))
         {
             msgType = PRIVMSG;
-            QString color = "Black";
-
-            /* Get custom name color */
-            int colorTagPosition = message.indexOf("color=");
-            // 6 = length of "color="
-            if (message.at(colorTagPosition + 6) != ';')
-            {
-                color = (message.mid(colorTagPosition + 6, 7));
-            }
-
-            /* Get author's name */
-            // 13 = length of "display-name="
-            int startOfTheName = message.indexOf("display-name=") + 13;
-            int nameLength = message.indexOf("emotes") - startOfTheName - 1;
-            if (nameLength < 1)
-            {
-                startOfTheName = message.indexOf("!") + 1;
-                nameLength = message.indexOf("@", startOfTheName) - startOfTheName;
-            }
-            QString name(message.mid(startOfTheName, nameLength));
-
-            /* Set params */
-            _color = "<font color=\"" + color + "\">";
-            _author = name;
-            name.clear();
-
-            /* Get chat message */
-            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
-            _message = message.right(message.length() - (message.indexOf("PRIVMSG #") + name.length() + 11));
-
-            /* Get moderator flag */
-            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
-            // If author is a broadcaster set mod flag true
-            if (_author.toLower() == name)
-            {
-                _isModerator = true;
-            }
-            // If author not broadcaster, check status in message
-            else
-            {
-                int index = message.indexOf("mod=");
-                _isModerator = message.mid(index + 4,1).toInt();
-            }
+            _GetAndSetNameColor(message);
+            _GetAndSetAuthor(message);
+            _GetAndSetChatMessage(message);
+            _GetAndSetModeratorFlag(message);
         }
     }
     // Set timestamp
     _SetTimeStamp();
 
     return msgType;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsNetworkMsg(const QString& message) const
+{
+    return message.startsWith("INFO");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsPingCommand(const QString& message) const
+{
+    return message.startsWith("PING");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsPongCommand(const QString& message) const
+{
+    return message.startsWith("PONG");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+int ChatMessage::_IsIrcComand(const QString& message) const
+{
+    int result(-1);
+    if (message.startsWith(":tmi.twitch.tv "))
+    {
+        result = message.mid(15, 3).toInt();
+    }
+
+    return result;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsConnectedToRoom(const QString& message) const
+{
+    bool result(false);
+    QString param;
+    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
+    {
+        result = message.contains("JOIN") &&
+                 !message.mid(1).contains(":") &&
+                 message.contains(param);
+    }
+
+    return result;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsUserState(const QString& message) const
+{
+    return message.contains("USERSTATE");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsPrivMsg(const QString& message) const
+{
+    return message.startsWith("@badges=");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsJoinMsg(const QString& message) const
+{
+    return message.contains("JOIN");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_isPartMsg(const QString& message) const
+{
+    return message.contains("PART");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::_SetTimeStamp()
+{
+    _timeStamp = QTime::currentTime().toString("h:mm:ss");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::_GetAndSetNameColor(const QString& message)
+{
+    // Default color
+    QString color = "Black";
+
+    int colorTagPosition = message.indexOf("color=");
+    // 6 = length of "color="
+    if (message.at(colorTagPosition + 6) != ';')
+    {
+        color = (message.mid(colorTagPosition + 6, 7));
+    }
+     _color = "<font color=\"" + color + "\">";
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::_GetAndSetAuthor(const QString& message)
+{
+    // 13 = length of "display-name="
+    int startOfTheName = message.indexOf("display-name=") + 13;
+    int nameLength = message.indexOf("emotes") - startOfTheName - 1;
+    if (nameLength < 1)
+    {
+        startOfTheName = message.indexOf("!") + 1;
+        nameLength = message.indexOf("@", startOfTheName) - startOfTheName;
+    }
+    _author = message.mid(startOfTheName, nameLength);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::_GetAndSetChatMessage(const QString& message)
+{
+    QString name;
+    ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
+    _message = message.right(message.length() - (message.indexOf("PRIVMSG #") + name.length() + 11));
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::_GetAndSetModeratorFlag(const QString& message)
+{
+    QString name;
+    ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
+    // If author is a broadcaster set mod flag true
+    if (_author.toLower() == name)
+    {
+        _isModerator = true;
+    }
+    // If author not broadcaster, check status in message
+    else
+    {
+        int index = message.indexOf("mod=");
+        _isModerator = message.mid(index + 4,1).toInt();
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

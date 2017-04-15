@@ -14,6 +14,9 @@ ViewerCounterWidget::ViewerCounterWidget(QWidget* parent) : QGroupBox(parent)
     _curViewerNumber = 0;
     _maxViewerNumber = 0;
     _AddViewerLabels();
+    RealTimeUserData* realTimeUD = RealTimeUserData::Instance();
+    connect(realTimeUD, &RealTimeUserData::UserListChanged,
+            this, &ViewerCounterWidget::UpdateLabels);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -22,9 +25,10 @@ ViewerCounterWidget::~ViewerCounterWidget() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ViewerCounterWidget::UpdateLabels(int newCurViewers)
+void ViewerCounterWidget::UpdateLabels()
 {
-    _curViewerNumber = newCurViewers;
+    const QStringList& userList = RealTimeUserData::Instance()->GetUserList();
+    _curViewerNumber = userList.size();
     if (_curViewerNumber > _maxViewerNumber)
     {
         _maxViewerNumber = _curViewerNumber;
