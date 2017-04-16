@@ -10,7 +10,7 @@ using namespace Ui;
 
 ///////////////////////////////////////////////////////////////////////////
 
-ChatWidget::ChatWidget(QWidget *parent) : QScrollArea(parent)
+ChatWidget::ChatWidget(QWidget* parent) : QScrollArea(parent)
 {
     // Set params to layout
     setWidgetResizable(true);
@@ -43,7 +43,17 @@ void ChatWidget::AddEntry(ChatMessage message, bool botMessage)
     }
     // Add new entry
     ChatMessageWidget* newEntry = new ChatMessageWidget("");
-    newEntry->insertHtml("<b>" + message.GetColor() + message.GetAuthor() + " | "
+
+    QString imageString;
+    // Check if author of message is moderator
+    if (message.IsModerator())
+    {
+        // Get font size and multiplay by 2 to change image size
+        QString stringFontSize = QString::number(newEntry->font().pointSize() * 2);
+        // Append moderator icon before author name
+        imageString = QString("<img src=':/Resources/Icons/modIcon.ico' height='%1' width='%1'>  ").arg(stringFontSize);
+    }
+    newEntry->insertHtml(imageString + "<b>" + message.GetColor() + message.GetAuthor() + " | "
                          + message.GetTimeStamp() + "</b></font><hr>"
                          + message.GetMessage());
     _layout->addWidget(newEntry);

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/Icons/IconEmber.ico</file>
+        <file>Resources/Icons/modIcon.ico</file>
+        <file>Resources/Icons/StatisticsIcon.ico</file>
+    </qresource>
+</RCC>
