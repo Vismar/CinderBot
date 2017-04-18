@@ -3,14 +3,18 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-RealTimeUserData::RealTimeUserData(QObject* parent) : QObject(parent) {}
+RealTimeUserData::RealTimeUserData(QObject* parent) : QObject(parent)
+{
+    _maxUserNumber = 0;
+}
 
 ///////////////////////////////////////////////////////////////////////////
 
 RealTimeUserData* RealTimeUserData::Instance()
 {
-    static RealTimeUserData* realTimeUD = new RealTimeUserData();
-    return realTimeUD;
+    static RealTimeUserData realTimeUD;
+    RealTimeUserData* realTimeUDPointer = &realTimeUD;
+    return realTimeUDPointer;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -26,11 +30,22 @@ const QStringList& RealTimeUserData::GetUserList()
 
 ///////////////////////////////////////////////////////////////////////////
 
+int RealTimeUserData::GetMaxUserNumber()
+{
+    return _maxUserNumber;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void RealTimeUserData::AddUserToList(const ChatMessage& chatMessage)
 {
     if (!_userList.contains(chatMessage.GetAuthor()))
     {
         _userList.append(chatMessage.GetAuthor());
+        if (_userList.size() > _maxUserNumber)
+        {
+            _maxUserNumber = _userList.size();
+        }
         emit UserListChanged();
     }
 }
