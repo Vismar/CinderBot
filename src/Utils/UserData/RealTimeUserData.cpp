@@ -41,7 +41,9 @@ void RealTimeUserData::AddUserToList(const ChatMessage& chatMessage)
 {
     if (!_userList.contains(chatMessage.GetAuthor()))
     {
+        // Add user to list
         _userList.append(chatMessage.GetAuthor());
+        // Check max number of users
         if (_userList.size() > _maxUserNumber)
         {
             _maxUserNumber = _userList.size();

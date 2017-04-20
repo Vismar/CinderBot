@@ -47,6 +47,6 @@ signals:
 private:
     /*! List of users that are in the chat */
     QStringList _userList;
-    /*! Max number of user in chat */
+    /*! Max number of users in chat */
     int _maxUserNumber;
 };
