@@ -50,6 +50,15 @@ bool ChatMessage::IsModerator() const
 
 ///////////////////////////////////////////////////////////////////////////
 
+bool ChatMessage::IsBroadcaster() const
+{
+    QString channelName;
+    ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, channelName);
+    return (channelName.toLower() == _author.toLower());
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void ChatMessage::SetAuthor(const QString& author)
 {
     _author = author;
