@@ -53,7 +53,12 @@ public:
      * Check if author is a moderator
      * \return moderator status
      */
-    bool           IsModerator() const;
+    bool IsModerator() const;
+    /*!
+     * Check if author is a broadcaster
+     * \return true if author name equals channel name
+     */
+    bool IsBroadcaster() const;
 
     /*!
      * Set author name
