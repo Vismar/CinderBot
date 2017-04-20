@@ -40,7 +40,7 @@ ViewerGraphWidget::ViewerGraphWidget(QWidget* parent) : QGroupBox(parent)
     _layout->setAlignment(Qt::AlignTop);
     this->setLayout(_layout);
     _layout->addWidget(_chartView);
-    // Initizlie timer
+    // Initialize timer
     _timer = new QTimer(this);
     UpdateGraph();
     connect(_timer, &QTimer::timeout,
