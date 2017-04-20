@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
-	<!--------------------------->
-	<!------- Login data -------->
-	<!--------------------------->
+	<!-- ======================= -->
+	<!-- ===== Login data ====== -->
+	<!-- ======================= -->
 	<LoginData>
 		<LoginName></LoginName>         <!-- Nick name of your bot -->
 		<LoginOauthKey></LoginOauthKey> <!-- Oauth key which required to login on twitch, should starts with "oauth:" -->
 		<LoginChannel></LoginChannel>   <!-- Channel to connect -->
 	</LoginData>
-	<!--------------------------->
-	<!------ Config params ------>
-	<!--------------------------->
+	<!-- ======================= -->
+	<!-- ==== Config params ==== -->
+	<!-- ======================= -->
 	<ConfigData>
 		<Currency>TwitchRPG</Currency> <!-- Use any emoticon which you like -->
 		<IgnoreList>
@@ -20,18 +20,18 @@
 			<User>moobot</User>         <!-- Chat bot #2 -->
 			<User>system message</User> <!-- System messages -->
 		</IgnoreList>
-		<!--------------------------->
-		<!----- Covenant params ----->
-		<!--------------------------->
+		<!-- ======================= -->
+		<!-- === Covenant params === -->
+		<!-- ======================= -->
 		<CovenantList>
 			<!-- Use <Covenant>Covenant name</Covenant> to define covenants -->
 			<Covenant>Covenant Name</Covenant>
 			<Covenant>Another Covenant Name</Covenant>
 		</CovenantList>
 		<CovJoinPrice>100</CovJoinPrice> <!-- Any integer number, bigger than 0 -->
-		<!--------------------------->
-		<!------ System params ------>
-		<!--------------------------->
+		<!-- ======================= -->
+		<!-- ==== System params ==== -->
+		<!-- ======================= -->
 		<ViewerGraphUpdateTime>10000</ViewerGraphUpdateTime> <!-- In milliseconds, bigger than 0 -->
 	</ConfigData>
 </Configuration>
