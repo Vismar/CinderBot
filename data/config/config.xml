@@ -1,21 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
-<LoginData>
-	<LoginName>BotName</LoginName>
-	<LoginOauthKey>oath:YourKey</LoginOauthKey>
-	<LoginChannel>ChannelNameToConnect</LoginChannel>
-</LoginData>
-<ConfigData>
-	<Currency>YourCurrency</Currency>
-	<IgnoreList>
-		<User>nightbot</User>
-		<User>moobot</User>
-		<User>system message</User>
-	</IgnoreList>
-	<CovenantList>
-		<Covenant>Covenant Name,Another Covenant Name</Covenant>
-	</CovenantList>
-	<!-- Covenant params -->
-	<CovJoinPrice>100</CovJoinPrice>
-</ConfigData>
+	<!--------------------------->
+	<!------- Login data -------->
+	<!--------------------------->
+	<LoginData>
+		<LoginName></LoginName>         <!-- Nick name of your bot -->
+		<LoginOauthKey></LoginOauthKey> <!-- Oauth key which required to login on twitch, should starts with "oauth:" -->
+		<LoginChannel></LoginChannel>   <!-- Channel to connect -->
+	</LoginData>
+	<!--------------------------->
+	<!------ Config params ------>
+	<!--------------------------->
+	<ConfigData>
+		<Currency>TwitchRPG</Currency> <!-- Use any emoticon which you like -->
+		<IgnoreList>
+			<!-- Type any user that should be ignored by bot -->
+			<!-- For example: <User>nightbot</User> -->
+			<User>nightbot</User>       <!-- Chat bot #1 -->
+			<User>moobot</User>         <!-- Chat bot #2 -->
+			<User>system message</User> <!-- System messages -->
+		</IgnoreList>
+		<!--------------------------->
+		<!----- Covenant params ----->
+		<!--------------------------->
+		<CovenantList>
+			<!-- Use <Covenant>Covenant name</Covenant> to define covenants -->
+			<Covenant>Covenant Name</Covenant>
+			<Covenant>Another Covenant Name</Covenant>
+		</CovenantList>
+		<CovJoinPrice>100</CovJoinPrice> <!-- Any integer number, bigger than 0 -->
+		<!--------------------------->
+		<!------ System params ------>
+		<!--------------------------->
+		<ViewerGraphUpdateTime>10000</ViewerGraphUpdateTime> <!-- In milliseconds, bigger than 0 -->
+	</ConfigData>
 </Configuration>

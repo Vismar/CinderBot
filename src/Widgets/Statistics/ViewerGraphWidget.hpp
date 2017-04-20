@@ -32,6 +32,7 @@ private:
     QHBoxLayout* _layout;
     QTimer* _timer;
     QDateTime _startingTime;
+    QString _timeToUpdate;
 };
 
 }

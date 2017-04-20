@@ -1,7 +1,8 @@
 #include "ViewerGraphWidget.hpp"
 #include <QTime>
 #include <Utils/UserData/RealTimeUserData.hpp>
-#include <QDebug>
+#include <Utils/Config/ConfigurationManager.hpp>
+#include <Utils/Config/ConfigurationParameters.hpp>
 
 using namespace Ui;
 using namespace QtCharts;
@@ -44,7 +45,9 @@ ViewerGraphWidget::ViewerGraphWidget(QWidget* parent) : QGroupBox(parent)
     UpdateGraph();
     connect(_timer, &QTimer::timeout,
             this, &ViewerGraphWidget::UpdateGraph);
-    _timer->start(10000);
+    // Start timer
+    ConfigurationManager::Instance().GetStringParam(CFGP_VGRAPH__UPD_TIME, _timeToUpdate);
+    _timer->start(_timeToUpdate.toInt());
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -68,7 +71,8 @@ void ViewerGraphWidget::UpdateGraph()
     {
         _valueAxis->setTickCount(7);
     }
-    _timer->start(10000);
+    ConfigurationManager::Instance().GetStringParam(CFGP_VGRAPH__UPD_TIME, _timeToUpdate);
+    _timer->start(_timeToUpdate.toInt());
 }
 
 ///////////////////////////////////////////////////////////////////////////
