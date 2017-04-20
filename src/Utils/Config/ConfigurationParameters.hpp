@@ -19,3 +19,4 @@
 #define CFGP_CURRENCY         "Currency"
 /* Covenant params */
 #define CFGP_COV_JOIN_PRICE   "CovJoinPrice"
+#define CFGP_VGRAPH__UPD_TIME "ViewerGraphUpdateTime"

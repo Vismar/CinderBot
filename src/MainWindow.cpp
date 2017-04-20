@@ -35,7 +35,7 @@ void MainWindow::_InitUi()
     window->setLayout(_layout);
     this->setCentralWidget(window);
     // Set minimum size for main window
-    this->setMinimumSize(640, 400);
+    this->setMinimumSize(850, 400);
 
     // Create widgets
     _CreateChatWidget();

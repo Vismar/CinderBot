@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     Widgets/Statistics/StatisticsWidget.cpp \
     Widgets/Statistics/ViewerStatisticsWidget.cpp \
     Widgets/Statistics/ViewerCounterWidget.cpp \
-    Utils/UserData/RealTimeUserData.cpp
+    Utils/UserData/RealTimeUserData.cpp \
+    Widgets/Statistics/ViewerGraphWidget.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -65,9 +66,8 @@ HEADERS  += MainWindow.hpp \
     Widgets/Statistics/StatisticsWidget.hpp \
     Widgets/Statistics/ViewerStatisticsWidget.hpp \
     Widgets/Statistics/ViewerCounterWidget.hpp \
-    Utils/UserData/RealTimeUserData.hpp
-
-FORMS    +=
+    Utils/UserData/RealTimeUserData.hpp \
+    Widgets/Statistics/ViewerGraphWidget.hpp
 
 RESOURCES += \
     Resources.qrc

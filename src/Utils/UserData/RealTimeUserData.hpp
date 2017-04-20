@@ -23,6 +23,11 @@ public:
      * \return const reference to the user list
      */
     const QStringList& GetUserList();
+    /*!
+     * Returns max user number during session
+     * \return max number of users
+     */
+    int GetMaxUserNumber();
 
 public slots:
     /*!
@@ -42,4 +47,6 @@ signals:
 private:
     /*! List of users that are in the chat */
     QStringList _userList;
+    /*! Max number of users in chat */
+    int _maxUserNumber;
 };

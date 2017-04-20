@@ -2,6 +2,7 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include "ViewerCounterWidget.hpp"
+#include "ViewerGraphWidget.hpp"
 
 namespace Ui
 {
@@ -18,11 +19,13 @@ private:
      * Add and initialize ViewerCounter widget
      */
     void _AddViewerCounterWidget();
+    void _AddViewerGraphWidget();
 
     /*! Horizontal layout */
     QHBoxLayout* _layout;
     /*! ViewerCounter widget*/
     ViewerCounterWidget* _viewerCounter;
+    ViewerGraphWidget* _viewerGraph;
 };
 
 }
