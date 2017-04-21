@@ -48,7 +48,6 @@ void ChatCommand::_Clear()
     _name.clear();
     _answers.clear();
     _answers.squeeze();
-    _lastTimeUsed.setHMS(0, 0, 0, 0);
     _cooldown.setHMS(0, 0, 0, 0);
     _moderatorOnly = false;
     _price = 0;
@@ -169,12 +168,9 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
             covenantIsOk = false;
         }
         // Get time when command can be executed
-        QTime timeToUse(_lastTimeUsed.hour() + _cooldown.hour(),
-                         _lastTimeUsed.minute() + _cooldown.minute(),
-                         _lastTimeUsed.second() + _cooldown.second(),
-                         _lastTimeUsed.msec() + _cooldown.msec());
+        QDateTime timeToUse = _lastTimeUsed.addMSecs(QTime(0,0,0,0).msecsTo(_cooldown));
         // Compare time when command can be used and time when command trying to be executed
-        if (covenantIsOk && (timeToUse < QTime::currentTime()))
+        if (covenantIsOk && (timeToUse < QDateTime::currentDateTime()))
         {
             // Get user currency value
 
@@ -208,7 +204,7 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
                 if (returnAnswer)
                 {
                     // Save time of exection
-                    _lastTimeUsed = QTime::currentTime();
+                    _lastTimeUsed = QDateTime::currentDateTime();
                     // Get random id for answer
                     int id = qrand() % _answers.size();
                     // Set returning answer
