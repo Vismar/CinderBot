@@ -2,8 +2,9 @@
 #include <QObject>
 #include <QVector>
 #include <QStringList>
-#include "../Chat/ChatMessage.hpp"
-#include "./ChatCommands/CommandList.hpp"
+#include <QTimer>
+#include <Chat/ChatMessage.hpp>
+#include <AI/ChatCommands/CommandList.hpp>
 
 /*!
  * Class BotAI
@@ -12,12 +13,32 @@
 class BotAI : public QObject
 {
     Q_OBJECT
-private:
-    /*! Array of commands */
-    QVector<Command::CommandList*> _chatCommands;
-    /*! Ignore list. Commands from users that stored in this list will not be executed */
-    QStringList               _ignoreList;
+public:
+    explicit BotAI(QObject* parent = 0);
+    ~BotAI();
 
+signals:
+    /*!
+     * Signal about new bot message
+     * \param(IN) message - bot message
+     */
+    void NewBotMessage(QString message);
+
+public slots:
+    /*!
+     * Read and process new message
+     * \param(IN) message - chat message
+     * \param(IN) botMessage - is it a bot or not?
+     */
+    void ReadNewMessage(ChatMessage message, bool botMessage);
+
+    /*!
+     * Give defined number of currency to all users,
+     * who is in the chat, except for users who is in ignore list
+     */
+    void GiveCurrencyOnTimer();
+
+private:
     /*!
      * Check if user is in ignore list
      * \param(IN) userName - name of a user
@@ -41,22 +62,10 @@ private:
      */
     void _AddCurrency(const QString& userName, const int value);
 
-public:
-    explicit BotAI(QObject* parent = 0);
-    ~BotAI();
-
-signals:
-    /*!
-     * Signal about new bot message
-     * \param(IN) message - bot message
-     */
-    void NewBotMessage(QString message);
-
-public slots:
-    /*!
-     * Read and process new message
-     * \param(IN) message - chat message
-     * \param(IN) botMessage - is it a bot or not?
-     */
-    void ReadNewMessage(ChatMessage message, bool botMessage);
+    /*! Array of commands */
+    QVector<Command::CommandList*> _chatCommands;
+    /*! Ignore list. Commands from users that stored in this list will not be executed */
+    QStringList _ignoreList;
+    /*! Timer which will execute some stuff for every user who is in the chat, except for users from ignore list */
+    QTimer _currencyTimer;
 };

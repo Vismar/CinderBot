@@ -1,7 +1,8 @@
 #include "BotAI.hpp"
-#include "../Utils/UserData/UserData.hpp"
-#include "../Utils/Config/ConfigurationManager.hpp"
-#include "../Utils/Config/ConfigurationParameters.hpp"
+#include <Utils/UserData/UserData.hpp>
+#include <Utils/Config/ConfigurationManager.hpp>
+#include <Utils/Config/ConfigurationParameters.hpp>
+#include <Utils/UserData/RealTimeUserData.hpp>
 /*** Command lists ***/
 #include "./ChatCommands/CustomCommandList.hpp"
 #include "./ChatCommands/UserDataCommandList.hpp"
@@ -38,6 +39,21 @@ BotAI::BotAI(QObject* parent) : QObject(parent)
     _chatCommands.push_back(new QuoteCommandList());
     // Custom commands for all users and covenants
     _chatCommands.push_back(new CustomCommandList());
+
+    // Connect and start currency timer
+    connect(&_currencyTimer, &QTimer::timeout,
+            this, &BotAI::GiveCurrencyOnTimer);
+    param = "60000"; // default value
+    configMng.GetStringParam(CFGP_CURRECY_TIMER, param);
+    int timeValue = param.toInt();
+    if (timeValue > 0)
+    {
+        _currencyTimer.start(timeValue);
+    }
+    else
+    {
+        _currencyTimer.start(60000); //default value
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -47,6 +63,46 @@ BotAI::~BotAI()
     for (int i = 0; i < _chatCommands.size(); ++i)
     {
         delete _chatCommands[i];
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
+{
+    // Update user data
+    _UpdateUserData(message);
+    // If new message is not created by bot, parse it.
+    if (!botMessage)
+    {
+        QString answer;
+
+        for (int i = 0; i < _chatCommands.size(); ++i)
+        {
+            // If we found a command, emit event with result and break the loop
+            if (_chatCommands[i]->TryGetAnswer(message, answer))
+            {
+                emit NewBotMessage(answer);
+                break;
+            }
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void BotAI::GiveCurrencyOnTimer()
+{
+    QStringList userList = RealTimeUserData::Instance()->GetUserList();
+    for (int i = 0; i < userList.count(); ++i)
+    {
+        if (!_ignoreList.contains(userList[i]))
+        {
+            // Add currency to user
+            QString tempString = "1"; // default value
+            ConfigurationManager::Instance().GetStringParam(CFGP_CURRENCY_OVER_TIME, tempString);
+            _AddCurrency(userList[i], tempString.toInt());
+        }
     }
 }
 
@@ -98,29 +154,6 @@ void BotAI::_AddCurrency(const QString& userName, const int value)
     param = QString::number(param.toInt() + value);
     // Set new value
     userData.UpdateUserData(userName, UDP_Currency, param);
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
-{
-    // Update user data
-    _UpdateUserData(message);
-    // If new message is not created by bot, parse it.
-    if (!botMessage)
-    {
-        QString answer;
-
-        for (int i = 0; i < _chatCommands.size(); ++i)
-        {
-            // If we found a command, emit event with result and break the loop
-            if (_chatCommands[i]->TryGetAnswer(message, answer))
-            {
-                emit NewBotMessage(answer);
-                break;
-            }
-        }
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
