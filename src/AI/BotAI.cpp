@@ -64,8 +64,11 @@ void BotAI::_UpdateUserData(const ChatMessage& message)
     // If user is not in ignore list, update info
     if (!_CheckIgnoreList(message.GetAuthor()))
     {
+        QString tempString = "1";
         _IncrementMessageCounter(message.GetAuthor());
-        _AddCurrency(message.GetAuthor(), 1);
+        // Add currency for message
+        ConfigurationManager::Instance().GetStringParam(CFGP_CURRENCY_PER_MSG, tempString);
+        _AddCurrency(message.GetAuthor(), tempString.toInt());
     }
 }
 

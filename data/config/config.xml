@@ -12,7 +12,11 @@
 	<!-- ==== Config params ==== -->
 	<!-- ======================= -->
 	<ConfigData>
-		<Currency>TwitchRPG</Currency> <!-- Use any emoticon which you like -->
+		<!-- ======================= -->
+		<!-- === Currency params === -->
+		<!-- ======================= -->
+		<Currency>Kappa</Currency>                 <!-- Use any emoticon which you like -->
+		<CurrencyPerMessage>1</CurrencyPerMessage> <!-- Set value (integer) which will represent how many currency will be given to user per message -->
 		<IgnoreList>
 			<!-- Type any user that should be ignored by bot -->
 			<!-- For example: <User>nightbot</User> -->
