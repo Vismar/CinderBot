@@ -15,8 +15,10 @@
 		<!-- ======================= -->
 		<!-- === Currency params === -->
 		<!-- ======================= -->
-		<Currency>Kappa</Currency>                 <!-- Use any emoticon which you like -->
-		<CurrencyPerMessage>1</CurrencyPerMessage> <!-- Set value (integer) which will represent how many currency will be given to user per message -->
+		<Currency>Kappa</Currency>             <!-- Use any emoticon which you like -->
+		<CurrencyPerMsg>1</CurrencyPerMsg>     <!-- Set value (integer) which will represent how many currency will be given to user per message -->
+		<CurrencyOverTime>1</CurrencyOverTime> <!-- Set value (integer) which will represent how many currency will be fiven to user per specified time-->
+		<CurrencyTimer>60000</CurrencyTimer>   <!-- In milliseconds, bigger than 0 -->
 		<IgnoreList>
 			<!-- Type any user that should be ignored by bot -->
 			<!-- For example: <User>nightbot</User> -->
