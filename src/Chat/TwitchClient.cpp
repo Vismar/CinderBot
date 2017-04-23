@@ -247,7 +247,6 @@ void TwitchClient::_SendIrcMessage(const QString& message)
     {
         _socket->write(message.toStdString().c_str());
         ++_msgCounter;
-        qDebug() << _msgCounter << _msgLimit;
     }
 }
 
