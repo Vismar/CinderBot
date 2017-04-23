@@ -18,6 +18,8 @@ enum MessageType
     USERSTATE,
     JOIN,
     PART,
+    MODE,
+    UNMODE,
     PRIVMSG
 };
 
@@ -137,15 +139,48 @@ private:
      * \param(IN) message - message to check
      * \return true, if it is a part message
      */
-    bool _isPartMsg(const QString& message) const;
+    bool _IsPartMsg(const QString& message) const;
+    /*!
+     * Check if message means that someone was setted as mode in the chat
+     * \param(IN) message - message to check
+     * \return true, if it is a mode message
+     */
+    bool _IsModeMessage(const QString& message) const;
+    /*!
+     * Check if message means that someone was downgraded from mode in the chat
+     * \param(IN) message - message to check
+     * \return true, if it is a unmode message
+     */
+    bool _IsUnmodeMessage(const QString& message) const;
     /*!
      * Set timestamp
      */
     void _SetTimeStamp();
 
+    /*!
+     * Parse message and get custom name color, then set it
+     * \param(IN) message - message to parse
+     */
     void _GetAndSetNameColor(const QString& message);
+    /*!
+     * Parse message and get name of user, then set it
+     * \param(IN) message - message to parse
+     */
     void _GetAndSetAuthor(const QString& message);
+    /*!
+     * Parse message and get name of user of moderator message, then set it
+     * \param(IN) message - message to parse
+     */
+    void _GetAndSetAuthorForMode(const QString& message, MessageType msgType);
+    /*!
+     * Parse message and get message itself, then set it
+     * \param(IN) message - message to parse
+     */
     void _GetAndSetChatMessage(const QString& message);
+    /*!
+     * Parse message and get moderator flag, then set it
+     * \param(IN) message - message to parse
+     */
     void _GetAndSetModeratorFlag(const QString& message);
 
     /*! Author of message*/

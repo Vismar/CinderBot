@@ -4,7 +4,7 @@
 #include <QString>
 #include <QTimer>
 #include "ChatMessage.hpp"
-#include "../AI/BotAI.hpp"
+#include <AI/BotAI.hpp>
 
 /*!
  * Class TwtichClient
@@ -13,16 +13,6 @@
 class TwitchClient : public QObject
 {
     Q_OBJECT
-private:
-    /*! BotAI. No direct calls, only signal-slot connections. */
-    BotAI*      _bot;
-    /*! Tcp socket. Handles connection. */
-    QTcpSocket* _socket;
-    /*! Message timer that starts after last received message */
-    QTimer*     _msgTimer;
-    /*! Ping timer that start after ping command that was sent to twitch */
-    QTimer*     _pingTimer;
-
 public:
     explicit TwitchClient(QObject *parent = 0);
     ~TwitchClient();
@@ -40,18 +30,6 @@ public:
      */
     void JoinChannel();
 
-private:
-    /*!
-     * Sends raw message to twitch
-     * \param(IN) message - raw data
-     */
-    void _SendIrcMessage(const QString& message);
-    /*!
-     * Generates raw data that will be sent to channel via _SendIrcMessage
-     * \param(IN) message - message that should be sent to channel
-     */
-    void _SendChatMessage(const QString& message);
-
 signals:
     /*!
      * Special event that emits to notify listeners about new chat message
@@ -61,7 +39,6 @@ signals:
     void NewMessage(ChatMessage message, bool botMessage);
 
 public slots:
-    /*void LeaveChannel();*/
     /*!
      * Disconnect from host
      */
@@ -82,4 +59,35 @@ public slots:
      * Sends bot message to twitch and emit signal about new message
      */
     void NewBotMessage(QString message);
+    /*!
+     * Reset msgLimit
+     */
+    void ResetMsgLimit();
+
+private:
+    /*!
+     * Sends raw message to twitch
+     * \param(IN) message - raw data
+     */
+    void _SendIrcMessage(const QString& message);
+    /*!
+     * Generates raw data that will be sent to channel via _SendIrcMessage
+     * \param(IN) message - message that should be sent to channel
+     */
+    void _SendChatMessage(const QString& message);
+
+    /*! BotAI. No direct calls, only signal-slot connections. */
+    BotAI*      _bot;
+    /*! Tcp socket. Handles connection. */
+    QTcpSocket* _socket;
+    /*! Message timer that starts after last received message */
+    QTimer*     _msgTimer;
+    /*! Ping timer that start after ping command that was sent to twitch */
+    QTimer*     _pingTimer;
+    /*! Timer which will cause reseting _msgCounter */
+    QTimer*     _msgLimitTimer;
+    /*! Number of messages that was sent to twitch */
+    int         _msgCounter;
+    /*! Limit of messages that can be sent to twitch */
+    int         _msgLimit;
 };
