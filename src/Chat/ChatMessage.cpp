@@ -1,6 +1,6 @@
 #include "ChatMessage.hpp"
-#include "../Utils/Config/ConfigurationManager.hpp"
-#include "../Utils/Config/ConfigurationParameters.hpp"
+#include <Utils/Config/ConfigurationManager.hpp>
+#include <Utils/Config/ConfigurationParameters.hpp>
 #include <QTime>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -133,10 +133,20 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
             msgType = JOIN;
             _GetAndSetAuthor(message);
         }
-        else if (_isPartMsg(message))
+        else if (_IsPartMsg(message))
         {
             msgType = PART;
             _GetAndSetAuthor(message);
+        }
+        else if (_IsModeMessage(message))
+        {
+            msgType = MODE;
+            _GetAndSetAuthorForMode(message, msgType);
+        }
+        else if (_IsUnmodeMessage(message))
+        {
+            msgType = UNMODE;
+            _GetAndSetAuthorForMode(message, msgType);
         }
         else if (_IsPrivMsg(message))
         {
@@ -226,9 +236,23 @@ bool ChatMessage::_IsJoinMsg(const QString& message) const
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_isPartMsg(const QString& message) const
+bool ChatMessage::_IsPartMsg(const QString& message) const
 {
     return message.contains("PART");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsModeMessage(const QString& message) const
+{
+    return (message.contains("MODE") && message.contains("+o"));
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsUnmodeMessage(const QString& message) const
+{
+    return (message.contains("MODE") && message.contains("-o"));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -267,6 +291,30 @@ void ChatMessage::_GetAndSetAuthor(const QString& message)
         nameLength = message.indexOf("@", startOfTheName) - startOfTheName;
     }
     _author = message.mid(startOfTheName, nameLength);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::_GetAndSetAuthorForMode(const QString& message, MessageType msgType)
+{
+    QString modeType;
+    if (msgType == MODE)
+    {
+        modeType = "+o";
+    }
+    else if (msgType == UNMODE)
+    {
+        modeType = "-o";
+    }
+    if (!modeType.isEmpty())
+    {
+        int startOfTheName = message.indexOf(modeType) + 3;
+        if (startOfTheName >= 3)
+        {
+            int nameLength = message.length() - startOfTheName - 2; // "-2" for "\r\n"
+            _author = message.mid(startOfTheName, nameLength);
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
