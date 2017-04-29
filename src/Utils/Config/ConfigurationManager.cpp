@@ -56,7 +56,7 @@ QString ConfigurationManager::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ConfigurationManager::GetStringParam(QString parameter, QString& value)
+bool ConfigurationManager::GetStringParam(const QString& parameter, QString& value)
 {
     // If manager contains requested paramter, get it and return true
     bool result = _params.contains(parameter);
@@ -66,6 +66,13 @@ bool ConfigurationManager::GetStringParam(QString parameter, QString& value)
     }
 
     return result;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::SetStringParam(const QString& parameter, QString& value)
+{
+    _params.insert(parameter, value);
 }
 
 ///////////////////////////////////////////////////////////////////////////

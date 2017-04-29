@@ -9,11 +9,11 @@
  */
 class ConfigurationManager
 {
-private:
-    /*! Hash table of parameters */
-    QHash<QString, QString> _params;
-
 public:
+    ConfigurationManager() {}
+    ConfigurationManager(ConfigurationManager const&) =delete;
+    void operator=(ConfigurationManager const&) =delete;
+
     /*!
      * Make an instace of manager
      * \return static reference to a manager
@@ -30,12 +30,15 @@ public:
      * \param(OUT) value - returning value of parameter
      * \return true if parameter was found
      */
-    bool GetStringParam(QString parameter, QString& value);
+    bool GetStringParam(const QString& parameter, QString& value);
+    /*!
+     * Sets new value to specified parameter, or create new parameter and set specified value to it
+     * \param(IN) parameter - parameter that user seek for
+     * \param(IN) value - value that should be setted to specified parameter
+     */
+    void SetStringParam(const QString& parameter, QString& value);
 
 private:
-    /*! Xml stream reader */
-    QXmlStreamReader _xmlReader;
-
     /*!
      * Read login data section in xml file
      */
@@ -53,7 +56,9 @@ private:
      */
     void _ReadCovenantList();
 
-    ConfigurationManager() {}
-    ConfigurationManager(ConfigurationManager const&);
-    void operator=(ConfigurationManager const&);
+    /*! Hash table of parameters */
+    QHash<QString, QString> _params;
+
+    /*! Xml stream reader */
+    QXmlStreamReader _xmlReader;
 };
