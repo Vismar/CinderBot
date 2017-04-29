@@ -95,6 +95,13 @@ void ChatMessage::SetMessage(const QString& message)
 
 ///////////////////////////////////////////////////////////////////////////
 
+void ChatMessage::SetModFlag(bool modFlag)
+{
+    _isModerator = modFlag;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 MessageType ChatMessage::ParseRawMessage(const QString& message)
 {
     MessageType msgType = Undefined;

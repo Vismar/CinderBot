@@ -88,6 +88,11 @@ public:
      */
     void SetMessage(const QString& message);
     /*!
+     * \brief SetModFlag
+     * \param modFlag
+     */
+    void SetModFlag(bool modFlag);
+    /*!
      * Parse raw message data
      * \param(IN) message - raw message data
      * \return message type

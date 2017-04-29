@@ -227,6 +227,7 @@ void TwitchClient::NewBotMessage(QString message)
         botMessage.SetRealName(param);
         botMessage.SetColor("Green");
         botMessage.SetMessage(message);
+        botMessage.SetModFlag(_msgLimit == MSG_LIMIT_MODE);
         // Create single shot timer to emit signal to display bot message with small delay
         QTimer::singleShot(50, this, [this, botMessage](){ emit NewMessage(botMessage, true); });
     }
@@ -244,26 +245,26 @@ void TwitchClient::ResetMsgLimit()
 
 void TwitchClient::_SendIrcMessage(const QString& message)
 {
-    if (_msgCounter < _msgLimit)
-    {
-        _socket->write(message.toStdString().c_str());
-        ++_msgCounter;
-    }
+    _socket->write(message.toStdString().c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void TwitchClient::_SendChatMessage(const QString& message)
 {
-    QString param;
-    // Try to get channel name
-    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
+    if (_msgCounter < _msgLimit)
     {
-        param.push_front("PRIVMSG #");
-        param.push_back(" :");
-        param.push_back(message);
-        param.push_back("\r\n");
-        _SendIrcMessage(param);
+        QString param;
+        // Try to get channel name
+        if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
+        {
+            param.push_front("PRIVMSG #");
+            param.push_back(" :");
+            param.push_back(message);
+            param.push_back("\r\n");
+            _SendIrcMessage(param);
+        }
+        ++_msgCounter;
     }
 }
 
