@@ -157,12 +157,12 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
 {
     QString answer;
     // Check if message contains command
-    if (message.GetMessage().contains(_name))
+    if (message.GetMessage().toLower().contains(_name))
     {
         UserData& userData = UserData::Instance();
         bool covenantIsOk = true;
         //Check covenant
-        QString userCovenantName = userData.GetUserDataParam(message.GetAuthor(), UDP_Covenant);
+        QString userCovenantName = userData.GetUserDataParam(message.GetRealName(), UDP_Covenant);
         if ((!_covenant.isEmpty()) && (_covenant != userCovenantName))
         {
             covenantIsOk = false;
@@ -173,8 +173,7 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
         if (covenantIsOk && (timeToUse < QDateTime::currentDateTime()))
         {
             // Get user currency value
-
-            QString tempUserCurrency = userData.GetUserDataParam(message.GetAuthor() ,UDP_Currency);
+            QString tempUserCurrency = userData.GetUserDataParam(message.GetRealName() ,UDP_Currency);
             int userCurrency = tempUserCurrency.toInt();
             // Set user currency value to 0 if converting was failed
             if (userCurrency < 0)
@@ -186,7 +185,7 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
             {
                 userCurrency -= _price;
                 QString newUserCurrencyValue = QString::number(userCurrency);
-                userData.UpdateUserData(message.GetAuthor(), UDP_Currency, newUserCurrencyValue);
+                userData.UpdateUserData(message.GetRealName(), UDP_Currency, newUserCurrencyValue);
                 bool returnAnswer(false);
                 // Check if command only for moderators
                 if (_moderatorOnly)

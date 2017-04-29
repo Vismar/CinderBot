@@ -37,6 +37,11 @@ public:
      */
     const QString& GetAuthor() const;
     /*!
+     * Returns real user name
+     * \return real user name
+     */
+    const QString& GetRealName() const;
+    /*!
      * Returns name color
      * \return name color
      */
@@ -68,6 +73,11 @@ public:
      */
     void SetAuthor(const QString& author);
     /*!
+     * Set real user name
+     * \param(IN) realName - Real user name
+     */
+    void SetRealName(const QString& realName);
+    /*!
      * Set author's name color
      * \param(IN) color - custom name color
      */
@@ -77,6 +87,11 @@ public:
      * \param(IN) message - message itself
      */
     void SetMessage(const QString& message);
+    /*!
+     * \brief SetModFlag
+     * \param modFlag
+     */
+    void SetModFlag(bool modFlag);
     /*!
      * Parse raw message data
      * \param(IN) message - raw message data
@@ -185,6 +200,8 @@ private:
 
     /*! Author of message*/
     QString _author;
+    /*! Real user name */
+    QString _realName;
     /*! Custom name color of author if it was set */
     QString _color;
     /*! Timestamp of a moment when message was received */
