@@ -22,6 +22,13 @@ const QString& ChatMessage::GetAuthor() const
 
 ///////////////////////////////////////////////////////////////////////////
 
+const QString& ChatMessage::GetRealName() const
+{
+    return _realName;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 const QString& ChatMessage::GetColor() const
 {
     return _color;
@@ -62,6 +69,13 @@ bool ChatMessage::IsBroadcaster() const
 void ChatMessage::SetAuthor(const QString& author)
 {
     _author = author;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::SetRealName(const QString& realName)
+{
+    _realName = realName;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -282,15 +296,23 @@ void ChatMessage::_GetAndSetNameColor(const QString& message)
 
 void ChatMessage::_GetAndSetAuthor(const QString& message)
 {
+    // Get real name
+    int startOfTheName = message.indexOf("!") + 1;
+    int nameLength = message.indexOf("@", startOfTheName) - startOfTheName;
+    _realName = message.mid(startOfTheName, nameLength);
+    // Get display name
     // 13 = length of "display-name="
-    int startOfTheName = message.indexOf("display-name=") + 13;
-    int nameLength = message.indexOf("emotes") - startOfTheName - 1;
+    startOfTheName = message.indexOf("display-name=") + 13;
+    nameLength = message.indexOf("emotes") - startOfTheName - 1;
+    // If display name was not specified, use real name
     if (nameLength < 1)
     {
-        startOfTheName = message.indexOf("!") + 1;
-        nameLength = message.indexOf("@", startOfTheName) - startOfTheName;
+        _author = _realName;
     }
-    _author = message.mid(startOfTheName, nameLength);
+    else
+    {
+        _author = message.mid(startOfTheName, nameLength);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -313,6 +335,7 @@ void ChatMessage::_GetAndSetAuthorForMode(const QString& message, MessageType ms
         {
             int nameLength = message.length() - startOfTheName - 2; // "-2" for "\r\n"
             _author = message.mid(startOfTheName, nameLength);
+            _realName = _author;
         }
     }
 }

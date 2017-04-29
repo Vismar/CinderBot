@@ -46,10 +46,10 @@ int RealTimeUserData::GetMaxUserNumber()
 
 void RealTimeUserData::AddUserToList(const ChatMessage& chatMessage)
 {
-    if (!_userList.contains(chatMessage.GetAuthor()))
+    if (!_userList.contains(chatMessage.GetRealName()))
     {
         // Add user to list
-        _userList.append(chatMessage.GetAuthor());
+        _userList.append(chatMessage.GetRealName());
         // Check max number of users
         if (_userList.size() > _maxUserNumber)
         {
@@ -63,7 +63,7 @@ void RealTimeUserData::AddUserToList(const ChatMessage& chatMessage)
 
 void RealTimeUserData::RemoveUserFromList(const ChatMessage& chatMessage)
 {
-    _userList.removeOne(chatMessage.GetAuthor());
+    _userList.removeOne(chatMessage.GetRealName());
     emit UserListChanged();
 }
 
@@ -71,9 +71,9 @@ void RealTimeUserData::RemoveUserFromList(const ChatMessage& chatMessage)
 
 void RealTimeUserData::AddModeToList(const ChatMessage& chatMessage)
 {
-    if (!_modeList.contains(chatMessage.GetAuthor()))
+    if (!_modeList.contains(chatMessage.GetRealName()))
     {
-        _modeList.append(chatMessage.GetAuthor());
+        _modeList.append(chatMessage.GetRealName());
         emit ModeListChanged();
     }
 }
@@ -82,7 +82,7 @@ void RealTimeUserData::AddModeToList(const ChatMessage& chatMessage)
 
 void RealTimeUserData::RemoveModeFromList(const ChatMessage& chatMessage)
 {
-    _modeList.removeOne(chatMessage.GetAuthor());
+    _modeList.removeOne(chatMessage.GetRealName());
     emit ModeListChanged();
 }
 

@@ -164,7 +164,7 @@ void TwitchClient::ReadLine()
         case MODE:
             RealTimeUserData::Instance()->AddModeToList(message);
             ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, line);
-            if (message.GetAuthor() == line.toLower())
+            if (message.GetRealName() == line.toLower())
             {
                 _msgLimit = MSG_LIMIT_MODE;
             }
@@ -172,7 +172,7 @@ void TwitchClient::ReadLine()
         case UNMODE:
             RealTimeUserData::Instance()->RemoveModeFromList(message);
             ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, line);
-            if (message.GetAuthor() == line.toLower())
+            if (message.GetRealName() == line.toLower())
             {
                 _msgLimit = MSG_LIMIT_NON_MODE;
             }
@@ -224,6 +224,7 @@ void TwitchClient::NewBotMessage(QString message)
     {
         // Prepare chat message
         botMessage.SetAuthor(param);
+        botMessage.SetRealName(param);
         botMessage.SetColor("Green");
         botMessage.SetMessage(message);
         // Create single shot timer to emit signal to display bot message with small delay

@@ -23,12 +23,12 @@ QString UserDataCommand::GetRandomAnswer(const ChatMessage& message)
         UserData& userData = UserData::Instance();
         ConfigurationManager& configMng = ConfigurationManager::Instance();
         answer = _answers.first();
-        answer.replace("MSG_COUNT", userData.GetUserDataParam(message.GetAuthor() ,UDP_Messages));
-        answer.replace("MSG_CUR", userData.GetUserDataParam(message.GetAuthor() ,UDP_Currency));
+        answer.replace("MSG_COUNT", userData.GetUserDataParam(message.GetRealName() ,UDP_Messages));
+        answer.replace("MSG_CUR", userData.GetUserDataParam(message.GetRealName() ,UDP_Currency));
         QString curName = "NomNom ";
         configMng.GetStringParam(CFGP_CURRENCY, curName);
         answer.replace("MSG_NAME_CUR", curName);
-        answer.replace("MSG_COV", userData.GetUserDataParam(message.GetAuthor() ,UDP_Covenant));
+        answer.replace("MSG_COV", userData.GetUserDataParam(message.GetRealName() ,UDP_Covenant));
         _AddAuthorName(answer, message.GetAuthor());
     }
 
