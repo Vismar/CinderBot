@@ -11,8 +11,6 @@ ViewerCounterWidget::ViewerCounterWidget(QWidget* parent) : QGroupBox(parent)
     _layout->setAlignment(Qt::AlignTop);
     _layout->setMargin(10);
     this->setLayout(_layout);
-    _curViewerNumber = 0;
-    _maxViewerNumber = 0;
     _AddViewerLabels();
     RealTimeUserData* realTimeUD = RealTimeUserData::Instance();
     connect(realTimeUD, &RealTimeUserData::UserListChanged,
@@ -27,14 +25,10 @@ ViewerCounterWidget::~ViewerCounterWidget() {}
 
 void ViewerCounterWidget::UpdateLabels()
 {
-    const QStringList& userList = RealTimeUserData::Instance()->GetUserList();
-    _curViewerNumber = userList.size();
-    if (_curViewerNumber > _maxViewerNumber)
-    {
-        _maxViewerNumber = _curViewerNumber;
-        _maxViewers->setText("Maximum: " + QString::number(_maxViewerNumber));
-    }
-    _curViewers->setText("Current: " + QString::number(_curViewerNumber));
+    int maxUserNumber = RealTimeUserData::Instance()->GetMaxUserNumber();
+    int curUserNumber = RealTimeUserData::Instance()->GetUserList().size();
+    _maxViewers->setText("Maximum: " + QString::number(maxUserNumber));
+    _curViewers->setText("Current: " + QString::number(curUserNumber));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -46,8 +40,8 @@ void ViewerCounterWidget::_AddViewerLabels()
     _maxViewers = new QLabel(this);
     _layout->addWidget(_curViewers);
     _layout->addWidget(_maxViewers);
-    _curViewers->setText("Current: " + QString::number(_curViewerNumber));
-    _maxViewers->setText("Maximum: " + QString::number(_maxViewerNumber));
+    _curViewers->setText("Current: 0");
+    _maxViewers->setText("Maximum: 0");
 }
 
 ///////////////////////////////////////////////////////////////////////////

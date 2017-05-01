@@ -34,7 +34,7 @@ QString CovenantCommand::GetRandomAnswer(const ChatMessage& message)
             break;
         case Cov_Join:
             {
-            int currency = userData.GetUserDataParam(message.GetAuthor(), UDP_Currency).toInt();
+            int currency = userData.GetUserDataParam(message.GetRealName(), UDP_Currency).toInt();
             // Set default price value
             int priceToJoin(100);
             // Try to get param from config manager
@@ -55,13 +55,13 @@ QString CovenantCommand::GetRandomAnswer(const ChatMessage& message)
                     if (message.GetMessage().contains(*iter))
                     {
                         // Check if user already in this covenant
-                        if (userData.GetUserDataParam(message.GetAuthor(), UDP_Covenant) != *iter)
+                        if (userData.GetUserDataParam(message.GetRealName(), UDP_Covenant) != *iter)
                         {
                             // Join user to covenant and take currency for it
                             answer = _answers.first();
                             answer.replace("COV_NAME", *iter);
-                            userData.UpdateUserData(message.GetAuthor(), UDP_Covenant, *iter);
-                            userData.UpdateUserData(message.GetAuthor(), UDP_Currency, QString::number(currency - priceToJoin));
+                            userData.UpdateUserData(message.GetRealName(), UDP_Covenant, *iter);
+                            userData.UpdateUserData(message.GetRealName(), UDP_Currency, QString::number(currency - priceToJoin));
                         }
                         // User is already in that covenant
                         else
@@ -81,7 +81,7 @@ QString CovenantCommand::GetRandomAnswer(const ChatMessage& message)
             break;
         case Cov_Leave:
             answer = _answers.first();
-            userData.UpdateUserData(message.GetAuthor(), UDP_Covenant, "Viewer");
+            userData.UpdateUserData(message.GetRealName(), UDP_Covenant, "Viewer");
             break;
         default:
             break;

@@ -3,6 +3,7 @@
 #include <QString>
 #include <QVector>
 #include <QTime>
+#include <QDateTime>
 #include <QXmlStreamReader>
 
 namespace Command
@@ -74,7 +75,7 @@ protected:
     /*! List of answers */
     QVector<QString> _answers;
     /*! Time, when command was executed for a last time */
-    QTime _lastTimeUsed;
+    QDateTime _lastTimeUsed;
     /*! Command cooldown */
     QTime _cooldown;
     /*! If command can be executed only be moderators */

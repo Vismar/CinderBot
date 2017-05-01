@@ -3,14 +3,19 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-RealTimeUserData::RealTimeUserData(QObject* parent) : QObject(parent) {}
+RealTimeUserData::RealTimeUserData(QObject* parent) : QObject(parent)
+{
+    _maxUserNumber = 0;
+    _msgCounter = 0;
+}
 
 ///////////////////////////////////////////////////////////////////////////
 
 RealTimeUserData* RealTimeUserData::Instance()
 {
-    static RealTimeUserData* realTimeUD = new RealTimeUserData();
-    return realTimeUD;
+    static RealTimeUserData realTimeUD;
+    RealTimeUserData* realTimeUDPointer = &realTimeUD;
+    return realTimeUDPointer;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -26,11 +31,31 @@ const QStringList& RealTimeUserData::GetUserList()
 
 ///////////////////////////////////////////////////////////////////////////
 
+const QStringList& RealTimeUserData::GetModeList()
+{
+    return _modeList;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+int RealTimeUserData::GetMaxUserNumber()
+{
+    return _maxUserNumber;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void RealTimeUserData::AddUserToList(const ChatMessage& chatMessage)
 {
-    if (!_userList.contains(chatMessage.GetAuthor()))
+    if (!_userList.contains(chatMessage.GetRealName()))
     {
-        _userList.append(chatMessage.GetAuthor());
+        // Add user to list
+        _userList.append(chatMessage.GetRealName());
+        // Check max number of users
+        if (_userList.size() > _maxUserNumber)
+        {
+            _maxUserNumber = _userList.size();
+        }
         emit UserListChanged();
     }
 }
@@ -39,8 +64,41 @@ void RealTimeUserData::AddUserToList(const ChatMessage& chatMessage)
 
 void RealTimeUserData::RemoveUserFromList(const ChatMessage& chatMessage)
 {
-    _userList.removeOne(chatMessage.GetAuthor());
+    _userList.removeOne(chatMessage.GetRealName());
     emit UserListChanged();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void RealTimeUserData::AddModeToList(const ChatMessage& chatMessage)
+{
+    if (!_modeList.contains(chatMessage.GetRealName()))
+    {
+        _modeList.append(chatMessage.GetRealName());
+        emit ModeListChanged();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void RealTimeUserData::RemoveModeFromList(const ChatMessage& chatMessage)
+{
+    _modeList.removeOne(chatMessage.GetRealName());
+    emit ModeListChanged();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void RealTimeUserData::IncrementMsgCounter()
+{
+    ++_msgCounter;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+unsigned long long RealTimeUserData::GetMsgCounter() const
+{
+    return _msgCounter;
 }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -11,9 +11,11 @@ ViewerStatisticsWidget::ViewerStatisticsWidget(QWidget* parent) : QGroupBox(pare
     _layout->setAlignment(Qt::AlignLeft);
     _layout->setMargin(10);
     this->setLayout(_layout);
+    this->setFixedHeight(275);
 
     // Add widgets
     _AddViewerCounterWidget();
+    _AddViewerGraphWidget();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -26,6 +28,14 @@ void ViewerStatisticsWidget::_AddViewerCounterWidget()
 {
     _viewerCounter = new ViewerCounterWidget(this);
     _layout->addWidget(_viewerCounter);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ViewerStatisticsWidget::_AddViewerGraphWidget()
+{
+    _viewerGraph = new ViewerGraphWidget(this);
+    _layout->addWidget(_viewerGraph);
 }
 
 ///////////////////////////////////////////////////////////////////////////

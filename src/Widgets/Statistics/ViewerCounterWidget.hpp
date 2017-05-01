@@ -29,10 +29,6 @@ private:
     QLabel* _curViewers;
     /*! Max viewer number */
     QLabel* _maxViewers;
-    /*! Current viewers number */
-    int _curViewerNumber;
-    /*! Max viewers number */
-    int _maxViewerNumber;
 };
 
 }

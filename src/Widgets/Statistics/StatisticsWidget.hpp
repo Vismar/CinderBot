@@ -3,6 +3,7 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include "ViewerStatisticsWidget.hpp"
+#include "MessageStatisticsWidget.hpp"
 
 namespace Ui
 {
@@ -19,6 +20,10 @@ private:
      * Create and initialize viewer statistics widget
      */
     void _AddViewerStatWidget();
+    /*!
+     * Create and initialize message statistics widget
+     */
+    void _AddMessageStatWidget();
 
     /*! Vertical layout */
     QVBoxLayout* _layout;
@@ -26,6 +31,8 @@ private:
     QWidget*     _container;
     /*! ViewerStatistics widget */
     ViewerStatisticsWidget* _viewerStatWidget;
+    /*! MessageStatistics widget */
+    MessageStatisticsWidget* _msgStatWidget;
 };
 
 }

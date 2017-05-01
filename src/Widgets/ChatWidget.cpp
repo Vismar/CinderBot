@@ -51,7 +51,16 @@ void ChatWidget::AddEntry(ChatMessage message, bool botMessage)
         // Get font size and multiplay by 2 to change image size
         QString stringFontSize = QString::number(newEntry->font().pointSize() * 2);
         // Append moderator icon before author name
-        imageString = QString("<img src=':/Resources/Icons/modIcon.ico' height='%1' width='%1'>  ").arg(stringFontSize);
+        QString resourceName;
+        if (message.IsBroadcaster())
+        {
+            resourceName = "broadcasterIcon.ico";
+        }
+        else
+        {
+            resourceName = "modIcon.ico";
+        }
+        imageString = QString("<img src=':/Resources/Icons/%1' height='%2' width='%2'>  ").arg(resourceName).arg(stringFontSize);
     }
     newEntry->insertHtml(imageString + "<b>" + message.GetColor() + message.GetAuthor() + " | "
                          + message.GetTimeStamp() + "</b></font><hr>"

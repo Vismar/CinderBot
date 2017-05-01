@@ -1,7 +1,11 @@
 #include "TwitchClient.hpp"
-#include "../Utils/Config/ConfigurationManager.hpp"
-#include "../Utils/Config/ConfigurationParameters.hpp"
-#include "../Utils/UserData/RealTimeUserData.hpp"
+#include <Utils/Config/ConfigurationManager.hpp>
+#include <Utils/Config/ConfigurationParameters.hpp>
+#include <Utils/UserData/RealTimeUserData.hpp>
+
+#define MSG_TIMER_TIME     30000
+#define MSG_LIMIT_NON_MODE 20
+#define MSG_LIMIT_MODE     100
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +20,17 @@ TwitchClient::TwitchClient(QObject *parent) : QObject(parent)
     _pingTimer = new QTimer(this);
     connect(_pingTimer, &QTimer::timeout,
             this,       &TwitchClient::Disconnect);
+
+    // Msg timer. Starts immediately
+    _msgLimitTimer = new QTimer(this);
+    connect(_msgLimitTimer, &QTimer::timeout,
+            this,           &TwitchClient::ResetMsgLimit);
+    _msgLimitTimer->start(MSG_TIMER_TIME);
+
+    // Message counter
+    _msgCounter = 0;
+    // Message limit always should be set to minimal in start of client
+    _msgLimit = MSG_LIMIT_NON_MODE;
 
     // Create socket and botAi
     _socket = new QTcpSocket();
@@ -92,29 +107,6 @@ void TwitchClient::JoinChannel()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void TwitchClient::_SendIrcMessage(const QString& message)
-{
-    _socket->write(message.toStdString().c_str());
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void TwitchClient::_SendChatMessage(const QString& message)
-{
-    QString param;
-    // Try to get channel name
-    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
-    {
-        param.push_front("PRIVMSG #");
-        param.push_back(" :");
-        param.push_back(message);
-        param.push_back("\r\n");
-        _SendIrcMessage(param);
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
 void TwitchClient::Disconnect()
 {
     _socket->disconnectFromHost();
@@ -124,7 +116,7 @@ void TwitchClient::Disconnect()
 
 void TwitchClient::PingTwitch()
 {
-    // Try to ping twitch to prevent lost ceonnection when chat is inactive
+    // Try to ping twitch to prevent lost connection when chat is inactive
     _SendIrcMessage("PING\r\n");
 }
 
@@ -169,7 +161,24 @@ void TwitchClient::ReadLine()
         case PART:
             RealTimeUserData::Instance()->RemoveUserFromList(message);
             break;
+        case MODE:
+            RealTimeUserData::Instance()->AddModeToList(message);
+            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, line);
+            if (message.GetRealName() == line.toLower())
+            {
+                _msgLimit = MSG_LIMIT_MODE;
+            }
+            break;
+        case UNMODE:
+            RealTimeUserData::Instance()->RemoveModeFromList(message);
+            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, line);
+            if (message.GetRealName() == line.toLower())
+            {
+                _msgLimit = MSG_LIMIT_NON_MODE;
+            }
+            break;
         case PRIVMSG:
+            RealTimeUserData::Instance()->IncrementMsgCounter();
             emit NewMessage(message, false);
             break;
         default:
@@ -216,9 +225,48 @@ void TwitchClient::NewBotMessage(QString message)
     {
         // Prepare chat message
         botMessage.SetAuthor(param);
+        botMessage.SetRealName(param);
         botMessage.SetColor("Green");
         botMessage.SetMessage(message);
+        botMessage.SetModFlag(_msgLimit == MSG_LIMIT_MODE);
         // Create single shot timer to emit signal to display bot message with small delay
         QTimer::singleShot(50, this, [this, botMessage](){ emit NewMessage(botMessage, true); });
     }
 }
+
+///////////////////////////////////////////////////////////////////////////
+
+void TwitchClient::ResetMsgLimit()
+{
+    _msgCounter = 0;
+    _msgLimitTimer->start(MSG_TIMER_TIME);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void TwitchClient::_SendIrcMessage(const QString& message)
+{
+    _socket->write(message.toStdString().c_str());
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void TwitchClient::_SendChatMessage(const QString& message)
+{
+    if (_msgCounter < _msgLimit)
+    {
+        QString param;
+        // Try to get channel name
+        if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
+        {
+            param.push_front("PRIVMSG #");
+            param.push_back(" :");
+            param.push_back(message);
+            param.push_back("\r\n");
+            _SendIrcMessage(param);
+        }
+        ++_msgCounter;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////

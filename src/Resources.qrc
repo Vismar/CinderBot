@@ -3,5 +3,6 @@
         <file>Resources/Icons/IconEmber.ico</file>
         <file>Resources/Icons/modIcon.ico</file>
         <file>Resources/Icons/StatisticsIcon.ico</file>
+        <file>Resources/Icons/broadcasterIcon.ico</file>
     </qresource>
 </RCC>

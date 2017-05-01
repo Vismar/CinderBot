@@ -1,6 +1,6 @@
 #include "ChatMessage.hpp"
-#include "../Utils/Config/ConfigurationManager.hpp"
-#include "../Utils/Config/ConfigurationParameters.hpp"
+#include <Utils/Config/ConfigurationManager.hpp>
+#include <Utils/Config/ConfigurationParameters.hpp>
 #include <QTime>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -18,6 +18,13 @@ ChatMessage::ChatMessage()
 const QString& ChatMessage::GetAuthor() const
 {
     return _author;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+const QString& ChatMessage::GetRealName() const
+{
+    return _realName;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -50,9 +57,25 @@ bool ChatMessage::IsModerator() const
 
 ///////////////////////////////////////////////////////////////////////////
 
+bool ChatMessage::IsBroadcaster() const
+{
+    QString channelName;
+    ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, channelName);
+    return (channelName.toLower() == _author.toLower());
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void ChatMessage::SetAuthor(const QString& author)
 {
     _author = author;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::SetRealName(const QString& realName)
+{
+    _realName = realName;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -68,6 +91,13 @@ void ChatMessage::SetMessage(const QString& message)
 {
     _message = message;
     _SetTimeStamp();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::SetModFlag(bool modFlag)
+{
+    _isModerator = modFlag;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -124,10 +154,20 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
             msgType = JOIN;
             _GetAndSetAuthor(message);
         }
-        else if (_isPartMsg(message))
+        else if (_IsPartMsg(message))
         {
             msgType = PART;
             _GetAndSetAuthor(message);
+        }
+        else if (_IsModeMessage(message))
+        {
+            msgType = MODE;
+            _GetAndSetAuthorForMode(message, msgType);
+        }
+        else if (_IsUnmodeMessage(message))
+        {
+            msgType = UNMODE;
+            _GetAndSetAuthorForMode(message, msgType);
         }
         else if (_IsPrivMsg(message))
         {
@@ -217,9 +257,23 @@ bool ChatMessage::_IsJoinMsg(const QString& message) const
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_isPartMsg(const QString& message) const
+bool ChatMessage::_IsPartMsg(const QString& message) const
 {
     return message.contains("PART");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsModeMessage(const QString& message) const
+{
+    return (message.contains("MODE") && message.contains("+o"));
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsUnmodeMessage(const QString& message) const
+{
+    return (message.contains("MODE") && message.contains("-o"));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -249,15 +303,48 @@ void ChatMessage::_GetAndSetNameColor(const QString& message)
 
 void ChatMessage::_GetAndSetAuthor(const QString& message)
 {
+    // Get real name
+    int startOfTheName = message.indexOf("!") + 1;
+    int nameLength = message.indexOf("@", startOfTheName) - startOfTheName;
+    _realName = message.mid(startOfTheName, nameLength);
+    // Get display name
     // 13 = length of "display-name="
-    int startOfTheName = message.indexOf("display-name=") + 13;
-    int nameLength = message.indexOf("emotes") - startOfTheName - 1;
+    startOfTheName = message.indexOf("display-name=") + 13;
+    nameLength = message.indexOf("emotes") - startOfTheName - 1;
+    // If display name was not specified, use real name
     if (nameLength < 1)
     {
-        startOfTheName = message.indexOf("!") + 1;
-        nameLength = message.indexOf("@", startOfTheName) - startOfTheName;
+        _author = _realName;
     }
-    _author = message.mid(startOfTheName, nameLength);
+    else
+    {
+        _author = message.mid(startOfTheName, nameLength);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::_GetAndSetAuthorForMode(const QString& message, MessageType msgType)
+{
+    QString modeType;
+    if (msgType == MODE)
+    {
+        modeType = "+o";
+    }
+    else if (msgType == UNMODE)
+    {
+        modeType = "-o";
+    }
+    if (!modeType.isEmpty())
+    {
+        int startOfTheName = message.indexOf(modeType) + 3;
+        if (startOfTheName >= 3)
+        {
+            int nameLength = message.length() - startOfTheName - 2; // "-2" for "\r\n"
+            _author = message.mid(startOfTheName, nameLength);
+            _realName = _author;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -48,7 +48,6 @@ void ChatCommand::_Clear()
     _name.clear();
     _answers.clear();
     _answers.squeeze();
-    _lastTimeUsed.setHMS(0, 0, 0, 0);
     _cooldown.setHMS(0, 0, 0, 0);
     _moderatorOnly = false;
     _price = 0;
@@ -158,27 +157,23 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
 {
     QString answer;
     // Check if message contains command
-    if (message.GetMessage().contains(_name))
+    if (message.GetMessage().toLower().contains(_name))
     {
         UserData& userData = UserData::Instance();
         bool covenantIsOk = true;
         //Check covenant
-        QString userCovenantName = userData.GetUserDataParam(message.GetAuthor(), UDP_Covenant);
+        QString userCovenantName = userData.GetUserDataParam(message.GetRealName(), UDP_Covenant);
         if ((!_covenant.isEmpty()) && (_covenant != userCovenantName))
         {
             covenantIsOk = false;
         }
         // Get time when command can be executed
-        QTime timeToUse(_lastTimeUsed.hour() + _cooldown.hour(),
-                         _lastTimeUsed.minute() + _cooldown.minute(),
-                         _lastTimeUsed.second() + _cooldown.second(),
-                         _lastTimeUsed.msec() + _cooldown.msec());
+        QDateTime timeToUse = _lastTimeUsed.addMSecs(QTime(0,0,0,0).msecsTo(_cooldown));
         // Compare time when command can be used and time when command trying to be executed
-        if (covenantIsOk && (timeToUse < QTime::currentTime()))
+        if (covenantIsOk && (timeToUse < QDateTime::currentDateTime()))
         {
             // Get user currency value
-
-            QString tempUserCurrency = userData.GetUserDataParam(message.GetAuthor() ,UDP_Currency);
+            QString tempUserCurrency = userData.GetUserDataParam(message.GetRealName() ,UDP_Currency);
             int userCurrency = tempUserCurrency.toInt();
             // Set user currency value to 0 if converting was failed
             if (userCurrency < 0)
@@ -190,7 +185,7 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
             {
                 userCurrency -= _price;
                 QString newUserCurrencyValue = QString::number(userCurrency);
-                userData.UpdateUserData(message.GetAuthor(), UDP_Currency, newUserCurrencyValue);
+                userData.UpdateUserData(message.GetRealName(), UDP_Currency, newUserCurrencyValue);
                 bool returnAnswer(false);
                 // Check if command only for moderators
                 if (_moderatorOnly)
@@ -208,7 +203,7 @@ QString ChatCommand::GetRandomAnswer(const ChatMessage& message)
                 if (returnAnswer)
                 {
                     // Save time of exection
-                    _lastTimeUsed = QTime::currentTime();
+                    _lastTimeUsed = QDateTime::currentDateTime();
                     // Get random id for answer
                     int id = qrand() % _answers.size();
                     // Set returning answer
