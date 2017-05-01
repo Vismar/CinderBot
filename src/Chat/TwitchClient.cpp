@@ -178,6 +178,7 @@ void TwitchClient::ReadLine()
             }
             break;
         case PRIVMSG:
+            RealTimeUserData::Instance()->IncrementMsgCounter();
             emit NewMessage(message, false);
             break;
         default:

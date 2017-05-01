@@ -39,7 +39,9 @@ SOURCES += main.cpp\
     Widgets/Statistics/ViewerStatisticsWidget.cpp \
     Widgets/Statistics/ViewerCounterWidget.cpp \
     Utils/UserData/RealTimeUserData.cpp \
-    Widgets/Statistics/ViewerGraphWidget.cpp
+    Widgets/Statistics/ViewerGraphWidget.cpp \
+    Widgets/Statistics/MessageStatisticsWidget.cpp \
+    Widgets/Statistics/MessageGraphWidget.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -67,7 +69,9 @@ HEADERS  += MainWindow.hpp \
     Widgets/Statistics/ViewerStatisticsWidget.hpp \
     Widgets/Statistics/ViewerCounterWidget.hpp \
     Utils/UserData/RealTimeUserData.hpp \
-    Widgets/Statistics/ViewerGraphWidget.hpp
+    Widgets/Statistics/ViewerGraphWidget.hpp \
+    Widgets/Statistics/MessageStatisticsWidget.hpp \
+    Widgets/Statistics/MessageGraphWidget.hpp
 
 RESOURCES += \
     Resources.qrc

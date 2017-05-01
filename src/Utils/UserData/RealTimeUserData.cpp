@@ -6,6 +6,7 @@
 RealTimeUserData::RealTimeUserData(QObject* parent) : QObject(parent)
 {
     _maxUserNumber = 0;
+    _msgCounter = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -84,6 +85,20 @@ void RealTimeUserData::RemoveModeFromList(const ChatMessage& chatMessage)
 {
     _modeList.removeOne(chatMessage.GetRealName());
     emit ModeListChanged();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void RealTimeUserData::IncrementMsgCounter()
+{
+    ++_msgCounter;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+unsigned long long RealTimeUserData::GetMsgCounter() const
+{
+    return _msgCounter;
 }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -19,6 +19,9 @@ private:
      * Add and initialize ViewerCounter widget
      */
     void _AddViewerCounterWidget();
+    /*!
+     * Add and initialize ViewerGraph widget
+     */
     void _AddViewerGraphWidget();
 
     /*! Horizontal layout */

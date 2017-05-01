@@ -12,17 +12,19 @@
 namespace Ui
 {
 
-class ViewerGraphWidget : public QGroupBox
+class MessageGraphWidget : public QGroupBox
 {
     Q_OBJECT
 public:
-    explicit ViewerGraphWidget(QWidget* parent = 0);
-    ~ViewerGraphWidget();
+    explicit MessageGraphWidget(QWidget* parent = 0);
+    ~MessageGraphWidget();
 
 public slots:
     void UpdateGraph();
 
 private:
+    void _UpdateAverageMsg();
+
     QtCharts::QChartView* _chartView;
     QtCharts::QChart* _chart;
     QtCharts::QDateTimeAxis* _dateAxis;
