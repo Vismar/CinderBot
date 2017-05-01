@@ -1,22 +1,25 @@
-#include "ViewerGraphWidget.hpp"
+#include "MessageGraphWidget.hpp"
 #include <Utils/UserData/RealTimeUserData.hpp>
 #include <Utils/Config/ConfigurationManager.hpp>
 #include <Utils/Config/ConfigurationParameters.hpp>
+
+#include <QDebug>
 
 using namespace Ui;
 using namespace QtCharts;
 
 ///////////////////////////////////////////////////////////////////////////
 
-ViewerGraphWidget::ViewerGraphWidget(QWidget* parent) : QGroupBox(parent)
+MessageGraphWidget::MessageGraphWidget(QWidget* parent) : QGroupBox(parent)
 {
     _startingTime = QDateTime::currentDateTime();
-    this->setTitle("Viewer graph");
+    this->setTitle("Message graph");
     // Inititalize chart
     _series = new QLineSeries();
     _chart = new QChart();
     _chart->addSeries(_series);
     _chart->legend()->hide();
+    _chart->setTitle("Average: ");
     // Initialize date axis
     _dateAxis = new QDateTimeAxis();
     _dateAxis->setTickCount(5);
@@ -43,24 +46,24 @@ ViewerGraphWidget::ViewerGraphWidget(QWidget* parent) : QGroupBox(parent)
     _timer = new QTimer(this);
     UpdateGraph();
     connect(_timer, &QTimer::timeout,
-            this, &ViewerGraphWidget::UpdateGraph);
+            this, &MessageGraphWidget::UpdateGraph);
     // Start timer
-    ConfigurationManager::Instance().GetStringParam(CFGP_VGRAPH_UPD_TIME, _timeToUpdate);
+    ConfigurationManager::Instance().GetStringParam(CFGP_MESSAGE_GRAPH_UPD_TIME, _timeToUpdate);
     _timer->start(_timeToUpdate.toInt());
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-ViewerGraphWidget::~ViewerGraphWidget() {}
+MessageGraphWidget::~MessageGraphWidget() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ViewerGraphWidget::UpdateGraph()
+void MessageGraphWidget::UpdateGraph()
 {
     QDateTime currentTime = QDateTime::currentDateTime();
-    _series->append(currentTime.toMSecsSinceEpoch(), RealTimeUserData::Instance()->GetUserList().size());
+    _series->append(currentTime.toMSecsSinceEpoch(), RealTimeUserData::Instance()->GetMsgCounter());
     _dateAxis->setRange(_startingTime, currentTime);
-    int newMaxY = RealTimeUserData::Instance()->GetMaxUserNumber() + 1.0;
+    int newMaxY = RealTimeUserData::Instance()->GetMsgCounter() + 1.0;
     _valueAxis->setMax(newMaxY);
     if (newMaxY <= 6)
     {
@@ -70,8 +73,33 @@ void ViewerGraphWidget::UpdateGraph()
     {
         _valueAxis->setTickCount(7);
     }
-    ConfigurationManager::Instance().GetStringParam(CFGP_VGRAPH_UPD_TIME, _timeToUpdate);
+    ConfigurationManager::Instance().GetStringParam(CFGP_MESSAGE_GRAPH_UPD_TIME, _timeToUpdate);
     _timer->start(_timeToUpdate.toInt());
+    // Update average msg counter
+    _UpdateAverageMsg();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void MessageGraphWidget::_UpdateAverageMsg()
+{
+    QVector<QPointF> values = _series->pointsVector();
+    unsigned long long sum(0);
+    if (values.size() > 1)
+    {
+        for (int i = 1; i < values.size(); ++i)
+        {
+            sum += (unsigned long long)values.at(i).toPoint().y() - (unsigned long long)values.at(i - 1).toPoint().y();
+        }
+        if (sum == 0)
+        {
+            _chart->setTitle("Average: 0");
+        }
+        else
+        {
+            _chart->setTitle(QString("Average: %1").arg(sum/values.size()));
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

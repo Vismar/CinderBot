@@ -55,6 +55,16 @@ public:
      */
     void RemoveModeFromList(const ChatMessage& chatMessage);
 
+    /*!
+     * Add one message to msg counter
+     */
+    void IncrementMsgCounter();
+    /*!
+     * Returns number of messages that was appeared in chat during the stream session
+     * \return number of messages
+     */
+    unsigned long long GetMsgCounter() const;
+
 signals:
     void UserListChanged();
     void ModeListChanged();
@@ -66,4 +76,6 @@ private:
     QStringList _modeList;
     /*! Max number of users in chat */
     int _maxUserNumber;
+    /*! Message counter for current session */
+    unsigned long long _msgCounter;
 };

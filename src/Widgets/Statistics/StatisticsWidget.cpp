@@ -15,6 +15,7 @@ StatisticsWidget::StatisticsWidget(QWidget* parent) : QScrollArea(parent)
 
     // Add widgets
     _AddViewerStatWidget();
+    _AddMessageStatWidget();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -27,6 +28,14 @@ void StatisticsWidget::_AddViewerStatWidget()
 {
     _viewerStatWidget = new ViewerStatisticsWidget(this);
     _layout->addWidget(_viewerStatWidget);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void StatisticsWidget::_AddMessageStatWidget()
+{
+    _msgStatWidget = new MessageStatisticsWidget(this);
+    _layout->addWidget(_msgStatWidget);
 }
 
 ///////////////////////////////////////////////////////////////////////////
