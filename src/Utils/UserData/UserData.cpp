@@ -7,6 +7,83 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
+UserData& UserData::Instance()
+{
+    static UserData instance;
+    return instance;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+UserData::~UserData()
+{
+    QFile userDataFile(UD_FILE_NAME);
+    if (userDataFile.open(QIODevice::WriteOnly))
+    {
+        _xmlWriter.setDevice(&userDataFile);
+        _xmlWriter.setAutoFormatting(true);
+        _xmlWriter.writeStartDocument();
+        _xmlWriter.writeStartElement("DataTable");
+        _SaveUserData();
+        _xmlWriter.writeEndElement();
+        _xmlWriter.writeEndDocument();
+    }
+    userDataFile.close();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void UserData::Initialize()
+{
+    _InitializeDefaultUserData();
+    QFile userDataFile(UD_FILE_NAME);
+    if (userDataFile.open(QIODevice::ReadOnly))
+    {
+        _xmlReader.setDevice(&userDataFile);
+
+        while (!_xmlReader.atEnd())
+        {
+            _xmlReader.readNext();
+            if (_xmlReader.isStartElement())
+            {
+                if (_xmlReader.name() == UD_SECTION_USER_DATA)
+                {
+                    _ReadUserData();
+                }
+            }
+        }
+    }
+    userDataFile.close();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+QString UserData::GetUserDataParam(const QString& userName, UserDataParam UDP)
+{
+    // If user do not exist, add him to the hash table
+    if (!_userData.contains(userName.toLower()))
+    {
+        _AddUserData(userName.toLower(), _defaultParams);
+    }
+    return _userData[userName.toLower()][_GetUDPParam(UDP)];
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void UserData::UpdateUserData(const QString& userName,
+                              UserDataParam UDP,
+                              const QString& newValue)
+{
+    // If user do not exist, add him to the hash table
+    if (!_userData.contains(userName.toLower()))
+    {
+        _AddUserData(userName.toLower(), _defaultParams);
+    }
+    _userData[userName.toLower()].insert(_GetUDPParam(UDP), newValue);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void UserData::_AddUserData(const QString& userName, const QHash<QString, QString>& params)
 {
     _userData.insert(userName.toLower(), params);
@@ -138,83 +215,6 @@ QHash<QString, QString> UserData::_ReadUserParams()
     }
 
     return params;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-UserData& UserData::Instance()
-{
-    static UserData instance;
-    return instance;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-UserData::~UserData()
-{
-    QFile userDataFile(UD_FILE_NAME);
-    if (userDataFile.open(QIODevice::WriteOnly))
-    {
-        _xmlWriter.setDevice(&userDataFile);
-        _xmlWriter.setAutoFormatting(true);
-        _xmlWriter.writeStartDocument();
-        _xmlWriter.writeStartElement("DataTable");
-        _SaveUserData();
-        _xmlWriter.writeEndElement();
-        _xmlWriter.writeEndDocument();
-    }
-    userDataFile.close();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void UserData::Initialize()
-{
-    _InitializeDefaultUserData();
-    QFile userDataFile(UD_FILE_NAME);
-    if (userDataFile.open(QIODevice::ReadOnly))
-    {
-        _xmlReader.setDevice(&userDataFile);
-
-        while (!_xmlReader.atEnd())
-        {
-            _xmlReader.readNext();
-            if (_xmlReader.isStartElement())
-            {
-                if (_xmlReader.name() == UD_SECTION_USER_DATA)
-                {
-                    _ReadUserData();
-                }
-            }
-        }
-    }
-    userDataFile.close();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-QString UserData::GetUserDataParam(const QString& userName, UserDataParam UDP)
-{
-    // If user do not exist, add him to the hash table
-    if (!_userData.contains(userName.toLower()))
-    {
-        _AddUserData(userName.toLower(), _defaultParams);
-    }
-    return _userData[userName.toLower()][_GetUDPParam(UDP)];
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void UserData::UpdateUserData(const QString& userName,
-                              UserDataParam UDP,
-                              const QString& newValue)
-{
-    // If user do not exist, add him to the hash table
-    if (!_userData.contains(userName.toLower()))
-    {
-        _AddUserData(userName.toLower(), _defaultParams);
-    }
-    _userData[userName.toLower()].insert(_GetUDPParam(UDP), newValue);
 }
 
 ///////////////////////////////////////////////////////////////////////////
