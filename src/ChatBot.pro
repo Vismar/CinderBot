@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network charts
+QT       += core gui network charts sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     Utils/UserData/RealTimeUserData.cpp \
     Widgets/Statistics/ViewerGraphWidget.cpp \
     Widgets/Statistics/MessageStatisticsWidget.cpp \
-    Widgets/Statistics/MessageGraphWidget.cpp
+    Widgets/Statistics/MessageGraphWidget.cpp \
+    Utils/DatabaseManager.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -71,7 +72,8 @@ HEADERS  += MainWindow.hpp \
     Utils/UserData/RealTimeUserData.hpp \
     Widgets/Statistics/ViewerGraphWidget.hpp \
     Widgets/Statistics/MessageStatisticsWidget.hpp \
-    Widgets/Statistics/MessageGraphWidget.hpp
+    Widgets/Statistics/MessageGraphWidget.hpp \
+    Utils/DatabaseManager.hpp
 
 RESOURCES += \
     Resources.qrc
