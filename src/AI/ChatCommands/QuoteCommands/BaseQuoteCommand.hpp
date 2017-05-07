@@ -12,11 +12,6 @@ class BaseQuoteCommand : public ChatCommand
 {
 public:
     BaseQuoteCommand();
-    /*!
-     * Set reference to quotes
-     * \param(IN) quotes - reference to list of quotes
-     */
-    void SetQuoteRef(QVector<QString>* quotes);
 
 protected:
     /*!
@@ -27,8 +22,6 @@ protected:
      * \return true, if number was found
      */
     bool _GetNumberAfterCommand(const QString& command, const QString& message, QString& value);
-    /*! Reference to list of quotes */
-    QVector<QString>* _quotes;
 };
 
 }

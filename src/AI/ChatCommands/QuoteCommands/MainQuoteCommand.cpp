@@ -1,4 +1,5 @@
 #include "MainQuoteCommand.hpp"
+#include <Utils/DatabaseManager.hpp>
 
 using namespace Command;
 
@@ -19,23 +20,40 @@ QString MainQuoteCommand::GetRandomAnswer(const ChatMessage& message)
     QString val;
     if (message.GetMessage().contains(_name))
     {
-        // Try to found number after command
-        if (_GetNumberAfterCommand(_name, msg, val))
+        std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(number)");
+        if (numberQuery != NULL)
         {
-            // Check borders
-            int number = val.toInt() - 1;
-            if ((number >= 0) && (number < _quotes->size()))
+            numberQuery->first();
+            int maxValue = numberQuery->value(0).toInt();
+
+            // Try to found number after command
+            if (_GetNumberAfterCommand(_name, msg, val))
             {
-                answer = _quotes->at(number);
-                answer.append(" - #" + QString::number(number + 1));
+                // Check borders
+                int number = val.toInt();
+                if ((number > 0) && (number <= maxValue))
+                {
+                    std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes", "quote", QString("number = %1").arg(number));
+                    if (query != NULL)
+                    {
+                        query->first();
+                        answer = query->value(0).toString();
+                        answer.append(" - #" + QString::number(number));
+                    }
+                }
             }
-        }
-        // If check failed return random quote
-        if (answer.isEmpty())
-        {
-            int k = qrand() % _quotes->size();
-            answer = _quotes->at(k);
-            answer.append(" - #" + QString::number(k + 1));
+            // If check failed return random quote
+            if (answer.isEmpty())
+            {
+                int k = qrand() % maxValue;
+                std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes", "quote", QString("number = %1").arg(k+1));
+                if (query != NULL)
+                {
+                    query->first();
+                    answer = query->value(0).toString();
+                    answer.append(" - #" + QString::number(k+1));
+                }
+            }
         }
     }
 
