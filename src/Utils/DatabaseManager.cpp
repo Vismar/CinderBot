@@ -33,9 +33,21 @@ QString DatabaseManager::Initialize()
     {
         result = _database.lastError().text();
     }
-    else
+
+    return result;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool DatabaseManager::CreateTable(const QString& tableName, const QString& columns)
+{
+    bool result = true;
+    QSqlQuery query;
+    query.prepare(QString("CREATE TABLE IF NOT EXISTS %1 (%2);").arg(tableName).arg(columns));
+    if (!query.exec())
     {
-        // Create tables here
+        result = false;
+        qDebug() << "Database error: " << query.lastError().text();
     }
 
     return result;
@@ -43,12 +55,13 @@ QString DatabaseManager::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool DatabaseManager::Insert(const QString& tableName, const QString& recordValues)
+bool DatabaseManager::Insert(const QString& tableName, const QString& recordValues, bool ignore)
 {
     bool result = true;
     QSqlQuery query;
-    query.prepare(QString("INSERT INTO %1 VALUES (%2);").arg(tableName).arg(recordValues));
-    qDebug() << QString("INSERT INTO %1 VALUES (%2);").arg(tableName).arg(recordValues);
+    QString orIgnore = ignore ? "OR IGNORE" : "";
+
+    query.prepare(QString("INSERT %1 INTO %2 VALUES (%3);").arg(orIgnore).arg(tableName).arg(recordValues));
     if (!query.exec())
     {
         result = false;

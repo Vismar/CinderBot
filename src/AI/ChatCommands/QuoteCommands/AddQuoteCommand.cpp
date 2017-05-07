@@ -1,4 +1,5 @@
 #include "AddQuoteCommand.hpp"
+#include <Utils/DatabaseManager.hpp>
 
 using namespace Command;
 
@@ -25,10 +26,19 @@ QString AddQuoteCommand::GetRandomAnswer(const ChatMessage& message)
         // If message not empty add quote to the list
         if (!msg.isEmpty())
         {
-            _quotes->push_back(msg);
-            answer = "Quote #";
-            answer.append(QString::number(_quotes->size()));
-            answer.append(" was added!");
+            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(number)");
+            if (numberQuery != NULL)
+            {
+                numberQuery->first();
+                int newMaxValue = numberQuery->value(0).toInt() + 1;
+
+                if (DB_INSERT("Quotes", QString("NULL, '%1', %2").arg(msg).arg(newMaxValue)))
+                {
+                    answer = "Quote #";
+                    answer.append(QString::number(newMaxValue));
+                    answer.append(" was added!");
+                }
+            }
         }
     }
 

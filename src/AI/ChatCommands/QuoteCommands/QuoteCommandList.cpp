@@ -3,6 +3,7 @@
 #include "AddQuoteCommand.hpp"
 #include "DeleteQuoteCommand.hpp"
 #include "EditQuoteCommand.hpp"
+#include <Utils/DatabaseManager.hpp>
 #include <QFile>
 
 using namespace Command;
@@ -15,71 +16,28 @@ QuoteCommandList::QuoteCommandList()
     _commands.push_back(new AddQuoteCommand());
     _commands.push_back(new DeleteQuoteCommand());
     _commands.push_back(new EditQuoteCommand());
-    for (int i = 0; i < _commands.size(); ++i)
-    {
-        BaseQuoteCommand* command = static_cast<BaseQuoteCommand*>(_commands[i]);
-        if (command)
-        {
-            command->SetQuoteRef(&_quotes);
-        }
-    }
+
     _Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-QuoteCommandList::~QuoteCommandList()
-{
-    QFile commandsFile("./data/data/Quotes.xml");
-    if (commandsFile.open(QIODevice::WriteOnly))
-    {
-        _xmlWriter.setDevice(&commandsFile);
-        _xmlWriter.setAutoFormatting(true);
-        _xmlWriter.writeStartDocument();
-        _xmlWriter.writeStartElement("Quotes");
-        _SaveQuotes();
-        _xmlWriter.writeEndElement();
-        _xmlWriter.writeEndDocument();
-    }
-    commandsFile.close();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void QuoteCommandList::_SaveQuotes()
-{
-    for (int i = 0; i < _quotes.size(); ++i)
-    {
-        _xmlWriter.writeTextElement("Quote", _quotes.at(i));
-    }
-}
+QuoteCommandList::~QuoteCommandList() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
 void QuoteCommandList::_Initialize()
 {
-    QFile commandsFile("./data/data/Quotes.xml");
-    // Try to open file
-    if (commandsFile.open(QIODevice::ReadOnly))
-    {
-        _xmlReader.setDevice(&commandsFile);
+    // Initialize data table in database
+    DB_CREATE_TABLE("Quotes", "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                              "quote TEXT NOT NULL,"
+                              "number INTEGER NOT NULL UNIQUE");
 
-        // Read xml file
-        while (!_xmlReader.atEnd())
-        {
-            _xmlReader.readNext();
-            if (_xmlReader.isStartElement())
-            {
-                // If it is start section of quote, read it
-                if (_xmlReader.name() == "Quote")
-                {
-                    QString quote = _xmlReader.readElementText();
-                    _quotes.push_back(quote);
-                }
-            }
-        }
+    std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "id", "number = 0");
+    if (!numberQuery->next())
+    {
+        DB_INSERT("Quotes", "NULL, 'Technical quote with 0 number for purpose of max number', 0", true);
     }
-    commandsFile.close();
 }
 
 ///////////////////////////////////////////////////////////////////////////

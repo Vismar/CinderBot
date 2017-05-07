@@ -17,21 +17,10 @@ public:
     ~QuoteCommandList();
 
 protected:
-    /*!
-     * Save all quotes to .xml file
-     */
-    void _SaveQuotes();
 
     ////////////////////////////////
     /// CommandList override
     void _Initialize();
-
-    /*! Xml stream reader */
-    QXmlStreamReader _xmlReader;
-    /*! Xml stream writer */
-    QXmlStreamWriter _xmlWriter;
-    /*! List of quotes */
-    QVector<QString> _quotes;
 };
 
 }

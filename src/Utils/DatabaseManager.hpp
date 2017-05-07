@@ -2,6 +2,12 @@
 #include <QtSql>
 #include <memory>
 
+#define DB_CREATE_TABLE DatabaseManager::Instance().CreateTable
+#define DB_INSERT       DatabaseManager::Instance().Insert
+#define DB_SELECT       DatabaseManager::Instance().Select
+#define DB_UPDATE       DatabaseManager::Instance().Update
+#define DB_DELETE       DatabaseManager::Instance().Delete
+
 class DatabaseManager
 {
 public:
@@ -26,12 +32,19 @@ public:
     QString Initialize();
 
     /*!
+     * Try to create table if it not exist
+     * \param(IN) tableName - name of a table which should be created
+     * \param(IN) columns - columns with all parameters that should be created for specified table
+     * \return true if command was successful
+     */
+    bool CreateTable(const QString& tableName, const QString& columns);
+    /*!
      * Insert new record to the database
      * \param(IN) tableName - name of a table in which new record should be added
      * \param(IN) recordValues - values for a new record
      * \return true if command was successful
      */
-    bool Insert(const QString& tableName, const QString& recordValues);
+    bool Insert(const QString& tableName, const QString& recordValues, bool ignore = false);
     /*!
      * \brief Select
      * \param(IN) tableName - name of a table in which new record should be added
