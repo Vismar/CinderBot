@@ -1,8 +1,6 @@
 #pragma once
 #include <QString>
 #include <QHash>
-#include <QXmlStreamReader>
-#include <QXmlStreamWriter>
 
 /*!
  * UserDataParam
@@ -68,26 +66,6 @@ private:
      */
     void _InitializeDefaultUserData();
 
-    /*!
-     * Read xml file to get UDP
-     * \return hash table of UDP
-     */
-    QHash<QString, QString> _ReadUserParams();
-    /*!
-     * Read user data from xml file
-     */
-    void _ReadUserData();
-    /*!
-     * Save stored user data to file
-     */
-    void _SaveUserData();
-
-    /*! Hash table of user data */
-    QHash<QString, QHash<QString, QString> > _userData;
-    /*! Hash table if default parameters of user data */
-    QHash<QString, QString>                  _defaultParams;
-    /*! Xml stream reader */
-    QXmlStreamReader _xmlReader;
-    /*! Xml stream writer */
-    QXmlStreamWriter _xmlWriter;
+    /*! Hash table of default parameters of user data */
+    QHash<QString, QString> _defaultParams;
 };
