@@ -1,9 +1,5 @@
 #include "UserData.hpp"
-#include <QFile>
-
-#define UD_FILE_NAME         "./data/data/UserData.xml"
-#define UD_SECTION_USER_DATA "UserData"
-#define UD_SECTION_NAME      "Name"
+#include <Utils/DatabaseManager.hpp>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -15,57 +11,41 @@ UserData& UserData::Instance()
 
 ///////////////////////////////////////////////////////////////////////////
 
-UserData::~UserData()
-{
-    QFile userDataFile(UD_FILE_NAME);
-    if (userDataFile.open(QIODevice::WriteOnly))
-    {
-        _xmlWriter.setDevice(&userDataFile);
-        _xmlWriter.setAutoFormatting(true);
-        _xmlWriter.writeStartDocument();
-        _xmlWriter.writeStartElement("DataTable");
-        _SaveUserData();
-        _xmlWriter.writeEndElement();
-        _xmlWriter.writeEndDocument();
-    }
-    userDataFile.close();
-}
+UserData::~UserData() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
 void UserData::Initialize()
 {
     _InitializeDefaultUserData();
-    QFile userDataFile(UD_FILE_NAME);
-    if (userDataFile.open(QIODevice::ReadOnly))
-    {
-        _xmlReader.setDevice(&userDataFile);
-
-        while (!_xmlReader.atEnd())
-        {
-            _xmlReader.readNext();
-            if (_xmlReader.isStartElement())
-            {
-                if (_xmlReader.name() == UD_SECTION_USER_DATA)
-                {
-                    _ReadUserData();
-                }
-            }
-        }
-    }
-    userDataFile.close();
+    DB_CREATE_TABLE("UserData", "Id       INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                "Name     TEXT    NOT NULL UNIQUE,"
+                                "Messages INTEGER NOT NULL,"
+                                "Currency INTEGER NOT NULL,"
+                                "Covenant TEXT    NOT NULL");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 QString UserData::GetUserDataParam(const QString& userName, UserDataParam UDP)
 {
+    QString returnString = "";
+
     // If user do not exist, add him to the hash table
-    if (!_userData.contains(userName.toLower()))
+    std::shared_ptr<QSqlQuery> query = DB_SELECT("UserData", "*", QString("Name = '%1'").arg(userName));
+    if (!query->next())
     {
         _AddUserData(userName.toLower(), _defaultParams);
     }
-    return _userData[userName.toLower()][_GetUDPParam(UDP)];
+
+    // Get user data
+    std::shared_ptr<QSqlQuery> dataQuery = DB_SELECT("UserData", _GetUDPParam(UDP), QString("Name = '%1'").arg(userName));
+    if (dataQuery->first())
+    {
+        returnString = dataQuery->value(_GetUDPParam(UDP)).toString();
+    }
+
+    return returnString;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -75,18 +55,36 @@ void UserData::UpdateUserData(const QString& userName,
                               const QString& newValue)
 {
     // If user do not exist, add him to the hash table
-    if (!_userData.contains(userName.toLower()))
+    std::shared_ptr<QSqlQuery> query = DB_SELECT("UserData", "*", QString("Name = '%1'").arg(userName));
+    if (!query->next())
     {
         _AddUserData(userName.toLower(), _defaultParams);
     }
-    _userData[userName.toLower()].insert(_GetUDPParam(UDP), newValue);
+
+    // Update user data
+    switch (UDP)
+    {
+    case UDP_Messages:
+    case UDP_Currency:
+        DB_UPDATE("UserData", QString("%1 = %2").arg(_GetUDPParam(UDP)).arg(newValue), QString("Name = '%1'").arg(userName));
+        break;
+    default:
+        DB_UPDATE("UserData", QString("%1 = '%2'").arg(_GetUDPParam(UDP)).arg(newValue), QString("Name = '%1'").arg(userName));
+        break;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void UserData::_AddUserData(const QString& userName, const QHash<QString, QString>& params)
 {
-    _userData.insert(userName.toLower(), params);
+    QString values = "NULL, ':name', :msg, :cur, ':cov'";
+    values.replace(":name", userName);
+    values.replace(":msg", params[_GetUDPParam(UDP_Messages)]);
+    values.replace(":cur", params[_GetUDPParam(UDP_Currency)]);
+    values.replace(":cov", params[_GetUDPParam(UDP_Covenant)]);
+    qDebug() << values;
+    DB_INSERT("UserData", values);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -128,93 +126,6 @@ QString UserData::_GetUDPParam(UserDataParam UDP)
     }
 
     return param;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void UserData::_ReadUserData()
-{
-    while (!_xmlReader.atEnd())
-    {
-        _xmlReader.readNext();
-        if (_xmlReader.isEndElement())
-        {
-            // If we reach end of user data section, break the loop
-            if (_xmlReader.name() == UD_SECTION_USER_DATA)
-            {
-                break;
-            }
-        }
-        if (_xmlReader.isStartElement())
-        {
-            if (_xmlReader.name() == UD_SECTION_NAME)
-            {
-                QString name = _xmlReader.readElementText().toLower();
-                _userData.insert(name, _ReadUserParams());
-            }
-        }
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void UserData::_SaveUserData()
-{
-    for (auto it = _userData.begin(); it != _userData.end(); ++it)
-    {
-        _xmlWriter.writeStartElement(UD_SECTION_USER_DATA);
-        _xmlWriter.writeTextElement(UD_SECTION_NAME, it.key());
-        for (auto itParam = it.value().begin(); itParam != it.value().end(); ++itParam)
-        {
-            _xmlWriter.writeTextElement(itParam.key(), itParam.value());
-        }
-        _xmlWriter.writeEndElement();
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-QHash<QString, QString> UserData::_ReadUserParams()
-{
-    QHash<QString, QString> params;
-    while (!_xmlReader.atEnd())
-    {
-        _xmlReader.readNext();
-        if (_xmlReader.isEndElement())
-        {
-            // If we reach end of user data section, break the loop
-            if (_xmlReader.name() == UD_SECTION_USER_DATA)
-            {
-                break;
-            }
-        }
-        if (_xmlReader.isStartElement())
-        {
-            QString param;
-            for (int i = 0; i < UDP_End; ++i)
-            {
-                param = _GetUDPParam(static_cast<UserDataParam>(i));
-                // If need parameter was found, save it
-                if (_xmlReader.name() == param)
-                {
-                    params.insert(param, _xmlReader.readElementText());
-                }
-            }
-        }
-    }
-    if (params.size() != _defaultParams.size())
-    {
-        // Check if all UDP were found. If not, add it and set to default value
-        for (auto it = _defaultParams.begin(); it != _defaultParams.end(); ++it)
-        {
-            if (!params.contains(it.key()) || params[it.key()] != "")
-            {
-                params.insert(it.key(), it.value());
-            }
-        }
-    }
-
-    return params;
 }
 
 ///////////////////////////////////////////////////////////////////////////
