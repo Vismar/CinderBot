@@ -1,4 +1,5 @@
 #pragma once
+#include <QObject>
 #include <QtSql>
 #include <memory>
 
@@ -8,8 +9,9 @@
 #define DB_UPDATE       DatabaseManager::Instance().Update
 #define DB_DELETE       DatabaseManager::Instance().Delete
 
-class DatabaseManager
+class DatabaseManager : public QObject
 {
+    Q_OBJECT
 public:
     /*!
      * Default constructor
@@ -68,6 +70,23 @@ public:
      * \return true if command was successful
      */
     bool Delete(const QString& tableName, const QString& conditions = "");
+
+signals:
+    /*!
+     * Event for any succesfull insert command
+     * \param tableName - name of table for which operation was executed
+     */
+    void OnInsertEvent(const QString& tableName);
+    /*!
+     * Event for any succesfull update command
+     * \param tableName - name of table for which operation was executed
+     */
+    void OnUpdateEvent(const QString& tableName);
+    /*!
+     * Event for any succesfull delete command
+     * \param tableName - name of table for which operation was executed
+     */
+    void OnDeleteEvent(const QString& tableName);
 
 private:
     /*! Database which is used to store all data */

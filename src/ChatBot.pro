@@ -42,7 +42,11 @@ SOURCES += main.cpp\
     Widgets/Statistics/ViewerGraphWidget.cpp \
     Widgets/Statistics/MessageStatisticsWidget.cpp \
     Widgets/Statistics/MessageGraphWidget.cpp \
-    Utils/DatabaseManager.cpp
+    Utils/DatabaseManager.cpp \
+    Widgets/Quotes/QuotesWidget.cpp \
+    Widgets/Quotes/SingleQuoteWidget.cpp \
+    Widgets/Quotes/CreateQuoteWidget.cpp \
+    Widgets/Quotes/QuoteTabWidget.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -73,7 +77,11 @@ HEADERS  += MainWindow.hpp \
     Widgets/Statistics/ViewerGraphWidget.hpp \
     Widgets/Statistics/MessageStatisticsWidget.hpp \
     Widgets/Statistics/MessageGraphWidget.hpp \
-    Utils/DatabaseManager.hpp
+    Utils/DatabaseManager.hpp \
+    Widgets/Quotes/QuotesWidget.hpp \
+    Widgets/Quotes/SingleQuoteWidget.hpp \
+    Widgets/Quotes/CreateQuoteWidget.hpp \
+    Widgets/Quotes/QuoteTabWidget.hpp
 
 RESOURCES += \
     Resources.qrc
