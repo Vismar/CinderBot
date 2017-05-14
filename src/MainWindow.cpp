@@ -62,15 +62,23 @@ void MainWindow::_CreateTabWidget()
     // Initialize tab widget
     _tabWidget = new QTabWidget(this);
     _tabWidget->setTabPosition(QTabWidget::East);
-    _tabWidget->setStyleSheet("QTabBar::tab {height: 41px; width:41px; padding:1px; margin:1px;}");
+    _tabWidget->setStyleSheet("QTabBar::tab {height: 43px; width:43px; padding:1px; margin:1px;}"
+                              "QTabBar::tab:selected {height: 43px; width:43px; padding:1px; margin:1px; background: #383838;}");
     _tabWidget->setIconSize(QSize(40, 40));
 
     /***** First tab - Statistics *****/
     // Create and add statistics widget
     _CreateStatisticsWidget();
-    QIcon icon(":/Resources/Icons/StatisticsIcon.ico");
-    _tabWidget->addTab(_statisticsWidget, icon, "");
+    QIcon iconStat(":/Resources/Icons/StatisticsIcon.ico");
+    _tabWidget->addTab(_statisticsWidget, iconStat, "");
     _tabWidget->setTabToolTip(0, "Statistics");
+
+    /***** Second tab - Quotes *****/
+    // Create and add quotes widget
+    _CreateQuotesWidget();
+    QIcon iconQuotes(":/Resources/Icons/QuotesIcon.ico");
+    _tabWidget->addTab(_quoteTabWidget, iconQuotes, "");
+    _tabWidget->setTabToolTip(1, "Quotes");
 
     // Add tab widget to layout
     _layout->addWidget(_tabWidget);
@@ -81,6 +89,13 @@ void MainWindow::_CreateTabWidget()
 void MainWindow::_CreateStatisticsWidget()
 {
     _statisticsWidget = new StatisticsWidget();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void MainWindow::_CreateQuotesWidget()
+{
+    _quoteTabWidget = new QuoteTabWidget();
 }
 
 ///////////////////////////////////////////////////////////////////////////

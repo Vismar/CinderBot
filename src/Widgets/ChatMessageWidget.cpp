@@ -25,7 +25,7 @@ ChatMessageWidget::ChatMessageWidget(const QString& text, QWidget* parent) : QTe
 
 void ChatMessageWidget::_AdjustMinimumSize(const QSizeF& size)
 {
-    // Sets maximum size of widget, prevents it from squeezing
+    // Sets minimum size of widget, prevents it from squeezing
     setMinimumHeight(size.height() + 2 * frameWidth());
     // Sets maximum size of widget, prevents it from stretching
     setMaximumHeight(size.height() + 2 * frameWidth());

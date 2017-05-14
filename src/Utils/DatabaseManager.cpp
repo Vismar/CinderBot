@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-DatabaseManager::DatabaseManager()
+DatabaseManager::DatabaseManager() : QObject(0)
 {
     _database = QSqlDatabase::addDatabase("QSQLITE");
     _database.setDatabaseName("CinderBotDatabase.sqlite");
@@ -28,9 +28,11 @@ DatabaseManager& DatabaseManager::Instance()
 
 QString DatabaseManager::Initialize()
 {
+    // Try to open database
     QString result("OK");
     if (!_database.open())
     {
+        // If something goes wrong, return error
         result = _database.lastError().text();
     }
 
@@ -43,9 +45,11 @@ bool DatabaseManager::CreateTable(const QString& tableName, const QString& colum
 {
     bool result = true;
     QSqlQuery query;
+    // Prepare command
     query.prepare(QString("CREATE TABLE IF NOT EXISTS %1 (%2);").arg(tableName).arg(columns));
     if (!query.exec())
     {
+        // If command failed, return error
         result = false;
         qDebug() << "Database error: " << query.lastError().text();
     }
@@ -59,13 +63,20 @@ bool DatabaseManager::Insert(const QString& tableName, const QString& recordValu
 {
     bool result = true;
     QSqlQuery query;
+    // Insert IGNORE if it was specififed
     QString orIgnore = ignore ? "OR IGNORE" : "";
-
+    // Prepare command
     query.prepare(QString("INSERT %1 INTO %2 VALUES (%3);").arg(orIgnore).arg(tableName).arg(recordValues));
     if (!query.exec())
     {
+        // If command failed, return error
         result = false;
         qDebug() << "Database error: " << query.lastError().text();
+    }
+    else
+    {
+        // Notify observers
+        emit OnInsertEvent(tableName);
     }
 
     return result;
@@ -77,6 +88,7 @@ std::shared_ptr<QSqlQuery> DatabaseManager::Select(const QString& tableName, con
 {
     std::shared_ptr<QSqlQuery> query = std::make_shared<QSqlQuery>();
     QString command;
+    // Prepare command
     if (conditions.isEmpty())
     {
         command = QString("SELECT %1 FROM %2;").arg(columnNames).arg(tableName);
@@ -90,7 +102,7 @@ std::shared_ptr<QSqlQuery> DatabaseManager::Select(const QString& tableName, con
     {
         return query;
     }
-
+    // If command failed, return error
     qDebug() << "Database error: " << query->lastError().text();
     return NULL;
 }
@@ -102,6 +114,7 @@ bool DatabaseManager::Update(const QString& tableName, const QString& columnValu
     bool result = true;
     QSqlQuery query;
     QString command;
+    // Prepare command
     if (conditions.isEmpty())
     {
         command = QString("UPDATE %1 SET %2;").arg(tableName).arg(columnValues);
@@ -113,8 +126,14 @@ bool DatabaseManager::Update(const QString& tableName, const QString& columnValu
     query.prepare(command);
     if (!query.exec())
     {
+        // If command failed, return error
         result = false;
         qDebug() << "Database error: " << query.lastError().text();
+    }
+    else
+    {
+        // Notify observers
+        emit OnUpdateEvent(tableName);
     }
 
     return result;
@@ -127,6 +146,7 @@ bool DatabaseManager::Delete(const QString& tableName, const QString& conditions
     bool result = true;
     QSqlQuery query;
     QString command;
+    // Prepare command
     if (conditions.isEmpty())
     {
         command = QString("DELETE FROM %1;").arg(tableName);
@@ -138,8 +158,14 @@ bool DatabaseManager::Delete(const QString& tableName, const QString& conditions
     query.prepare(command);
     if (!query.exec())
     {
+        // If command failed, return error
         result = false;
         qDebug() << "Database error: " << query.lastError().text();
+    }
+    else
+    {
+        // Notify observers
+        emit OnDeleteEvent(tableName);
     }
 
     return result;
