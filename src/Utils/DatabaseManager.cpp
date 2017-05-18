@@ -74,17 +74,24 @@ bool DatabaseManager::CreateTable(const QString& tableName, const QString& colum
             if (pragmaQuery.exec())
             {
                 QStringList columnList = columns.split(",");
-                bool columnsExists[columnList.size()] = {false};
-                int i = 0;
+                bool columnsExists[columnList.size()];
+                // We have to initialize this array in that way
+                // because gcc do not allow to inititalize array with value which do not known in compile time
+                for (int i = 0; i < columnList.size(); ++i)
+                {
+                    columnsExists[i] = false;
+                }
                 // Check if columns exist in current table
                 while (pragmaQuery.next())
                 {
-                    if (columnList.at(i).startsWith(pragmaQuery.value("name").toString() + " "))
+                    for (int i = 0; i < columnList.size(); ++i)
                     {
-                        columnsExists[i] = true;
-                        qDebug() << columnsExists[i] << columnList.at(i) << pragmaQuery.value("name").toString();
+                        if (columnList.at(i).startsWith(pragmaQuery.value("name").toString() + " "))
+                        {
+                            columnsExists[i] = true;
+                            qDebug() << columnsExists[i] << columnList.at(i) << pragmaQuery.value("name").toString();
+                        }
                     }
-                    ++i;
                 }
                 // Parse list of columns that should exist and create if columns do not exist
                 for (int j = 0; j < columnList.size(); ++j)
