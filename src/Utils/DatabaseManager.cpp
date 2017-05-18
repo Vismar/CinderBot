@@ -1,4 +1,5 @@
 #include "DatabaseManager.hpp"
+#include <QStringList>
 #include <QDebug>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -44,14 +45,65 @@ QString DatabaseManager::Initialize()
 bool DatabaseManager::CreateTable(const QString& tableName, const QString& columns)
 {
     bool result = true;
-    QSqlQuery query;
-    // Prepare command
-    query.prepare(QString("CREATE TABLE IF NOT EXISTS %1 (%2);").arg(tableName).arg(columns));
-    if (!query.exec())
+
+    std::shared_ptr<QSqlQuery> queryToCheckTable = DB_SELECT("sqlite_master",
+                                                             "COUNT(*)",
+                                                             QString("type = 'table' AND name = '%1'").arg(tableName));
+    if (queryToCheckTable != NULL)
     {
-        // If command failed, return error
-        result = false;
-        qDebug() << "Database error: " << query.lastError().text();
+        queryToCheckTable->first();
+        qDebug() << queryToCheckTable->value(0).toString();
+        // If table do not exist, create it
+        if (queryToCheckTable->value(0).toInt() == 0)
+        {
+            QSqlQuery query;
+            // Prepare command
+            query.prepare(QString("CREATE TABLE %1 (%2);").arg(tableName).arg(columns));
+            if (!query.exec())
+            {
+                // If command failed, return error
+                result = false;
+                qDebug() << "Database error: " << query.lastError().text();
+            }
+        }
+        // If table exist, check if all columns are added
+        else
+        {
+            QSqlQuery pragmaQuery;
+            pragmaQuery.prepare(QString("PRAGMA table_info(%1)").arg(tableName));
+            if (pragmaQuery.exec())
+            {
+                QStringList columnList = columns.split(",");
+                bool columnsExists[columnList.size()] = {false};
+                int i = 0;
+                // Check if columns exist in current table
+                while (pragmaQuery.next())
+                {
+                    if (columnList.at(i).startsWith(pragmaQuery.value("name").toString() + " "))
+                    {
+                        columnsExists[i] = true;
+                        qDebug() << columnsExists[i] << columnList.at(i) << pragmaQuery.value("name").toString();
+                    }
+                    ++i;
+                }
+                // Parse list of columns that should exist and create if columns do not exist
+                for (int j = 0; j < columnList.size(); ++j)
+                {
+                    if (!columnsExists[j])
+                    {
+                        qDebug() << "Creating columns - " << columnList.at(j);
+                        QSqlQuery alterTableQuery;
+                        alterTableQuery.prepare(QString("ALTER TABLE %1 ADD COLUMN %2;").arg(tableName).arg(columnList.at(j)));
+                        if (!alterTableQuery.exec())
+                        {
+                            // If command failed, return error
+                            result = false;
+                            qDebug() << "Database error: " << alterTableQuery.lastError().text();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return result;
