@@ -1,7 +1,8 @@
 #include "CovenantCommand.hpp"
-#include "../../Utils/UserData/UserData.hpp"
-#include "../../Utils/Config/ConfigurationManager.hpp"
-#include "../../Utils/Config/ConfigurationParameters.hpp"
+#include <Utils/UserData/UserData.hpp>
+#include <Utils/Config/ConfigurationManager.hpp>
+#include <Utils/Config/ConfigurationParameters.hpp>
+#include <Utils/DatabaseManager.hpp>
 #include <QStringList>
 
 using namespace Command;
@@ -21,67 +22,16 @@ QString CovenantCommand::GetRandomAnswer(const ChatMessage& message)
     QString answer;
     if (message.GetMessage().contains(_name))
     {
-        QString value;
-        QString price;
-        ConfigurationManager& configMng = ConfigurationManager::Instance();
-        UserData& userData = UserData::Instance();
         switch (_cmdType)
         {
         case Cov_List:
-            answer = _answers.first();
-            configMng.GetStringParam(CFGS_COVENANTS,value);
-            answer.replace("COV_LIST", value);
+            answer = _GetAnswerForCovListCmd();
             break;
         case Cov_Join:
-            {
-            int currency = userData.GetUserDataParam(message.GetRealName(), UDP_Currency).toInt();
-            // Set default price value
-            int priceToJoin(100);
-            // Try to get param from config manager
-            if (configMng.GetStringParam(CFGP_COV_JOIN_PRICE,price))
-            {
-                priceToJoin = price.toInt();
-
-            }
-            // If user have enough currency to join
-            if (currency >= priceToJoin)
-            {
-                configMng.GetStringParam(CFGS_COVENANTS,value);
-                QStringList covenants = value.split(",");
-                // Try to find specified covenant from list of covenants
-                for (auto iter = covenants.begin(); iter != covenants.end(); ++iter)
-                {
-                    // Found a overlap
-                    if (message.GetMessage().contains(*iter))
-                    {
-                        // Check if user already in this covenant
-                        if (userData.GetUserDataParam(message.GetRealName(), UDP_Covenant) != *iter)
-                        {
-                            // Join user to covenant and take currency for it
-                            answer = _answers.first();
-                            answer.replace("COV_NAME", *iter);
-                            userData.UpdateUserData(message.GetRealName(), UDP_Covenant, *iter);
-                            userData.UpdateUserData(message.GetRealName(), UDP_Currency, QString::number(currency - priceToJoin));
-                        }
-                        // User is already in that covenant
-                        else
-                        {
-                            // Second answer
-                            answer = _answers.at(1);
-                        }
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                answer = _answers.last();
-            }
-            }
+            answer = _GetAnswerForCovJoinCmd(message);
             break;
         case Cov_Leave:
-            answer = _answers.first();
-            userData.UpdateUserData(message.GetRealName(), UDP_Covenant, "Viewer");
+            answer = _GetAnswerForCovLeaveCmd(message);
             break;
         default:
             break;
@@ -120,6 +70,106 @@ void CovenantCommand::Initialize()
     default:
         break;
     }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+QString CovenantCommand::_GetAnswerForCovListCmd()
+{
+    QString answer;
+    QString covList;
+    std::shared_ptr<QSqlQuery> query = DB_SELECT("Covenants", "Name");
+    if (query->exec())
+    {
+        answer = _answers.first();
+        while (query->next())
+        {
+            covList.append(query->value("Name").toString() + ", ");
+        }
+        if (covList.size() > 0)
+        {
+            covList = covList.left(covList.size() - 2);
+        }
+    }
+    answer.replace("COV_LIST", covList);
+
+    return answer;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+QString CovenantCommand::_GetAnswerForCovJoinCmd(const ChatMessage& message)
+{
+    QString answer;
+    QString price;
+    ConfigurationManager& configMng = ConfigurationManager::Instance();
+    UserData& userData = UserData::Instance();
+
+    // Get amount of currency which user have
+    int currency = userData.GetUserDataParam(message.GetRealName(), UDP_Currency).toInt();
+    // Set default price value
+    int priceToJoin(100);
+    // Try to get param from config manager
+    if (configMng.GetStringParam(CFGP_COV_JOIN_PRICE,price))
+    {
+        priceToJoin = price.toInt();
+
+    }
+    // If user have enough currency to join
+    if (currency >= priceToJoin)
+    {
+        // Get covenant list
+        QStringList covenants;
+        std::shared_ptr<QSqlQuery> query = DB_SELECT("Covenants", "Name");
+        if (query->exec())
+        {
+            while (query->next())
+            {
+                covenants.append(query->value("Name").toString());
+            }
+        }
+        // Try to find specified covenant from list of covenants
+        for (auto iter = covenants.begin(); iter != covenants.end(); ++iter)
+        {
+            // Found a overlap
+            if (message.GetMessage().contains(*iter))
+            {
+                // Check if user already in this covenant
+                if (userData.GetUserDataParam(message.GetRealName(), UDP_Covenant) != *iter)
+                {
+                    // Join user to covenant and take currency for it
+                    answer = _answers.first();
+                    answer.replace("COV_NAME", *iter);
+                    userData.UpdateUserData(message.GetRealName(), UDP_Covenant, *iter);
+                    userData.UpdateUserData(message.GetRealName(), UDP_Currency, QString::number(currency - priceToJoin));
+                }
+                // User is already in that covenant
+                else
+                {
+                    // Second answer
+                    answer = _answers.at(1);
+                }
+                break;
+            }
+        }
+    }
+    else
+    {
+        answer = _answers.last();
+    }
+
+    return answer;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+QString CovenantCommand::_GetAnswerForCovLeaveCmd(const ChatMessage& message)
+{
+    QString answer = _answers.first();
+    UserData& userData = UserData::Instance();
+    userData.UpdateUserData(message.GetRealName(), UDP_Covenant, "Viewer");
+
+    return answer;
 }
 
 ///////////////////////////////////////////////////////////////////////////

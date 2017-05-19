@@ -5,7 +5,6 @@
 #define CFGS_CONFIG    "ConfigData"
 #define CFGS_IGNORE    "IgnoreList"
 #define CFGS_USER      "User"
-#define CFGS_COVENANTS "CovenantList"
 #define CFGS_COVENANT  "Covenant"
 
 /*============================================*/

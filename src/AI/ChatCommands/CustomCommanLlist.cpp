@@ -1,8 +1,9 @@
 #include "CustomCommandList.hpp"
 #include <QFile>
 #include <QXmlStreamReader>
-#include "../../Utils/Config/ConfigurationManager.hpp"
-#include "../../Utils/Config/ConfigurationParameters.hpp"
+#include <Utils/Config/ConfigurationManager.hpp>
+#include <Utils/Config/ConfigurationParameters.hpp>
+#include <Utils/DatabaseManager.hpp>
 
 using namespace Command;
 
@@ -20,14 +21,19 @@ void CustomCommandList::_Initialize()
     // Custom commands
     _ReadXml("./data/config/Commands.xml");
     // Covenant commands
-    ConfigurationManager& configMng = ConfigurationManager::Instance();
-    QString covenantListString;
-    configMng.GetStringParam(CFGS_COVENANTS, covenantListString);
-    QStringList covenantList = covenantListString.split(",");
-    for (int i = 0; i < covenantList.size(); ++i)
+    QStringList covList;
+    std::shared_ptr<QSqlQuery> query = DB_SELECT("Covenants", "Name");
+    if (query->exec())
     {
-        covenantListString = QString("./data/config/%1.xml").arg(covenantList[i]);
-        _ReadXml(covenantListString);
+        while (query->next())
+        {
+            covList.append(query->value("Name").toString());
+        }
+    }
+    for (int i = 0; i < covList.size(); ++i)
+    {
+        QString covenantCmdPath = QString("./data/config/%1.xml").arg(covList[i]);
+        _ReadXml(covenantCmdPath);
     }
 }
 
