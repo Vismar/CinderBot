@@ -24,7 +24,8 @@ void CovenantCommandList::_Initialize()
 {
     // Initialize data table in database
     DB_CREATE_TABLE("Covenants", "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                 "Name TEXT NOT NULL UNIQUE");
+                                 "Name TEXT NOT NULL UNIQUE,"
+                                 "Leader TEXT");
 }
 
 ///////////////////////////////////////////////////////////////////////////
