@@ -4,7 +4,6 @@
 #include "DeleteQuoteCommand.hpp"
 #include "EditQuoteCommand.hpp"
 #include <Utils/DatabaseManager.hpp>
-#include <QFile>
 
 using namespace Command;
 

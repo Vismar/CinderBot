@@ -51,10 +51,6 @@ private:
      * Read ignore list section in xml file
      */
     void _ReadIgnoreList();
-    /*!
-     * Read covenant list section in xml file
-     */
-    void _ReadCovenantList();
 
     /*! Hash table of parameters */
     QHash<QString, QString> _params;

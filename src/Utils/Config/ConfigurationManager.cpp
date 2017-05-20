@@ -120,11 +120,6 @@ void ConfigurationManager::_ReadConfigData()
             {
                 _ReadIgnoreList();
             }
-            // If we found covenant list section, read it
-            else if (_xmlReader.name() == CFGS_COVENANTS)
-            {
-                _ReadCovenantList();
-            }
             // If we found any other parameter, save it
             else
             {
@@ -168,38 +163,6 @@ void ConfigurationManager::_ReadIgnoreList()
         }
     }
     _params.insert("IgnoreList", ignoreList);
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void ConfigurationManager::_ReadCovenantList()
-{
-    QString covenants;
-    while (!_xmlReader.atEnd())
-    {
-        _xmlReader.readNext();
-        if (_xmlReader.isEndElement())
-        {
-            // If we reach end of covenant list section, break the loop
-            if (_xmlReader.name() == CFGS_COVENANTS)
-            {
-                break;
-            }
-        }
-        if (_xmlReader.isStartElement())
-        {
-            if (_xmlReader.name() == CFGS_COVENANT)
-            {
-                // Stick all covenant names in one line to easy access via GetStringParam()
-                if (!covenants.isEmpty())
-                {
-                    covenants.append(',');
-                }
-                covenants.append(_xmlReader.readElementText());
-            }
-        }
-    }
-    _params.insert("CovenantList", covenants);
 }
 
 ///////////////////////////////////////////////////////////////////////////

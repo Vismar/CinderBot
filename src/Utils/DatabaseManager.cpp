@@ -52,7 +52,6 @@ bool DatabaseManager::CreateTable(const QString& tableName, const QString& colum
     if (queryToCheckTable != NULL)
     {
         queryToCheckTable->first();
-        qDebug() << queryToCheckTable->value(0).toString();
         // If table do not exist, create it
         if (queryToCheckTable->value(0).toInt() == 0)
         {
@@ -89,7 +88,6 @@ bool DatabaseManager::CreateTable(const QString& tableName, const QString& colum
                         if (columnList.at(i).startsWith(pragmaQuery.value("name").toString() + " "))
                         {
                             columnsExists[i] = true;
-                            qDebug() << columnsExists[i] << columnList.at(i) << pragmaQuery.value("name").toString();
                         }
                     }
                 }
@@ -98,7 +96,6 @@ bool DatabaseManager::CreateTable(const QString& tableName, const QString& colum
                 {
                     if (!columnsExists[j])
                     {
-                        qDebug() << "Creating columns - " << columnList.at(j);
                         QSqlQuery alterTableQuery;
                         alterTableQuery.prepare(QString("ALTER TABLE %1 ADD COLUMN %2;").arg(tableName).arg(columnList.at(j)));
                         if (!alterTableQuery.exec())
