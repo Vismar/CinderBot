@@ -97,8 +97,8 @@ bool DatabaseManager::CreateTable(const QString& tableName, const QString& colum
                     if (!columnsExists[j])
                     {
                         QSqlQuery alterTableQuery;
-                        alterTableQuery.prepare(QString("ALTER TABLE %1 ADD COLUMN %2;").arg(tableName).arg(columnList.at(j)));
-                        if (!alterTableQuery.exec())
+                        //qDebug() << alterTableQuery.prepare(command);
+                        if (!alterTableQuery.exec(QString("ALTER TABLE %1 ADD COLUMN %2;").arg(tableName).arg(columnList.at(j))))
                         {
                             // If command failed, return error
                             result = false;
