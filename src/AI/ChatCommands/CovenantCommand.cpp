@@ -60,17 +60,17 @@ void CovenantCommand::Initialize()
     switch (_cmdType)
     {
     case Cov_List:
-        _name = "#cov_list";
+        _name = "!cov_list";
         _answers.push_back("Covenants: COV_LIST");
         break;
     case Cov_Join:
-        _name = "#cov_join";
+        _name = "!cov_join";
         _answers.push_back("You are joining COV_NAME, @.");
         _answers.push_back("You are already in that covenant, @!");
         _answers.push_back("Not enough currency, @!");
         break;
     case Cov_Leave:
-        _name = "#cov_leave";
+        _name = "!cov_leave";
         _answers.push_back("You left covenant! Now you are just a viewer, @");
         _answers.push_back("You are leader of covenant, @! Please provide name of the new leader.");
         _answers.push_back("You left covenant, @! New leader of COV_NAME is LEADER_NAME.");
@@ -78,13 +78,13 @@ void CovenantCommand::Initialize()
         _answers.push_back("You are not in any covenant yet, @.");
         break;
     case Cov_Disband:
-        _name = "#cov_disband";
+        _name = "!cov_disband";
         _answers.push_back("Your covenant was disbanded, @!");
         _answers.push_back("You are not leader of your covenant, @.");
         _answers.push_back("You are not in any covenant yet, @.");
         break;
     case Cov_Create:
-        _name = "#cov_create";
+        _name = "!cov_create";
         _answers.push_back("You do not have enought currency, @.");
         _answers.push_back("You are leader of another covenant, @! Leave or disband it and try again.");
         _answers.push_back("Covenant COV_NAME was created. @! Now you are leader of it.");

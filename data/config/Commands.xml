@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Commands>
 	<Command>
-		<Name>#test</Name>
+		<!-- Here you should type whatever you want to trigger a command -->
+		<Name>!test</Name>
 		<!-- This tag is may not exist. But if you use it, it should be in format "hours:minutes:seconds:milliseconds" -->
 		<Cooldown>0:0:30:0</Cooldown>
 		<!-- This tag is may not exist. But if you use it, please use "true" or "false" values, any other value will be equivalent to "false" -->

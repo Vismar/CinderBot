@@ -43,20 +43,20 @@ void UserDataCommand::Initialize()
     switch (_cmdType)
     {
     case UDC_Messages:
-        _name = "#UD_msg";
+        _name = "!UD_msg";
         //TODO: Replace with GetString in future
         _answers.push_back("You wrote MSG_COUNT messages! @");
         break;
     case UDC_Currency:
-        _name = "#UD_cur";
+        _name = "!UD_cur";
         _answers.push_back("You have MSG_CUR of MSG_NAME_CUR ! @");
         break;
     case UDC_Covenant:
-        _name = "#UD_cov";
+        _name = "!UD_cov";
         _answers.push_back("You are in MSG_COV covenant! @");
         break;
     case UDC_Full:
-        _name = "#me";
+        _name = "!me";
         _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Covenant - MSG_COV.");
         break;
     default:

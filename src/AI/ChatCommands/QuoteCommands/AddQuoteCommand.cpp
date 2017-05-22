@@ -8,7 +8,7 @@ using namespace Command;
 AddQuoteCommand::AddQuoteCommand()
 {
     _Clear();
-    _name = "#add_quote";
+    _name = "!add_quote";
 }
 
 ///////////////////////////////////////////////////////////////////////////

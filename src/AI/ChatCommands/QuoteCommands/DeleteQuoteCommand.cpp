@@ -8,7 +8,7 @@ using namespace Command;
 DeleteQuoteCommand::DeleteQuoteCommand()
 {
     _Clear();
-    _name = "#delete_quote";
+    _name = "!delete_quote";
 }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -8,7 +8,7 @@ using namespace Command;
 EditQuoteCommand::EditQuoteCommand()
 {
     _Clear();
-    _name = "#edit_quote";
+    _name = "!edit_quote";
 }
 
 ///////////////////////////////////////////////////////////////////////////
