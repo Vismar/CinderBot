@@ -23,6 +23,7 @@ void UserData::Initialize()
                                 "Messages INTEGER NOT NULL,"
                                 "Currency INTEGER NOT NULL,"
                                 "Covenant TEXT    NOT NULL");
+    DB_CREATE_INDEX("UserData", "Covenant_Index", "Covenant");
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -83,7 +84,6 @@ void UserData::_AddUserData(const QString& userName, const QHash<QString, QStrin
     values.replace(":msg", params[_GetUDPParam(UDP_Messages)]);
     values.replace(":cur", params[_GetUDPParam(UDP_Currency)]);
     values.replace(":cov", params[_GetUDPParam(UDP_Covenant)]);
-    qDebug() << values;
     DB_INSERT("UserData", values);
 }
 

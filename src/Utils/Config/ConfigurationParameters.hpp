@@ -21,6 +21,7 @@
 #define CFGP_CURRECY_TIMER          "CurrencyTimer"
 /* Covenant params */
 #define CFGP_COV_JOIN_PRICE         "CovJoinPrice"
+#define CFGP_COV_CREATE_PRICE       "CovCreatePrice"
 #define CFGP_VGRAPH_UPD_TIME        "ViewerGraphUpdateTime"
 /* Message params */
 #define CFGP_MESSAGE_GRAPH_UPD_TIME "MessagegraphUpdateTime"

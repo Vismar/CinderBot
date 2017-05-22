@@ -3,6 +3,7 @@
 #include <QtSql>
 #include <memory>
 
+#define DB_CREATE_INDEX DatabaseManager::Instance().CreateIndex
 #define DB_CREATE_TABLE DatabaseManager::Instance().CreateTable
 #define DB_INSERT       DatabaseManager::Instance().Insert
 #define DB_SELECT       DatabaseManager::Instance().Select
@@ -33,6 +34,14 @@ public:
      */
     QString Initialize();
 
+    /*!
+     * Create index on specified table (and columns if specified)
+     * \param tableName - name of table
+     * \param indexName - name of index
+     * \param columns - columns which should be indexed
+     * \return true if index successfully created
+     */
+    bool CreateIndex(const QString& tableName, const QString& indexName, const QString& columns = "");
     /*!
      * Try to create table if it not exist
      * \param(IN) tableName - name of a table which should be created
@@ -65,7 +74,7 @@ public:
     bool Update(const QString& tableName, const QString& columnValues, const QString& conditions = "");
     /*!
      * \brief Delete
-     * \param(IN) tableName - name of a table in which new record should be added
+     * \param(IN) tableName - name of a table in which record should be deelted
      * \param(IN) conditions - conditions for selection from the table
      * \return true if command was successful
      */
