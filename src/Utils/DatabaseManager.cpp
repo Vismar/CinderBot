@@ -42,6 +42,33 @@ QString DatabaseManager::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
+bool DatabaseManager::CreateIndex(const QString& tableName, const QString& indexName, const QString& columns)
+{
+    bool result = true;
+
+    QString command;
+    QSqlQuery query;
+    // Prepare command for whole table or specified columns in specified table
+    if (columns.isEmpty())
+    {
+        command = QString("CREATE INDEX IF NOT EXISTS %2 ON %1;").arg(tableName).arg(indexName);
+    }
+    else
+    {
+        command = QString("CREATE INDEX IF NOT EXISTS %2 ON %1 (%3);").arg(tableName).arg(indexName).arg(columns);
+    }
+    // If command failed. return error
+    if (!query.exec(command))
+    {
+        result = false;
+        qDebug() << "Database error(CreateIndex): " << query.lastError();
+    }
+
+    return result;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 bool DatabaseManager::CreateTable(const QString& tableName, const QString& columns)
 {
     bool result = true;
@@ -62,7 +89,7 @@ bool DatabaseManager::CreateTable(const QString& tableName, const QString& colum
             {
                 // If command failed, return error
                 result = false;
-                qDebug() << "Database error: " << query.lastError().text();
+                qDebug() << "Database error(CreateTable): " << query.lastError().text();
             }
         }
         // If table exist, check if all columns are added
@@ -102,7 +129,7 @@ bool DatabaseManager::CreateTable(const QString& tableName, const QString& colum
                         {
                             // If command failed, return error
                             result = false;
-                            qDebug() << "Database error: " << alterTableQuery.lastError().text();
+                            qDebug() << "Database error(CreateTable): " << alterTableQuery.lastError().text();
                         }
                     }
                 }
@@ -127,7 +154,7 @@ bool DatabaseManager::Insert(const QString& tableName, const QString& recordValu
     {
         // If command failed, return error
         result = false;
-        qDebug() << "Database error: " << query.lastError().text();
+        qDebug() << "Database error(Insert): " << query.lastError().text();
     }
     else
     {
@@ -159,7 +186,7 @@ std::shared_ptr<QSqlQuery> DatabaseManager::Select(const QString& tableName, con
         return query;
     }
     // If command failed, return error
-    qDebug() << "Database error: " << query->lastError().text();
+    qDebug() << "Database error(Select): " << query->lastError().text();
     return NULL;
 }
 
@@ -184,7 +211,7 @@ bool DatabaseManager::Update(const QString& tableName, const QString& columnValu
     {
         // If command failed, return error
         result = false;
-        qDebug() << "Database error: " << query.lastError().text();
+        qDebug() << "Database error(Update): " << query.lastError().text();
     }
     else
     {
@@ -216,7 +243,7 @@ bool DatabaseManager::Delete(const QString& tableName, const QString& conditions
     {
         // If command failed, return error
         result = false;
-        qDebug() << "Database error: " << query.lastError().text();
+        qDebug() << "Database error(Delete): " << query.lastError().text();
     }
     else
     {
