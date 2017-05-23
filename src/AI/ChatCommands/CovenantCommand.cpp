@@ -39,8 +39,10 @@ QString CovenantCommand::GetRandomAnswer(const ChatMessage& message)
         case Cov_Create:
             answer = _GetAnswerForCovCreateCmd(message);
             break;
+        case Cov_Rename:
+            answer = _GetAnswerForCovRenameCmd(message);
+            break;
         default:
-            answer = _GetAnswerForCovCreateCmd(message);
             break;
         }
     }
@@ -65,7 +67,7 @@ void CovenantCommand::Initialize()
         break;
     case Cov_Join:
         _name = "!cov_join";
-        _answers.push_back("You are joining COV_NAME, @.");
+        _answers.push_back("You are joining 'COV_NAME', @.");
         _answers.push_back("You are already in that covenant, @!");
         _answers.push_back("Not enough currency, @!");
         _answers.push_back("You are leader of your covenant, @! Please leave before trying to join.");
@@ -88,8 +90,15 @@ void CovenantCommand::Initialize()
         _name = "!cov_create";
         _answers.push_back("You do not have enought currency, @.");
         _answers.push_back("You are leader of another covenant, @! Leave or disband it and try again.");
-        _answers.push_back("Covenant COV_NAME was created. @! Now you are leader of it.");
+        _answers.push_back("Covenant 'COV_NAME' was created. @! Now you are leader of it.");
         _answers.push_back("Please provide name of new covenant, @.");
+        break;
+    case Cov_Rename:
+        _name = "!cov_rename";
+        _answers.push_back("You are not leader of your covenant, @!");
+        _answers.push_back("Your covenant has been renamed, @.");
+        _answers.push_back("You are not in any covenant yet, @.");
+        _answers.push_back("Please provide a new name of covenant, @.");
         break;
     default:
         break;
@@ -358,6 +367,11 @@ QString CovenantCommand::_GetAnswerForCovCreateCmd(const ChatMessage& message)
                 // Get covenant name
                 QString newCovenant = message.GetMessage().mid(_name.size()+1);
                 int covNameLength = ((newCovenant.size()-2) < 0) ? 0 : (newCovenant.size()-2);
+                // If covenant name too long, just make it shorter
+                if (covNameLength > 50)
+                {
+                    covNameLength = 50;
+                }
                 newCovenant = newCovenant.left(covNameLength);
                 // If user provided covenant name, create it
                 if (!newCovenant.isEmpty())
@@ -387,6 +401,74 @@ QString CovenantCommand::_GetAnswerForCovCreateCmd(const ChatMessage& message)
                 answer = _answers.at(0);
             }
         }
+    }
+
+    return answer;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+QString CovenantCommand::_GetAnswerForCovRenameCmd(const ChatMessage& message)
+{
+    QString answer;
+    UserData& userData = UserData::Instance();
+    QString covenant = userData.GetUserDataParam(message.GetRealName(), UDP_Covenant);
+    // Check if user in covenant
+    if (covenant != "Viewer")
+    {
+        // Check if user is leader of its covenant
+        std::shared_ptr<QSqlQuery> query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
+        if (query->exec())
+        {
+            // If user is in covenant, check its leader
+            if (query->first())
+            {
+                qDebug() << query->value("Leader").toString() << message.GetRealName();
+                if (query->value("Leader").toString() == message.GetRealName())
+                {
+                    QString newCovenantName = message.GetMessage().mid(_name.size()+1);
+                    int covNameLength = ((newCovenantName.size()-2) < 0) ? 0 : (newCovenantName.size()-2);
+                    // If covenant name too long, just make it shorter
+                    if (covNameLength > 50)
+                    {
+                        covNameLength = 50;
+                    }
+                    newCovenantName = newCovenantName.left(covNameLength);
+                    // If user provided covenant name, create it
+                    if (!newCovenantName.isEmpty())
+                    {
+                        // If covenant was disbanded, set covenant field to viewer for all users who was in that covenant
+                        if (DB_UPDATE("Covenants", QString("Name = '%1'").arg(newCovenantName),
+                                                   QString("Leader = '%1'").arg(message.GetRealName())))
+                        {
+                            std::shared_ptr<QSqlQuery> queryUpdate = DB_SELECT("UserData",
+                                                                               "Name",
+                                                                               QString("Covenant = '%1'").arg(covenant));
+                            if (queryUpdate != NULL)
+                            {
+                                while (queryUpdate->next())
+                                {
+                                    userData.UpdateUserData(queryUpdate->value("Name").toString(), UDP_Covenant, newCovenantName);
+                                }
+                            }
+                            answer = _answers.at(1);
+                        }
+                    }
+                    else
+                    {
+                        answer = _answers.at(3);
+                    }
+                }
+                else
+                {
+                    answer = _answers.at(0);
+                }
+            }
+        }
+    }
+    else
+    {
+        answer = _answers.at(2);
     }
 
     return answer;
