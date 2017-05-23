@@ -15,6 +15,7 @@ enum CovCommandType
     Cov_Leave,
     Cov_Disband,
     Cov_Create,
+    Cov_Rename,
     Cov_End
 };
 
@@ -65,6 +66,12 @@ private:
      * \return answer which will notify user about creating covenant
      */
     QString _GetAnswerForCovCreateCmd(const ChatMessage& message);
+    /*!
+     * Get answer for Cov_Rename command
+     * \param message - chat message that will be used for getting needed data
+     * \return answer which will notify user about renaming covenant
+     */
+    QString _GetAnswerForCovRenameCmd(const ChatMessage& message);
 
     /*** Cov_Leave helper functions ***/
     /*!
