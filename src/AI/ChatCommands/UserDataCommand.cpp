@@ -4,9 +4,9 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "UserDataCommand.hpp"
-#include "../../Utils/UserData/UserData.hpp"
-#include "../../Utils/Config/ConfigurationManager.hpp"
-#include "../../Utils/Config/ConfigurationParameters.hpp"
+#include <Utils/UserData/UserData.hpp>
+#include <Utils/Config/ConfigurationManager.hpp>
+#include <Utils/Config/ConfigurationParameters.hpp>
 
 using namespace Command;
 
@@ -25,15 +25,14 @@ QString UserDataCommand::GetRandomAnswer(const ChatMessage& message)
     QString answer;
     if (message.GetMessage().contains(_name))
     {
-        UserData& userData = UserData::Instance();
         ConfigurationManager& configMng = ConfigurationManager::Instance();
         answer = _answers.first();
-        answer.replace("MSG_COUNT", userData.GetUserDataParam(message.GetRealName() ,UDP_Messages));
-        answer.replace("MSG_CUR", userData.GetUserDataParam(message.GetRealName() ,UDP_Currency));
+        answer.replace("MSG_COUNT", UD_GET_PARAM(message.GetRealName() ,UDP_Messages));
+        answer.replace("MSG_CUR", UD_GET_PARAM(message.GetRealName() ,UDP_Currency));
         QString curName = "NomNom ";
         configMng.GetStringParam(CFGP_CURRENCY, curName);
         answer.replace("MSG_NAME_CUR", curName);
-        answer.replace("MSG_COV", userData.GetUserDataParam(message.GetRealName() ,UDP_Covenant));
+        answer.replace("MSG_COV", UD_GET_PARAM(message.GetRealName() ,UDP_Covenant));
         _AddAuthorName(answer, message.GetAuthor());
     }
 

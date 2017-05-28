@@ -15,6 +15,8 @@
 #define DB_UPDATE       DatabaseManager::Instance().Update
 #define DB_DELETE       DatabaseManager::Instance().Delete
 
+#define DB_QUERY_PTR    std::shared_ptr<QSqlQuery>
+
 class DatabaseManager : public QObject
 {
     Q_OBJECT

@@ -9,10 +9,10 @@
 #include <Utils/Config/ConfigurationParameters.hpp>
 #include <Utils/UserData/RealTimeUserData.hpp>
 /*** Command lists ***/
-#include "./ChatCommands/CustomCommandList.hpp"
-#include "./ChatCommands/UserDataCommandList.hpp"
-#include "./ChatCommands/CovenantCommandList.hpp"
-#include "./ChatCommands/QuoteCommands/QuoteCommandList.hpp"
+#include <AI/ChatCommands/CustomCommandList.hpp>
+#include <AI/ChatCommands/UserDataCommandList.hpp>
+#include <AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp>
+#include <AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp>
 
 using namespace Command;
 
@@ -137,28 +137,26 @@ void BotAI::_UpdateUserData(const ChatMessage& message)
 
 void BotAI::_IncrementMessageCounter(const QString& userName)
 {
-    UserData& userData = UserData::Instance();
     QString param;
     // Get message counter
-    param = userData.GetUserDataParam(userName, UDP_Messages);
+    param = UD_GET_PARAM(userName, UDP_Messages);
     // Increment counter
     param = QString::number(param.toInt() + 1);
     // Set new value
-    userData.UpdateUserData(userName, UDP_Messages, param);
+    UD_UPDATE(userName, UDP_Messages, param);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void BotAI::_AddCurrency(const QString& userName, const int value)
 {
-    UserData& userData = UserData::Instance();
     QString param;
     // Get currency value
-    param = userData.GetUserDataParam(userName, UDP_Currency);
+    param = UD_GET_PARAM(userName, UDP_Currency);
     // Update value
     param = QString::number(param.toInt() + value);
     // Set new value
-    userData.UpdateUserData(userName, UDP_Currency, param);
+    UD_UPDATE(userName, UDP_Currency, param);
 }
 
 ///////////////////////////////////////////////////////////////////////////
