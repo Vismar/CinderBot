@@ -27,8 +27,6 @@ SOURCES += main.cpp\
     AI/ChatCommands/CustomCommanLlist.cpp \
     AI/ChatCommands/UserDataCommand.cpp \
     AI/ChatCommands/UserDataCommandList.cpp \
-    AI/ChatCommands/CovenantCommand.cpp \
-    AI/ChatCommands/CovenantCommandList.cpp \
     AI/ChatCommands/QuoteCommands/BaseQuoteCommand.cpp \
     AI/ChatCommands/QuoteCommands/MainQuoteCommand.cpp \
     AI/ChatCommands/QuoteCommands/QuoteCommandList.cpp \
@@ -46,7 +44,14 @@ SOURCES += main.cpp\
     Widgets/Quotes/QuotesWidget.cpp \
     Widgets/Quotes/SingleQuoteWidget.cpp \
     Widgets/Quotes/CreateQuoteWidget.cpp \
-    Widgets/Quotes/QuoteTabWidget.cpp
+    Widgets/Quotes/QuoteTabWidget.cpp \
+    AI/ChatCommands/CovenantCommands/LeaveCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/JoinCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/ListCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/CreateCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/RenameCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/CovenantCommandList.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -62,8 +67,6 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/CustomCommandList.hpp \
     AI/ChatCommands/UserDataCommand.hpp \
     AI/ChatCommands/UserDataCommandList.hpp \
-    AI/ChatCommands/CovenantCommand.hpp \
-    AI/ChatCommands/CovenantCommandList.hpp \
     AI/ChatCommands/QuoteCommands/BaseQuoteCommand.hpp \
     AI/ChatCommands/QuoteCommands/MainQuoteCommand.hpp \
     AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp \
@@ -81,7 +84,14 @@ HEADERS  += MainWindow.hpp \
     Widgets/Quotes/QuotesWidget.hpp \
     Widgets/Quotes/SingleQuoteWidget.hpp \
     Widgets/Quotes/CreateQuoteWidget.hpp \
-    Widgets/Quotes/QuoteTabWidget.hpp
+    Widgets/Quotes/QuoteTabWidget.hpp \
+    AI/ChatCommands/CovenantCommands/LeaveCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/JoinCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/ListCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/CreateCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/RenameCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp
 
 RESOURCES += \
     Resources.qrc

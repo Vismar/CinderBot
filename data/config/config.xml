@@ -31,6 +31,7 @@
 		<!-- ======================= -->
 		<CovJoinPrice>100</CovJoinPrice>      <!-- Any integer number, bigger than 0 -->
 		<CovCreatePrice>2000</CovCreatePrice> <!-- Any integer number, bigger than 0 -->
+		<CovRenamePrice>500</CovRenamePrice>  <!-- Any integer number, bigger than 0 -->
 		<!-- ======================= -->
 		<!-- ==== System params ==== -->
 		<!-- ======================= -->

@@ -7,6 +7,9 @@
 #include <QString>
 #include <QHash>
 
+#define UD_UPDATE    UserData::Instance().UpdateUserData
+#define UD_GET_PARAM UserData::Instance().GetUserDataParam
+
 /*!
  * UserDataParam
  * Types of user data

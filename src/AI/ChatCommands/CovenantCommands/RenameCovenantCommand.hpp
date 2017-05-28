@@ -4,25 +4,22 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "CommandList.hpp"
+#include <AI/ChatCommands/ChatCommand.hpp>
 
 namespace Command
 {
 
-/*!
- * Class CovenantCommandList
- * Store all covenant commands
- */
-class CovenantCommandList : public CommandList
+class RenameCovenantCommand : public ChatCommand
 {
 public:
-    /*! Constructor */
-    CovenantCommandList();
-
-protected:
+    /*!
+     * Deafult Constructor
+     */
+    RenameCovenantCommand();
     ////////////////////////////////
-    /// CommandList override
-    void _Initialize();
+    /// ChatCommand overrides
+    QString GetRandomAnswer(const ChatMessage& message) override;
+    void Initialize();
 };
 
 }

@@ -4,7 +4,12 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CovenantCommandList.hpp"
-#include "CovenantCommand.hpp"
+#include <AI/ChatCommands/CovenantCommands/ListCovenantCommand.hpp>
+#include <AI/ChatCommands/CovenantCommands/JoinCovenantCommand.hpp>
+#include <AI/ChatCommands/CovenantCommands/LeaveCovenantCommand.hpp>
+#include <AI/ChatCommands/CovenantCommands/CreateCovenantCommand.hpp>
+#include <AI/ChatCommands/CovenantCommands/RenameCovenantCommand.hpp>
+#include <AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp>
 #include <Utils/DatabaseManager.hpp>
 
 using namespace Command;
@@ -13,12 +18,13 @@ using namespace Command;
 
 CovenantCommandList::CovenantCommandList()
 {
-    for (int i = Cov_List; i < Cov_End; ++i)
-    {
-        CovenantCommand* command = new CovenantCommand();
-        command->SetCommandType(static_cast<CovCommandType>(i));
-        _commands.push_back(command);
-    }
+    // Add all commands
+    _commands.push_back(new ListCovenantCommand());
+    _commands.push_back(new JoinCovenantCommand());
+    _commands.push_back(new LeaveCovenantCommand());
+    _commands.push_back(new CreateCovenantCommand());
+    _commands.push_back(new RenameCovenantCommand());
+    _commands.push_back(new DisbandCovenantCommand());
 
     _Initialize();
 }
