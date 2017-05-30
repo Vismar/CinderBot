@@ -9,6 +9,10 @@
 namespace Command
 {
 
+/*!
+ * class RenameCovenantCommand
+ * Handle renaming covenants by users
+ */
 class RenameCovenantCommand : public ChatCommand
 {
 public:

@@ -19,11 +19,11 @@ public:
     virtual ~CommandList();
     /*!
      * Try to get answer from stored list of commands
-     * \param(IN) message - chat message
-     * \param(OUT) answer - returning answer
+     * \param message - chat message
+     * \param answer - returning answer
      * \return true if one of commands from command list was executed
      */
-    virtual bool TryGetAnswer(const ChatMessage& message, QString& answer);
+    virtual bool TryExecute(const ChatMessage& message, QString& answer);
 
 protected:
     /*!

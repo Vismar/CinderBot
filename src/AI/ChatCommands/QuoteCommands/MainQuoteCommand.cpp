@@ -25,7 +25,7 @@ QString MainQuoteCommand::GetRandomAnswer(const ChatMessage& message)
     QString val;
     if (message.GetMessage().contains(_name))
     {
-        std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(number)");
+        DB_QUERY_PTR numberQuery = DB_SELECT("Quotes", "MAX(number)");
         if (numberQuery != NULL)
         {
             numberQuery->first();
@@ -38,11 +38,11 @@ QString MainQuoteCommand::GetRandomAnswer(const ChatMessage& message)
                 int number = val.toInt();
                 if ((number > 0) && (number <= maxValue))
                 {
-                    std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes", "quote", QString("number = %1").arg(number));
+                    DB_QUERY_PTR query = DB_SELECT("Quotes", "quote", QString("number = %1").arg(number));
                     if (query != NULL)
                     {
                         query->first();
-                        answer = query->value(0).toString();
+                        answer = query->value("quote").toString();
                         answer.append(" - #" + QString::number(number));
                     }
                 }
@@ -51,12 +51,14 @@ QString MainQuoteCommand::GetRandomAnswer(const ChatMessage& message)
             if (answer.isEmpty())
             {
                 int k = qrand() % maxValue;
-                std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes", "quote", QString("number = %1").arg(k+1));
+                DB_QUERY_PTR query = DB_SELECT("Quotes", "quote", QString("number = %1").arg(k+1));
                 if (query != NULL)
                 {
-                    query->first();
-                    answer = query->value(0).toString();
-                    answer.append(" - #" + QString::number(k+1));
+                    if (query->first())
+                    {
+                        answer = query->value("quote").toString();
+                        answer.append(" - #" + QString::number(k+1));
+                    }
                 }
             }
         }

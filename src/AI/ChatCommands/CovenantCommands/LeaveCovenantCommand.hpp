@@ -10,7 +10,7 @@ namespace Command
 {
 
 /*!
- * Class LeaveCovenantCommand
+ * class LeaveCovenantCommand
  * Handles user's leaving from covenant
  */
 class LeaveCovenantCommand : public ChatCommand

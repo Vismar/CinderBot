@@ -3,9 +3,9 @@
 ******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
+#pragma once
 #include <Chat/ChatMessage.hpp>
 #include <QString>
-#include <QVector>
 #include <QTime>
 #include <QDateTime>
 
@@ -13,7 +13,7 @@ namespace Command
 {
 
 /*!
- * Class BaseChatCommand
+ * class BaseChatCommand
  * Provide basic functionality to check existence of executing command in message
  * and executing it by one of two methods. Also, handles replacing placeholders which can be used by any command.
  */
@@ -49,7 +49,7 @@ protected:
      * \param message - chat message
      * \param answer - reference to variable which will store answer
      */
-    virtual void _GetRandomAnswer(const ChatMessage& message, QString& answer);
+    void _GetRandomAnswer(const ChatMessage& message, QString& answer);
 
     /* Utility functions */
     /*!
@@ -110,8 +110,6 @@ private:
     bool _isRandom;
     /*! Command name */
     QString _name;
-    /*! List of answers */
-    QVector<QString> _answers;
     /*! Time, when command was executed for a last time */
     QDateTime _lastTimeUsed;
     /*! Command cooldown */

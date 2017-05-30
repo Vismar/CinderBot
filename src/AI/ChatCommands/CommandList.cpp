@@ -19,7 +19,7 @@ CommandList::~CommandList()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool CommandList::TryGetAnswer(const ChatMessage& message, QString& answer)
+bool CommandList::TryExecute(const ChatMessage& message, QString& answer)
 {
     bool result(false);
     // Check all commands
