@@ -49,7 +49,7 @@ protected:
      * \param message - chat message
      * \param answer - reference to variable which will store answer
      */
-    void _GetRandomAnswer(const ChatMessage& message, QString& answer);
+    virtual void _GetRandomAnswer(const ChatMessage& message, QString& answer) = 0;
 
     /* Utility functions */
     /*!
@@ -105,7 +105,7 @@ protected:
      */
     bool _CheckModerationFlag(bool userIsModerator);
 
-private:
+    /* Variables */
     /*! Flag which represents should command return random answer or not */
     bool _isRandom;
     /*! Command name */

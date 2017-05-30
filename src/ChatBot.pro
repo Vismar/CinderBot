@@ -53,7 +53,8 @@ SOURCES += main.cpp\
     AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.cpp \
     AI/ChatCommands/CovenantCommands/CovenantCommandList.cpp \
     AI/ChatCommands/BaseChatCommand.cpp \
-    AI/ChatCommands/InbuiltChatCommand.cpp
+    AI/ChatCommands/InbuiltChatCommand.cpp \
+    AI/ChatCommands/CustomChatCommand.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -95,7 +96,8 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp \
     AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp \
     AI/ChatCommands/BaseChatCommand.hpp \
-    AI/ChatCommands/InbuiltChatCommand.hpp
+    AI/ChatCommands/InbuiltChatCommand.hpp \
+    AI/ChatCommands/CustomChatCommand.hpp
 
 RESOURCES += \
     Resources.qrc
