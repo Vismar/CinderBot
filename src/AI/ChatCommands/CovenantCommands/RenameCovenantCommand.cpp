@@ -18,7 +18,7 @@ using namespace Command;
 #define MSG_NO_CURRENCY 4
 
 #define MAX_COVENANT_NAME_LENGTH 50
-#define DEFAULT_PRICE_FOR_RENAME 500
+#define DEFAULT_PRICE_FOR_RENAME "500"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -61,7 +61,7 @@ QString RenameCovenantCommand::GetRandomAnswer(const ChatMessage& message)
                     {
                         // Get currency which user have
                         QString currency = UD_GET_PARAM(message.GetRealName(), UDP_Currency);
-                        // Get amount currency which is needed to create covenant
+                        // Get amount currency which is needed to rename covenant
                         QString price;
                         if (!ConfigurationManager::Instance().GetStringParam(CFGP_COV_RENAME_PRICE, price))
                         {
@@ -77,11 +77,11 @@ QString RenameCovenantCommand::GetRandomAnswer(const ChatMessage& message)
                                 covNameLength = MAX_COVENANT_NAME_LENGTH;
                             }
                             newCovenantName = newCovenantName.left(covNameLength);
-                            // If user provided covenant name, create it
+                            // If user provided covenant name, rename it
                             if (!newCovenantName.isEmpty())
                             {
-                                // If covenant was disbanded, set covenant field to viewer
-                                // for all users who was in that covenant
+                                // If covenant was reanmed, set covenant field to a new value
+                                // for all users who are in that covenant
                                 if (DB_UPDATE("Covenants", QString("Name = '%1'").arg(newCovenantName),
                                                            QString("Leader = '%1'").arg(message.GetRealName())))
                                 {
@@ -95,6 +95,9 @@ QString RenameCovenantCommand::GetRandomAnswer(const ChatMessage& message)
                                             UD_UPDATE(queryUpdate->value("Name").toString(), UDP_Covenant, newCovenantName);
                                         }
                                     }
+                                    // Take price to rename covenant
+                                    int newCurValue = currency.toInt()-price.toInt();
+                                    UD_UPDATE(message.GetRealName(), UDP_Currency, QString::number(newCurValue));
                                     answer = _answers.at(MSG_RENAMED);
                                 }
                             }

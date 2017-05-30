@@ -48,35 +48,6 @@ bool BaseChatCommand::Execute(const ChatMessage& message, QString& answer)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseChatCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
-{
-    if (_CheckModerationFlag(message.IsModerator()) &&
-        _CheckCooldown() &&
-        _CheckCurrency(message.GetRealName()) &&
-        _CheckCovenant(message.GetRealName()))
-    {
-        // Update user currency value
-        _TakeDefaultPriceFromUser(message.GetRealName());
-        // Save time of exection
-        _lastTimeUsed = QDateTime::currentDateTime();
-        // Get random answer
-        DB_QUERY_PTR query = DB_SELECT("CommandAnswers",
-                                       "*",
-                                       "Answer IN "
-                                       "(SELECT Answer FROM CommandAnswers "
-                                       "WHERE Name='%1' ORDER BY RANDOM() LIMIT 1)");
-        if (query != NULL)
-        {
-            if (query->first())
-            {
-                answer = query->value("Answer").toString();
-            }
-        }
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
 void BaseChatCommand::_Clear()
 {
     _isRandom = false;
