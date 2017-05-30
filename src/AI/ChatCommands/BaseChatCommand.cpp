@@ -5,6 +5,7 @@
 **************************************************************************/
 #include "BaseChatCommand.hpp"
 #include <Utils/UserData/UserData.hpp>
+#include <Utils/DatabaseManager.hpp>
 
 using namespace Command;
 
@@ -58,10 +59,19 @@ void BaseChatCommand::_GetRandomAnswer(const ChatMessage& message, QString& answ
         _TakeDefaultPriceFromUser(message.GetRealName());
         // Save time of exection
         _lastTimeUsed = QDateTime::currentDateTime();
-        // Get random id for answer
-        int id = qrand() % _answers.size();
-        // Set returning answer
-        answer = _answers.at(id);
+        // Get random answer
+        DB_QUERY_PTR query = DB_SELECT("CommandAnswers",
+                                       "*",
+                                       "Answer IN "
+                                       "(SELECT Answer FROM CommandAnswers "
+                                       "WHERE Name='%1' ORDER BY RANDOM() LIMIT 1)");
+        if (query != NULL)
+        {
+            if (query->first())
+            {
+                answer = query->value("Answer").toString();
+            }
+        }
     }
 }
 
@@ -71,7 +81,6 @@ void BaseChatCommand::_Clear()
 {
     _isRandom = false;
     _name.clear();
-    _answers.clear();
     _cooldown.setHMS(0, 0, 0, 0);
     _moderatorOnly = false;
     _price = 0;

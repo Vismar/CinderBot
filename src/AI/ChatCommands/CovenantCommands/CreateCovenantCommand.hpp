@@ -10,7 +10,7 @@ namespace Command
 {
 
 /*!
- * Class CreateCovenantCommand
+ * class CreateCovenantCommand
  * Handle creating covenants by users
  */
 class CreateCovenantCommand : public ChatCommand

@@ -4,25 +4,28 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <AI/ChatCommands/CommandList.hpp>
+#include <AI/ChatCommands/BaseChatCommand.hpp>
+#include <QVector>
 
 namespace Command
 {
 
 /*!
- * class CovenantCommandList
- * Store all covenant commands
+ * class InbuiltChatCommand
+ * Base class for inbuilt commands, which includes array
+ * that can be used as a store for answers that should be translated
  */
-class CovenantCommandList : public CommandList
+class InbuiltChatCommand : public BaseChatCommand
 {
 public:
     /*! Constructor */
-    CovenantCommandList();
+    InbuiltChatCommand();
+    /*! Destructor */
+    virtual ~InbuiltChatCommand();
 
 protected:
-    ////////////////////////////////
-    /// CommandList override
-    void _Initialize();
+    /*! List of answers */
+    QVector<QString> _answers;
 };
 
 }

@@ -85,7 +85,7 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
         for (int i = 0; i < _chatCommands.size(); ++i)
         {
             // If we found a command, emit event with result and break the loop
-            if (_chatCommands[i]->TryGetAnswer(message, answer))
+            if (_chatCommands[i]->TryExecute(message, answer))
             {
                 emit NewBotMessage(answer);
                 break;

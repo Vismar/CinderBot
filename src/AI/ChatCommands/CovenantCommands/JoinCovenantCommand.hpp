@@ -10,7 +10,7 @@ namespace Command
 {
 
 /*!
- * Class JoinCovenantCommand
+ * class JoinCovenantCommand
  * Handle joining users to covenants
  */
 class JoinCovenantCommand : public ChatCommand

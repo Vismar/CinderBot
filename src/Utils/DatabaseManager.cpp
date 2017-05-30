@@ -172,9 +172,9 @@ bool DatabaseManager::Insert(const QString& tableName, const QString& recordValu
 
 ///////////////////////////////////////////////////////////////////////////
 
-std::shared_ptr<QSqlQuery> DatabaseManager::Select(const QString& tableName, const QString& columnNames, const QString& conditions)
+DB_QUERY_PTR DatabaseManager::Select(const QString& tableName, const QString& columnNames, const QString& conditions)
 {
-    std::shared_ptr<QSqlQuery> query = std::make_shared<QSqlQuery>();
+    DB_QUERY_PTR query = std::make_shared<QSqlQuery>();
     QString command;
     // Prepare command
     if (conditions.isEmpty())
@@ -185,13 +185,13 @@ std::shared_ptr<QSqlQuery> DatabaseManager::Select(const QString& tableName, con
     {
         command = QString("SELECT %1 FROM %2 WHERE %3;").arg(columnNames).arg(tableName).arg(conditions);
     }
-    query->prepare(command);
-    if (query->exec())
+    if (query->exec(command))
     {
         return query;
     }
     // If command failed, return error
     qDebug() << "Database error(Select): " << query->lastError().text();
+
     return NULL;
 }
 
