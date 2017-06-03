@@ -25,9 +25,7 @@ bool CommandList::TryExecute(const ChatMessage& message, QString& answer)
     // Check all commands
     for (int i = 0; i < _commands.size(); ++i)
     {
-        answer = _commands[i]->GetRandomAnswer(message);
-        // If answer is empty, that means command not executed
-        if (!answer.isEmpty())
+        if (_commands[i]->Execute(message, answer))
         {
             result = true;
             break;
@@ -36,9 +34,5 @@ bool CommandList::TryExecute(const ChatMessage& message, QString& answer)
 
     return result;
 }
-
-///////////////////////////////////////////////////////////////////////////
-
-void CommandList::_Initialize() { }
 
 ///////////////////////////////////////////////////////////////////////////

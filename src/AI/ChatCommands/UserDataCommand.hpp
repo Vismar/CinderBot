@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "ChatCommand.hpp"
+#include <AI/ChatCommands/InbuiltChatCommand.hpp>
 
 namespace Command
 {
@@ -26,7 +26,7 @@ enum UDCommandType
  * Class UserDataCommand
  * Store user data command. Can be inititalized as any user data command type.
  */
-class UserDataCommand : public ChatCommand
+class UserDataCommand : public InbuiltChatCommand
 {
 public:
     /*!
@@ -34,10 +34,13 @@ public:
      * \param(IN) cmdType - user data command type
      */
     void SetCommandType(UDCommandType cmdType);
+
+protected:
     ////////////////////////////////
-    /// ChatCommand overrides
-    QString GetRandomAnswer(const ChatMessage& message);
+    /// BaseChatCommand overrides
     void Initialize();
+    void _GetAnswer(const ChatMessage& message, QString& answer);
+    void _GetRandomAnswer(const ChatMessage& message, QString& answer);
 
 private:
     UDCommandType _cmdType;

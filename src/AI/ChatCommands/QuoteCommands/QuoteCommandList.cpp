@@ -3,11 +3,11 @@
 ******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
-#include "QuoteCommandList.hpp"
-#include "MainQuoteCommand.hpp"
-#include "AddQuoteCommand.hpp"
-#include "DeleteQuoteCommand.hpp"
-#include "EditQuoteCommand.hpp"
+#include <AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp>
+#include <AI/ChatCommands/QuoteCommands/MainQuoteCommand.hpp>
+#include <AI/ChatCommands/QuoteCommands/AddQuoteCommand.hpp>
+#include <AI/ChatCommands/QuoteCommands/DeleteQuoteCommand.hpp>
+#include <AI/ChatCommands/QuoteCommands/EditQuoteCommand.hpp>
 #include <Utils/DatabaseManager.hpp>
 
 using namespace Command;
@@ -33,9 +33,9 @@ QuoteCommandList::~QuoteCommandList() {}
 void QuoteCommandList::_Initialize()
 {
     // Initialize data table in database
-    DB_CREATE_TABLE("Quotes", "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                              "quote TEXT NOT NULL,"
-                              "number INTEGER NOT NULL UNIQUE");
+    DB_CREATE_TABLE("Quotes", "Id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                              "Quote TEXT NOT NULL,"
+                              "Number INTEGER NOT NULL UNIQUE");
 
     std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "id", "number = 0");
     if (!numberQuery->next())

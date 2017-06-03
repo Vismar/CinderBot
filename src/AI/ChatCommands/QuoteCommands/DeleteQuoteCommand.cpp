@@ -13,57 +13,71 @@ using namespace Command;
 DeleteQuoteCommand::DeleteQuoteCommand()
 {
     _Clear();
-    _name = "!delete_quote";
+    Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString DeleteQuoteCommand::GetRandomAnswer(const ChatMessage& message)
+void DeleteQuoteCommand::Initialize()
 {
-    QString answer;
-    if (message.GetMessage().contains(_name))
+    _name = "!quote_delete";
+    _moderatorOnly = true;
+    _answers.push_back("Quote #QUOTE_NUMBER was removed!");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void DeleteQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
+{
+    if (_CheckModerationFlag(message.IsModerator()))
     {
-        QString msg = message.GetMessage();
         QString val;
         // Try to found number after command
-        if (_GetNumberAfterCommand(_name, msg, val))
+        if (_GetNumberAfterCommand(_name, message.GetMessage(), val))
         {
             // Check borders
             int number = val.toInt();
-            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(number)");
+            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
             if (numberQuery != NULL)
             {
                 numberQuery->first();
                 int maxValue = numberQuery->value(0).toInt() + 1;
                 if ((number > 0) && (number <= maxValue))
                 {
-                    if(DB_DELETE("Quotes", QString("number = %1").arg(number)))
+                    if(DB_DELETE("Quotes", QString("Number = %1").arg(number)))
                     {
                         _RefreshQuoteNumbers(number);
-                        answer = "Quote #";
-                        answer.append(QString::number(number));
-                        answer.append(" was removed!");
+                        answer = _answers.at(0);
+                        answer.replace("QUOTE_NUMBER", QString::number(number));
                     }
                 }
             }
         }
     }
+}
 
-    return answer;
+///////////////////////////////////////////////////////////////////////////
+
+void DeleteQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void DeleteQuoteCommand::_RefreshQuoteNumbers(int quoteNumber)
 {
-    std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes", "id, number", QString("number > %1 ORDER BY number ASC ").arg(quoteNumber));
+    std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes",
+                                                 "Id, Number",
+                                                 QString("Number > %1 ORDER BY Number ASC ").arg(quoteNumber));
     if (query != NULL)
     {
         while (query->next())
         {
-            int newNumber = query->value("number").toInt() - 1;
+            int newNumber = query->value("Number").toInt() - 1;
             int id = query->value("id").toInt();
-            DB_UPDATE("Quotes", QString("number = %1").arg(newNumber), QString("id = %1").arg(id));
+            DB_UPDATE("Quotes", QString("Number = %1").arg(newNumber), QString("Id = %1").arg(id));
         }
     }
 }

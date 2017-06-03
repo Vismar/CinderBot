@@ -41,98 +41,94 @@ void RenameCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString RenameCovenantCommand::GetRandomAnswer(const ChatMessage& message)
+void RenameCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 {
-    QString answer;
-    if (message.GetMessage().contains(_name))
+    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+    // Check if user in covenant
+    if (covenant != "Viewer")
     {
-        QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
-        // Check if user in covenant
-        if (covenant != "Viewer")
+        // Check if user is leader of its covenant
+        DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
+        if (query->exec())
         {
-            // Check if user is leader of its covenant
-            DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
-            if (query->exec())
+            // If user is in covenant, check its leader
+            if (query->first())
             {
-                // If user is in covenant, check its leader
-                if (query->first())
+                if (query->value("Leader").toString() == message.GetRealName())
                 {
-                    if (query->value("Leader").toString() == message.GetRealName())
+                    // Get amount currency which is needed to rename covenant
+                    QString price;
+                    if (!ConfigurationManager::Instance().GetStringParam(CFGP_COV_RENAME_PRICE, price))
                     {
-                        // Get currency which user have
-                        QString currency = UD_GET_PARAM(message.GetRealName(), UDP_Currency);
-                        // Get amount currency which is needed to rename covenant
-                        QString price;
-                        if (!ConfigurationManager::Instance().GetStringParam(CFGP_COV_RENAME_PRICE, price))
+                        price = DEFAULT_PRICE_FOR_RENAME;
+                    }
+                    _price = price.toInt();
+                    if (_CheckCurrency(message.GetRealName()))
+                    {
+                        QString newCovenantName = message.GetMessage().mid(_name.size()+1);
+                        int covNameLength = ((newCovenantName.size()-2) < 0) ? 0 : (newCovenantName.size()-2);
+                        // If covenant name too long, just make it shorter
+                        if (covNameLength > MAX_COVENANT_NAME_LENGTH)
                         {
-                            price = DEFAULT_PRICE_FOR_RENAME;
+                            covNameLength = MAX_COVENANT_NAME_LENGTH;
                         }
-                        if (currency.toInt() >= price.toInt())
+                        newCovenantName = newCovenantName.left(covNameLength);
+                        // If user provided covenant name, rename it
+                        if (!newCovenantName.isEmpty())
                         {
-                            QString newCovenantName = message.GetMessage().mid(_name.size()+1);
-                            int covNameLength = ((newCovenantName.size()-2) < 0) ? 0 : (newCovenantName.size()-2);
-                            // If covenant name too long, just make it shorter
-                            if (covNameLength > MAX_COVENANT_NAME_LENGTH)
+                            // If covenant was reanmed, set covenant field to a new value
+                            // for all users who are in that covenant
+                            if (DB_UPDATE("Covenants", QString("Name = '%1'").arg(newCovenantName),
+                                                       QString("Leader = '%1'").arg(message.GetRealName())))
                             {
-                                covNameLength = MAX_COVENANT_NAME_LENGTH;
-                            }
-                            newCovenantName = newCovenantName.left(covNameLength);
-                            // If user provided covenant name, rename it
-                            if (!newCovenantName.isEmpty())
-                            {
-                                // If covenant was reanmed, set covenant field to a new value
-                                // for all users who are in that covenant
-                                if (DB_UPDATE("Covenants", QString("Name = '%1'").arg(newCovenantName),
-                                                           QString("Leader = '%1'").arg(message.GetRealName())))
+                                DB_QUERY_PTR queryUpdate = DB_SELECT("UserData",
+                                                                     "Name",
+                                                                     QString("Covenant = '%1'").arg(covenant));
+                                if (queryUpdate != NULL)
                                 {
-                                    DB_QUERY_PTR queryUpdate = DB_SELECT("UserData",
-                                                                         "Name",
-                                                                         QString("Covenant = '%1'").arg(covenant));
-                                    if (queryUpdate != NULL)
+                                    while (queryUpdate->next())
                                     {
-                                        while (queryUpdate->next())
-                                        {
-                                            UD_UPDATE(queryUpdate->value("Name").toString(), UDP_Covenant, newCovenantName);
-                                        }
+                                        UD_UPDATE(queryUpdate->value("Name").toString(), UDP_Covenant, newCovenantName);
                                     }
-                                    // Take price to rename covenant
-                                    int newCurValue = currency.toInt()-price.toInt();
-                                    UD_UPDATE(message.GetRealName(), UDP_Currency, QString::number(newCurValue));
-                                    answer = _answers.at(MSG_RENAMED);
                                 }
-                            }
-                            // If name was not provided
-                            else
-                            {
-                                answer = _answers.at(MSG_NO_NAME);
+                                // Take price to rename covenant
+                                _TakeDefaultPriceFromUser(message.GetRealName());
+                                answer = _answers.at(MSG_RENAMED);
                             }
                         }
-                        // If user do not have enought currency
+                        // If name was not provided
                         else
                         {
-                            answer = _answers.at(MSG_NO_CURRENCY);
+                            answer = _answers.at(MSG_NO_NAME);
                         }
                     }
-                    // If user is not leader
+                    // If user do not have enought currency
                     else
                     {
-                        answer = _answers.at(MSG_NOT_LEADER);
+                        answer = _answers.at(MSG_NO_CURRENCY);
                     }
+                }
+                // If user is not leader
+                else
+                {
+                    answer = _answers.at(MSG_NOT_LEADER);
                 }
             }
         }
-        // If user is not in any covenant
-        else
-        {
-            answer = _answers.at(MSG_NO_COVENANT);
-        }
     }
-    if (!answer.isEmpty())
+    // If user is not in any covenant
+    else
     {
-        _AddAuthorName(answer, message.GetAuthor());
+        answer = _answers.at(MSG_NO_COVENANT);
     }
+}
 
-    return answer;
+///////////////////////////////////////////////////////////////////////////
+
+void RenameCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////

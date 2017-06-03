@@ -22,7 +22,6 @@ SOURCES += main.cpp\
     Chat/TwitchClient.cpp \
     Utils/Config/ConfigurationManager.cpp \
     Utils/UserData/UserData.cpp \
-    AI/ChatCommands/ChatCommand.cpp \
     AI/ChatCommands/CommandList.cpp \
     AI/ChatCommands/CustomCommanLlist.cpp \
     AI/ChatCommands/UserDataCommand.cpp \
@@ -65,7 +64,6 @@ HEADERS  += MainWindow.hpp \
     Utils/Config/ConfigurationManager.hpp \
     Utils/Config/ConfigurationParameters.hpp \
     Utils/UserData/UserData.hpp \
-    AI/ChatCommands/ChatCommand.hpp \
     AI/ChatCommands/CommandList.hpp \
     AI/ChatCommands/CustomCommandList.hpp \
     AI/ChatCommands/UserDataCommand.hpp \

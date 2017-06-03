@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "../ChatCommand.hpp"
+#include <AI/ChatCommands/InbuiltChatCommand.hpp>
 
 namespace Command
 {
@@ -13,7 +13,7 @@ namespace Command
  * Class BaseCovenantCommand
  * Base class for every quote command
  */
-class BaseQuoteCommand : public ChatCommand
+class BaseQuoteCommand : public InbuiltChatCommand
 {
 public:
     BaseQuoteCommand();

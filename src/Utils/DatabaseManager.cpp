@@ -12,7 +12,7 @@
 DatabaseManager::DatabaseManager() : QObject(0)
 {
     _database = QSqlDatabase::addDatabase("QSQLITE");
-    _database.setDatabaseName("CinderBotDatabase.sqlite");
+    _database.setDatabaseName("./data/CinderBotDatabase.sqlite");
 }
 
 ///////////////////////////////////////////////////////////////////////////

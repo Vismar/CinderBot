@@ -19,9 +19,12 @@ public:
     /*! Constructor */
     EditQuoteCommand();
 
+protected:
     ////////////////////////////////
-    /// ChatCommand overrides
-    QString GetRandomAnswer(const ChatMessage& message) override;
+    /// BaseChatCommand overrides
+    void Initialize();
+    void _GetAnswer(const ChatMessage& message, QString& answer);
+    void _GetRandomAnswer(const ChatMessage& message, QString& answer);
 };
 
 }

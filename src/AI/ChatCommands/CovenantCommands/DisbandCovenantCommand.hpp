@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <AI/ChatCommands/ChatCommand.hpp>
+#include <AI/ChatCommands/InbuiltChatCommand.hpp>
 
 namespace Command
 {
@@ -13,17 +13,20 @@ namespace Command
  * class JoinCovenantCommand
  * Handle disbanding the covenant by user
  */
-class DisbandCovenantCommand : public ChatCommand
+class DisbandCovenantCommand : public InbuiltChatCommand
 {
 public:
     /*!
      * Deafult Constructor
      */
     DisbandCovenantCommand();
+
+protected:
     ////////////////////////////////
-    /// ChatCommand overrides
-    QString GetRandomAnswer(const ChatMessage& message) override;
+    /// BaseChatCommand overrides
     void Initialize();
+    void _GetAnswer(const ChatMessage& message, QString& answer);
+    void _GetRandomAnswer(const ChatMessage& message, QString& answer);
 };
 
 }

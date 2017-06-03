@@ -105,7 +105,7 @@ void SingleQuoteWidget::_HandleEditSaveButton()
         _quoteEditSave->setText("Edit");
         _quoteEditSave->setStyleSheet("");
         std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes",
-                                                     "quote",
+                                                     "Quote",
                                                      QString("number = %1").arg(_quoteNumber->text()));
         if (query != NULL)
         {
@@ -114,8 +114,8 @@ void SingleQuoteWidget::_HandleEditSaveButton()
             if (query->value(0).toString() != _quoteText->toPlainText())
             {
                 DB_UPDATE("Quotes",
-                          QString("quote = '%1'").arg(_quoteText->toPlainText()),
-                          QString("number = %1").arg(_quoteNumber->text()));
+                          QString("Quote = '%1'").arg(_quoteText->toPlainText()),
+                          QString("Number = %1").arg(_quoteNumber->text()));
             }
         }
     }
@@ -125,7 +125,7 @@ void SingleQuoteWidget::_HandleEditSaveButton()
 
 void SingleQuoteWidget::_HandleDeleteButton()
 {
-    DB_DELETE("Quotes", QString("number = %1").arg(_quoteNumber->text()));
+    DB_DELETE("Quotes", QString("Number = %1").arg(_quoteNumber->text()));
 }
 
 ///////////////////////////////////////////////////////////////////////////

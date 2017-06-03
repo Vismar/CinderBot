@@ -42,6 +42,10 @@ bool BaseChatCommand::Execute(const ChatMessage& message, QString& answer)
             result = !answer.isEmpty();
         }
     }
+    if (result)
+    {
+        _ReplacePlaceHolders(message, answer);
+    }
 
     return result;
 }
@@ -102,7 +106,7 @@ bool BaseChatCommand::_CheckCovenant(const QString& userName)
     bool covenantIsOk(true);
 
     // If covenant is specified, check covenant in which user in
-    if (!_covenant.isEmpty())
+    if (_covenant != "Viewer")
     {
         QString userCovenantName = UD_GET_PARAM(userName, UDP_Covenant);
         // If users covenant is not the same as specified, then command cannot be executed
@@ -151,7 +155,17 @@ bool BaseChatCommand::_CheckCooldown()
 
 bool BaseChatCommand::_CheckModerationFlag(bool userIsModerator)
 {
-    return (_moderatorOnly && userIsModerator);
+    bool result(false);
+    if (userIsModerator)
+    {
+        result = true;
+    }
+    else if (!_moderatorOnly)
+    {
+        result = true;
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////

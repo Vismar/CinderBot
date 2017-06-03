@@ -4,7 +4,8 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "ChatCommand.hpp"
+#include <AI/ChatCommands/BaseChatCommand.hpp>
+#include <QVector>
 
 namespace Command
 {
@@ -29,10 +30,10 @@ protected:
     /*!
      * Initialize command list. Should be overridden by derived class.
      */
-    virtual void _Initialize();
+    virtual void _Initialize() = 0;
 
     /*! List of commands */
-    QVector<ChatCommand*> _commands;
+    QVector<BaseChatCommand*> _commands;
 };
 
 }

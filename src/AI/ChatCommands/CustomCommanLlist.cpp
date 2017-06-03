@@ -4,10 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CustomCommandList.hpp"
-#include <QFile>
-#include <QXmlStreamReader>
-#include <Utils/Config/ConfigurationManager.hpp>
-#include <Utils/Config/ConfigurationParameters.hpp>
+#include <AI/ChatCommands/CustomChatCommand.hpp>
 #include <Utils/DatabaseManager.hpp>
 
 using namespace Command;
@@ -23,55 +20,29 @@ CustomCommandList::CustomCommandList()
 
 void CustomCommandList::_Initialize()
 {
-    // Custom commands
-    _ReadXml("./data/config/Commands.xml");
-    // Covenant commands
-    QStringList covList;
-    std::shared_ptr<QSqlQuery> query = DB_SELECT("Covenants", "Name");
-    if (query->exec())
+    DB_CREATE_TABLE("CustomCommands", "Id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                      "Name TEXT NOT NULL,"
+                                      "Cooldown TEXT NOT NULL,"
+                                      "ModeratorOnly INTEGER NOT NULL,"
+                                      "Price INTEGER NOT NULL,"
+                                      "Covenant TEXT NOT NULL");
+
+    DB_CREATE_TABLE("CustomCommandAnswers", "Id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                            "Name TEXT NOT NULL,"
+                                            "Answer TEXT NOT NULL");
+
+    DB_CREATE_INDEX("CustomCommandAnswers", "Answer_Index", "Answer");
+
+    DB_QUERY_PTR query = DB_SELECT("CustomCommands", "Name");
+    if (query != NULL)
     {
         while (query->next())
         {
-            covList.append(query->value("Name").toString());
+            CustomChatCommand* chatCommand = new CustomChatCommand();
+            chatCommand->InitializeByName(query->value("Name").toString());
+            _commands.push_back(chatCommand);
         }
     }
-    for (int i = 0; i < covList.size(); ++i)
-    {
-        QString covenantCmdPath = QString("./data/config/%1.xml").arg(covList[i]);
-        _ReadXml(covenantCmdPath);
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void CustomCommandList::_ReadXml(const QString& filePath)
-{
-    QXmlStreamReader xmlReader;
-    // Should be changed when global strings will be implemented
-    QFile commandsFile(filePath);
-    // Try to open file
-    if (commandsFile.open(QIODevice::ReadOnly))
-    {
-        xmlReader.setDevice(&commandsFile);
-        // Read xml file
-        while (!xmlReader.atEnd())
-        {
-            xmlReader.readNext();
-            if (xmlReader.isStartElement())
-            {
-                // If it is start section of command, read it
-                if (xmlReader.name() == ChatCommand::GetSectionName(Start))
-                {
-                    ChatCommand* command = new ChatCommand();
-                    if (command->Initialize(xmlReader))
-                    {
-                        _commands.push_back(command);
-                    }
-                }
-            }
-        }
-    }
-    commandsFile.close();
 }
 
 ///////////////////////////////////////////////////////////////////////////

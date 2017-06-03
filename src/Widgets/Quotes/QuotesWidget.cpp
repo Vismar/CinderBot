@@ -49,7 +49,7 @@ void QuotesWidget::UpdateQuotes(const QString& tableName)
     if (tableName == "Quotes")
     {
         // Get last quote number
-        std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(number)");
+        std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
         if (numberQuery != NULL)
         {
             numberQuery->first();
@@ -80,22 +80,22 @@ void QuotesWidget::UpdateQuotes(const QString& tableName)
 
             // Update quote data in widgets
             std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes",
-                                                         "number, quote",
-                                                         "number > 0 ORDER BY number ASC");
+                                                         "Number, Quote",
+                                                         "Number > 0 ORDER BY Number ASC");
             if (query != NULL)
             {
                 while (query->next())
                 {
                     // Get layout item
-                    QLayoutItem* item = _layout->itemAt(query->value("number").toInt() - 1);
+                    QLayoutItem* item = _layout->itemAt(query->value("Number").toInt() - 1);
                     if (item != NULL)
                     {
                         SingleQuoteWidget* quoteWidget = dynamic_cast<SingleQuoteWidget*>(item->widget());
                         // Update widget data
                         if (quoteWidget != NULL)
                         {
-                            quoteWidget->SetQuoteNumber(query->value("number").toString());
-                            quoteWidget->SetQuoteText(query->value("quote").toString());
+                            quoteWidget->SetQuoteNumber(query->value("Number").toString());
+                            quoteWidget->SetQuoteText(query->value("Quote").toString());
                         }
                     }
                 }

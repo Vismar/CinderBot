@@ -13,15 +13,23 @@ using namespace Command;
 EditQuoteCommand::EditQuoteCommand()
 {
     _Clear();
-    _name = "!edit_quote";
+    Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString EditQuoteCommand::GetRandomAnswer(const ChatMessage& message)
+void EditQuoteCommand::Initialize()
 {
-    QString answer;
-    if (message.GetMessage().contains(_name))
+    _name = "!quote_edit";
+    _moderatorOnly = true;
+    _answers.push_back("Quote #QUOTE_NUMBER was edited!");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void EditQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
+{
+    if (_CheckModerationFlag(message.IsModerator()))
     {
         QString msg = message.GetMessage();
         QString val;
@@ -30,7 +38,7 @@ QString EditQuoteCommand::GetRandomAnswer(const ChatMessage& message)
         {
             // Check borders
             int number = val.toInt();
-            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(number)");
+            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
             if (numberQuery != NULL)
             {
                 numberQuery->first();
@@ -42,19 +50,23 @@ QString EditQuoteCommand::GetRandomAnswer(const ChatMessage& message)
                     msg = msg.left(msg.size() - 2);
                     msg = msg.mid(val.size() + 1);
                     // Update quote
-                    if(DB_UPDATE("Quotes", QString("quote = '%1'").arg(msg), QString("number = %1").arg(number)))
+                    if(DB_UPDATE("Quotes", QString("Quote = '%1'").arg(msg), QString("Number = %1").arg(number)))
                     {
-                        answer = "Quote #";
-                        answer.append(QString::number(number));
-                        answer.append(" was edited!");
+                        answer = _answers.at(0);
+                        answer.replace("QUOTE_NUMBER", QString::number(number));
                     }
                 }
             }
-
         }
     }
+}
 
-    return answer;
+///////////////////////////////////////////////////////////////////////////
+
+void EditQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////

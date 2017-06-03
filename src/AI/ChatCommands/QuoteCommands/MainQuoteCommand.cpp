@@ -13,58 +13,66 @@ using namespace Command;
 MainQuoteCommand::MainQuoteCommand()
 {
     _Clear();
+    Initialize();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void MainQuoteCommand::Initialize()
+{
     _name = "!quote";
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString MainQuoteCommand::GetRandomAnswer(const ChatMessage& message)
+void MainQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 {
-    QString answer;
-    QString msg = message.GetMessage();
     QString val;
-    if (message.GetMessage().contains(_name))
+    DB_QUERY_PTR numberQuery = DB_SELECT("Quotes", "MAX(Number)");
+    if (numberQuery != NULL)
     {
-        DB_QUERY_PTR numberQuery = DB_SELECT("Quotes", "MAX(number)");
-        if (numberQuery != NULL)
-        {
-            numberQuery->first();
-            int maxValue = numberQuery->value(0).toInt();
+        numberQuery->first();
+        int maxValue = numberQuery->value(0).toInt();
 
-            // Try to found number after command
-            if (_GetNumberAfterCommand(_name, msg, val))
+        // Try to found number after command
+        if (_GetNumberAfterCommand(_name, message.GetMessage(), val))
+        {
+            // Check borders
+            int number = val.toInt();
+            if ((number > 0) && (number <= maxValue))
             {
-                // Check borders
-                int number = val.toInt();
-                if ((number > 0) && (number <= maxValue))
-                {
-                    DB_QUERY_PTR query = DB_SELECT("Quotes", "quote", QString("number = %1").arg(number));
-                    if (query != NULL)
-                    {
-                        query->first();
-                        answer = query->value("quote").toString();
-                        answer.append(" - #" + QString::number(number));
-                    }
-                }
-            }
-            // If check failed return random quote
-            if (answer.isEmpty())
-            {
-                int k = qrand() % maxValue;
-                DB_QUERY_PTR query = DB_SELECT("Quotes", "quote", QString("number = %1").arg(k+1));
+                DB_QUERY_PTR query = DB_SELECT("Quotes", "Quote", QString("Number = %1").arg(number));
                 if (query != NULL)
                 {
-                    if (query->first())
-                    {
-                        answer = query->value("quote").toString();
-                        answer.append(" - #" + QString::number(k+1));
-                    }
+                    query->first();
+                    answer = query->value("quote").toString();
+                    answer.append(" - #" + QString::number(number));
+                }
+            }
+        }
+        // If check failed return random quote
+        if (answer.isEmpty())
+        {
+            int k = qrand() % maxValue;
+            DB_QUERY_PTR query = DB_SELECT("Quotes", "Quote", QString("Number = %1").arg(k+1));
+            if (query != NULL)
+            {
+                if (query->first())
+                {
+                    answer = query->value("Quote").toString();
+                    answer.append(" - #" + QString::number(k+1));
                 }
             }
         }
     }
+}
 
-    return answer;
+///////////////////////////////////////////////////////////////////////////
+
+void MainQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////
