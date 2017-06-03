@@ -23,7 +23,6 @@ SOURCES += main.cpp\
     Utils/Config/ConfigurationManager.cpp \
     Utils/UserData/UserData.cpp \
     AI/ChatCommands/CommandList.cpp \
-    AI/ChatCommands/CustomCommanLlist.cpp \
     AI/ChatCommands/UserDataCommand.cpp \
     AI/ChatCommands/UserDataCommandList.cpp \
     AI/ChatCommands/QuoteCommands/BaseQuoteCommand.cpp \
@@ -53,7 +52,10 @@ SOURCES += main.cpp\
     AI/ChatCommands/CovenantCommands/CovenantCommandList.cpp \
     AI/ChatCommands/BaseChatCommand.cpp \
     AI/ChatCommands/InbuiltChatCommand.cpp \
-    AI/ChatCommands/CustomChatCommand.cpp
+    AI/ChatCommands/CustomCommands/CustomCovChatCommand.cpp \
+    AI/ChatCommands/CustomCommands/CustomChatCommand.cpp \
+    AI/ChatCommands/CustomCommands/CustomCovCommandList.cpp \
+    AI/ChatCommands/CustomCommands/CustomCommanList.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -65,7 +67,6 @@ HEADERS  += MainWindow.hpp \
     Utils/Config/ConfigurationParameters.hpp \
     Utils/UserData/UserData.hpp \
     AI/ChatCommands/CommandList.hpp \
-    AI/ChatCommands/CustomCommandList.hpp \
     AI/ChatCommands/UserDataCommand.hpp \
     AI/ChatCommands/UserDataCommandList.hpp \
     AI/ChatCommands/QuoteCommands/BaseQuoteCommand.hpp \
@@ -95,7 +96,10 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp \
     AI/ChatCommands/BaseChatCommand.hpp \
     AI/ChatCommands/InbuiltChatCommand.hpp \
-    AI/ChatCommands/CustomChatCommand.hpp
+    AI/ChatCommands/CustomCommands/CustomCovChatCommand.hpp \
+    AI/ChatCommands/CustomCommands/CustomChatCommand.hpp \
+    AI/ChatCommands/CustomCommands/CustomCommandList.hpp \
+    AI/ChatCommands/CustomCommands/CustomCovCommandList.hpp
 
 RESOURCES += \
     Resources.qrc

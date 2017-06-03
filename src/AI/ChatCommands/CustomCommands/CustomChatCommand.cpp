@@ -10,7 +10,11 @@ using namespace Command;
 
 ///////////////////////////////////////////////////////////////////////////
 
-CustomChatCommand::CustomChatCommand() {}
+CustomChatCommand::CustomChatCommand()
+{
+    _commandTableName = "CustomCommands";
+    _commandAnswersTableName = "CustomCommandAnswers";
+}
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +25,7 @@ CustomChatCommand::~CustomChatCommand() {}
 void CustomChatCommand::Initialize()
 {
     // Get data about command
-    DB_QUERY_PTR query = DB_SELECT("CustomCommands", "*", QString("Name='%1'").arg(_name));
+    DB_QUERY_PTR query = DB_SELECT(_commandTableName, "*", QString("Name='%1'").arg(_name));
     if (query != NULL)
     {
         if (query->first())
@@ -67,9 +71,10 @@ void CustomChatCommand::_GetRandomAnswer(const ChatMessage& message, QString& an
         // Save time of exection
         _lastTimeUsed = QDateTime::currentDateTime();
         // Get random answer
-        DB_QUERY_PTR query = DB_SELECT("CustomCommandAnswers", "*",
-                                       QString("Answer IN (SELECT Answer FROM CustomCommandAnswers "
-                                       "WHERE Name='%1' ORDER BY RANDOM() LIMIT 1)").arg(_name));
+        DB_QUERY_PTR query = DB_SELECT(_commandAnswersTableName, "*",
+                                       QString("Answer IN (SELECT Answer FROM %1 "
+                                       "WHERE Name='%2' "
+                                       "ORDER BY RANDOM() LIMIT 1)").arg(_commandAnswersTableName).arg(_name));
         if (query != NULL)
         {
             if (query->first())

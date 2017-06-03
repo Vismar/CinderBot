@@ -9,7 +9,8 @@
 #include <Utils/Config/ConfigurationParameters.hpp>
 #include <Utils/UserData/RealTimeUserData.hpp>
 /*** Command lists ***/
-#include <AI/ChatCommands/CustomCommandList.hpp>
+#include <AI/ChatCommands/CustomCommands/CustomCommandList.hpp>
+#include <AI/ChatCommands/CustomCommands/CustomCovCommandList.hpp>
 #include <AI/ChatCommands/UserDataCommandList.hpp>
 #include <AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp>
 #include <AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp>
@@ -44,6 +45,7 @@ BotAI::BotAI(QObject* parent) : QObject(parent)
     _chatCommands.push_back(new QuoteCommandList());
     // Custom commands for all users and covenants
     _chatCommands.push_back(new CustomCommandList());
+    _chatCommands.push_back(new CustomCovCommandList());
 
     // Connect and start currency timer
     connect(&_currencyTimer, &QTimer::timeout,
