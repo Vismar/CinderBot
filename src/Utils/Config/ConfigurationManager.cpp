@@ -7,7 +7,7 @@
 #include "ConfigurationParameters.hpp"
 #include <QFile>
 
-#define CFG_FILE_NAME "./data/config/config.xml"
+#define CFG_FILE_NAME "./data/config/Сonfig.xml"
 
 ///////////////////////////////////////////////////////////////////////////
 
