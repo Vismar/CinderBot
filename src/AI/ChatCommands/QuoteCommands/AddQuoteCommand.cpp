@@ -13,15 +13,23 @@ using namespace Command;
 AddQuoteCommand::AddQuoteCommand()
 {
     _Clear();
-    _name = "!add_quote";
+    Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString AddQuoteCommand::GetRandomAnswer(const ChatMessage& message)
+void AddQuoteCommand::Initialize()
 {
-    QString answer;
-    if (message.GetMessage().contains(_name))
+    _name = "!quote_add";
+    _moderatorOnly = true;
+    _answers.push_back("Quote #QUOTE_NUMBER was added!");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void AddQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
+{
+    if (_CheckModerationFlag(message.IsModerator()))
     {
         QString msg = message.GetMessage();
         // Get quote that should ba added
@@ -31,7 +39,7 @@ QString AddQuoteCommand::GetRandomAnswer(const ChatMessage& message)
         // If message not empty add quote to the list
         if (!msg.isEmpty())
         {
-            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(number)");
+            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
             if (numberQuery != NULL)
             {
                 numberQuery->first();
@@ -39,15 +47,20 @@ QString AddQuoteCommand::GetRandomAnswer(const ChatMessage& message)
 
                 if (DB_INSERT("Quotes", QString("NULL, '%1', %2").arg(msg).arg(newMaxValue)))
                 {
-                    answer = "Quote #";
-                    answer.append(QString::number(newMaxValue));
-                    answer.append(" was added!");
+                    answer = _answers.at(0);
+                    answer.replace("QUOTE_NUMBER", QString::number(newMaxValue));
                 }
             }
         }
     }
+}
 
-    return answer;
+///////////////////////////////////////////////////////////////////////////
+
+void AddQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////

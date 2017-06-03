@@ -25,30 +25,34 @@ void ListCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString ListCovenantCommand::GetRandomAnswer(const ChatMessage& message)
+void ListCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 {
-    QString answer;
-    if (message.GetMessage().contains(_name))
-    {
-        QString covList;
-        // Get covenant list
-        DB_QUERY_PTR query = DB_SELECT("Covenants", "Name");
-        if (query->exec())
-        {
-            answer = _answers.first();
-            while (query->next())
-            {
-                covList.append(query->value("Name").toString() + ", ");
-            }
-            if (covList.size() > 0)
-            {
-                covList = covList.left(covList.size() - 2);
-            }
-        }
-        answer.replace("COV_LIST", covList);
-    }
+    Q_UNUSED(message);
 
-    return answer;
+    QString covList;
+    // Get covenant list
+    DB_QUERY_PTR query = DB_SELECT("Covenants", "Name");
+    if (query->exec())
+    {
+        answer = _answers.first();
+        while (query->next())
+        {
+            covList.append(query->value("Name").toString() + ", ");
+        }
+        if (covList.size() > 0)
+        {
+            covList = covList.left(covList.size() - 2);
+        }
+    }
+    answer.replace("COV_LIST", covList);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ListCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <AI/ChatCommands/ChatCommand.hpp>
+#include <AI/ChatCommands/InbuiltChatCommand.hpp>
 
 namespace Command
 {
@@ -13,17 +13,20 @@ namespace Command
  * class LeaveCovenantCommand
  * Handles user's leaving from covenant
  */
-class LeaveCovenantCommand : public ChatCommand
+class LeaveCovenantCommand : public InbuiltChatCommand
 {
 public:
     /*!
      * Deafult Constructor
      */
     LeaveCovenantCommand();
+
+protected:
     ////////////////////////////////
-    /// ChatCommand overrides
-    QString GetRandomAnswer(const ChatMessage& message) override;
+    /// BaseChatCommand overrides
     void Initialize();
+    void _GetAnswer(const ChatMessage& message, QString& answer);
+    void _GetRandomAnswer(const ChatMessage& message, QString& answer);
 
 private:
     /*** Helper functions ***/

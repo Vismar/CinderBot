@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "../CommandList.hpp"
+#include <AI/ChatCommands/CommandList.hpp>
 
 namespace Command
 {
@@ -22,7 +22,6 @@ public:
     ~QuoteCommandList();
 
 protected:
-
     ////////////////////////////////
     /// CommandList override
     void _Initialize();

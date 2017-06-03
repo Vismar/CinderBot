@@ -39,84 +39,80 @@ void CreateCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString CreateCovenantCommand::GetRandomAnswer(const ChatMessage& message)
+void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 {
-    QString answer;
-    if (message.GetMessage().contains(_name))
+    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+    // Check if user is leader of its covenant
+    DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
+    if (query->exec())
     {
-        QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
-        // Check if user is leader of its covenant
-        DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
-        if (query->exec())
+        // If user is in covenant, check its leader
+        if (query->first())
         {
-            // If user is in covenant, check its leader
-            if (query->first())
+            if (query->value("Leader").toString() == message.GetRealName())
             {
-                if (query->value("Leader").toString() == message.GetRealName())
-                {
-                    // User is leader of another covenant
-                    answer = _answers.at(MSG_USER_IS_LEADER);
-                }
+                // User is leader of another covenant
+                answer = _answers.at(MSG_USER_IS_LEADER);
             }
-            // If user is not a leader or he not in a covenant, he is allowed to create covenant
-            if (answer.isEmpty())
+        }
+        // If user is not a leader or he not in a covenant, he is allowed to create covenant
+        if (answer.isEmpty())
+        {
+            // Get amount currency which is needed to create covenant
+            QString price;
+            if (!ConfigurationManager::Instance().GetStringParam(CFGP_COV_CREATE_PRICE, price))
             {
-                // Get currency which user have
-                QString currency = UD_GET_PARAM(message.GetRealName(), UDP_Currency);
-                // Get amount currency which is needed to create covenant
-                QString price;
-                if (!ConfigurationManager::Instance().GetStringParam(CFGP_COV_CREATE_PRICE, price))
+                price = DEFAULT_PRICE_FOR_CREATE;
+            }
+            _price = price.toInt();
+            // Check if user have enough currency
+            if (_CheckCurrency(message.GetRealName()))
+            {
+                // Get covenant name
+                QString newCovenant = message.GetMessage().mid(_name.size()+1);
+                int covNameLength = ((newCovenant.size()-2) < 0) ? 0 : (newCovenant.size()-2);
+                // If covenant name too long, just make it shorter
+                if (covNameLength > MAX_COVENANT_NAME_LENGTH)
                 {
-                    price = DEFAULT_PRICE_FOR_CREATE;
+                    covNameLength = MAX_COVENANT_NAME_LENGTH;
                 }
-                // Check if user have enough currency
-                if (currency.toInt() >= price.toInt())
+                newCovenant = newCovenant.left(covNameLength);
+                // If user provided covenant name, create it
+                if (!newCovenant.isEmpty())
                 {
-                    // Get covenant name
-                    QString newCovenant = message.GetMessage().mid(_name.size()+1);
-                    int covNameLength = ((newCovenant.size()-2) < 0) ? 0 : (newCovenant.size()-2);
-                    // If covenant name too long, just make it shorter
-                    if (covNameLength > MAX_COVENANT_NAME_LENGTH)
+                    // Create new covenant
+                    if (DB_INSERT("Covenants", QString("NULL, '%1', '%2'").arg(newCovenant).arg(message.GetRealName())))
                     {
-                        covNameLength = MAX_COVENANT_NAME_LENGTH;
-                    }
-                    newCovenant = newCovenant.left(covNameLength);
-                    // If user provided covenant name, create it
-                    if (!newCovenant.isEmpty())
-                    {
-                        // Create new covenant
-                        if (DB_INSERT("Covenants", QString("NULL, '%1', '%2'").arg(newCovenant).arg(message.GetRealName())))
-                        {
-                            // Update covenant field for user
-                            UD_UPDATE(message.GetRealName(), UDP_Covenant, newCovenant);
-                            // Take price to create covenant
-                            int newCurValue = currency.toInt()-price.toInt();
-                            UD_UPDATE(message.GetRealName(), UDP_Currency, QString::number(newCurValue));
-                            // Set answer
-                            answer = _answers.at(MSG_COVENANT_CREATED);
-                            answer.replace("COV_NAME", newCovenant);
-                        }
-                    }
-                    // Name of covenant doesn't provided
-                    else
-                    {
-                        answer = _answers.at(MSG_PROVIDE_NAME);
+                        // Update covenant field for user
+                        UD_UPDATE(message.GetRealName(), UDP_Covenant, newCovenant);
+                        // Take price to create covenant
+                        _TakeDefaultPriceFromUser(message.GetRealName());
+                        // Set answer
+                        answer = _answers.at(MSG_COVENANT_CREATED);
+                        answer.replace("COV_NAME", newCovenant);
                     }
                 }
-                // Not enough currency
+                // Name of covenant doesn't provided
                 else
                 {
-                    answer = _answers.at(MSG_NO_CURRENCY);
+                    answer = _answers.at(MSG_PROVIDE_NAME);
                 }
+            }
+            // Not enough currency
+            else
+            {
+                answer = _answers.at(MSG_NO_CURRENCY);
             }
         }
     }
-    if (!answer.isEmpty())
-    {
-        _AddAuthorName(answer, message.GetAuthor());
-    }
+}
 
-    return answer;
+///////////////////////////////////////////////////////////////////////////
+
+void CreateCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////

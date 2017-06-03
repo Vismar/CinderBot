@@ -67,11 +67,9 @@ void CustomChatCommand::_GetRandomAnswer(const ChatMessage& message, QString& an
         // Save time of exection
         _lastTimeUsed = QDateTime::currentDateTime();
         // Get random answer
-        DB_QUERY_PTR query = DB_SELECT("CustomCommandAnswers",
-                                       "*",
-                                       "Answer IN "
-                                       "(SELECT Answer FROM CommandAnswers "
-                                       "WHERE Name='%1' ORDER BY RANDOM() LIMIT 1)");
+        DB_QUERY_PTR query = DB_SELECT("CustomCommandAnswers", "*",
+                                       QString("Answer IN (SELECT Answer FROM CustomCommandAnswers "
+                                       "WHERE Name='%1' ORDER BY RANDOM() LIMIT 1)").arg(_name));
         if (query != NULL)
         {
             if (query->first())

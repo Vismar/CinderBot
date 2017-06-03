@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "CommandList.hpp"
+#include <AI/ChatCommands/CommandList.hpp>
 
 namespace Command
 {
@@ -23,12 +23,6 @@ protected:
     ////////////////////////////////
     /// CommandList override
     void _Initialize();
-
-    /*!
-     * Read specified xml file and store found commands
-     * \param(IN) filePath - path to a xml file
-     */
-    void _ReadXml(const QString& filePath);
 };
 
 }

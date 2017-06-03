@@ -66,7 +66,7 @@ void CreateQuoteWidget::_AddQuote()
     if (!_quoteText->toPlainText().isEmpty())
     {
         //  Get last quote number
-        std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(number)");
+        std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
         if (numberQuery != NULL)
         {
             numberQuery->first();

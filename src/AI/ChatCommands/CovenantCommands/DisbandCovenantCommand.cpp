@@ -32,55 +32,53 @@ void DisbandCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString DisbandCovenantCommand::GetRandomAnswer(const ChatMessage& message)
+void DisbandCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 {
-    QString answer;
-    if (message.GetMessage().contains(_name))
+    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+    if (covenant != "Viewer")
     {
-        QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
-        if (covenant != "Viewer")
+        // Check if user is leader of its covenant
+        DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
+        if (query->exec())
         {
-            // Check if user is leader of its covenant
-            DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
-            if (query->exec())
+            query->first();
+            // If user is leader, than proceed disband of covenant
+            if (query->value("Leader").toString() == message.GetRealName())
             {
-                query->first();
-                // If user is leader, than proceed disband of covenant
-                if (query->value("Leader").toString() == message.GetRealName())
+                // If covenant was disbanded, set covenant field to viewer for all users who was in that covenant
+                if (DB_DELETE("Covenants", QString("Name = '%1'").arg(covenant)))
                 {
-                    // If covenant was disbanded, set covenant field to viewer for all users who was in that covenant
-                    if (DB_DELETE("Covenants", QString("Name = '%1'").arg(covenant)))
+                    DB_QUERY_PTR query = DB_SELECT("UserData", "Name", QString("Covenant = '%1'").arg(covenant));
+                    if (query != NULL)
                     {
-                        DB_QUERY_PTR query = DB_SELECT("UserData", "Name", QString("Covenant = '%1'").arg(covenant));
-                        if (query != NULL)
+                        while (query->next())
                         {
-                            while (query->next())
-                            {
-                                UD_UPDATE(query->value("Name").toString(), UDP_Covenant, "Viewer");
-                            }
+                            UD_UPDATE(query->value("Name").toString(), UDP_Covenant, "Viewer");
                         }
-                        answer = _answers.at(MSG_DISBANDING);
                     }
-                }
-                // If user not leader, say it
-                else
-                {
-                    answer = _answers.at(MSG_NOT_LEADER);
+                    answer = _answers.at(MSG_DISBANDING);
                 }
             }
-        }
-        // If user is not a member of any covenant
-        else
-        {
-            answer = _answers.at(MSG_NO_COVENANT);
+            // If user not leader, say it
+            else
+            {
+                answer = _answers.at(MSG_NOT_LEADER);
+            }
         }
     }
-    if (!answer.isEmpty())
+    // If user is not a member of any covenant
+    else
     {
-        _AddAuthorName(answer, message.GetAuthor());
+        answer = _answers.at(MSG_NO_COVENANT);
     }
+}
 
-    return answer;
+///////////////////////////////////////////////////////////////////////////
+
+void DisbandCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////

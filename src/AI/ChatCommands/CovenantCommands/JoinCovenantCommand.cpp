@@ -36,92 +36,89 @@ void JoinCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString JoinCovenantCommand::GetRandomAnswer(const ChatMessage& message)
+void JoinCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 {
-    QString answer;
-    if (message.GetMessage().contains(_name))
+    QString price;
+    ConfigurationManager& configMng = ConfigurationManager::Instance();
+    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+
+    // Check if user is leader of its covenant
+    if (covenant != "Viewer")
     {
-        QString price;
-        ConfigurationManager& configMng = ConfigurationManager::Instance();
-        QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
-
-        // Check if user is leader of its covenant
-        if (covenant != "Viewer")
+        DB_QUERY_PTR queryLeader = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
+        if (queryLeader->exec())
         {
-            DB_QUERY_PTR queryLeader = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
-            if (queryLeader->exec())
+            queryLeader->first();
+            // If user is leader, notify him about it
+            if (queryLeader->value("Leader").toString() == message.GetRealName())
             {
-                queryLeader->first();
-                // If user is leader, notify him about it
-                if (queryLeader->value("Leader").toString() == message.GetRealName())
-                {
-                    answer = _answers.at(MSG_USER_IS_LEADER);
-                }
-            }
-        }
-        // If user Viewer or not a leader of its covenant
-        if (answer.isEmpty())
-        {
-            // Get amount of currency which user have
-            int currency = UD_GET_PARAM(message.GetRealName(), UDP_Currency).toInt();
-            // Set default price value
-            int priceToJoin(100);
-            // Try to get param from config manager
-            if (configMng.GetStringParam(CFGP_COV_JOIN_PRICE,price))
-            {
-                priceToJoin = price.toInt();
-
-            }
-            // If user have enough currency to join
-            if (currency >= priceToJoin)
-            {
-                // Get covenant list
-                QStringList covenants;
-                DB_QUERY_PTR query = DB_SELECT("Covenants", "Name");
-                if (query->exec())
-                {
-                    while (query->next())
-                    {
-                        covenants.append(query->value("Name").toString());
-                    }
-                }
-                // Try to find specified covenant from list of covenants
-                for (auto iter = covenants.begin(); iter != covenants.end(); ++iter)
-                {
-                    // Found a overlap
-                    if (message.GetMessage().contains(*iter))
-                    {
-                        // Check if user already in this covenant
-                        if (UD_GET_PARAM(message.GetRealName(), UDP_Covenant) != *iter)
-                        {
-                            // Join user to covenant and take currency for it
-                            answer = _answers.at(MSG_JOINING_COV);
-                            answer.replace("COV_NAME", *iter);
-                            UD_UPDATE(message.GetRealName(), UDP_Covenant, *iter);
-                            UD_UPDATE(message.GetRealName(), UDP_Currency, QString::number(currency - priceToJoin));
-                        }
-                        // User is already in that covenant
-                        else
-                        {
-                            // Second answer
-                            answer = _answers.at(MSG_ALREADY_IN_COV);
-                        }
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                answer = _answers.at(MSG_NO_CURRENCY);
+                answer = _answers.at(MSG_USER_IS_LEADER);
             }
         }
     }
-    if (!answer.isEmpty())
+    // If user Viewer or not a leader of its covenant
+    if (answer.isEmpty())
     {
-        _AddAuthorName(answer, message.GetAuthor());
-    }
+        // Set default price value
+        int priceToJoin(100);
+        // Try to get param from config manager
+        if (configMng.GetStringParam(CFGP_COV_JOIN_PRICE,price))
+        {
+            priceToJoin = price.toInt();
 
-    return answer;
+        }
+        _price = priceToJoin;
+        // If user have enough currency to join
+        if (_CheckCurrency(message.GetRealName()))
+        {
+            // Get covenant list
+            QStringList covenants;
+            DB_QUERY_PTR query = DB_SELECT("Covenants", "Name");
+            if (query->exec())
+            {
+                while (query->next())
+                {
+                    covenants.append(query->value("Name").toString());
+                }
+            }
+            // Try to find specified covenant from list of covenants
+            for (auto iter = covenants.begin(); iter != covenants.end(); ++iter)
+            {
+                // Found a overlap
+                if (message.GetMessage().contains(*iter))
+                {
+                    // Check if user already in this covenant
+                    if (UD_GET_PARAM(message.GetRealName(), UDP_Covenant) != *iter)
+                    {
+                        // Join user to covenant and take currency for it
+                        answer = _answers.at(MSG_JOINING_COV);
+                        answer.replace("COV_NAME", *iter);
+                        UD_UPDATE(message.GetRealName(), UDP_Covenant, *iter);
+                        _TakeDefaultPriceFromUser(message.GetRealName());
+                    }
+                    // User is already in that covenant
+                    else
+                    {
+                        // Second answer
+                        answer = _answers.at(MSG_ALREADY_IN_COV);
+                    }
+                    break;
+                }
+            }
+        }
+        else
+        {
+            answer = _answers.at(MSG_NO_CURRENCY);
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void JoinCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////
