@@ -20,21 +20,22 @@ void UserDataCommand::SetCommandType(UDCommandType cmdType)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void UserDataCommand::_GetAnswer(const ChatMessage& message, QString& answer)
+void UserDataCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
 {
     ConfigurationManager& configMng = ConfigurationManager::Instance();
-    answer = _answers.first();
-    answer.replace("MSG_COUNT", UD_GET_PARAM(message.GetRealName() ,UDP_Messages));
-    answer.replace("MSG_CUR", UD_GET_PARAM(message.GetRealName() ,UDP_Currency));
+    answer.append(_answers.first());
+    auto firstAnswer = answer.begin();
+    (*firstAnswer).replace("MSG_COUNT", UD_GET_PARAM(message.GetRealName() ,UDP_Messages));
+    (*firstAnswer).replace("MSG_CUR", UD_GET_PARAM(message.GetRealName() ,UDP_Currency));
     QString curName = "NomNom ";
     configMng.GetStringParam(CFGP_CURRENCY, curName);
-    answer.replace("MSG_NAME_CUR", curName);
-    answer.replace("MSG_COV", UD_GET_PARAM(message.GetRealName() ,UDP_Covenant));
+    (*firstAnswer).replace("MSG_NAME_CUR", curName);
+    (*firstAnswer).replace("MSG_COV", UD_GET_PARAM(message.GetRealName() ,UDP_Covenant));
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void UserDataCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+void UserDataCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

@@ -22,7 +22,7 @@ BaseChatCommand::~BaseChatCommand() { }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BaseChatCommand::Execute(const ChatMessage& message, QString& answer)
+bool BaseChatCommand::Execute(const ChatMessage& message, QStringList& answer)
 {
     bool result(false);
     QString messageInLowerCase = message.GetMessage().toLower();
@@ -63,16 +63,19 @@ void BaseChatCommand::_Clear()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseChatCommand::_ReplacePlaceHolders(const ChatMessage& message, QString& answer)
+void BaseChatCommand::_ReplacePlaceHolders(const ChatMessage& message, QStringList& answer)
 {
     _AddAuthorName(answer, message.GetAuthor());
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseChatCommand::_AddAuthorName(QString& answer, const QString& author)
+void BaseChatCommand::_AddAuthorName(QStringList& answer, const QString& author)
 {
-    answer.replace("@", author);
+    for (auto iter = answer.begin(); iter != answer.end(); ++iter)
+    {
+        (*iter).replace("@", author);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

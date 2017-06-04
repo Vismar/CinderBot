@@ -27,7 +27,7 @@ void AddQuoteCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void AddQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
+void AddQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
 {
     if (_CheckModerationFlag(message.IsModerator()))
     {
@@ -47,8 +47,8 @@ void AddQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 
                 if (DB_INSERT("Quotes", QString("NULL, '%1', %2").arg(msg).arg(newMaxValue)))
                 {
-                    answer = _answers.at(0);
-                    answer.replace("QUOTE_NUMBER", QString::number(newMaxValue));
+                    answer.append(_answers.at(0));
+                    (*answer.begin()).replace("QUOTE_NUMBER", QString::number(newMaxValue));
                 }
             }
         }
@@ -57,7 +57,7 @@ void AddQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void AddQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+void AddQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

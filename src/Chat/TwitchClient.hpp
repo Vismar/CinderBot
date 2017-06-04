@@ -63,7 +63,7 @@ public slots:
     /*!
      * Sends bot message to twitch and emit signal about new message
      */
-    void NewBotMessage(QString message);
+    void NewBotMessage(QStringList message);
     /*!
      * Reset msgLimit
      */
@@ -79,7 +79,7 @@ private:
      * Generates raw data that will be sent to channel via _SendIrcMessage
      * \param(IN) message - message that should be sent to channel
      */
-    void _SendChatMessage(const QString& message);
+    void _SendChatMessage(const QStringList& message);
 
     /*! BotAI. No direct calls, only signal-slot connections. */
     BotAI*      _bot;

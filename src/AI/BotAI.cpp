@@ -82,7 +82,7 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
     // If new message is not created by bot, parse it.
     if (!botMessage)
     {
-        QString answer;
+        QStringList answer;
 
         for (int i = 0; i < _chatCommands.size(); ++i)
         {

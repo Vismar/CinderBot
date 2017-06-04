@@ -25,7 +25,7 @@ void MainQuoteCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void MainQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
+void MainQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
 {
     QString val;
     DB_QUERY_PTR numberQuery = DB_SELECT("Quotes", "MAX(Number)");
@@ -45,8 +45,8 @@ void MainQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
                 if (query != NULL)
                 {
                     query->first();
-                    answer = query->value("quote").toString();
-                    answer.append(" - #" + QString::number(number));
+                    answer.append(query->value("quote").toString());
+                    (*answer.begin()).append(" - #" + QString::number(number));
                 }
             }
         }
@@ -59,8 +59,8 @@ void MainQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
             {
                 if (query->first())
                 {
-                    answer = query->value("Quote").toString();
-                    answer.append(" - #" + QString::number(k+1));
+                    answer.append(query->value("Quote").toString());
+                    (*answer.begin()).append(" - #" + QString::number(k+1));
                 }
             }
         }
@@ -69,7 +69,7 @@ void MainQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void MainQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+void MainQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);
