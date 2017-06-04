@@ -10,6 +10,7 @@
 #include <AI/ChatCommands/CovenantCommands/CreateCovenantCommand.hpp>
 #include <AI/ChatCommands/CovenantCommands/RenameCovenantCommand.hpp>
 #include <AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.hpp>
+#include <AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp>
 #include <AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp>
 #include <Utils/DatabaseManager.hpp>
 
@@ -26,6 +27,7 @@ CovenantCommandList::CovenantCommandList()
     _commands.push_back(new CreateCovenantCommand());
     _commands.push_back(new RenameCovenantCommand());
     _commands.push_back(new DescriptionCovenantCommand());
+    _commands.push_back(new InfoCovenantCommand());
     _commands.push_back(new DisbandCovenantCommand());
 
     _Initialize();
