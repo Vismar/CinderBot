@@ -9,6 +9,7 @@
 #include <AI/ChatCommands/CovenantCommands/LeaveCovenantCommand.hpp>
 #include <AI/ChatCommands/CovenantCommands/CreateCovenantCommand.hpp>
 #include <AI/ChatCommands/CovenantCommands/RenameCovenantCommand.hpp>
+#include <AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.hpp>
 #include <AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp>
 #include <Utils/DatabaseManager.hpp>
 
@@ -24,6 +25,7 @@ CovenantCommandList::CovenantCommandList()
     _commands.push_back(new LeaveCovenantCommand());
     _commands.push_back(new CreateCovenantCommand());
     _commands.push_back(new RenameCovenantCommand());
+    _commands.push_back(new DescriptionCovenantCommand());
     _commands.push_back(new DisbandCovenantCommand());
 
     _Initialize();
@@ -36,7 +38,8 @@ void CovenantCommandList::_Initialize()
     // Initialize data table in database
     DB_CREATE_TABLE("Covenants", "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                  "Name TEXT NOT NULL UNIQUE,"
-                                 "Leader TEXT");
+                                 "Leader TEXT,"
+                                 "Description TEXT");
 }
 
 ///////////////////////////////////////////////////////////////////////////
