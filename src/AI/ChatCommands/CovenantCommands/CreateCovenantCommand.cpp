@@ -81,7 +81,7 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& 
                 if (!newCovenant.isEmpty())
                 {
                     // Create new covenant
-                    if (DB_INSERT("Covenants", QString("NULL, '%1', '%2'").arg(newCovenant).arg(message.GetRealName())))
+                    if (DB_INSERT("Covenants", QString("NULL, '%1', '%2', ''").arg(newCovenant).arg(message.GetRealName())))
                     {
                         // Update covenant field for user
                         UD_UPDATE(message.GetRealName(), UDP_Covenant, newCovenant);

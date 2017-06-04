@@ -15,7 +15,7 @@ using namespace Command;
 #define MSG_USER_LEADER         1
 #define MSG_LEFT_AND_NEW_LEADER 2
 #define MSG_SPECIFIE_NEW_LEADER 3
-#define MSG_NO_IN_COVENANT      4
+#define MSG_NOT_IN_COVENANT     4
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -106,7 +106,7 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& a
     // If user is not in any covenant
     else
     {
-        answer.append(_answers.at(MSG_NO_IN_COVENANT));
+        answer.append(_answers.at(MSG_NOT_IN_COVENANT));
     }
 }
 
