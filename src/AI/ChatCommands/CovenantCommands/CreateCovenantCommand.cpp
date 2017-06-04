@@ -39,7 +39,7 @@ void CreateCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answer)
+void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     // Check if user is leader of its covenant
@@ -52,7 +52,7 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answ
             if (query->value("Leader").toString() == message.GetRealName())
             {
                 // User is leader of another covenant
-                answer = _answers.at(MSG_USER_IS_LEADER);
+                answer.append(_answers.at(MSG_USER_IS_LEADER));
             }
         }
         // If user is not a leader or he not in a covenant, he is allowed to create covenant
@@ -88,20 +88,20 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answ
                         // Take price to create covenant
                         _TakeDefaultPriceFromUser(message.GetRealName());
                         // Set answer
-                        answer = _answers.at(MSG_COVENANT_CREATED);
-                        answer.replace("COV_NAME", newCovenant);
+                        answer.append(_answers.at(MSG_COVENANT_CREATED));
+                        (*answer.begin()).replace("COV_NAME", newCovenant);
                     }
                 }
                 // Name of covenant doesn't provided
                 else
                 {
-                    answer = _answers.at(MSG_PROVIDE_NAME);
+                    answer.append(_answers.at(MSG_PROVIDE_NAME));
                 }
             }
             // Not enough currency
             else
             {
-                answer = _answers.at(MSG_NO_CURRENCY);
+                answer.append(_answers.at(MSG_NO_CURRENCY));
             }
         }
     }
@@ -109,7 +109,7 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answ
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CreateCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+void CreateCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

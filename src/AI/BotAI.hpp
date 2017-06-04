@@ -27,7 +27,7 @@ signals:
      * Signal about new bot message
      * \param(IN) message - bot message
      */
-    void NewBotMessage(QString message);
+    void NewBotMessage(QStringList message);
 
 public slots:
     /*!

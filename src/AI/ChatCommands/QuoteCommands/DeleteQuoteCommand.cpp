@@ -27,7 +27,7 @@ void DeleteQuoteCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void DeleteQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
+void DeleteQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
 {
     if (_CheckModerationFlag(message.IsModerator()))
     {
@@ -47,8 +47,8 @@ void DeleteQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
                     if(DB_DELETE("Quotes", QString("Number = %1").arg(number)))
                     {
                         _RefreshQuoteNumbers(number);
-                        answer = _answers.at(0);
-                        answer.replace("QUOTE_NUMBER", QString::number(number));
+                        answer.append(_answers.at(0));
+                        (*answer.begin()).replace("QUOTE_NUMBER", QString::number(number));
                     }
                 }
             }
@@ -58,7 +58,7 @@ void DeleteQuoteCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void DeleteQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+void DeleteQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

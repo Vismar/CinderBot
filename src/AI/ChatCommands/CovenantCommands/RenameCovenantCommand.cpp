@@ -41,7 +41,7 @@ void RenameCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void RenameCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answer)
+void RenameCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     // Check if user in covenant
@@ -93,25 +93,25 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answ
                                 }
                                 // Take price to rename covenant
                                 _TakeDefaultPriceFromUser(message.GetRealName());
-                                answer = _answers.at(MSG_RENAMED);
+                                answer.append(_answers.at(MSG_RENAMED));
                             }
                         }
                         // If name was not provided
                         else
                         {
-                            answer = _answers.at(MSG_NO_NAME);
+                            answer.append(_answers.at(MSG_NO_NAME));
                         }
                     }
                     // If user do not have enought currency
                     else
                     {
-                        answer = _answers.at(MSG_NO_CURRENCY);
+                        answer.append(_answers.at(MSG_NO_CURRENCY));
                     }
                 }
                 // If user is not leader
                 else
                 {
-                    answer = _answers.at(MSG_NOT_LEADER);
+                    answer.append(_answers.at(MSG_NOT_LEADER));
                 }
             }
         }
@@ -119,13 +119,13 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage& message, QString& answ
     // If user is not in any covenant
     else
     {
-        answer = _answers.at(MSG_NO_COVENANT);
+        answer.append(_answers.at(MSG_NO_COVENANT));
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void RenameCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+void RenameCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

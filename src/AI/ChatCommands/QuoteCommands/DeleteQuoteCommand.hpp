@@ -23,8 +23,8 @@ protected:
     ////////////////////////////////
     /// BaseChatCommand overrides
     void Initialize();
-    void _GetAnswer(const ChatMessage& message, QString& answer);
-    void _GetRandomAnswer(const ChatMessage& message, QString& answer);
+    void _GetAnswer(const ChatMessage& message, QStringList& answer);
+    void _GetRandomAnswer(const ChatMessage& message, QStringList& answer);
 
 private:
     /*!

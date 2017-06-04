@@ -51,7 +51,7 @@ void CustomChatCommand::InitializeByName(const QString& commandName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomChatCommand::_GetAnswer(const ChatMessage& message, QString& answer)
+void CustomChatCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);
@@ -59,7 +59,7 @@ void CustomChatCommand::_GetAnswer(const ChatMessage& message, QString& answer)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomChatCommand::_GetRandomAnswer(const ChatMessage& message, QString& answer)
+void CustomChatCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
 {
     if (_CheckModerationFlag(message.IsModerator()) &&
         _CheckCooldown() &&
@@ -79,7 +79,36 @@ void CustomChatCommand::_GetRandomAnswer(const ChatMessage& message, QString& an
         {
             if (query->first())
             {
-                answer = query->value("Answer").toString();
+                QString longAnswer = query->value("Answer").toString();
+                // If answer is less than 500 symbols, then everything ok
+                if (longAnswer.length() <= 500)
+                {
+                    answer.append(longAnswer);
+                }
+                // If answer is longer than 500 symbols, so it should be sliced
+                else
+                {
+                    // Slice an answer to separate messages
+                    // until every part of an answer will not be less than 500 symbols
+                    while (longAnswer.length() > 0)
+                    {
+                        QString part = longAnswer.left(500);
+                        // Try to find last space in this part
+                        int lastSpace = part.lastIndexOf(' ');
+                        // If in this part no space were found, just use 500 symbols there
+                        if (lastSpace != -1)
+                        {
+                            answer.append(longAnswer.left(lastSpace+1));
+                            longAnswer.remove(0, lastSpace+1);
+                        }
+                        // If last space were found, cut the message until this index
+                        else
+                        {
+                            answer.append(part);
+                            longAnswer.remove(0, 500);
+                        }
+                    }
+                }
             }
         }
     }
