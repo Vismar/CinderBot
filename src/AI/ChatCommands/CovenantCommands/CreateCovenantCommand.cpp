@@ -15,6 +15,7 @@ using namespace Command;
 #define MSG_USER_IS_LEADER   1
 #define MSG_COVENANT_CREATED 2
 #define MSG_PROVIDE_NAME     3
+#define MSG_ALREADY_EXIST    4
 
 #define MAX_COVENANT_NAME_LENGTH 50
 #define DEFAULT_PRICE_FOR_CREATE "2000"
@@ -35,6 +36,7 @@ void CreateCovenantCommand::Initialize()
     _answers.push_back("You are leader of another covenant, @! Leave or disband it and try again.");
     _answers.push_back("Covenant 'COV_NAME' was created. @! Now you are leader of it.");
     _answers.push_back("Please provide name of new covenant, @.");
+    _answers.push_back("Such covenant already exist, @.");
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -80,8 +82,23 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& 
                 // If user provided covenant name, create it
                 if (!newCovenant.isEmpty())
                 {
-                    // Create new covenant
-                    if (DB_INSERT("Covenants", QString("NULL, '%1', '%2', ''").arg(newCovenant).arg(message.GetRealName())))
+                    // Check if such covenant already exist
+                    DB_QUERY_PTR queryName = DB_SELECT("Covenants", "COUNT(*)",
+                                                                    QString("Name = '%1'").arg(newCovenant));
+                    if (queryName != NULL)
+                    {
+                        if (queryName->first())
+                        {
+                            if (queryName->value(0).toInt() != 0)
+                            {
+                                answer.append(_answers.at(MSG_ALREADY_EXIST));
+                            }
+                        }
+                    }
+
+                    // Create new covenant if such covenant not exist
+                    if ((answer.isEmpty()) &&
+                        (DB_INSERT("Covenants", QString("NULL, '%1', '%2', ''").arg(newCovenant).arg(message.GetRealName()))))
                     {
                         // Update covenant field for user
                         UD_UPDATE(message.GetRealName(), UDP_Covenant, newCovenant);

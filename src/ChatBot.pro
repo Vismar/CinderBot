@@ -56,7 +56,8 @@ SOURCES += main.cpp\
     AI/ChatCommands/CustomCommands/CustomChatCommand.cpp \
     AI/ChatCommands/CustomCommands/CustomCovCommandList.cpp \
     AI/ChatCommands/CustomCommands/CustomCommanList.cpp \
-    AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.cpp
+    AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/InfoCovenantCommand.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -101,7 +102,8 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/CustomCommands/CustomChatCommand.hpp \
     AI/ChatCommands/CustomCommands/CustomCommandList.hpp \
     AI/ChatCommands/CustomCommands/CustomCovCommandList.hpp \
-    AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.hpp
+    AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp
 
 RESOURCES += \
     Resources.qrc

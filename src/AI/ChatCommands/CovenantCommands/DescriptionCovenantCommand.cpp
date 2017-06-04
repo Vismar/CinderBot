@@ -56,6 +56,11 @@ void DescriptionCovenantCommand::_GetAnswer(const ChatMessage& message, QStringL
                     else
                     {
                         int lengthOfDescription = message.GetMessage().size()-_name.size()-3;
+                        // Description of covenant should not contain more than 400 symbols
+                        if (lengthOfDescription > 400)
+                        {
+                            lengthOfDescription = 400;
+                        }
                         QString description = message.GetMessage().mid(_name.size()+1, lengthOfDescription);
                         DB_UPDATE("Covenants", QString("Description = '%1'").arg(description),
                                                QString("Name = '%1'").arg(covenant));

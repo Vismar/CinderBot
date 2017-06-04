@@ -19,6 +19,8 @@ ListCovenantCommand::ListCovenantCommand()
 
 void ListCovenantCommand::Initialize()
 {
+    // 1 min cooldown
+    _cooldown.setHMS(0, 1, 0, 0);
     _name = "!cov_list";
     _answers.push_back("Covenants: COV_LIST");
 }
