@@ -41,7 +41,8 @@ void CovenantCommandList::_Initialize()
     DB_CREATE_TABLE("Covenants", "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                  "Name TEXT NOT NULL UNIQUE,"
                                  "Leader TEXT,"
-                                 "Description TEXT");
+                                 "Description TEXT,"
+                                 "CmdSlots INTEGER");
 }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -24,7 +24,7 @@ InfoCovenantCommand::InfoCovenantCommand()
 void InfoCovenantCommand::Initialize()
 {
     _name = "!cov_info";
-    _answers.push_back("Covenant: COV_NAME; Members: COV_MEMBERS;");
+    _answers.push_back("Covenant: COV_NAME; Members: COV_MEMBERS; Commands: COV_CMD_NUM;");
     _answers.push_back("Description: ");
     _answers.push_back("Please provide name of the covenant, @.");
 }
@@ -56,6 +56,7 @@ void InfoCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& an
                         temp.replace("COV_MEMBERS", (memberQuery->value(0).toString()));
                     }
                 }
+                temp.replace("COV_CMD_NUM", query->value("CmdSlots").toString());
                 answer.append(temp);
                 temp = query->value("Description").toString();
                 if (!temp.isEmpty())
