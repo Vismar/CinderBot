@@ -42,7 +42,9 @@ void CovenantCommandList::_Initialize()
                                  "Name TEXT NOT NULL UNIQUE,"
                                  "Leader TEXT,"
                                  "Description TEXT,"
-                                 "CmdSlots INTEGER");
+                                 "CmdSlots INTEGER,"
+                                 "Level INTEGER,"
+                                 "Exp INTEGER");
 }
 
 ///////////////////////////////////////////////////////////////////////////
