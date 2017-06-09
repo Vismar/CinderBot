@@ -250,7 +250,7 @@ bool ChatMessage::_IsUserState(const QString& message) const
 
 bool ChatMessage::_IsPrivMsg(const QString& message) const
 {
-    return message.startsWith("@badges=");
+    return (message.startsWith("@badges=") && (message.contains("PRIVMSG")));
 }
 
 ///////////////////////////////////////////////////////////////////////////

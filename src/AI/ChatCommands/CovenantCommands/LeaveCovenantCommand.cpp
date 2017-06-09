@@ -52,13 +52,13 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& a
             if (query->value("Leader").toString() == message.GetRealName())
             {
                 // Name of new leader should start with ampersand
-                int ampersand = message.GetMessage().indexOf("@");
-                if (ampersand > 0)
+                int startOfName = message.GetMessage().indexOf(" ");
+                if (startOfName > 0)
                 {
                     // Try to get name of new leader
                     QString newLeader;
-                    int endOfName = _GetEndOfNameFromAmpersand(ampersand, message.GetMessage());
-                    newLeader = message.GetMessage().mid(ampersand+1, endOfName-ampersand-1);
+                    int endOfName = _GetEndOfNameFromStart(startOfName, message.GetMessage());
+                    newLeader = message.GetMessage().mid(startOfName+1, endOfName-startOfName-1);
                     // If leader name was found, try to use it
                     if (!newLeader.isEmpty())
                     {
@@ -120,14 +120,14 @@ void LeaveCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringL
 
 ///////////////////////////////////////////////////////////////////////////
 
-int LeaveCovenantCommand::_GetEndOfNameFromAmpersand(int ampersandPosition, const QString& message)
+int LeaveCovenantCommand::_GetEndOfNameFromStart(int startOfName, const QString& message)
 {
     // Try to get name of user if user typed something after name of new leader
-    int endOfName = message.indexOf(" ", ampersandPosition);
+    int endOfName = message.indexOf(" ", startOfName+1);
     // If user do not enter anything after name of a new leader
     if (endOfName < 0)
     {
-        endOfName = message.indexOf("\r", ampersandPosition);
+        endOfName = message.indexOf("\r", startOfName);
     }
 
     return endOfName;

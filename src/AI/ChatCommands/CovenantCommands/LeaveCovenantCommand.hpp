@@ -36,7 +36,7 @@ private:
      * \param message - message where to search name
      * \return position which specifies end of name
      */
-    int _GetEndOfNameFromAmpersand(int ampersandPosition, const QString& message);
+    int _GetEndOfNameFromStart(int startOfName, const QString& message);
     /*!
      * Try to set new leader to specified covenant and make old leader just a viewer
      * \param newLeader - name of new leader
