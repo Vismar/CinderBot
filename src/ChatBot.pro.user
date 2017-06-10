@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.0.3, 2017-04-30T02:04:54. -->
+<!-- Written by QtCreator 4.0.3, 2017-06-10T02:47:48. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -54,7 +54,17 @@
  </data>
  <data>
   <variable>ProjectExplorer.Project.PluginSettings</variable>
-  <valuemap type="QVariantMap"/>
+  <valuemap type="QVariantMap">
+   <valuelist type="QVariantList" key="ClangStaticAnalyzer.SuppressedDiagnostics">
+    <valuemap type="QVariantMap">
+     <value type="QString" key="ClangStaticAnalyzer.SuppressedDiagnosticContext">qMain</value>
+     <value type="QString" key="ClangStaticAnalyzer.SuppressedDiagnosticContextKind">function</value>
+     <value type="QString" key="ClangStaticAnalyzer.SuppressedDiagnosticFilePath">G:\Bot\CinderBot\src\main.cpp</value>
+     <value type="QString" key="ClangStaticAnalyzer.SuppressedDiagnosticMessage">Value stored to 'returningCode' is never read</value>
+     <value type="int" key="ClangStaticAnalyzer.SuppressedDiagnosticUniquifier">1</value>
+    </valuemap>
+   </valuelist>
+  </valuemap>
  </data>
  <data>
   <variable>ProjectExplorer.Project.Target.0</variable>

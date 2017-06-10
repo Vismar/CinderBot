@@ -1,5 +1,10 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #pragma once
-#include "../ChatCommand.hpp"
+#include <AI/ChatCommands/InbuiltChatCommand.hpp>
 
 namespace Command
 {
@@ -8,15 +13,10 @@ namespace Command
  * Class BaseCovenantCommand
  * Base class for every quote command
  */
-class BaseQuoteCommand : public ChatCommand
+class BaseQuoteCommand : public InbuiltChatCommand
 {
 public:
     BaseQuoteCommand();
-    /*!
-     * Set reference to quotes
-     * \param(IN) quotes - reference to list of quotes
-     */
-    void SetQuoteRef(QVector<QString>* quotes);
 
 protected:
     /*!
@@ -27,8 +27,6 @@ protected:
      * \return true, if number was found
      */
     bool _GetNumberAfterCommand(const QString& command, const QString& message, QString& value);
-    /*! Reference to list of quotes */
-    QVector<QString>* _quotes;
 };
 
 }

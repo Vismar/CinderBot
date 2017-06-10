@@ -1,13 +1,19 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #include "BotAI.hpp"
 #include <Utils/UserData/UserData.hpp>
 #include <Utils/Config/ConfigurationManager.hpp>
 #include <Utils/Config/ConfigurationParameters.hpp>
 #include <Utils/UserData/RealTimeUserData.hpp>
 /*** Command lists ***/
-#include "./ChatCommands/CustomCommandList.hpp"
-#include "./ChatCommands/UserDataCommandList.hpp"
-#include "./ChatCommands/CovenantCommandList.hpp"
-#include "./ChatCommands/QuoteCommands/QuoteCommandList.hpp"
+#include <AI/ChatCommands/CustomCommands/CustomCommandList.hpp>
+#include <AI/ChatCommands/CustomCommands/CustomCovCommandList.hpp>
+#include <AI/ChatCommands/UserDataCommandList.hpp>
+#include <AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp>
+#include <AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp>
 
 using namespace Command;
 
@@ -39,6 +45,7 @@ BotAI::BotAI(QObject* parent) : QObject(parent)
     _chatCommands.push_back(new QuoteCommandList());
     // Custom commands for all users and covenants
     _chatCommands.push_back(new CustomCommandList());
+    _chatCommands.push_back(new CustomCovCommandList());
 
     // Connect and start currency timer
     connect(&_currencyTimer, &QTimer::timeout,
@@ -75,12 +82,12 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
     // If new message is not created by bot, parse it.
     if (!botMessage)
     {
-        QString answer;
+        QStringList answer;
 
         for (int i = 0; i < _chatCommands.size(); ++i)
         {
             // If we found a command, emit event with result and break the loop
-            if (_chatCommands[i]->TryGetAnswer(message, answer))
+            if (_chatCommands[i]->TryExecute(message, answer))
             {
                 emit NewBotMessage(answer);
                 break;
@@ -132,28 +139,26 @@ void BotAI::_UpdateUserData(const ChatMessage& message)
 
 void BotAI::_IncrementMessageCounter(const QString& userName)
 {
-    UserData& userData = UserData::Instance();
     QString param;
     // Get message counter
-    param = userData.GetUserDataParam(userName, UDP_Messages);
+    param = UD_GET_PARAM(userName, UDP_Messages);
     // Increment counter
     param = QString::number(param.toInt() + 1);
     // Set new value
-    userData.UpdateUserData(userName, UDP_Messages, param);
+    UD_UPDATE(userName, UDP_Messages, param);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void BotAI::_AddCurrency(const QString& userName, const int value)
 {
-    UserData& userData = UserData::Instance();
     QString param;
     // Get currency value
-    param = userData.GetUserDataParam(userName, UDP_Currency);
+    param = UD_GET_PARAM(userName, UDP_Currency);
     // Update value
     param = QString::number(param.toInt() + value);
     // Set new value
-    userData.UpdateUserData(userName, UDP_Currency, param);
+    UD_UPDATE(userName, UDP_Currency, param);
 }
 
 ///////////////////////////////////////////////////////////////////////////

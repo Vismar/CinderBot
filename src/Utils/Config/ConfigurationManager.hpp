@@ -1,3 +1,8 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #pragma once
 #include <QHash>
 #include <QString>
@@ -51,10 +56,6 @@ private:
      * Read ignore list section in xml file
      */
     void _ReadIgnoreList();
-    /*!
-     * Read covenant list section in xml file
-     */
-    void _ReadCovenantList();
 
     /*! Hash table of parameters */
     QHash<QString, QString> _params;

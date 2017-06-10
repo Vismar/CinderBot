@@ -1,20 +1,15 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #include "BaseQuoteCommand.hpp"
 
 using namespace Command;
 
 ///////////////////////////////////////////////////////////////////////////
 
-BaseQuoteCommand::BaseQuoteCommand()
-{
-    _quotes = 0;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void BaseQuoteCommand::SetQuoteRef(QVector<QString>* quotes)
-{
-    _quotes = quotes;
-}
+BaseQuoteCommand::BaseQuoteCommand() {}
 
 ///////////////////////////////////////////////////////////////////////////
 

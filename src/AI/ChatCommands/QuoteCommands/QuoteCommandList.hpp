@@ -1,5 +1,10 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #pragma once
-#include "../CommandList.hpp"
+#include <AI/ChatCommands/CommandList.hpp>
 
 namespace Command
 {
@@ -17,21 +22,9 @@ public:
     ~QuoteCommandList();
 
 protected:
-    /*!
-     * Save all quotes to .xml file
-     */
-    void _SaveQuotes();
-
     ////////////////////////////////
     /// CommandList override
     void _Initialize();
-
-    /*! Xml stream reader */
-    QXmlStreamReader _xmlReader;
-    /*! Xml stream writer */
-    QXmlStreamWriter _xmlWriter;
-    /*! List of quotes */
-    QVector<QString> _quotes;
 };
 
 }

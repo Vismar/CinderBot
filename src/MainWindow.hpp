@@ -1,9 +1,15 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #pragma once
 #include <QMainWindow>
 #include <QTabWidget>
-#include "./Widgets/ChatWidget.hpp"
-#include "./Widgets/Statistics/StatisticsWidget.hpp"
-#include "./Chat/TwitchClient.hpp"
+#include <Widgets/ChatWidget.hpp>
+#include <Widgets/Statistics/StatisticsWidget.hpp>
+#include <Widgets/Quotes/QuoteTabWidget.hpp>
+#include <Chat/TwitchClient.hpp>
 
 namespace Ui
 {
@@ -39,6 +45,10 @@ private:
      * Create and initialize statistics widget
      */
     void _CreateStatisticsWidget();
+    /*!
+     * Create and initialize quotes widget
+     */
+    void _CreateQuotesWidget();
 
     /*! Horizontal layout */
     QHBoxLayout*      _layout;
@@ -48,8 +58,10 @@ private:
     QTabWidget*       _tabWidget;
     /*! Statistics widget */
     StatisticsWidget* _statisticsWidget;
+    /*! Quotes widget */
+    QuoteTabWidget*   _quoteTabWidget;
     /*! Twitch client. Handles all network stuff. */
-    TwitchClient* _twitchClient;
+    TwitchClient*     _twitchClient;
 };
 
 }

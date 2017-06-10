@@ -1,4 +1,10 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #include "AddQuoteCommand.hpp"
+#include <Utils/DatabaseManager.hpp>
 
 using namespace Command;
 
@@ -7,15 +13,23 @@ using namespace Command;
 AddQuoteCommand::AddQuoteCommand()
 {
     _Clear();
-    _name = "#add_quote";
+    Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString AddQuoteCommand::GetRandomAnswer(const ChatMessage& message)
+void AddQuoteCommand::Initialize()
 {
-    QString answer;
-    if (message.GetMessage().contains(_name))
+    _name = "!quote_add";
+    _moderatorOnly = true;
+    _answers.push_back("Quote #QUOTE_NUMBER was added!");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void AddQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+{
+    if (_CheckModerationFlag(message.IsModerator()))
     {
         QString msg = message.GetMessage();
         // Get quote that should ba added
@@ -25,14 +39,28 @@ QString AddQuoteCommand::GetRandomAnswer(const ChatMessage& message)
         // If message not empty add quote to the list
         if (!msg.isEmpty())
         {
-            _quotes->push_back(msg);
-            answer = "Quote #";
-            answer.append(QString::number(_quotes->size()));
-            answer.append(" was added!");
+            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
+            if (numberQuery != NULL)
+            {
+                numberQuery->first();
+                int newMaxValue = numberQuery->value(0).toInt() + 1;
+
+                if (DB_INSERT("Quotes", QString("NULL, '%1', %2").arg(msg).arg(newMaxValue)))
+                {
+                    answer.append(_answers.at(0));
+                    (*answer.begin()).replace("QUOTE_NUMBER", QString::number(newMaxValue));
+                }
+            }
         }
     }
+}
 
-    return answer;
+///////////////////////////////////////////////////////////////////////////
+
+void AddQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////

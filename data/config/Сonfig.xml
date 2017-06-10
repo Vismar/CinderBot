@@ -29,12 +29,9 @@
 		<!-- ======================= -->
 		<!-- === Covenant params === -->
 		<!-- ======================= -->
-		<CovenantList>
-			<!-- Use <Covenant>Covenant name</Covenant> to define covenants -->
-			<Covenant>Covenant Name</Covenant>
-			<Covenant>Another Covenant Name</Covenant>
-		</CovenantList>
-		<CovJoinPrice>100</CovJoinPrice> <!-- Any integer number, bigger than 0 -->
+		<CovJoinPrice>100</CovJoinPrice>      <!-- Any integer number, bigger than 0 -->
+		<CovCreatePrice>2000</CovCreatePrice> <!-- Any integer number, bigger than 0 -->
+		<CovRenamePrice>500</CovRenamePrice>  <!-- Any integer number, bigger than 0 -->
 		<!-- ======================= -->
 		<!-- ==== System params ==== -->
 		<!-- ======================= -->

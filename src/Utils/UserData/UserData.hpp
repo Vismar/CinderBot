@@ -1,8 +1,14 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #pragma once
 #include <QString>
 #include <QHash>
-#include <QXmlStreamReader>
-#include <QXmlStreamWriter>
+
+#define UD_UPDATE    UserData::Instance().UpdateUserData
+#define UD_GET_PARAM UserData::Instance().GetUserDataParam
 
 /*!
  * UserDataParam
@@ -68,26 +74,6 @@ private:
      */
     void _InitializeDefaultUserData();
 
-    /*!
-     * Read xml file to get UDP
-     * \return hash table of UDP
-     */
-    QHash<QString, QString> _ReadUserParams();
-    /*!
-     * Read user data from xml file
-     */
-    void _ReadUserData();
-    /*!
-     * Save stored user data to file
-     */
-    void _SaveUserData();
-
-    /*! Hash table of user data */
-    QHash<QString, QHash<QString, QString> > _userData;
-    /*! Hash table if default parameters of user data */
-    QHash<QString, QString>                  _defaultParams;
-    /*! Xml stream reader */
-    QXmlStreamReader _xmlReader;
-    /*! Xml stream writer */
-    QXmlStreamWriter _xmlWriter;
+    /*! Hash table of default parameters of user data */
+    QHash<QString, QString> _defaultParams;
 };

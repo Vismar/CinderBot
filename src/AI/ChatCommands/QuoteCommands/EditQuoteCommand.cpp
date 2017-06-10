@@ -1,4 +1,10 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #include "EditQuoteCommand.hpp"
+#include <Utils/DatabaseManager.hpp>
 
 using namespace Command;
 
@@ -7,15 +13,23 @@ using namespace Command;
 EditQuoteCommand::EditQuoteCommand()
 {
     _Clear();
-    _name = "#edit_quote";
+    Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString EditQuoteCommand::GetRandomAnswer(const ChatMessage& message)
+void EditQuoteCommand::Initialize()
 {
-    QString answer;
-    if (message.GetMessage().contains(_name))
+    _name = "!quote_edit";
+    _moderatorOnly = true;
+    _answers.push_back("Quote #QUOTE_NUMBER was edited!");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void EditQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+{
+    if (_CheckModerationFlag(message.IsModerator()))
     {
         QString msg = message.GetMessage();
         QString val;
@@ -23,23 +37,36 @@ QString EditQuoteCommand::GetRandomAnswer(const ChatMessage& message)
         if (_GetNumberAfterCommand(_name, msg, val))
         {
             // Check borders
-            int number = val.toInt() - 1;
-            if ((number >= 0) && (number < _quotes->size()))
+            int number = val.toInt();
+            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
+            if (numberQuery != NULL)
             {
-                // Remove part with number from message
-                msg = msg.mid(msg.indexOf(_name) + _name.size() + 1);
-                msg = msg.left(msg.size() - 2);
-                msg = msg.mid(val.size() + 1);
-                // Update quote
-                (*_quotes)[number] = msg;
-                answer = "Quote #";
-                answer.append(QString::number(number + 1));
-                answer.append(" was edited!");
+                numberQuery->first();
+                int maxValue = numberQuery->value(0).toInt() + 1;
+                if ((number > 0) && (number <= maxValue))
+                {
+                    // Remove part with number from message
+                    msg = msg.mid(msg.indexOf(_name) + _name.size() + 1);
+                    msg = msg.left(msg.size() - 2);
+                    msg = msg.mid(val.size() + 1);
+                    // Update quote
+                    if(DB_UPDATE("Quotes", QString("Quote = '%1'").arg(msg), QString("Number = %1").arg(number)))
+                    {
+                        answer.append(_answers.at(0));
+                        (*answer.begin()).replace("QUOTE_NUMBER", QString::number(number));
+                    }
+                }
             }
         }
     }
+}
 
-    return answer;
+///////////////////////////////////////////////////////////////////////////
+
+void EditQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////

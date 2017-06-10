@@ -1,3 +1,8 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #include "CommandList.hpp"
 
 using namespace Command;
@@ -14,15 +19,13 @@ CommandList::~CommandList()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool CommandList::TryGetAnswer(const ChatMessage& message, QString& answer)
+bool CommandList::TryExecute(const ChatMessage& message, QStringList& answer)
 {
     bool result(false);
     // Check all commands
     for (int i = 0; i < _commands.size(); ++i)
     {
-        answer = _commands[i]->GetRandomAnswer(message);
-        // If answer is empty, that means command not executed
-        if (!answer.isEmpty())
+        if (_commands[i]->Execute(message, answer))
         {
             result = true;
             break;
@@ -31,9 +34,5 @@ bool CommandList::TryGetAnswer(const ChatMessage& message, QString& answer)
 
     return result;
 }
-
-///////////////////////////////////////////////////////////////////////////
-
-void CommandList::_Initialize() { }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -1,3 +1,8 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #pragma once
 #include "BaseQuoteCommand.hpp"
 
@@ -14,9 +19,19 @@ public:
     /*! Constructor */
     DeleteQuoteCommand();
 
+protected:
     ////////////////////////////////
-    /// ChatCommand overrides
-    QString GetRandomAnswer(const ChatMessage& message) override;
+    /// BaseChatCommand overrides
+    void Initialize();
+    void _GetAnswer(const ChatMessage& message, QStringList& answer);
+    void _GetRandomAnswer(const ChatMessage& message, QStringList& answer);
+
+private:
+    /*!
+     * Update quote numbers
+     * \param(IN) quoteNumber - number of deleted quote
+     */
+    void _RefreshQuoteNumbers(int quoteNumber);
 };
 
 }

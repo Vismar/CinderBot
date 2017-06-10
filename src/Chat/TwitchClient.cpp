@@ -1,3 +1,8 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #include "TwitchClient.hpp"
 #include <Utils/Config/ConfigurationManager.hpp>
 #include <Utils/Config/ConfigurationParameters.hpp>
@@ -139,8 +144,9 @@ void TwitchClient::ReadLine()
         case INFO:
             if (message.GetMessage() == SYSTEM_MESSAGE_CR)
             {
-                //TODO: Should be changed to selected phrase from dictionary
-                _SendChatMessage("Poooound Всем приветище! Poooound");
+                QStringList hiMsg;
+                hiMsg.append("Poooound Всем приветище! Poooound");
+                _SendChatMessage(hiMsg);
             }
             emit NewMessage(message, true);
             break;
@@ -215,22 +221,33 @@ void TwitchClient::HandleStateChange(QAbstractSocket::SocketState state)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void TwitchClient::NewBotMessage(QString message)
+void TwitchClient::NewBotMessage(QStringList message)
 {
     _SendChatMessage(message);
-    ChatMessage botMessage;
-    QString param;
-    // Try to get login name
-    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
+    if ((_msgCounter + message.size()) < _msgLimit)
     {
-        // Prepare chat message
-        botMessage.SetAuthor(param);
-        botMessage.SetRealName(param);
-        botMessage.SetColor("Green");
-        botMessage.SetMessage(message);
-        botMessage.SetModFlag(_msgLimit == MSG_LIMIT_MODE);
-        // Create single shot timer to emit signal to display bot message with small delay
-        QTimer::singleShot(50, this, [this, botMessage](){ emit NewMessage(botMessage, true); });
+        ChatMessage botMessage;
+        QString param;
+        // Try to get login name
+        if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
+        {
+            // Need to add additional delay, because if all timers will end in the same time,
+            // it is possible that last one would be checked first, so the last message will be displayed
+            // in the first place, and the first message will become last
+            int additionalDelay(0);
+            for (auto iter = message.begin(); iter != message.end(); ++iter)
+            {
+                // Prepare chat message
+                botMessage.SetAuthor(param);
+                botMessage.SetRealName(param);
+                botMessage.SetColor("Green");
+                botMessage.SetMessage(*iter);
+                botMessage.SetModFlag(_msgLimit == MSG_LIMIT_MODE);
+                // Create single shot timer to emit signal to display bot message with small delay
+                QTimer::singleShot(50+additionalDelay, this, [this, botMessage](){ emit NewMessage(botMessage, true); });
+                additionalDelay += 10;
+            }
+        }
     }
 }
 
@@ -251,19 +268,23 @@ void TwitchClient::_SendIrcMessage(const QString& message)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void TwitchClient::_SendChatMessage(const QString& message)
+void TwitchClient::_SendChatMessage(const QStringList& message)
 {
-    if (_msgCounter < _msgLimit)
+    if ((_msgCounter + message.size()) < _msgLimit)
     {
         QString param;
         // Try to get channel name
         if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
         {
-            param.push_front("PRIVMSG #");
-            param.push_back(" :");
-            param.push_back(message);
-            param.push_back("\r\n");
-            _SendIrcMessage(param);
+            for (auto iter = message.begin(); iter != message.end(); ++iter)
+            {
+                QString msg("PRIVMSG #" + param);
+                msg.push_back(" :");
+                msg.push_back(*iter);
+                msg.push_back("\r\n");
+                _SendIrcMessage(msg);
+                qDebug() << msg;
+            }
         }
         ++_msgCounter;
     }

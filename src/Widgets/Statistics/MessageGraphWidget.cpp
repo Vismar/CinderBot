@@ -1,3 +1,8 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #include "MessageGraphWidget.hpp"
 #include <Utils/UserData/RealTimeUserData.hpp>
 #include <Utils/Config/ConfigurationManager.hpp>
@@ -84,9 +89,9 @@ void MessageGraphWidget::UpdateGraph()
 void MessageGraphWidget::_UpdateAverageMsg()
 {
     QVector<QPointF> values = _series->pointsVector();
-    unsigned long long sum(0);
     if (values.size() > 1)
     {
+        unsigned long long sum(0);
         for (int i = 1; i < values.size(); ++i)
         {
             sum += (unsigned long long)values.at(i).toPoint().y() - (unsigned long long)values.at(i - 1).toPoint().y();

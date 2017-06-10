@@ -1,5 +1,10 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #pragma once
-#include "ChatCommand.hpp"
+#include <AI/ChatCommands/InbuiltChatCommand.hpp>
 
 namespace Command
 {
@@ -21,7 +26,7 @@ enum UDCommandType
  * Class UserDataCommand
  * Store user data command. Can be inititalized as any user data command type.
  */
-class UserDataCommand : public ChatCommand
+class UserDataCommand : public InbuiltChatCommand
 {
 public:
     /*!
@@ -29,10 +34,13 @@ public:
      * \param(IN) cmdType - user data command type
      */
     void SetCommandType(UDCommandType cmdType);
+
+protected:
     ////////////////////////////////
-    /// ChatCommand overrides
-    QString GetRandomAnswer(const ChatMessage& message);
+    /// BaseChatCommand overrides
     void Initialize();
+    void _GetAnswer(const ChatMessage& message, QStringList& answer);
+    void _GetRandomAnswer(const ChatMessage& message, QStringList& answer);
 
 private:
     UDCommandType _cmdType;

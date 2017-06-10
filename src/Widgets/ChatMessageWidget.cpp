@@ -1,3 +1,8 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #include "ChatMessageWidget.hpp"
 #include <QAbstractTextDocumentLayout>
 
@@ -25,7 +30,7 @@ ChatMessageWidget::ChatMessageWidget(const QString& text, QWidget* parent) : QTe
 
 void ChatMessageWidget::_AdjustMinimumSize(const QSizeF& size)
 {
-    // Sets maximum size of widget, prevents it from squeezing
+    // Sets minimum size of widget, prevents it from squeezing
     setMinimumHeight(size.height() + 2 * frameWidth());
     // Sets maximum size of widget, prevents it from stretching
     setMaximumHeight(size.height() + 2 * frameWidth());

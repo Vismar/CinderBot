@@ -1,4 +1,10 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #include "MainQuoteCommand.hpp"
+#include <Utils/DatabaseManager.hpp>
 
 using namespace Command;
 
@@ -7,39 +13,66 @@ using namespace Command;
 MainQuoteCommand::MainQuoteCommand()
 {
     _Clear();
-    _name = "#quote";
+    Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString MainQuoteCommand::GetRandomAnswer(const ChatMessage& message)
+void MainQuoteCommand::Initialize()
 {
-    QString answer;
-    QString msg = message.GetMessage();
+    _name = "!quote";
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void MainQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+{
     QString val;
-    if (message.GetMessage().contains(_name))
+    DB_QUERY_PTR numberQuery = DB_SELECT("Quotes", "MAX(Number)");
+    if (numberQuery != NULL)
     {
+        numberQuery->first();
+        int maxValue = numberQuery->value(0).toInt();
+
         // Try to found number after command
-        if (_GetNumberAfterCommand(_name, msg, val))
+        if (_GetNumberAfterCommand(_name, message.GetMessage(), val))
         {
             // Check borders
-            int number = val.toInt() - 1;
-            if ((number >= 0) && (number < _quotes->size()))
+            int number = val.toInt();
+            if ((number > 0) && (number <= maxValue))
             {
-                answer = _quotes->at(number);
-                answer.append(" - #" + QString::number(number + 1));
+                DB_QUERY_PTR query = DB_SELECT("Quotes", "Quote", QString("Number = %1").arg(number));
+                if (query != NULL)
+                {
+                    query->first();
+                    answer.append(query->value("quote").toString());
+                    (*answer.begin()).append(" - #" + QString::number(number));
+                }
             }
         }
         // If check failed return random quote
         if (answer.isEmpty())
         {
-            int k = qrand() % _quotes->size();
-            answer = _quotes->at(k);
-            answer.append(" - #" + QString::number(k + 1));
+            int k = qrand() % maxValue;
+            DB_QUERY_PTR query = DB_SELECT("Quotes", "Quote", QString("Number = %1").arg(k+1));
+            if (query != NULL)
+            {
+                if (query->first())
+                {
+                    answer.append(query->value("Quote").toString());
+                    (*answer.begin()).append(" - #" + QString::number(k+1));
+                }
+            }
         }
     }
+}
 
-    return answer;
+///////////////////////////////////////////////////////////////////////////
+
+void MainQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(answer);
 }
 
 ///////////////////////////////////////////////////////////////////////////

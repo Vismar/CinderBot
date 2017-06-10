@@ -1,3 +1,8 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #pragma once
 #include <QObject>
 #include <QVector>
@@ -22,7 +27,7 @@ signals:
      * Signal about new bot message
      * \param(IN) message - bot message
      */
-    void NewBotMessage(QString message);
+    void NewBotMessage(QStringList message);
 
 public slots:
     /*!

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network charts
+QT       += core gui network charts sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,13 +22,9 @@ SOURCES += main.cpp\
     Chat/TwitchClient.cpp \
     Utils/Config/ConfigurationManager.cpp \
     Utils/UserData/UserData.cpp \
-    AI/ChatCommands/ChatCommand.cpp \
     AI/ChatCommands/CommandList.cpp \
-    AI/ChatCommands/CustomCommanLlist.cpp \
     AI/ChatCommands/UserDataCommand.cpp \
     AI/ChatCommands/UserDataCommandList.cpp \
-    AI/ChatCommands/CovenantCommand.cpp \
-    AI/ChatCommands/CovenantCommandList.cpp \
     AI/ChatCommands/QuoteCommands/BaseQuoteCommand.cpp \
     AI/ChatCommands/QuoteCommands/MainQuoteCommand.cpp \
     AI/ChatCommands/QuoteCommands/QuoteCommandList.cpp \
@@ -41,7 +37,27 @@ SOURCES += main.cpp\
     Utils/UserData/RealTimeUserData.cpp \
     Widgets/Statistics/ViewerGraphWidget.cpp \
     Widgets/Statistics/MessageStatisticsWidget.cpp \
-    Widgets/Statistics/MessageGraphWidget.cpp
+    Widgets/Statistics/MessageGraphWidget.cpp \
+    Utils/DatabaseManager.cpp \
+    Widgets/Quotes/QuotesWidget.cpp \
+    Widgets/Quotes/SingleQuoteWidget.cpp \
+    Widgets/Quotes/CreateQuoteWidget.cpp \
+    Widgets/Quotes/QuoteTabWidget.cpp \
+    AI/ChatCommands/CovenantCommands/LeaveCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/JoinCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/ListCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/CreateCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/RenameCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/CovenantCommandList.cpp \
+    AI/ChatCommands/BaseChatCommand.cpp \
+    AI/ChatCommands/InbuiltChatCommand.cpp \
+    AI/ChatCommands/CustomCommands/CustomCovChatCommand.cpp \
+    AI/ChatCommands/CustomCommands/CustomChatCommand.cpp \
+    AI/ChatCommands/CustomCommands/CustomCovCommandList.cpp \
+    AI/ChatCommands/CustomCommands/CustomCommanList.cpp \
+    AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.cpp \
+    AI/ChatCommands/CovenantCommands/InfoCovenantCommand.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -52,13 +68,9 @@ HEADERS  += MainWindow.hpp \
     Utils/Config/ConfigurationManager.hpp \
     Utils/Config/ConfigurationParameters.hpp \
     Utils/UserData/UserData.hpp \
-    AI/ChatCommands/ChatCommand.hpp \
     AI/ChatCommands/CommandList.hpp \
-    AI/ChatCommands/CustomCommandList.hpp \
     AI/ChatCommands/UserDataCommand.hpp \
     AI/ChatCommands/UserDataCommandList.hpp \
-    AI/ChatCommands/CovenantCommand.hpp \
-    AI/ChatCommands/CovenantCommandList.hpp \
     AI/ChatCommands/QuoteCommands/BaseQuoteCommand.hpp \
     AI/ChatCommands/QuoteCommands/MainQuoteCommand.hpp \
     AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp \
@@ -71,7 +83,27 @@ HEADERS  += MainWindow.hpp \
     Utils/UserData/RealTimeUserData.hpp \
     Widgets/Statistics/ViewerGraphWidget.hpp \
     Widgets/Statistics/MessageStatisticsWidget.hpp \
-    Widgets/Statistics/MessageGraphWidget.hpp
+    Widgets/Statistics/MessageGraphWidget.hpp \
+    Utils/DatabaseManager.hpp \
+    Widgets/Quotes/QuotesWidget.hpp \
+    Widgets/Quotes/SingleQuoteWidget.hpp \
+    Widgets/Quotes/CreateQuoteWidget.hpp \
+    Widgets/Quotes/QuoteTabWidget.hpp \
+    AI/ChatCommands/CovenantCommands/LeaveCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/JoinCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/ListCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/CreateCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/RenameCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp \
+    AI/ChatCommands/BaseChatCommand.hpp \
+    AI/ChatCommands/InbuiltChatCommand.hpp \
+    AI/ChatCommands/CustomCommands/CustomCovChatCommand.hpp \
+    AI/ChatCommands/CustomCommands/CustomChatCommand.hpp \
+    AI/ChatCommands/CustomCommands/CustomCommandList.hpp \
+    AI/ChatCommands/CustomCommands/CustomCovCommandList.hpp \
+    AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.hpp \
+    AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp
 
 RESOURCES += \
     Resources.qrc

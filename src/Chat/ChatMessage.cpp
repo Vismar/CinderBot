@@ -1,3 +1,8 @@
+/*************************************************************************
+***************  CinderBot - standalone bot for Twitch.tv ****************
+******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
+********         Check full copyright header in main.cpp          ********
+**************************************************************************/
 #include "ChatMessage.hpp"
 #include <Utils/Config/ConfigurationManager.hpp>
 #include <Utils/Config/ConfigurationParameters.hpp>
@@ -245,7 +250,7 @@ bool ChatMessage::_IsUserState(const QString& message) const
 
 bool ChatMessage::_IsPrivMsg(const QString& message) const
 {
-    return message.startsWith("@badges=");
+    return (message.startsWith("@badges=") && (message.contains("PRIVMSG")));
 }
 
 ///////////////////////////////////////////////////////////////////////////
