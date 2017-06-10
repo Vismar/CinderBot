@@ -40,11 +40,11 @@ void CovenantCommandList::_Initialize()
     // Initialize data table in database
     DB_CREATE_TABLE("Covenants", "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                  "Name TEXT NOT NULL UNIQUE,"
-                                 "Leader TEXT,"
-                                 "Description TEXT,"
-                                 "CmdSlots INTEGER,"
-                                 "Level INTEGER,"
-                                 "Exp INTEGER");
+                                 "Leader TEXT NOT NULL,"
+                                 "Description TEXT NOT NULL,"
+                                 "CmdSlots INTEGER NOT NULL,"
+                                 "Level INTEGER NOT NULL,"
+                                 "Exp INTEGER NOT NULL");
 }
 
 ///////////////////////////////////////////////////////////////////////////
