@@ -23,8 +23,6 @@ SOURCES += main.cpp\
     Utils/Config/ConfigurationManager.cpp \
     Utils/UserData/UserData.cpp \
     AI/ChatCommands/CommandList.cpp \
-    AI/ChatCommands/UserDataCommand.cpp \
-    AI/ChatCommands/UserDataCommandList.cpp \
     AI/ChatCommands/QuoteCommands/BaseQuoteCommand.cpp \
     AI/ChatCommands/QuoteCommands/MainQuoteCommand.cpp \
     AI/ChatCommands/QuoteCommands/QuoteCommandList.cpp \
@@ -57,7 +55,12 @@ SOURCES += main.cpp\
     AI/ChatCommands/CustomCommands/CustomCovCommandList.cpp \
     AI/ChatCommands/CustomCommands/CustomCommanList.cpp \
     AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.cpp \
-    AI/ChatCommands/CovenantCommands/InfoCovenantCommand.cpp
+    AI/ChatCommands/CovenantCommands/InfoCovenantCommand.cpp \
+    AI/ChatCommands/UserDataCommands/MessagesUserDataCommand.cpp \
+    AI/ChatCommands/UserDataCommands/CurrencyUserDataCommand.cpp \
+    AI/ChatCommands/UserDataCommands/CovenantUserDataCommand.cpp \
+    AI/ChatCommands/UserDataCommands/FullUserDataCommand.cpp \
+    AI/ChatCommands/UserDataCommands/UserDataCommandList.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -69,8 +72,6 @@ HEADERS  += MainWindow.hpp \
     Utils/Config/ConfigurationParameters.hpp \
     Utils/UserData/UserData.hpp \
     AI/ChatCommands/CommandList.hpp \
-    AI/ChatCommands/UserDataCommand.hpp \
-    AI/ChatCommands/UserDataCommandList.hpp \
     AI/ChatCommands/QuoteCommands/BaseQuoteCommand.hpp \
     AI/ChatCommands/QuoteCommands/MainQuoteCommand.hpp \
     AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp \
@@ -103,7 +104,12 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/CustomCommands/CustomCommandList.hpp \
     AI/ChatCommands/CustomCommands/CustomCovCommandList.hpp \
     AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.hpp \
-    AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp
+    AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp \
+    AI/ChatCommands/UserDataCommands/MessagesUserDataCommand.hpp \
+    AI/ChatCommands/UserDataCommands/CurrencyUserDataCommand.hpp \
+    AI/ChatCommands/UserDataCommands/CovenantUserDataCommand.hpp \
+    AI/ChatCommands/UserDataCommands/FullUserDataCommand.hpp \
+    AI/ChatCommands/UserDataCommands/UserDataCommandList.hpp
 
 RESOURCES += \
     Resources.qrc

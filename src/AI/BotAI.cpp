@@ -11,11 +11,12 @@
 /*** Command lists ***/
 #include "AI/ChatCommands/CustomCommands/CustomCommandList.hpp"
 #include "AI/ChatCommands/CustomCommands/CustomCovCommandList.hpp"
-#include "AI/ChatCommands/UserDataCommandList.hpp"
+#include "AI/ChatCommands/UserDataCommands/UserDataCommandList.hpp"
 #include "AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp"
 #include "AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp"
 
 using namespace Command;
+using namespace Command::UserDataCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 
