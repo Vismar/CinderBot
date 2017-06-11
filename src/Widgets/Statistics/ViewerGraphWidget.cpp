@@ -4,9 +4,9 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "ViewerGraphWidget.hpp"
-#include <Utils/UserData/RealTimeUserData.hpp>
-#include <Utils/Config/ConfigurationManager.hpp>
-#include <Utils/Config/ConfigurationParameters.hpp>
+#include "Utils/UserData/RealTimeUserData.hpp"
+#include "Utils/Config/ConfigurationManager.hpp"
+#include "Utils/Config/ConfigurationParameters.hpp"
 
 using namespace Ui;
 using namespace QtCharts;

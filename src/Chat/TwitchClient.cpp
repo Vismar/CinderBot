@@ -4,9 +4,9 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "TwitchClient.hpp"
-#include <Utils/Config/ConfigurationManager.hpp>
-#include <Utils/Config/ConfigurationParameters.hpp>
-#include <Utils/UserData/RealTimeUserData.hpp>
+#include "Utils/Config/ConfigurationManager.hpp"
+#include "Utils/Config/ConfigurationParameters.hpp"
+#include "Utils/UserData/RealTimeUserData.hpp"
 
 #define MSG_TIMER_TIME     30000
 #define MSG_LIMIT_NON_MODE 20

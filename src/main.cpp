@@ -16,10 +16,10 @@
 ** along with this program. If not, see <http://www.gnu.org/licenses/>. **
 **************************************************************************/
 #include "MainWindow.hpp"
-#include <Utils/Config/ConfigurationManager.hpp>
-#include <Utils/DatabaseManager.hpp>
-#include <Utils/UserData/UserData.hpp>
-#include <Utils/UserData/RealTimeUserData.hpp>
+#include "Utils/Config/ConfigurationManager.hpp"
+#include "Utils/DatabaseManager.hpp"
+#include "Utils/UserData/UserData.hpp"
+#include "Utils/UserData/RealTimeUserData.hpp"
 #include <QApplication>
 #include <QMessageBox>
 #include <QtGlobal>

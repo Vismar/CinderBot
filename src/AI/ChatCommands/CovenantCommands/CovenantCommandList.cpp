@@ -4,15 +4,15 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CovenantCommandList.hpp"
-#include <AI/ChatCommands/CovenantCommands/ListCovenantCommand.hpp>
-#include <AI/ChatCommands/CovenantCommands/JoinCovenantCommand.hpp>
-#include <AI/ChatCommands/CovenantCommands/LeaveCovenantCommand.hpp>
-#include <AI/ChatCommands/CovenantCommands/CreateCovenantCommand.hpp>
-#include <AI/ChatCommands/CovenantCommands/RenameCovenantCommand.hpp>
-#include <AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.hpp>
-#include <AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp>
-#include <AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp>
-#include <Utils/DatabaseManager.hpp>
+#include "AI/ChatCommands/CovenantCommands/ListCovenantCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/JoinCovenantCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/LeaveCovenantCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/CreateCovenantCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/RenameCovenantCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp"
+#include "Utils/DatabaseManager.hpp"
 
 using namespace Command;
 

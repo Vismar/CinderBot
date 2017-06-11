@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "../Chat/ChatMessage.hpp"
+#include "Chat/ChatMessage.hpp"
 #include <QScrollArea>
 #include <QWidget>
 #include <QVBoxLayout>

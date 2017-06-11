@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "InfoCovenantCommand.hpp"
-#include <Utils/DatabaseManager.hpp>
+#include "Utils/DatabaseManager.hpp"
 
 using namespace Command;
 

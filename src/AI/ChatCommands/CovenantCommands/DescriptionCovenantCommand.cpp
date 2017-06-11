@@ -4,8 +4,8 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "DescriptionCovenantCommand.hpp"
-#include <Utils/UserData/UserData.hpp>
-#include <Utils/DatabaseManager.hpp>
+#include "Utils/UserData/UserData.hpp"
+#include "Utils/DatabaseManager.hpp"
 
 using namespace Command;
 

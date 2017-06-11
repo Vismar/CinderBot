@@ -4,8 +4,8 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CustomCommandList.hpp"
-#include <AI/ChatCommands/CustomCommands/CustomChatCommand.hpp>
-#include <Utils/DatabaseManager.hpp>
+#include "AI/ChatCommands/CustomCommands/CustomChatCommand.hpp"
+#include "Utils/DatabaseManager.hpp"
 
 using namespace Command;
 

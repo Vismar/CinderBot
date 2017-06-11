@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <AI/ChatCommands/BaseChatCommand.hpp>
+#include "AI/ChatCommands/BaseChatCommand.hpp"
 #include <QVector>
 
 namespace Command
