@@ -4,9 +4,12 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "UserDataCommandList.hpp"
-#include "UserDataCommand.hpp"
+#include "AI/ChatCommands/UserDataCommands/MessagesUserDataCommand.hpp"
+#include "AI/ChatCommands/UserDataCommands/CurrencyUserDataCommand.hpp"
+#include "AI/ChatCommands/UserDataCommands/CovenantUserDataCommand.hpp"
+#include "AI/ChatCommands/UserDataCommands/FullUserDataCommand.hpp"
 
-using namespace Command;
+using namespace Command::UserDataCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -19,12 +22,10 @@ UserDataCommandList::UserDataCommandList()
 
 void UserDataCommandList::_Initialize()
 {
-    for (int i = UDC_Messages; i < UDC_End; ++i)
-    {
-        UserDataCommand* command = new UserDataCommand();
-        command->SetCommandType(static_cast<UDCommandType>(i));
-        _commands.push_back(command);
-    }
+    _commands.push_back(new MessagesUserDataCommand());
+    _commands.push_back(new CurrencyUserDataCommand());
+    _commands.push_back(new CovenantUserDataCommand());
+    _commands.push_back(new FullUserDataCommand());
 }
 
 ///////////////////////////////////////////////////////////////////////////

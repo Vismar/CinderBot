@@ -4,25 +4,27 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "CommandList.hpp"
+#include "AI/ChatCommands/InbuiltChatCommand.hpp"
+
 
 namespace Command
 {
+namespace UserDataCmd
+{
 
-/*!
- * Class UserDataCommandList
- * Store all UD commands
- */
-class UserDataCommandList : public CommandList
+class CovenantUserDataCommand : public InbuiltChatCommand
 {
 public:
     /*! Constructor */
-    UserDataCommandList();
+    CovenantUserDataCommand();
 
 protected:
     ////////////////////////////////
-    /// CommandList override
-    void _Initialize();
+    /// BaseChatCommand overrides
+    void Initialize();
+    void _GetAnswer(const ChatMessage& message, QStringList& answer);
+    void _GetRandomAnswer(const ChatMessage& message, QStringList& answer);
 };
 
+}
 }
