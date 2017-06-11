@@ -5,7 +5,7 @@
 **************************************************************************/
 #include "QuotesWidget.hpp"
 #include "SingleQuoteWidget.hpp"
-#include <Utils/DatabaseManager.hpp>
+#include "Utils/DatabaseManager.hpp"
 #include <QScrollBar>
 
 using namespace Ui;

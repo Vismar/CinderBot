@@ -4,7 +4,8 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <AI/ChatCommands/QuoteCommands/BaseQuoteCommand.hpp>
+#include "AI/ChatCommands/QuoteCommands/BaseQuoteCommand.hpp"
+
 namespace Command
 {
 

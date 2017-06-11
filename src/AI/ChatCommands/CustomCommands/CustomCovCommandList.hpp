@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <AI/ChatCommands/CustomCommands/CustomCommandList.hpp>
+#include "AI/ChatCommands/CustomCommands/CustomCommandList.hpp"
 
 namespace Command
 {

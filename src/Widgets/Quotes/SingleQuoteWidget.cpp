@@ -4,8 +4,8 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "SingleQuoteWidget.hpp"
+#include "Utils/DatabaseManager.hpp"
 #include <QAbstractTextDocumentLayout>
-#include <Utils/DatabaseManager.hpp>
 
 using namespace Ui;
 

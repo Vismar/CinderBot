@@ -6,7 +6,7 @@
 #pragma once
 #include <QObject>
 #include <QString>
-#include <Chat/ChatMessage.hpp>
+#include "Chat/ChatMessage.hpp"
 
 /*!
  * Singleton class that stores user list and other stuff fpr real time things, like statistics and etc.

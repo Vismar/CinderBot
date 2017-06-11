@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "EditQuoteCommand.hpp"
-#include <Utils/DatabaseManager.hpp>
+#include "Utils/DatabaseManager.hpp"
 
 using namespace Command;
 

@@ -4,16 +4,16 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "BotAI.hpp"
-#include <Utils/UserData/UserData.hpp>
-#include <Utils/Config/ConfigurationManager.hpp>
-#include <Utils/Config/ConfigurationParameters.hpp>
-#include <Utils/UserData/RealTimeUserData.hpp>
+#include "Utils/UserData/UserData.hpp"
+#include "Utils/Config/ConfigurationManager.hpp"
+#include "Utils/Config/ConfigurationParameters.hpp"
+#include "Utils/UserData/RealTimeUserData.hpp"
 /*** Command lists ***/
-#include <AI/ChatCommands/CustomCommands/CustomCommandList.hpp>
-#include <AI/ChatCommands/CustomCommands/CustomCovCommandList.hpp>
-#include <AI/ChatCommands/UserDataCommandList.hpp>
-#include <AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp>
-#include <AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp>
+#include "AI/ChatCommands/CustomCommands/CustomCommandList.hpp"
+#include "AI/ChatCommands/CustomCommands/CustomCovCommandList.hpp"
+#include "AI/ChatCommands/UserDataCommandList.hpp"
+#include "AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp"
+#include "AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp"
 
 using namespace Command;
 

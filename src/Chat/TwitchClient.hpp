@@ -9,7 +9,7 @@
 #include <QString>
 #include <QTimer>
 #include "ChatMessage.hpp"
-#include <AI/BotAI.hpp>
+#include "AI/BotAI.hpp"
 
 /*!
  * Class TwtichClient

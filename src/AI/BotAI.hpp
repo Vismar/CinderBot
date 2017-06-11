@@ -8,8 +8,8 @@
 #include <QVector>
 #include <QStringList>
 #include <QTimer>
-#include <Chat/ChatMessage.hpp>
-#include <AI/ChatCommands/CommandList.hpp>
+#include "Chat/ChatMessage.hpp"
+#include "AI/ChatCommands/CommandList.hpp"
 
 /*!
  * Class BotAI

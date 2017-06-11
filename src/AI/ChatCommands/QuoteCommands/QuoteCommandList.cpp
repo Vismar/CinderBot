@@ -3,12 +3,12 @@
 ******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
-#include <AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp>
-#include <AI/ChatCommands/QuoteCommands/MainQuoteCommand.hpp>
-#include <AI/ChatCommands/QuoteCommands/AddQuoteCommand.hpp>
-#include <AI/ChatCommands/QuoteCommands/DeleteQuoteCommand.hpp>
-#include <AI/ChatCommands/QuoteCommands/EditQuoteCommand.hpp>
-#include <Utils/DatabaseManager.hpp>
+#include "AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp"
+#include "AI/ChatCommands/QuoteCommands/MainQuoteCommand.hpp"
+#include "AI/ChatCommands/QuoteCommands/AddQuoteCommand.hpp"
+#include "AI/ChatCommands/QuoteCommands/DeleteQuoteCommand.hpp"
+#include "AI/ChatCommands/QuoteCommands/EditQuoteCommand.hpp"
+#include "Utils/DatabaseManager.hpp"
 
 using namespace Command;
 
