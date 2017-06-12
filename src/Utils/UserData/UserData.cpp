@@ -72,10 +72,12 @@ void UserData::UpdateUserData(const QString& userName,
     {
     case UDP_Messages:
     case UDP_Currency:
-        DB_UPDATE("UserData", QString("%1 = %2").arg(_GetUDPParam(UDP)).arg(newValue), QString("Name = '%1'").arg(userName));
+        DB_UPDATE("UserData", QString("%1 = %2").arg(_GetUDPParam(UDP)).arg(newValue),
+                              QString("Name = '%1'").arg(userName));
         break;
     default:
-        DB_UPDATE("UserData", QString("%1 = '%2'").arg(_GetUDPParam(UDP)).arg(newValue), QString("Name = '%1'").arg(userName));
+        DB_UPDATE("UserData", QString("%1 = '%2'").arg(_GetUDPParam(UDP)).arg(newValue),
+                              QString("Name = '%1'").arg(userName));
         break;
     }
 }

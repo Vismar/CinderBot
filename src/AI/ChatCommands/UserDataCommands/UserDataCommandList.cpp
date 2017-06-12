@@ -8,6 +8,7 @@
 #include "AI/ChatCommands/UserDataCommands/CurrencyUserDataCommand.hpp"
 #include "AI/ChatCommands/UserDataCommands/CovenantUserDataCommand.hpp"
 #include "AI/ChatCommands/UserDataCommands/FullUserDataCommand.hpp"
+#include "AI/ChatCommands/UserDataCommands/CheckUserDataCommand.hpp"
 
 using namespace Command::UserDataCmd;
 
@@ -26,6 +27,7 @@ void UserDataCommandList::_Initialize()
     _commands.push_back(new CurrencyUserDataCommand());
     _commands.push_back(new CovenantUserDataCommand());
     _commands.push_back(new FullUserDataCommand());
+    _commands.push_back(new CheckUserDataCommand());
 }
 
 ///////////////////////////////////////////////////////////////////////////

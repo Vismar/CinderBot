@@ -31,10 +31,9 @@ void EditQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answe
 {
     if (_CheckModerationFlag(message.IsModerator()))
     {
-        QString msg = message.GetMessage();
         QString val;
         // Try to found number after command
-        if (_GetNumberAfterCommand(_name, msg, val))
+        if (_GetNumberAfterCommand(_name, message.GetMessage(), val))
         {
             // Check borders
             int number = val.toInt();
@@ -46,9 +45,8 @@ void EditQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answe
                 if ((number > 0) && (number <= maxValue))
                 {
                     // Remove part with number from message
-                    msg = msg.mid(msg.indexOf(_name) + _name.size() + 1);
-                    msg = msg.left(msg.size() - 2);
-                    msg = msg.mid(val.size() + 1);
+                    const QString& refMsg = message.GetMessage();
+                    QString msg = refMsg.right(refMsg.size()-refMsg.indexOf(_name)-_name.size()-val.size()-2);
                     // Update quote
                     if(DB_UPDATE("Quotes", QString("Quote = '%1'").arg(msg), QString("Number = %1").arg(number)))
                     {

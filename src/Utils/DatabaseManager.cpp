@@ -81,7 +81,7 @@ bool DatabaseManager::CreateTable(const QString& tableName, const QString& colum
     std::shared_ptr<QSqlQuery> queryToCheckTable = DB_SELECT("sqlite_master",
                                                              "COUNT(*)",
                                                              QString("type = 'table' AND name = '%1'").arg(tableName));
-    if (queryToCheckTable != NULL)
+    if (queryToCheckTable != nullptr)
     {
         queryToCheckTable->first();
         // If table do not exist, create it
@@ -192,7 +192,7 @@ DB_QUERY_PTR DatabaseManager::Select(const QString& tableName, const QString& co
     // If command failed, return error
     qDebug() << "Database error(Select): " << query->lastError().text();
 
-    return NULL;
+    return nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////

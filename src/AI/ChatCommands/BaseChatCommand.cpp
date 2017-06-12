@@ -27,7 +27,8 @@ bool BaseChatCommand::Execute(const ChatMessage& message, QStringList& answer)
     bool result(false);
     QString messageInLowerCase = message.GetMessage().toLower();
     // Check if command was used properly (no additional symbols after it)
-    if (messageInLowerCase.contains(_name+' ') || messageInLowerCase.contains(_name+'\r'))
+    if (messageInLowerCase.contains(_name+' ') ||
+        ((messageInLowerCase.size() == _name.size()) && (messageInLowerCase.contains(_name))))
     {
         // If command should return random answer
         if (_isRandom)

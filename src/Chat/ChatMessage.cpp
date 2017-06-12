@@ -358,7 +358,9 @@ void ChatMessage::_GetAndSetChatMessage(const QString& message)
 {
     QString name;
     ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
-    _message = message.right(message.length() - (message.indexOf("PRIVMSG #") + name.length() + 11));
+    // 11 - size of "PRIVMSG #" plus " :"
+    int startOfMsg = message.indexOf("PRIVMSG #") + name.length() + 11;
+    _message = message.mid(startOfMsg, message.size() - startOfMsg - 2);
 }
 
 ///////////////////////////////////////////////////////////////////////////

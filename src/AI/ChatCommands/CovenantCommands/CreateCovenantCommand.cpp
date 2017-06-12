@@ -71,14 +71,16 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& 
             if (_CheckCurrency(message.GetRealName()))
             {
                 // Get covenant name
-                QString newCovenant = message.GetMessage().mid(_name.size()+1);
-                int covNameLength = ((newCovenant.size()-2) < 0) ? 0 : (newCovenant.size()-2);
-                // If covenant name too long, just make it shorter
-                if (covNameLength > MAX_COVENANT_NAME_LENGTH)
+                QString newCovenant;
+                if (message.GetMessage().size() > _name.size())
                 {
-                    covNameLength = MAX_COVENANT_NAME_LENGTH;
+                   newCovenant = message.GetMessage().right(message.GetMessage().size()-_name.size()-1);
                 }
-                newCovenant = newCovenant.left(covNameLength);
+                // If covenant name too long, just make it shorter
+                if (newCovenant.size() > MAX_COVENANT_NAME_LENGTH)
+                {
+                    newCovenant.left(MAX_COVENANT_NAME_LENGTH);
+                }
                 // If user provided covenant name, create it
                 if (!newCovenant.isEmpty())
                 {
