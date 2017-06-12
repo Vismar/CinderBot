@@ -32,7 +32,7 @@ void CheckUserDataCommand::Initialize()
     _moderatorOnly = true;
     _answers.push_back("USER_NAME: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Covenant - MSG_COV.");
     _answers.push_back("USER_NAME: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Not in covenant.");
-    _answers.push_back("USER_NAME: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of 'MSG_COV' covenant.");
+    _answers.push_back("USER_NAME: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of covenant 'MSG_COV'.");
     _answers.push_back("Please provide a name, @!");
     _answers.push_back("User with such name is not exist, @!");
 }
@@ -51,16 +51,16 @@ void CheckUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &a
         qDebug() << userName;
         if (!userName.isEmpty())
         {
-            DB_QUERY_PTR userQuery = DB_SELECT("UserData", "Name", QString("Name='%1'").arg(userName.toLower()));
+            DB_QUERY_PTR userQuery = DB_SELECT("UserData", "*", QString("Author='%1'").arg(userName));
             if ((userQuery != nullptr) && (userQuery->first()))
             {
-                QString covenant = UD_GET_PARAM(userName.toLower() ,UDP_Covenant);
+                QString covenant = UD_GET_PARAM(userQuery->value("Name").toString() ,UDP_Covenant);
                 DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
                 if (query != nullptr)
                 {
                     if (query->first())
                     {
-                        if (query->value("Leader").toString() == message.GetRealName())
+                        if (query->value("Leader").toString() == userQuery->value("Name"))
                         {
                             answer.append(_answers.at(MSG_IS_LEADER));
                         }

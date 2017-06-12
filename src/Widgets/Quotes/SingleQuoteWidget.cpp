@@ -60,21 +60,21 @@ SingleQuoteWidget::~SingleQuoteWidget() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-void SingleQuoteWidget::SetQuoteNumber(const QString& number)
+void SingleQuoteWidget::SetQuoteNumber(const QString &number)
 {
     _quoteNumber->setText(number);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void SingleQuoteWidget::SetQuoteText(const QString& text)
+void SingleQuoteWidget::SetQuoteText(const QString &text)
 {
     _quoteText->setText(text);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void SingleQuoteWidget::_AdjustMinimumSize(const QSizeF& size)
+void SingleQuoteWidget::_AdjustMinimumSize(const QSizeF &size)
 {
     // Sets minimum size of widget, prevents it from squeezing
     _quoteText->setMinimumHeight(size.height() + 2 * _quoteText->frameWidth());

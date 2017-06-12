@@ -31,7 +31,7 @@ private slots:
      * Adjust minimum possible size of chat message
      * \param(IN) size - New size of the document in message. In pixels.
      */
-    void _AdjustMinimumSize(const QSizeF& size);
+    void _AdjustMinimumSize(const QSizeF &size);
     /*!
      * Add quote that was typed in text field
      */

@@ -41,7 +41,7 @@ void CreateCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void CreateCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     // Check if user is leader of its covenant
@@ -129,7 +129,7 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& 
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CreateCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void CreateCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

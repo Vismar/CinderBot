@@ -33,7 +33,7 @@ public:
      * Initialize and create instance of database manaager
      * \return reference to static database manager
      */
-    static DatabaseManager& Instance();
+    static DatabaseManager &Instance();
 
     /*!
      * Try to open and initialize database
@@ -48,21 +48,21 @@ public:
      * \param columns - columns which should be indexed
      * \return true if index successfully created
      */
-    bool CreateIndex(const QString& tableName, const QString& indexName, const QString& columns = "");
+    bool CreateIndex(const QString &tableName, const QString &indexName, const QString &columns = "");
     /*!
      * Try to create table if it not exist
      * \param(IN) tableName - name of a table which should be created
      * \param(IN) columns - columns with all parameters that should be created for specified table
      * \return true if command was successful
      */
-    bool CreateTable(const QString& tableName, const QString& columns);
+    bool CreateTable(const QString &tableName, const QString &columns);
     /*!
      * Insert new record to the database
      * \param(IN) tableName - name of a table in which new record should be added
      * \param(IN) recordValues - values for a new record
      * \return true if command was successful
      */
-    bool Insert(const QString& tableName, const QString& recordValues, bool ignore = false);
+    bool Insert(const QString &tableName, const QString &recordValues, bool ignore = false);
     /*!
      * \brief Select
      * \param(IN) tableName - name of a table in which new record should be added
@@ -70,7 +70,7 @@ public:
      * \param(IN) conditions - conditions for selection from the table
      * \return shared pointer to a query if command was successful, will return NULL of command failed
      */
-    std::shared_ptr<QSqlQuery> Select(const QString& tableName, const QString& columnNames, const QString& conditions = "");
+    std::shared_ptr<QSqlQuery> Select(const QString &tableName, const QString &columnNames, const QString &conditions = "");
     /*!
      * \brief Update
     * \param(IN) tableName - name of a table in which new record should be added
@@ -78,31 +78,31 @@ public:
      * \param(IN) conditions - conditions for selection from the table
      * \return true if command was successful
      */
-    bool Update(const QString& tableName, const QString& columnValues, const QString& conditions = "");
+    bool Update(const QString &tableName, const QString &columnValues, const QString &conditions = "");
     /*!
      * \brief Delete
      * \param(IN) tableName - name of a table in which record should be deelted
      * \param(IN) conditions - conditions for selection from the table
      * \return true if command was successful
      */
-    bool Delete(const QString& tableName, const QString& conditions = "");
+    bool Delete(const QString &tableName, const QString &conditions = "");
 
 signals:
     /*!
      * Event for any succesfull insert command
      * \param tableName - name of table for which operation was executed
      */
-    void OnInsertEvent(const QString& tableName);
+    void OnInsertEvent(const QString &tableName);
     /*!
      * Event for any succesfull update command
      * \param tableName - name of table for which operation was executed
      */
-    void OnUpdateEvent(const QString& tableName);
+    void OnUpdateEvent(const QString &tableName);
     /*!
      * Event for any succesfull delete command
      * \param tableName - name of table for which operation was executed
      */
-    void OnDeleteEvent(const QString& tableName);
+    void OnDeleteEvent(const QString &tableName);
 
 private:
     /*! Database which is used to store all data */

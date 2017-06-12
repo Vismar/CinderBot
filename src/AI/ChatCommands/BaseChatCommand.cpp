@@ -22,7 +22,7 @@ BaseChatCommand::~BaseChatCommand() { }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BaseChatCommand::Execute(const ChatMessage& message, QStringList& answer)
+bool BaseChatCommand::Execute(const ChatMessage &message, QStringList &answer)
 {
     bool result(false);
     QString messageInLowerCase = message.GetMessage().toLower();
@@ -64,14 +64,14 @@ void BaseChatCommand::_Clear()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseChatCommand::_ReplacePlaceHolders(const ChatMessage& message, QStringList& answer)
+void BaseChatCommand::_ReplacePlaceHolders(const ChatMessage &message, QStringList &answer)
 {
     _AddAuthorName(answer, message.GetAuthor());
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseChatCommand::_AddAuthorName(QStringList& answer, const QString& author)
+void BaseChatCommand::_AddAuthorName(QStringList &answer, const QString &author)
 {
     for (auto iter = answer.begin(); iter != answer.end(); ++iter)
     {
@@ -81,7 +81,7 @@ void BaseChatCommand::_AddAuthorName(QStringList& answer, const QString& author)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseChatCommand::_TakeDefaultPriceFromUser(const QString& userName)
+void BaseChatCommand::_TakeDefaultPriceFromUser(const QString &userName)
 {
     // Get user currency value
     int userCurrency = UD_GET_PARAM(userName, UDP_Currency).toInt();
@@ -93,7 +93,7 @@ void BaseChatCommand::_TakeDefaultPriceFromUser(const QString& userName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseChatCommand::_TakePriceFromUser(const QString& userName, int price)
+void BaseChatCommand::_TakePriceFromUser(const QString &userName, int price)
 {
     // Get user currency value
     int userCurrency = UD_GET_PARAM(userName, UDP_Currency).toInt();
@@ -105,7 +105,7 @@ void BaseChatCommand::_TakePriceFromUser(const QString& userName, int price)
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BaseChatCommand::_CheckCovenant(const QString& userName)
+bool BaseChatCommand::_CheckCovenant(const QString &userName)
 {
     bool covenantIsOk(true);
 
@@ -125,7 +125,7 @@ bool BaseChatCommand::_CheckCovenant(const QString& userName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BaseChatCommand::_CheckCurrency(const QString& userName)
+bool BaseChatCommand::_CheckCurrency(const QString &userName)
 {
     bool currencyIsOk(true);
     // Get user currency value

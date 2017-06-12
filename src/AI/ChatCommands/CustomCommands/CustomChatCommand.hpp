@@ -26,13 +26,13 @@ public:
      * For initialization should be used only that function.
      * \param commandName - name of command
      */
-    void InitializeByName(const QString& commandName);
+    void InitializeByName(const QString &commandName);
 
 protected:
     ////////////////////////////////
     /// BaseChatCommand overrides
-    virtual void _GetAnswer(const ChatMessage& message, QStringList& answer);
-    virtual void _GetRandomAnswer(const ChatMessage& message, QStringList& answer);
+    virtual void _GetAnswer(const ChatMessage &message, QStringList &answer);
+    virtual void _GetRandomAnswer(const ChatMessage &message, QStringList &answer);
 
     /*! Name of table from which data should be grabbed */
     QString _commandTableName;

@@ -31,19 +31,19 @@ public:
      * Set number field for quote
      * \param number - number that should be setted
      */
-    void SetQuoteNumber(const QString& number);
+    void SetQuoteNumber(const QString &number);
     /*!
      * Set text field for quote
      * \param text - text which will be used in text field
      */
-    void SetQuoteText(const QString& text);
+    void SetQuoteText(const QString &text);
 
 private slots:
     /*!
      * Adjust minimum possible size of chat message
      * \param(IN) size - New size of the document in message. In pixels.
      */
-    void _AdjustMinimumSize(const QSizeF& size);
+    void _AdjustMinimumSize(const QSizeF &size);
     /*!
      * Handle edit/save button
      */

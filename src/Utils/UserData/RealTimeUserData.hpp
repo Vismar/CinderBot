@@ -27,12 +27,12 @@ public:
      * Returns reference to the user list
      * \return const reference to the user list
      */
-    const QStringList& GetUserList();
+    const QStringList &GetUserList();
     /*!
      * Returns reference to the moderator list
      * \return const reference to the moderator list
      */
-    const QStringList& GetModeList();
+    const QStringList &GetModeList();
     /*!
      * Returns max user number during session
      * \return max number of users
@@ -43,22 +43,22 @@ public:
      * Add user to list
      * \param(IN) chatMessage - chat message, that contains author
      */
-    void AddUserToList(const ChatMessage& chatMessage);
+    void AddUserToList(const ChatMessage &chatMessage);
     /*!
      * Remove user from list
      * \param(IN) chatMessage - chat message, that contains author
      */
-    void RemoveUserFromList(const ChatMessage& chatMessage);
+    void RemoveUserFromList(const ChatMessage &chatMessage);
     /*!
      * Add moderator to list
      * \param (IN) chatMessage - chat message, that contains author
      */
-    void AddModeToList(const ChatMessage& chatMessage);
+    void AddModeToList(const ChatMessage &chatMessage);
     /*!
      * Remove moderator to list
      * \param (IN) chatMessage - chat message, that contains author
      */
-    void RemoveModeFromList(const ChatMessage& chatMessage);
+    void RemoveModeFromList(const ChatMessage &chatMessage);
 
     /*!
      * Add one message to msg counter

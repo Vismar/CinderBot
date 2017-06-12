@@ -33,7 +33,7 @@ void InfoCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void InfoCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void InfoCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     // Get covenant name
     QString covenant = message.GetMessage().right(message.GetMessage().size() - _name.size() - 1);
@@ -90,7 +90,7 @@ void InfoCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& an
 
 ///////////////////////////////////////////////////////////////////////////
 
-void InfoCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void InfoCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

@@ -261,14 +261,14 @@ void TwitchClient::ResetMsgLimit()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void TwitchClient::_SendIrcMessage(const QString& message)
+void TwitchClient::_SendIrcMessage(const QString &message)
 {
     _socket->write(message.toStdString().c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void TwitchClient::_SendChatMessage(const QStringList& message)
+void TwitchClient::_SendChatMessage(const QStringList &message)
 {
     if ((_msgCounter + message.size()) < _msgLimit)
     {

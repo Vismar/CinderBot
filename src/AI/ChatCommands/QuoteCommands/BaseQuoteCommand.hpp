@@ -26,7 +26,7 @@ protected:
      * \param(OUT) value - number that was found
      * \return true, if number was found
      */
-    bool _GetNumberAfterCommand(const QString& command, const QString& message, QString& value);
+    bool _GetNumberAfterCommand(const QString &command, const QString &message, QString &value);
 };
 
 }

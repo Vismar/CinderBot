@@ -24,7 +24,7 @@ CovenantUserDataCommand::CovenantUserDataCommand()
 void CovenantUserDataCommand::Initialize()
 {
     _name = "!cov";
-    _answers.push_back("You are in 'MSG_COV' covenant, @!");
+    _answers.push_back("You are in covenant 'MSG_COV', @!");
     _answers.push_back(" And you are leader of it!");
 }
 

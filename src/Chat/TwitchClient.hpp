@@ -74,12 +74,12 @@ private:
      * Sends raw message to twitch
      * \param(IN) message - raw data
      */
-    void _SendIrcMessage(const QString& message);
+    void _SendIrcMessage(const QString &message);
     /*!
      * Generates raw data that will be sent to channel via _SendIrcMessage
      * \param(IN) message - message that should be sent to channel
      */
-    void _SendChatMessage(const QStringList& message);
+    void _SendChatMessage(const QStringList &message);
 
     /*! BotAI. No direct calls, only signal-slot connections. */
     BotAI*      _bot;

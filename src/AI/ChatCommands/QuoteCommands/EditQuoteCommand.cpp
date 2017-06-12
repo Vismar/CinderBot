@@ -27,7 +27,7 @@ void EditQuoteCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void EditQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     if (_CheckModerationFlag(message.IsModerator()))
     {
@@ -45,7 +45,7 @@ void EditQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answe
                 if ((number > 0) && (number <= maxValue))
                 {
                     // Remove part with number from message
-                    const QString& refMsg = message.GetMessage();
+                    const QString &refMsg = message.GetMessage();
                     QString msg = refMsg.right(refMsg.size()-refMsg.indexOf(_name)-_name.size()-val.size()-2);
                     // Update quote
                     if(DB_UPDATE("Quotes", QString("Quote = '%1'").arg(msg), QString("Number = %1").arg(number)))
@@ -61,7 +61,7 @@ void EditQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answe
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void EditQuoteCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

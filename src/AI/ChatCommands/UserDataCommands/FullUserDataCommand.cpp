@@ -29,7 +29,7 @@ void FullUserDataCommand::Initialize()
     _name = "!me";
     _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Covenant - MSG_COV.");
     _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Not in covenant.");
-    _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of 'MSG_COV' covenant.");
+    _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of covenant 'MSG_COV'.");
 }
 
 ///////////////////////////////////////////////////////////////////////////

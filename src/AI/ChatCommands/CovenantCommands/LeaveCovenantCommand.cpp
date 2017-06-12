@@ -38,7 +38,7 @@ void LeaveCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void LeaveCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void LeaveCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     if (covenant != "Viewer")
@@ -110,7 +110,7 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& a
 
 ///////////////////////////////////////////////////////////////////////////
 
-void LeaveCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void LeaveCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);
@@ -118,7 +118,7 @@ void LeaveCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringL
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool LeaveCovenantCommand::_SetNewLeaderToCovenant(const QString& newLeader, const QString& oldLeader, const QString& covName)
+bool LeaveCovenantCommand::_SetNewLeaderToCovenant(const QString &newLeader, const QString &oldLeader, const QString &covName)
 {
     bool result(false);
     // Check if provided user is member of covenant

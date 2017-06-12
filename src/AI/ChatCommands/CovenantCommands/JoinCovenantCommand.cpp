@@ -36,10 +36,10 @@ void JoinCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void JoinCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     QString price;
-    ConfigurationManager& configMng = ConfigurationManager::Instance();
+    ConfigurationManager &configMng = ConfigurationManager::Instance();
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
 
     // Check if user is leader of its covenant
@@ -115,7 +115,7 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& an
 
 ///////////////////////////////////////////////////////////////////////////
 
-void JoinCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void JoinCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

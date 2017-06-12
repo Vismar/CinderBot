@@ -41,7 +41,7 @@ void RenameCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void RenameCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     // Check if user in covenant
@@ -123,7 +123,7 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& 
 
 ///////////////////////////////////////////////////////////////////////////
 
-void RenameCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void RenameCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

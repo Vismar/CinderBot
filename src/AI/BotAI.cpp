@@ -20,10 +20,10 @@ using namespace Command::UserDataCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 
-BotAI::BotAI(QObject* parent) : QObject(parent)
+BotAI::BotAI(QObject *parent) : QObject(parent)
 {
     // Load IgnoreList
-    ConfigurationManager& configMng = ConfigurationManager::Instance();
+    ConfigurationManager &configMng = ConfigurationManager::Instance();
     QString param;
     // Fill ignore list
     if (configMng.GetStringParam(CFGS_IGNORE, param))
@@ -116,19 +116,20 @@ void BotAI::GiveCurrencyOnTimer()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BotAI::_CheckIgnoreList(const QString& userName)
+bool BotAI::_CheckIgnoreList(const QString &userName)
 {
     return _ignoreList.contains(userName.toLower());
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BotAI::_UpdateUserData(const ChatMessage& message)
+void BotAI::_UpdateUserData(const ChatMessage &message)
 {
     // If user is not in ignore list, update info
     if (!(_CheckIgnoreList(message.GetAuthor()) || (_CheckIgnoreList(message.GetRealName()))))
     {
         QString tempString = "1";
+        _UpdateAuthor(message.GetRealName(), message.GetAuthor());
         _IncrementMessageCounter(message.GetRealName());
         // Add currency for message
         ConfigurationManager::Instance().GetStringParam(CFGP_CURRENCY_PER_MSG, tempString);
@@ -138,7 +139,14 @@ void BotAI::_UpdateUserData(const ChatMessage& message)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BotAI::_IncrementMessageCounter(const QString& userName)
+void BotAI::_UpdateAuthor(const QString &userName, const QString &author)
+{
+    UD_UPDATE(userName, UDP_Author, author);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void BotAI::_IncrementMessageCounter(const QString &userName)
 {
     QString param;
     // Get message counter
@@ -151,7 +159,7 @@ void BotAI::_IncrementMessageCounter(const QString& userName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BotAI::_AddCurrency(const QString& userName, const int value)
+void BotAI::_AddCurrency(const QString &userName, const int value)
 {
     QString param;
     // Get currency value

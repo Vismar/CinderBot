@@ -27,7 +27,7 @@ void AddQuoteCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void AddQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void AddQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     if (_CheckModerationFlag(message.IsModerator()))
     {        
@@ -55,7 +55,7 @@ void AddQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer
 
 ///////////////////////////////////////////////////////////////////////////
 
-void AddQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void AddQuoteCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

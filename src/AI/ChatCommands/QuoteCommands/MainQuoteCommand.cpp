@@ -25,7 +25,7 @@ void MainQuoteCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void MainQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void MainQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     QString val;
     DB_QUERY_PTR numberQuery = DB_SELECT("Quotes", "MAX(Number)");
@@ -69,7 +69,7 @@ void MainQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answe
 
 ///////////////////////////////////////////////////////////////////////////
 
-void MainQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void MainQuoteCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);
