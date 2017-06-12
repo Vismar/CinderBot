@@ -47,7 +47,7 @@ CreateQuoteWidget::~CreateQuoteWidget()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CreateQuoteWidget::_AdjustMinimumSize(const QSizeF& size)
+void CreateQuoteWidget::_AdjustMinimumSize(const QSizeF &size)
 {
     // Sets minimum size of widget, prevents it from squeezing
     _quoteText->setMinimumHeight(size.height() + 2 * _quoteText->frameWidth());

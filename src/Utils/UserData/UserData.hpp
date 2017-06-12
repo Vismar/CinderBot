@@ -19,6 +19,7 @@ enum UserDataParam
     UDP_Messages = 0,
     UDP_Currency,
     UDP_Covenant,
+    UDP_Author,
     UDP_End
 };
 
@@ -29,7 +30,7 @@ enum UserDataParam
 class UserData
 {
 public:
-    static UserData& Instance();
+    static UserData &Instance();
     ~UserData();
 
     /*!
@@ -42,14 +43,14 @@ public:
      * \param(IN) UDP - user data parameter
      * \return string value of UDP
      */
-    QString GetUserDataParam(const QString& userName, UserDataParam UDP);
+    QString GetUserDataParam(const QString &userName, UserDataParam UDP);
     /*!
      * Update user data. If user do not exist, add him to the hash table with default values of UDP
      * \param(IN) userName - name of a user
      * \param(IN) UDP - user data parameter
      * \param(IN) newValue - new value of UDP
      */
-    void UpdateUserData(const QString& userName, UserDataParam UDP, const QString& newValue);
+    void UpdateUserData(const QString &userName, UserDataParam UDP, const QString &newValue);
 
 private:
     /*!
@@ -63,12 +64,12 @@ private:
      * \param(IN) userName - name of a user
      * \param(IN) params - hash table of params of user
      */
-    void _AddUserData(const QString& userName, const QHash<QString, QString>& params);
+    void _AddUserData(const QString &userName, const QHash<QString, QString> &params);
     /*!
      * Reset UDP of specified user
      * \param(IN) userName - name of a user
      */
-    void _ResetToDefaultUserData(const QString& userName);
+    void _ResetToDefaultUserData(const QString &userName);
     /*!
      * Initialize default values of UDP
      */

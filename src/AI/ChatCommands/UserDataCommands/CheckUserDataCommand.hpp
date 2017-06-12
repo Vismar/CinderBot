@@ -12,11 +12,11 @@ namespace Command
 namespace UserDataCmd
 {
 
-class FullUserDataCommand : public InbuiltChatCommand
+class CheckUserDataCommand : public InbuiltChatCommand
 {
 public:
     /*! Constructor */
-    FullUserDataCommand();
+    CheckUserDataCommand();
 
 protected:
     ////////////////////////////////

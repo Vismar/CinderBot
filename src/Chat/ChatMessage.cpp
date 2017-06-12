@@ -20,35 +20,35 @@ ChatMessage::ChatMessage()
 
 ///////////////////////////////////////////////////////////////////////////
 
-const QString& ChatMessage::GetAuthor() const
+const QString &ChatMessage::GetAuthor() const
 {
     return _author;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-const QString& ChatMessage::GetRealName() const
+const QString &ChatMessage::GetRealName() const
 {
     return _realName;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-const QString& ChatMessage::GetColor() const
+const QString &ChatMessage::GetColor() const
 {
     return _color;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-const QString& ChatMessage::GetTimeStamp() const
+const QString &ChatMessage::GetTimeStamp() const
 {
     return _timeStamp;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-const QString& ChatMessage::GetMessage() const
+const QString &ChatMessage::GetMessage() const
 {
     return _message;
 }
@@ -71,28 +71,28 @@ bool ChatMessage::IsBroadcaster() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ChatMessage::SetAuthor(const QString& author)
+void ChatMessage::SetAuthor(const QString &author)
 {
     _author = author;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ChatMessage::SetRealName(const QString& realName)
+void ChatMessage::SetRealName(const QString &realName)
 {
     _realName = realName;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ChatMessage::SetColor(const QString& color)
+void ChatMessage::SetColor(const QString &color)
 {
     _color = "<font color=\"" + color + "\">";
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ChatMessage::SetMessage(const QString& message)
+void ChatMessage::SetMessage(const QString &message)
 {
     _message = message;
     _SetTimeStamp();
@@ -107,7 +107,7 @@ void ChatMessage::SetModFlag(bool modFlag)
 
 ///////////////////////////////////////////////////////////////////////////
 
-MessageType ChatMessage::ParseRawMessage(const QString& message)
+MessageType ChatMessage::ParseRawMessage(const QString &message)
 {
     MessageType msgType = Undefined;
 
@@ -191,28 +191,28 @@ MessageType ChatMessage::ParseRawMessage(const QString& message)
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsNetworkMsg(const QString& message) const
+bool ChatMessage::_IsNetworkMsg(const QString &message) const
 {
     return message.startsWith("INFO");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsPingCommand(const QString& message) const
+bool ChatMessage::_IsPingCommand(const QString &message) const
 {
     return message.startsWith("PING");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsPongCommand(const QString& message) const
+bool ChatMessage::_IsPongCommand(const QString &message) const
 {
     return message.startsWith("PONG");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-int ChatMessage::_IsIrcComand(const QString& message) const
+int ChatMessage::_IsIrcComand(const QString &message) const
 {
     int result(-1);
     if (message.startsWith(":tmi.twitch.tv "))
@@ -225,7 +225,7 @@ int ChatMessage::_IsIrcComand(const QString& message) const
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsConnectedToRoom(const QString& message) const
+bool ChatMessage::_IsConnectedToRoom(const QString &message) const
 {
     bool result(false);
     QString param;
@@ -241,42 +241,42 @@ bool ChatMessage::_IsConnectedToRoom(const QString& message) const
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsUserState(const QString& message) const
+bool ChatMessage::_IsUserState(const QString &message) const
 {
     return message.contains("USERSTATE");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsPrivMsg(const QString& message) const
+bool ChatMessage::_IsPrivMsg(const QString &message) const
 {
     return (message.startsWith("@badges=") && (message.contains("PRIVMSG")));
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsJoinMsg(const QString& message) const
+bool ChatMessage::_IsJoinMsg(const QString &message) const
 {
     return message.contains("JOIN");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsPartMsg(const QString& message) const
+bool ChatMessage::_IsPartMsg(const QString &message) const
 {
     return message.contains("PART");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsModeMessage(const QString& message) const
+bool ChatMessage::_IsModeMessage(const QString &message) const
 {
     return (message.contains("MODE") && message.contains("+o"));
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsUnmodeMessage(const QString& message) const
+bool ChatMessage::_IsUnmodeMessage(const QString &message) const
 {
     return (message.contains("MODE") && message.contains("-o"));
 }
@@ -290,7 +290,7 @@ void ChatMessage::_SetTimeStamp()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ChatMessage::_GetAndSetNameColor(const QString& message)
+void ChatMessage::_GetAndSetNameColor(const QString &message)
 {
     // Default color
     QString color = "Black";
@@ -306,7 +306,7 @@ void ChatMessage::_GetAndSetNameColor(const QString& message)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ChatMessage::_GetAndSetAuthor(const QString& message)
+void ChatMessage::_GetAndSetAuthor(const QString &message)
 {
     // Get real name
     int startOfTheName = message.indexOf("!") + 1;
@@ -329,7 +329,7 @@ void ChatMessage::_GetAndSetAuthor(const QString& message)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ChatMessage::_GetAndSetAuthorForMode(const QString& message, MessageType msgType)
+void ChatMessage::_GetAndSetAuthorForMode(const QString &message, MessageType msgType)
 {
     QString modeType;
     if (msgType == MODE)
@@ -354,16 +354,18 @@ void ChatMessage::_GetAndSetAuthorForMode(const QString& message, MessageType ms
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ChatMessage::_GetAndSetChatMessage(const QString& message)
+void ChatMessage::_GetAndSetChatMessage(const QString &message)
 {
     QString name;
     ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
-    _message = message.right(message.length() - (message.indexOf("PRIVMSG #") + name.length() + 11));
+    // 11 - size of "PRIVMSG #" plus " :"
+    int startOfMsg = message.indexOf("PRIVMSG #") + name.length() + 11;
+    _message = message.mid(startOfMsg, message.size() - startOfMsg - 2);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ChatMessage::_GetAndSetModeratorFlag(const QString& message)
+void ChatMessage::_GetAndSetModeratorFlag(const QString &message)
 {
     QString name;
     ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);

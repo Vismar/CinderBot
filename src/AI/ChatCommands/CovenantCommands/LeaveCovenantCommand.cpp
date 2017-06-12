@@ -38,7 +38,7 @@ void LeaveCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void LeaveCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void LeaveCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     if (covenant != "Viewer")
@@ -51,14 +51,12 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& a
             // If user is leader, than try to find specified name of new leader
             if (query->value("Leader").toString() == message.GetRealName())
             {
-                // Name of new leader should start with ampersand
                 int startOfName = message.GetMessage().indexOf(" ");
                 if (startOfName > 0)
                 {
                     // Try to get name of new leader
                     QString newLeader;
-                    int endOfName = _GetEndOfNameFromStart(startOfName, message.GetMessage());
-                    newLeader = message.GetMessage().mid(startOfName+1, endOfName-startOfName-1);
+                    newLeader = message.GetMessage().right(message.GetMessage().size() - startOfName - 1);
                     // If leader name was found, try to use it
                     if (!newLeader.isEmpty())
                     {
@@ -74,7 +72,7 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& a
                             {
                                 answer.append(_answers.at(MSG_LEFT_AND_NEW_LEADER));
                                 (*answer.begin()).replace("COV_NAME", covenant);
-                                (*answer.begin()).replace("LEADER_NAME", QString("@%1").arg(newLeader));
+                                (*answer.begin()).replace("LEADER_NAME", newLeader);
                             }
                             // Notify that user is not member of covenant
                             else
@@ -112,7 +110,7 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& a
 
 ///////////////////////////////////////////////////////////////////////////
 
-void LeaveCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void LeaveCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);
@@ -120,22 +118,7 @@ void LeaveCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringL
 
 ///////////////////////////////////////////////////////////////////////////
 
-int LeaveCovenantCommand::_GetEndOfNameFromStart(int startOfName, const QString& message)
-{
-    // Try to get name of user if user typed something after name of new leader
-    int endOfName = message.indexOf(" ", startOfName+1);
-    // If user do not enter anything after name of a new leader
-    if (endOfName < 0)
-    {
-        endOfName = message.indexOf("\r", startOfName);
-    }
-
-    return endOfName;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-bool LeaveCovenantCommand::_SetNewLeaderToCovenant(const QString& newLeader, const QString& oldLeader, const QString& covName)
+bool LeaveCovenantCommand::_SetNewLeaderToCovenant(const QString &newLeader, const QString &oldLeader, const QString &covName)
 {
     bool result(false);
     // Check if provided user is member of covenant

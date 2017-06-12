@@ -24,7 +24,7 @@ DatabaseManager::~DatabaseManager()
 
 ///////////////////////////////////////////////////////////////////////////
 
-DatabaseManager& DatabaseManager::Instance()
+DatabaseManager &DatabaseManager::Instance()
 {
     static DatabaseManager instance;
     return instance;
@@ -47,7 +47,7 @@ QString DatabaseManager::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool DatabaseManager::CreateIndex(const QString& tableName, const QString& indexName, const QString& columns)
+bool DatabaseManager::CreateIndex(const QString &tableName, const QString &indexName, const QString &columns)
 {
     bool result = true;
 
@@ -74,14 +74,14 @@ bool DatabaseManager::CreateIndex(const QString& tableName, const QString& index
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool DatabaseManager::CreateTable(const QString& tableName, const QString& columns)
+bool DatabaseManager::CreateTable(const QString &tableName, const QString &columns)
 {
     bool result = true;
 
     std::shared_ptr<QSqlQuery> queryToCheckTable = DB_SELECT("sqlite_master",
                                                              "COUNT(*)",
                                                              QString("type = 'table' AND name = '%1'").arg(tableName));
-    if (queryToCheckTable != NULL)
+    if (queryToCheckTable != nullptr)
     {
         queryToCheckTable->first();
         // If table do not exist, create it
@@ -147,7 +147,7 @@ bool DatabaseManager::CreateTable(const QString& tableName, const QString& colum
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool DatabaseManager::Insert(const QString& tableName, const QString& recordValues, bool ignore)
+bool DatabaseManager::Insert(const QString &tableName, const QString &recordValues, bool ignore)
 {
     bool result = true;
     QSqlQuery query;
@@ -172,7 +172,7 @@ bool DatabaseManager::Insert(const QString& tableName, const QString& recordValu
 
 ///////////////////////////////////////////////////////////////////////////
 
-DB_QUERY_PTR DatabaseManager::Select(const QString& tableName, const QString& columnNames, const QString& conditions)
+DB_QUERY_PTR DatabaseManager::Select(const QString &tableName, const QString &columnNames, const QString &conditions)
 {
     DB_QUERY_PTR query = std::make_shared<QSqlQuery>();
     QString command;
@@ -192,12 +192,12 @@ DB_QUERY_PTR DatabaseManager::Select(const QString& tableName, const QString& co
     // If command failed, return error
     qDebug() << "Database error(Select): " << query->lastError().text();
 
-    return NULL;
+    return nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool DatabaseManager::Update(const QString& tableName, const QString& columnValues, const QString& conditions)
+bool DatabaseManager::Update(const QString &tableName, const QString &columnValues, const QString &conditions)
 {
     bool result = true;
     QSqlQuery query;
@@ -229,7 +229,7 @@ bool DatabaseManager::Update(const QString& tableName, const QString& columnValu
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool DatabaseManager::Delete(const QString& tableName, const QString& conditions)
+bool DatabaseManager::Delete(const QString &tableName, const QString &conditions)
 {
     bool result = true;
     QSqlQuery query;

@@ -60,7 +60,8 @@ SOURCES += main.cpp\
     AI/ChatCommands/UserDataCommands/CurrencyUserDataCommand.cpp \
     AI/ChatCommands/UserDataCommands/CovenantUserDataCommand.cpp \
     AI/ChatCommands/UserDataCommands/FullUserDataCommand.cpp \
-    AI/ChatCommands/UserDataCommands/UserDataCommandList.cpp
+    AI/ChatCommands/UserDataCommands/UserDataCommandList.cpp \
+    AI/ChatCommands/UserDataCommands/CheckUserDataCommand.cpp
 
 HEADERS  += MainWindow.hpp \
     Widgets/ChatWidget.hpp \
@@ -109,7 +110,8 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/UserDataCommands/CurrencyUserDataCommand.hpp \
     AI/ChatCommands/UserDataCommands/CovenantUserDataCommand.hpp \
     AI/ChatCommands/UserDataCommands/FullUserDataCommand.hpp \
-    AI/ChatCommands/UserDataCommands/UserDataCommandList.hpp
+    AI/ChatCommands/UserDataCommands/UserDataCommandList.hpp \
+    AI/ChatCommands/UserDataCommands/CheckUserDataCommand.hpp
 
 RESOURCES += \
     Resources.qrc

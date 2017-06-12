@@ -12,7 +12,8 @@
 using namespace Command::UserDataCmd;
 
 #define MSG_NOT_LEADER 0
-#define MSG_IS_LEADER  1
+#define MSG_NO_COV     1
+#define MSG_IS_LEADER  2
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -27,7 +28,8 @@ void FullUserDataCommand::Initialize()
 {
     _name = "!me";
     _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Covenant - MSG_COV.");
-    _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of 'MSG_COV' covenant.");
+    _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Not in covenant.");
+    _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of covenant 'MSG_COV'.");
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -48,7 +50,14 @@ void FullUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &an
     }
     if (answer.isEmpty())
     {
-        answer.append(_answers.at(MSG_NOT_LEADER));
+        if (covenant == "Viewer")
+        {
+            answer.append(_answers.at(MSG_NO_COV));
+        }
+        else
+        {
+            answer.append(_answers.at(MSG_NOT_LEADER));
+        }
     }
     if (!answer.isEmpty())
     {

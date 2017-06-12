@@ -35,7 +35,7 @@ public:
      * \param answer - reference to variable which will store answer
      * \return true if command was executed
      */
-    bool Execute(const ChatMessage& message, QStringList& answer);
+    bool Execute(const ChatMessage &message, QStringList &answer);
 
 protected:
     /*!
@@ -43,13 +43,13 @@ protected:
      * \param message - chat message
      * \param answer - reference to variable which will store answer
      */
-    virtual void _GetAnswer(const ChatMessage& message, QStringList& answer) = 0;
+    virtual void _GetAnswer(const ChatMessage &message, QStringList &answer) = 0;
     /*!
      * Get random answer
      * \param message - chat message
      * \param answer - reference to variable which will store answer
      */
-    virtual void _GetRandomAnswer(const ChatMessage& message, QStringList& answer) = 0;
+    virtual void _GetRandomAnswer(const ChatMessage &message, QStringList &answer) = 0;
 
     /* Utility functions */
     /*!
@@ -61,24 +61,24 @@ protected:
      * \param message - chat message
      * \param answer - reference to variable which will store answer
      */
-    void _ReplacePlaceHolders(const ChatMessage& message, QStringList& answer);
+    void _ReplacePlaceHolders(const ChatMessage &message, QStringList &answer);
     /*!
      * Try to find "@" symbol and attach author name to it
      * \param answer - selected answer that will be parsed to add author name
      * \param author - author name
      */
-    void _AddAuthorName(QStringList& answer, const QString& author);
+    void _AddAuthorName(QStringList &answer, const QString &author);
     /*!
      * Take default specififed price from user
      * \param userName - name of user
      */
-    void _TakeDefaultPriceFromUser(const QString& userName);
+    void _TakeDefaultPriceFromUser(const QString &userName);
     /*!
      * Take specified price from user
      * \param userName - name of user
      * \param price - price which should be taken from user
      */
-    void _TakePriceFromUser(const QString& userName, int price);
+    void _TakePriceFromUser(const QString &userName, int price);
 
     /* Flag checkers */
     /*!
@@ -86,13 +86,13 @@ protected:
      * \param userName - real name of user
      * \return true if user can use command
      */
-    bool _CheckCovenant(const QString& userName);
+    bool _CheckCovenant(const QString &userName);
     /*!
      * Check if user have enough currency to use command
      * \param userName - real name of user
      * \return true if user can use command
      */
-    bool _CheckCurrency(const QString& userName);
+    bool _CheckCurrency(const QString &userName);
     /*!
      * Check if command cooldown was expired
      * \return true if user can use command

@@ -23,7 +23,7 @@ public:
      * Make an instace of manager
      * \return static reference to a manager
      */
-    static ConfigurationManager& Instance();
+    static ConfigurationManager &Instance();
     /*!
      * Initialize manager, read config file
      * \return error string if something goes wrong
@@ -35,13 +35,13 @@ public:
      * \param(OUT) value - returning value of parameter
      * \return true if parameter was found
      */
-    bool GetStringParam(const QString& parameter, QString& value);
+    bool GetStringParam(const QString &parameter, QString &value);
     /*!
      * Sets new value to specified parameter, or create new parameter and set specified value to it
      * \param(IN) parameter - parameter that user seek for
      * \param(IN) value - value that should be setted to specified parameter
      */
-    void SetStringParam(const QString& parameter, QString& value);
+    void SetStringParam(const QString &parameter, QString &value);
 
 private:
     /*!

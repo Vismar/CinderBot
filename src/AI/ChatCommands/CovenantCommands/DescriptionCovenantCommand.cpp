@@ -32,7 +32,7 @@ void DescriptionCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void DescriptionCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void DescriptionCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     if (covenant != "Viewer")
@@ -88,7 +88,7 @@ void DescriptionCovenantCommand::_GetAnswer(const ChatMessage& message, QStringL
 
 ///////////////////////////////////////////////////////////////////////////
 
-void DescriptionCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void DescriptionCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

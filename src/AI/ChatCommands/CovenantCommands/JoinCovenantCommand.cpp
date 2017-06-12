@@ -36,10 +36,10 @@ void JoinCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void JoinCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     QString price;
-    ConfigurationManager& configMng = ConfigurationManager::Instance();
+    ConfigurationManager &configMng = ConfigurationManager::Instance();
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
 
     // Check if user is leader of its covenant
@@ -72,37 +72,37 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& an
         if (_CheckCurrency(message.GetRealName()))
         {
             // Get covenant list
-            QStringList covenants;
             DB_QUERY_PTR query = DB_SELECT("Covenants", "Name");
-            if (query->exec())
+            if (query != nullptr)
             {
+                QStringList covenants;
                 while (query->next())
                 {
                     covenants.append(query->value("Name").toString());
                 }
-            }
-            // Try to find specified covenant from list of covenants
-            for (auto iter = covenants.begin(); iter != covenants.end(); ++iter)
-            {
-                // Found a overlap
-                if (message.GetMessage().contains(*iter))
+                // Try to find specified covenant from list of covenants
+                for (auto iter = covenants.begin(); iter != covenants.end(); ++iter)
                 {
-                    // Check if user already in this covenant
-                    if (UD_GET_PARAM(message.GetRealName(), UDP_Covenant) != *iter)
+                    // Found an overlap
+                    if (message.GetMessage().contains(*iter))
                     {
-                        // Join user to covenant and take currency for it
-                        answer.append(_answers.at(MSG_JOINING_COV));
-                        (*answer.begin()).replace("COV_NAME", *iter);
-                        UD_UPDATE(message.GetRealName(), UDP_Covenant, *iter);
-                        _TakeDefaultPriceFromUser(message.GetRealName());
+                        // Check if user already in this covenant
+                        if (UD_GET_PARAM(message.GetRealName(), UDP_Covenant) != *iter)
+                        {
+                            // Join user to covenant and take currency for it
+                            answer.append(_answers.at(MSG_JOINING_COV));
+                            (*answer.begin()).replace("COV_NAME", *iter);
+                            UD_UPDATE(message.GetRealName(), UDP_Covenant, *iter);
+                            _TakeDefaultPriceFromUser(message.GetRealName());
+                        }
+                        // User is already in that covenant
+                        else
+                        {
+                            // Second answer
+                            answer.append(_answers.at(MSG_ALREADY_IN_COV));
+                        }
+                        break;
                     }
-                    // User is already in that covenant
-                    else
-                    {
-                        // Second answer
-                        answer.append(_answers.at(MSG_ALREADY_IN_COV));
-                    }
-                    break;
                 }
             }
         }
@@ -115,7 +115,7 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& an
 
 ///////////////////////////////////////////////////////////////////////////
 
-void JoinCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void JoinCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

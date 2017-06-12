@@ -27,7 +27,7 @@ void ListCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ListCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void ListCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
 
@@ -51,7 +51,7 @@ void ListCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& an
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ListCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void ListCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

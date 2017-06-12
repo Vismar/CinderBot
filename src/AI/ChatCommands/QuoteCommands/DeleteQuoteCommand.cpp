@@ -27,7 +27,7 @@ void DeleteQuoteCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void DeleteQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void DeleteQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     if (_CheckModerationFlag(message.IsModerator()))
     {
@@ -58,7 +58,7 @@ void DeleteQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& ans
 
 ///////////////////////////////////////////////////////////////////////////
 
-void DeleteQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void DeleteQuoteCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

@@ -27,15 +27,13 @@ void AddQuoteCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void AddQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void AddQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     if (_CheckModerationFlag(message.IsModerator()))
-    {
-        QString msg = message.GetMessage();
+    {        
         // Get quote that should ba added
-        int id = msg.indexOf(_name);
-        msg = msg.mid(id + _name.size() + 1);
-        msg = msg.left(msg.size() - 2);
+        int id = message.GetMessage().indexOf(_name);
+        QString msg = message.GetMessage().right(message.GetMessage().size() - id - _name.size() - 1);
         // If message not empty add quote to the list
         if (!msg.isEmpty())
         {
@@ -57,7 +55,7 @@ void AddQuoteCommand::_GetAnswer(const ChatMessage& message, QStringList& answer
 
 ///////////////////////////////////////////////////////////////////////////
 
-void AddQuoteCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void AddQuoteCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

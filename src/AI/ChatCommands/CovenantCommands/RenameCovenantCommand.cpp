@@ -41,7 +41,7 @@ void RenameCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void RenameCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     // Check if user in covenant
@@ -66,13 +66,11 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& 
                     if (_CheckCurrency(message.GetRealName()))
                     {
                         QString newCovenantName = message.GetMessage().mid(_name.size()+1);
-                        int covNameLength = ((newCovenantName.size()-2) < 0) ? 0 : (newCovenantName.size()-2);
                         // If covenant name too long, just make it shorter
-                        if (covNameLength > MAX_COVENANT_NAME_LENGTH)
+                        if (newCovenantName.size() > MAX_COVENANT_NAME_LENGTH)
                         {
-                            covNameLength = MAX_COVENANT_NAME_LENGTH;
+                            newCovenantName.left(MAX_COVENANT_NAME_LENGTH);
                         }
-                        newCovenantName = newCovenantName.left(covNameLength);
                         // If user provided covenant name, rename it
                         if (!newCovenantName.isEmpty())
                         {
@@ -125,7 +123,7 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage& message, QStringList& 
 
 ///////////////////////////////////////////////////////////////////////////
 
-void RenameCovenantCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void RenameCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

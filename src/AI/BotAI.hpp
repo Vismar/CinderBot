@@ -19,7 +19,7 @@ class BotAI : public QObject
 {
     Q_OBJECT
 public:
-    explicit BotAI(QObject* parent = 0);
+    explicit BotAI(QObject *parent = 0);
     ~BotAI();
 
 signals:
@@ -49,23 +49,29 @@ private:
      * \param(IN) userName - name of a user
      * \return true if user is in ignore list
      */
-    bool _CheckIgnoreList(const QString& userName);
+    bool _CheckIgnoreList(const QString &userName);
     /*!
-     * Update user data (Message counter and currency)
+     * Update user data (Author, message counter and currency)
      * \param(IN) message - chat message
      */
-    void _UpdateUserData(const ChatMessage& message);
+    void _UpdateUserData(const ChatMessage &message);
+    /*!
+     * Update author field in database
+     * \param userName - real name of a user
+     * \param author - author name of a user
+     */
+    void _UpdateAuthor(const QString &userName, const QString &author);
     /*!
      * Increment message counter
      * \param(IN) userName - name of a user
      */
-    void _IncrementMessageCounter(const QString& userName);
+    void _IncrementMessageCounter(const QString &userName);
     /*!
      * Add currency to a user
      * \param(IN) userName - name of a user
      * \param(IN) value - amount of currency that should be added
      */
-    void _AddCurrency(const QString& userName, const int value);
+    void _AddCurrency(const QString &userName, const int value);
 
     /*! Array of commands */
     QVector<Command::CommandList*> _chatCommands;

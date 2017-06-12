@@ -43,7 +43,7 @@ QuotesWidget::~QuotesWidget()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void QuotesWidget::UpdateQuotes(const QString& tableName)
+void QuotesWidget::UpdateQuotes(const QString &tableName)
 {
     // If table name is that, then we can handle it
     if (tableName == "Quotes")

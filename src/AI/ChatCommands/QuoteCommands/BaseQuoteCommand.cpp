@@ -16,22 +16,25 @@ BaseQuoteCommand::BaseQuoteCommand() {}
 bool BaseQuoteCommand::_GetNumberAfterCommand(const QString &command, const QString &message, QString &value)
 {
     bool isDigit(false);
-    QString msg = message;
     // Get start of a command
-    int id = msg.indexOf(command);
+    int id = message.indexOf(command);
     if (id != -1)
     {
         // Check size
-        if ((id + QString(command).size() + 2) < message.size())
+        if ((id + command.size()) < message.size())
         {
             isDigit = true;
             // Get string that should contain number
-            msg = msg.mid(id + QString(command).size() + 1);
-            msg = msg.left(msg.size() - 2);
-            msg.append(" ");
-            QStringList words = msg.split(" ");
-            value = words.first();
-            // Check if it is number
+            int startPosOfSearch = id + command.size() + 1;
+            int indexOfSpace = message.indexOf(" ", startPosOfSearch);
+            if (indexOfSpace != -1)
+            {
+                value = message.mid(startPosOfSearch, indexOfSpace - startPosOfSearch);
+            }
+            else
+            {
+                value = message.right(message.size() - startPosOfSearch);
+            }
             for (int i = 0; i < value.size(); ++i)
             {
                 if (!value.at(i).isDigit())

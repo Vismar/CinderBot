@@ -29,14 +29,14 @@ RealTimeUserData::~RealTimeUserData() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-const QStringList& RealTimeUserData::GetUserList()
+const QStringList &RealTimeUserData::GetUserList()
 {
     return _userList;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-const QStringList& RealTimeUserData::GetModeList()
+const QStringList &RealTimeUserData::GetModeList()
 {
     return _modeList;
 }
@@ -50,7 +50,7 @@ int RealTimeUserData::GetMaxUserNumber()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void RealTimeUserData::AddUserToList(const ChatMessage& chatMessage)
+void RealTimeUserData::AddUserToList(const ChatMessage &chatMessage)
 {
     if (!_userList.contains(chatMessage.GetRealName()))
     {
@@ -67,7 +67,7 @@ void RealTimeUserData::AddUserToList(const ChatMessage& chatMessage)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void RealTimeUserData::RemoveUserFromList(const ChatMessage& chatMessage)
+void RealTimeUserData::RemoveUserFromList(const ChatMessage &chatMessage)
 {
     _userList.removeOne(chatMessage.GetRealName());
     emit UserListChanged();
@@ -75,7 +75,7 @@ void RealTimeUserData::RemoveUserFromList(const ChatMessage& chatMessage)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void RealTimeUserData::AddModeToList(const ChatMessage& chatMessage)
+void RealTimeUserData::AddModeToList(const ChatMessage &chatMessage)
 {
     if (!_modeList.contains(chatMessage.GetRealName()))
     {
@@ -86,7 +86,7 @@ void RealTimeUserData::AddModeToList(const ChatMessage& chatMessage)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void RealTimeUserData::RemoveModeFromList(const ChatMessage& chatMessage)
+void RealTimeUserData::RemoveModeFromList(const ChatMessage &chatMessage)
 {
     _modeList.removeOne(chatMessage.GetRealName());
     emit ModeListChanged();

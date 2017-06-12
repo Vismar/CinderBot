@@ -41,7 +41,7 @@ void CustomChatCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomChatCommand::InitializeByName(const QString& commandName)
+void CustomChatCommand::InitializeByName(const QString &commandName)
 {
     _Clear();
     _name = commandName;
@@ -51,7 +51,7 @@ void CustomChatCommand::InitializeByName(const QString& commandName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomChatCommand::_GetAnswer(const ChatMessage& message, QStringList& answer)
+void CustomChatCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);
@@ -59,7 +59,7 @@ void CustomChatCommand::_GetAnswer(const ChatMessage& message, QStringList& answ
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomChatCommand::_GetRandomAnswer(const ChatMessage& message, QStringList& answer)
+void CustomChatCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
 {
     if (_CheckModerationFlag(message.IsModerator()) &&
         _CheckCooldown() &&

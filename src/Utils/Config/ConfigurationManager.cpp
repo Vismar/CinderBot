@@ -11,7 +11,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-ConfigurationManager& ConfigurationManager::Instance()
+ConfigurationManager &ConfigurationManager::Instance()
 {
     static ConfigurationManager instance;
     return instance;
@@ -61,7 +61,7 @@ QString ConfigurationManager::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ConfigurationManager::GetStringParam(const QString& parameter, QString& value)
+bool ConfigurationManager::GetStringParam(const QString &parameter, QString &value)
 {
     // If manager contains requested paramter, get it and return true
     bool result = _params.contains(parameter);
@@ -75,7 +75,7 @@ bool ConfigurationManager::GetStringParam(const QString& parameter, QString& val
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ConfigurationManager::SetStringParam(const QString& parameter, QString& value)
+void ConfigurationManager::SetStringParam(const QString &parameter, QString &value)
 {
     _params.insert(parameter, value);
 }

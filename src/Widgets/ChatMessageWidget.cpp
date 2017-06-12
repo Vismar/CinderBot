@@ -10,7 +10,7 @@ using namespace Ui;
 
 ///////////////////////////////////////////////////////////////////////////
 
-ChatMessageWidget::ChatMessageWidget(const QString& text, QWidget* parent) : QTextEdit(text, parent)
+ChatMessageWidget::ChatMessageWidget(const QString &text, QWidget* parent) : QTextEdit(text, parent)
 {
     // Make it look and feel like an ordinary label
     setReadOnly(true);
@@ -28,7 +28,7 @@ ChatMessageWidget::ChatMessageWidget(const QString& text, QWidget* parent) : QTe
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ChatMessageWidget::_AdjustMinimumSize(const QSizeF& size)
+void ChatMessageWidget::_AdjustMinimumSize(const QSizeF &size)
 {
     // Sets minimum size of widget, prevents it from squeezing
     setMinimumHeight(size.height() + 2 * frameWidth());

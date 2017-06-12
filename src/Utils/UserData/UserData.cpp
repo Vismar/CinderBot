@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-UserData& UserData::Instance()
+UserData &UserData::Instance()
 {
     static UserData instance;
     return instance;
@@ -25,6 +25,7 @@ void UserData::Initialize()
     _InitializeDefaultUserData();
     DB_CREATE_TABLE("UserData", "Id       INTEGER PRIMARY KEY AUTOINCREMENT,"
                                 "Name     TEXT    NOT NULL UNIQUE,"
+                                "Author   TEXT,"
                                 "Messages INTEGER NOT NULL,"
                                 "Currency INTEGER NOT NULL,"
                                 "Covenant TEXT    NOT NULL");
@@ -33,7 +34,7 @@ void UserData::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString UserData::GetUserDataParam(const QString& userName, UserDataParam UDP)
+QString UserData::GetUserDataParam(const QString &userName, UserDataParam UDP)
 {
     QString returnString = "";
 
@@ -56,9 +57,9 @@ QString UserData::GetUserDataParam(const QString& userName, UserDataParam UDP)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void UserData::UpdateUserData(const QString& userName,
+void UserData::UpdateUserData(const QString &userName,
                               UserDataParam UDP,
-                              const QString& newValue)
+                              const QString &newValue)
 {
     // If user do not exist, add him to the hash table
     std::shared_ptr<QSqlQuery> query = DB_SELECT("UserData", "*", QString("Name = '%1'").arg(userName));
@@ -72,20 +73,23 @@ void UserData::UpdateUserData(const QString& userName,
     {
     case UDP_Messages:
     case UDP_Currency:
-        DB_UPDATE("UserData", QString("%1 = %2").arg(_GetUDPParam(UDP)).arg(newValue), QString("Name = '%1'").arg(userName));
+        DB_UPDATE("UserData", QString("%1 = %2").arg(_GetUDPParam(UDP)).arg(newValue),
+                              QString("Name = '%1'").arg(userName));
         break;
     default:
-        DB_UPDATE("UserData", QString("%1 = '%2'").arg(_GetUDPParam(UDP)).arg(newValue), QString("Name = '%1'").arg(userName));
+        DB_UPDATE("UserData", QString("%1 = '%2'").arg(_GetUDPParam(UDP)).arg(newValue),
+                              QString("Name = '%1'").arg(userName));
         break;
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void UserData::_AddUserData(const QString& userName, const QHash<QString, QString>& params)
+void UserData::_AddUserData(const QString &userName, const QHash<QString, QString> &params)
 {
-    QString values = "NULL, ':name', :msg, :cur, ':cov'";
+    QString values = "NULL, ':name', ':author', :msg, :cur, ':cov'";
     values.replace(":name", userName);
+    values.replace(":msg", params[_GetUDPParam(UDP_Author)]);
     values.replace(":msg", params[_GetUDPParam(UDP_Messages)]);
     values.replace(":cur", params[_GetUDPParam(UDP_Currency)]);
     values.replace(":cov", params[_GetUDPParam(UDP_Covenant)]);
@@ -94,9 +98,9 @@ void UserData::_AddUserData(const QString& userName, const QHash<QString, QStrin
 
 ///////////////////////////////////////////////////////////////////////////
 
-void UserData::_ResetToDefaultUserData(const QString& userName)
+void UserData::_ResetToDefaultUserData(const QString &userName)
 {
-    _AddUserData(userName, _defaultParams);
+    _AddUserData(userName.toLower(), _defaultParams);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -104,6 +108,7 @@ void UserData::_ResetToDefaultUserData(const QString& userName)
 void UserData::_InitializeDefaultUserData()
 {
     /* Create default values of UDP */
+    _defaultParams.insert(_GetUDPParam(UDP_Author),   "NoAuthorNameYet");
     _defaultParams.insert(_GetUDPParam(UDP_Messages), "0");
     _defaultParams.insert(_GetUDPParam(UDP_Currency), "0");
     _defaultParams.insert(_GetUDPParam(UDP_Covenant), "Viewer");
@@ -124,6 +129,9 @@ QString UserData::_GetUDPParam(UserDataParam UDP)
         break;
     case UDP_Covenant:
         param = "Covenant";
+        break;
+    case UDP_Author:
+        param = "Author";
         break;
     default:
         param = "NoParam";
