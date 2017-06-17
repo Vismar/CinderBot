@@ -15,7 +15,7 @@ using namespace Ui;
 
 ///////////////////////////////////////////////////////////////////////////
 
-ChatWidget::ChatWidget(QWidget* parent) : QScrollArea(parent)
+ChatWidget::ChatWidget(QWidget *parent) : QScrollArea(parent)
 {
     // Set params to layout
     setWidgetResizable(true);

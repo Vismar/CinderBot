@@ -15,8 +15,6 @@ CONFIG += c++11
 
 SOURCES += main.cpp\
         MainWindow.cpp \
-    Widgets/ChatWidget.cpp \
-    Widgets/ChatMessageWidget.cpp \
     AI/BotAI.cpp \
     Chat/ChatMessage.cpp \
     Chat/TwitchClient.cpp \
@@ -61,11 +59,12 @@ SOURCES += main.cpp\
     AI/ChatCommands/UserDataCommands/CovenantUserDataCommand.cpp \
     AI/ChatCommands/UserDataCommands/FullUserDataCommand.cpp \
     AI/ChatCommands/UserDataCommands/UserDataCommandList.cpp \
-    AI/ChatCommands/UserDataCommands/CheckUserDataCommand.cpp
+    AI/ChatCommands/UserDataCommands/CheckUserDataCommand.cpp \
+    Widgets/Chat/ChatMessageWidget.cpp \
+    Widgets/Chat/ChatWidget.cpp \
+    Widgets/Common/PageListWidget.cpp
 
 HEADERS  += MainWindow.hpp \
-    Widgets/ChatWidget.hpp \
-    Widgets/ChatMessageWidget.hpp \
     AI/BotAI.hpp \
     Chat/ChatMessage.hpp \
     Chat/TwitchClient.hpp \
@@ -111,7 +110,10 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/UserDataCommands/CovenantUserDataCommand.hpp \
     AI/ChatCommands/UserDataCommands/FullUserDataCommand.hpp \
     AI/ChatCommands/UserDataCommands/UserDataCommandList.hpp \
-    AI/ChatCommands/UserDataCommands/CheckUserDataCommand.hpp
+    AI/ChatCommands/UserDataCommands/CheckUserDataCommand.hpp \
+    Widgets/Chat/ChatMessageWidget.hpp \
+    Widgets/Chat/ChatWidget.hpp \
+    Widgets/Common/PageListWidget.hpp
 
 RESOURCES += \
     Resources.qrc
