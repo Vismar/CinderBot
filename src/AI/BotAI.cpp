@@ -78,20 +78,24 @@ BotAI::~BotAI()
 
 void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
 {
-    // Update user data
-    _UpdateUserData(message);
     // If new message is not created by bot, parse it.
     if (!botMessage)
     {
-        QStringList answer;
+        // Update user data
+        _UpdateUserData(message);
 
-        for (int i = 0; i < _chatCommands.size(); ++i)
+        // If user is not in ignore list, try to find commands
+        if (!(_CheckIgnoreList(message.GetAuthor()) || _CheckIgnoreList(message.GetRealName())))
         {
-            // If we found a command, emit event with result and break the loop
-            if (_chatCommands[i]->TryExecute(message, answer))
+            QStringList answer;
+            for (int i = 0; i < _chatCommands.size(); ++i)
             {
-                emit NewBotMessage(answer);
-                break;
+                // If we found a command, emit event with result and break the loop
+                if (_chatCommands[i]->TryExecute(message, answer))
+                {
+                    emit NewBotMessage(answer);
+                    break;
+                }
             }
         }
     }
@@ -126,7 +130,7 @@ bool BotAI::_CheckIgnoreList(const QString &userName)
 void BotAI::_UpdateUserData(const ChatMessage &message)
 {
     // If user is not in ignore list, update info
-    if (!(_CheckIgnoreList(message.GetAuthor()) || (_CheckIgnoreList(message.GetRealName()))))
+    if (!(_CheckIgnoreList(message.GetAuthor()) || _CheckIgnoreList(message.GetRealName())))
     {
         QString tempString = "1";
         _UpdateAuthor(message.GetRealName(), message.GetAuthor());

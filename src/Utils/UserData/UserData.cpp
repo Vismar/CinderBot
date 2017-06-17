@@ -89,7 +89,7 @@ void UserData::_AddUserData(const QString &userName, const QHash<QString, QStrin
 {
     QString values = "NULL, ':name', ':author', :msg, :cur, ':cov'";
     values.replace(":name", userName);
-    values.replace(":msg", params[_GetUDPParam(UDP_Author)]);
+    values.replace(":author", params[_GetUDPParam(UDP_Author)]);
     values.replace(":msg", params[_GetUDPParam(UDP_Messages)]);
     values.replace(":cur", params[_GetUDPParam(UDP_Currency)]);
     values.replace(":cov", params[_GetUDPParam(UDP_Covenant)]);
