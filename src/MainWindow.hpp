@@ -6,7 +6,7 @@
 #pragma once
 #include <QMainWindow>
 #include <QTabWidget>
-#include "Widgets/ChatWidget.hpp"
+#include "Widgets/Chat/ChatWidget.hpp"
 #include "Widgets/Statistics/StatisticsWidget.hpp"
 #include "Widgets/Quotes/QuoteTabWidget.hpp"
 #include "Chat/TwitchClient.hpp"

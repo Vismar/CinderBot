@@ -20,7 +20,7 @@ class ChatWidget : public QScrollArea
 {
     Q_OBJECT
 public:
-    explicit ChatWidget(QWidget* parent = 0);
+    explicit ChatWidget(QWidget *parent = 0);
     ~ChatWidget();
 
 public slots:
