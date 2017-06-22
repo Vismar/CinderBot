@@ -22,7 +22,7 @@ namespace Ui
  * and provides functionality to change number of entries which will be displayed per page
  * and navigation through those pages.
  */
-class PageListWidget : public QWidget
+class PageListWidget : public QFrame
 {
     Q_OBJECT
 public:
@@ -34,6 +34,17 @@ public:
      * Destructor
      */
     virtual ~PageListWidget();
+
+    /*!
+     * Select specified page
+     * \param page - page number which should be selected
+     */
+    void SelectPage(int page);
+    /*!
+     * Get current page number
+     * \return current page number
+     */
+    int GetCurrentPage() const;
 
 public slots:
     /*!

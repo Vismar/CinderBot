@@ -5,6 +5,7 @@
 **************************************************************************/
 #pragma once
 #include "AI/ChatCommands/CommandList.hpp"
+#include <QObject>
 
 namespace Command
 {
@@ -13,8 +14,9 @@ namespace Command
  * Class CustomCommandList
  * Read and store all custom commands from database
  */
-class CustomCommandList : public CommandList
+class CustomCommandList : public QObject, public CommandList
 {
+    Q_OBJECT
 public:
     /*! Constructor */
     CustomCommandList();
@@ -35,6 +37,13 @@ protected:
     QString _commandTableName;
     /*! Name of table which should be created to store answers for commands */
     QString _commandAnswersTableName;
+
+private slots:
+    /*!
+     * Update list of custom commands
+     * \param tableName - name of the table which was updated
+     */
+    void _UpdateCommands(const QString &tableName);
 };
 
 }

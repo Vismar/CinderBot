@@ -62,7 +62,16 @@ SOURCES += main.cpp\
     AI/ChatCommands/UserDataCommands/CheckUserDataCommand.cpp \
     Widgets/Chat/ChatMessageWidget.cpp \
     Widgets/Chat/ChatWidget.cpp \
-    Widgets/Common/PageListWidget.cpp
+    Widgets/Common/PageListWidget.cpp \
+    Widgets/CustomCommands/ParametersCustomCommandWidget.cpp \
+    Widgets/CustomCommands/CreateCustomCommandWindow.cpp \
+    Widgets/CustomCommands/EditCustomCommandWindow.cpp \
+    Widgets/Common/EditSaveWidget.cpp \
+    Widgets/CustomCommands/EditSaveAnswerCustomCommandWidget.cpp \
+    Widgets/CustomCommands/AnswersCustomCommandWidget.cpp \
+    Widgets/CustomCommands/EntryCustomCommandWidget.cpp \
+    Widgets/CustomCommands/ListCustomCommandWidget.cpp \
+    Widgets/CustomCommands/CustomCommandWindow.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -113,7 +122,16 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/UserDataCommands/CheckUserDataCommand.hpp \
     Widgets/Chat/ChatMessageWidget.hpp \
     Widgets/Chat/ChatWidget.hpp \
-    Widgets/Common/PageListWidget.hpp
+    Widgets/Common/PageListWidget.hpp \
+    Widgets/CustomCommands/ParametersCustomCommandWidget.hpp \
+    Widgets/CustomCommands/CreateCustomCommandWindow.hpp \
+    Widgets/CustomCommands/EditCustomCommandWindow.hpp \
+    Widgets/Common/EditSaveWidget.hpp \
+    Widgets/CustomCommands/EditSaveAnswerCustomCommandWidget.hpp \
+    Widgets/CustomCommands/AnswersCustomCommandWidget.hpp \
+    Widgets/CustomCommands/EntryCustomCommandWidget.hpp \
+    Widgets/CustomCommands/ListCustomCommandWidget.hpp \
+    Widgets/CustomCommands/CustomCommandWindow.hpp
 
 RESOURCES += \
     Resources.qrc

@@ -24,6 +24,16 @@ CustomCommandList::~CustomCommandList() { }
 
 ///////////////////////////////////////////////////////////////////////////
 
+void CustomCommandList::_UpdateCommands(const QString &tableName)
+{
+    if (tableName == "CustomCommands")
+    {
+        _InitializeCommands();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void CustomCommandList::_Initialize()
 {
     DB_CREATE_TABLE(_commandTableName, "Id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -39,6 +49,14 @@ void CustomCommandList::_Initialize()
 
     DB_CREATE_INDEX(_commandAnswersTableName, "Answer_Index", "Answer");
 
+    // Connect events from database manager to know, when we need to update commands
+    connect(&DatabaseManager::Instance(), &DatabaseManager::OnInsertEvent,
+            this, &CustomCommandList::_UpdateCommands);
+    connect(&DatabaseManager::Instance(), &DatabaseManager::OnUpdateEvent,
+            this, &CustomCommandList::_UpdateCommands);
+    connect(&DatabaseManager::Instance(), &DatabaseManager::OnDeleteEvent,
+            this, &CustomCommandList::_UpdateCommands);
+
     _InitializeCommands();
 }
 
@@ -46,6 +64,14 @@ void CustomCommandList::_Initialize()
 
 void CustomCommandList::_InitializeCommands()
 {
+    // Clear all commands that was already created
+    for (int i = 0; i < _commands.size(); ++i)
+    {
+        delete _commands[i];
+    }
+    _commands.clear();
+
+    // Create new commands
     DB_QUERY_PTR query = DB_SELECT(_commandTableName, "Name");
     if (query != NULL)
     {

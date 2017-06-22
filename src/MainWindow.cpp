@@ -5,6 +5,8 @@
 **************************************************************************/
 #include "MainWindow.hpp"
 
+#include "Widgets/CustomCommands/CustomCommandWindow.hpp"
+
 using namespace Ui;
 
 ///////////////////////////////////////////////////////////////////////////
@@ -84,6 +86,12 @@ void MainWindow::_CreateTabWidget()
     QIcon iconQuotes(":/Resources/Icons/QuotesIcon.ico");
     _tabWidget->addTab(_quoteTabWidget, iconQuotes, "");
     _tabWidget->setTabToolTip(1, "Quotes");
+
+
+    /***** SHOULD BE REMOVED WHEN NEW INTERFACE WILL BE IMPLEMENTED *****/
+    CustomCommandWindow *listWindow = new CustomCommandWindow(this);
+    listWindow->show();
+    /***** SHOULD BE REMOVED WHEN NEW INTERFACE WILL BE IMPLEMENTED *****/
 
     // Add tab widget to layout
     _layout->addWidget(_tabWidget);
