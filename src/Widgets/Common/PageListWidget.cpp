@@ -9,24 +9,42 @@ using namespace Ui;
 
 ///////////////////////////////////////////////////////////////////////////
 
-PageListWidget::PageListWidget(QWidget *parent) : QWidget(parent)
+PageListWidget::PageListWidget(QWidget *parent) : QFrame(parent)
 {
+    // For borders
+    this->setFrameShape(QFrame::Box);
+
+    // Initialize main layout
     _mainLayout = new QVBoxLayout(this);
     _mainLayout->setAlignment(Qt::AlignTop);
     _InitializeHeader();
     _InitializeContent();
-
-    QVector<int> lol;
-    for (int i = 0; i < 35; ++i)
-    {
-        lol.push_back(i);
-    }
-    UpdateIds(lol);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 PageListWidget::~PageListWidget() {}
+
+///////////////////////////////////////////////////////////////////////////
+
+void PageListWidget::SelectPage(int page)
+{
+    if (page <= _pageSlider->maximum())
+    {
+        _pageSlider->setValue(page);
+    }
+    else
+    {
+        _pageSlider->setValue(_pageSlider->maximum());
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+int PageListWidget::GetCurrentPage() const
+{
+    return _pageSlider->value();
+}
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +123,10 @@ void PageListWidget::_InitializeHeader()
 void PageListWidget::_InitializeContent()
 {
     _content = new QScrollArea(this);
-    _contentLayout = new QVBoxLayout(_content);
+    _content->setWidgetResizable(true);
+    QWidget *widget = new QWidget();
+    _content->setWidget(widget);
+    _contentLayout = new QVBoxLayout(widget);
     _contentLayout->setMargin(10);
     _contentLayout->setAlignment(Qt::AlignTop);
     _mainLayout->addWidget(_content);
@@ -115,6 +136,7 @@ void PageListWidget::_InitializeContent()
 
 void PageListWidget::_UpdateSlider()
 {
+    // Get number of pages
     int numberOfPages = _ids.size()/_numberOfEntriesPerPage->currentText().toInt();
     if (_ids.size()%_numberOfEntriesPerPage->currentText().toInt())
     {
@@ -124,7 +146,9 @@ void PageListWidget::_UpdateSlider()
     {
         ++numberOfPages;
     }
+    // Update maximum value of slider
     _pageSlider->setMaximum(numberOfPages);
+    // Check if value is larger than maximum
     if (_pageSlider->value() > _pageSlider->maximum())
     {
         _pageSlider->setValue(_pageSlider->maximum());
@@ -142,12 +166,14 @@ void PageListWidget::_UpdatePageNumber()
 
 void PageListWidget::_UpdateContent()
 {
+    // Get number of entries which should be displayed on current page
     int numberOfEntriesPerPage = _numberOfEntriesPerPage->currentText().toInt();
     int numberOfEntries = _ids.size()-(numberOfEntriesPerPage*(_pageSlider->value()-1));
     if (numberOfEntries > numberOfEntriesPerPage)
     {
         numberOfEntries = numberOfEntriesPerPage;
     }
+    // If current page should have less entries, remove redundant widgets
     if (_contentLayout->count() > numberOfEntries)
     {
         for (int i = _contentLayout->count(); i > numberOfEntries; --i)
@@ -161,6 +187,7 @@ void PageListWidget::_UpdateContent()
             }
         }
     }
+    // If current page should have more entries, add missing widgets
     else if (_contentLayout->count() < numberOfEntries)
     {
         for (int i = _contentLayout->count()+1; i <= numberOfEntries; ++i)
@@ -168,7 +195,7 @@ void PageListWidget::_UpdateContent()
             _CreateAndAddWidget();
         }
     }
-
+    // Update values of entries on current page
     for (int i = 0; i < _contentLayout->count(); ++i)
     {
         QLayoutItem* item = _contentLayout->itemAt(i);

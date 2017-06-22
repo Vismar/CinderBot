@@ -31,7 +31,7 @@ void CustomChatCommand::Initialize()
         if (query->first())
         {
             // Set data to variables
-            _cooldown = QTime::fromString(query->value("Cooldown").toString(), "h:m:s:z");
+            _cooldown = QTime::fromString(query->value("Cooldown").toString(), "h:m:s");
             _moderatorOnly = query->value("ModeratorOnly").toBool();
             _price = query->value("Price").toInt();
             _covenant = query->value("Covenant").toString();

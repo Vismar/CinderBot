@@ -106,11 +106,11 @@ void SingleQuoteWidget::_HandleEditSaveButton()
         _quoteEditSave->setStyleSheet("");
         std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes",
                                                      "Quote",
-                                                     QString("number = %1").arg(_quoteNumber->text()));
+                                                     QString("Number = %1").arg(_quoteNumber->text()));
         if (query != NULL)
         {
             query->first();
-            // Save new quote text if was changed
+            // Save new quote text if it was changed
             if (query->value(0).toString() != _quoteText->toPlainText())
             {
                 DB_UPDATE("Quotes",
