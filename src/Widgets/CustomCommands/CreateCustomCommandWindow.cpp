@@ -29,7 +29,7 @@ CreateCustomCommandWindow::CreateCustomCommandWindow(QWidget *parent) : QDialog(
 
     // Connect events
     connect(_parameters, &ParametersCustomCommandWidget::OnCommandNameFieldChanged,
-            this, _CheckCommandNameField);
+            this, &CreateCustomCommandWindow::_CheckCommandNameField);
     connect(_createButton, &QPushButton::clicked,
             this, &CreateCustomCommandWindow::_OnCreateButton);
 }
