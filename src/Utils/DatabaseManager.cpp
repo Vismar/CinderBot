@@ -5,14 +5,20 @@
 **************************************************************************/
 #include "DatabaseManager.hpp"
 #include <QStringList>
+#include <QFile>
 #include <QDebug>
+
+#define DB_FOLDER    "data"
+#define DB_FILE_NAME "CinderBotDatabase.sqlite"
 
 ///////////////////////////////////////////////////////////////////////////
 
 DatabaseManager::DatabaseManager() : QObject(0)
 {
     _database = QSqlDatabase::addDatabase("QSQLITE");
-    _database.setDatabaseName("./data/CinderBotDatabase.sqlite");
+    QString dbName = QString("./%1/%2").arg(DB_FOLDER).arg(DB_FILE_NAME);
+    qDebug() << dbName;
+    _database.setDatabaseName(dbName);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -36,7 +42,18 @@ QString DatabaseManager::Initialize()
 {
     // Try to open database
     QString result("OK");
-    if (!_database.open())
+    // Check directory
+    QDir dir(DB_FOLDER);
+    if (!dir.exists())
+    {
+        qDebug() << "WARNING: ./data Not exist. Trying to create...";
+        if (!dir.mkpath("."))
+        {
+            qDebug() << "ERROR: Folder cannot be created!";
+            result = "Cannot create a data folder!";
+        }
+    }
+    if ((result == "OK") && (!_database.open()))
     {
         // If something goes wrong, return error
         result = _database.lastError().text();
