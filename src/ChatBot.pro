@@ -71,7 +71,8 @@ SOURCES += main.cpp\
     Widgets/CustomCommands/AnswersCustomCommandWidget.cpp \
     Widgets/CustomCommands/EntryCustomCommandWidget.cpp \
     Widgets/CustomCommands/ListCustomCommandWidget.cpp \
-    Widgets/CustomCommands/CustomCommandWindow.cpp
+    Widgets/CustomCommands/CustomCommandWindow.cpp \
+    Chat/ChatAnswer.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -131,7 +132,8 @@ HEADERS  += MainWindow.hpp \
     Widgets/CustomCommands/AnswersCustomCommandWidget.hpp \
     Widgets/CustomCommands/EntryCustomCommandWidget.hpp \
     Widgets/CustomCommands/ListCustomCommandWidget.hpp \
-    Widgets/CustomCommands/CustomCommandWindow.hpp
+    Widgets/CustomCommands/CustomCommandWindow.hpp \
+    Chat/ChatAnswer.hpp
 
 RESOURCES += \
     Resources.qrc

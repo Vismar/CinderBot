@@ -25,7 +25,8 @@ enum MessageType
     PART,
     MODE,
     UNMODE,
-    PRIVMSG
+    PRIVMSG,
+    WHISPER
 };
 
 /*!
@@ -71,6 +72,11 @@ public:
      * \return true if author name equals channel name
      */
     bool IsBroadcaster() const;
+    /*!
+     * Return type of message
+     * \return type of message that was assigned during the parsing
+     */
+    MessageType GetType() const;
 
     /*!
      * Set author name
@@ -93,10 +99,16 @@ public:
      */
     void SetMessage(const QString &message);
     /*!
-     * \brief SetModFlag
+     * Set moderator flag
      * \param modFlag
      */
     void SetModFlag(bool modFlag);
+    /*!
+     * Set type of message
+     * \param type - type which will be setted
+     */
+    void SetType(MessageType type);
+
     /*!
      * Parse raw message data
      * \param(IN) message - raw message data
@@ -173,6 +185,12 @@ private:
      */
     bool _IsUnmodeMessage(const QString &message) const;
     /*!
+     * Check if it is whisper message
+     * \param message - message to check
+     * \return true if it is a whisper message
+     */
+    bool _IsWhisper(const QString &message) const;
+    /*!
      * Set timestamp
      */
     void _SetTimeStamp();
@@ -215,4 +233,6 @@ private:
     QString _message;
     /*! Moderator flag */
     bool    _isModerator;
+    /*! Type of the message */
+    MessageType _type;
 };

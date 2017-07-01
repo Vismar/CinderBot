@@ -8,6 +8,11 @@
 #include "Utils/Config/ConfigurationParameters.hpp"
 #include <QTime>
 
+#include <QDebug>
+
+#define STR_PRIVMSG "PRIVMSG"
+#define STR_WHISPER "WHISPER"
+
 ///////////////////////////////////////////////////////////////////////////
 
 ChatMessage::ChatMessage()
@@ -71,6 +76,13 @@ bool ChatMessage::IsBroadcaster() const
 
 ///////////////////////////////////////////////////////////////////////////
 
+MessageType ChatMessage::GetType() const
+{
+    return _type;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void ChatMessage::SetAuthor(const QString &author)
 {
     _author = author;
@@ -103,6 +115,13 @@ void ChatMessage::SetMessage(const QString &message)
 void ChatMessage::SetModFlag(bool modFlag)
 {
     _isModerator = modFlag;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::SetType(MessageType type)
+{
+    _type = type;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -182,9 +201,18 @@ MessageType ChatMessage::ParseRawMessage(const QString &message)
             _GetAndSetChatMessage(message);
             _GetAndSetModeratorFlag(message);
         }
+        else if (_IsWhisper(message))
+        {
+            msgType = WHISPER;
+            _GetAndSetNameColor(message);
+            _GetAndSetAuthor(message);
+            _GetAndSetChatMessage(message);
+            //_GetAndSetModeratorFlag();
+        }
     }
     // Set timestamp
     _SetTimeStamp();
+    _type = msgType;
 
     return msgType;
 }
@@ -250,7 +278,7 @@ bool ChatMessage::_IsUserState(const QString &message) const
 
 bool ChatMessage::_IsPrivMsg(const QString &message) const
 {
-    return (message.startsWith("@badges=") && (message.contains("PRIVMSG")));
+    return (message.startsWith("@badges=") && (message.contains(STR_PRIVMSG)));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -279,6 +307,13 @@ bool ChatMessage::_IsModeMessage(const QString &message) const
 bool ChatMessage::_IsUnmodeMessage(const QString &message) const
 {
     return (message.contains("MODE") && message.contains("-o"));
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsWhisper(const QString &message) const
+{
+    return (message.startsWith("@badges=") && (message.contains(STR_WHISPER)));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -315,7 +350,7 @@ void ChatMessage::_GetAndSetAuthor(const QString &message)
     // Get display name
     // 13 = length of "display-name="
     startOfTheName = message.indexOf("display-name=") + 13;
-    nameLength = message.indexOf("emotes") - startOfTheName - 1;
+    nameLength = message.indexOf("emote") - startOfTheName - 1;
     // If display name was not specified, use real name
     if (nameLength < 1)
     {
@@ -358,8 +393,17 @@ void ChatMessage::_GetAndSetChatMessage(const QString &message)
 {
     QString name;
     ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
-    // 11 - size of "PRIVMSG #" plus " :"
-    int startOfMsg = message.indexOf("PRIVMSG #") + name.length() + 11;
+    QString keyWord = STR_PRIVMSG;
+    keyWord += " #";
+    int startOfMsg = message.indexOf(keyWord);
+    if (startOfMsg == -1)
+    {
+        keyWord = STR_WHISPER;
+        keyWord += " ";
+        startOfMsg = message.indexOf(keyWord);
+        ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, name);
+    }
+    startOfMsg += name.length() + keyWord.length() + 2; // 2 = length of " :"
     _message = message.mid(startOfMsg, message.size() - startOfMsg - 2);
 }
 
