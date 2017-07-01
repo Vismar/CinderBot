@@ -45,6 +45,10 @@ public:
 
 private:
     /*!
+     * Creating config file that doesn't exist
+     */
+    void _CreateDefaultConfigFile();
+    /*!
      * Read login data section in xml file
      */
     void _ReadLoginData();
