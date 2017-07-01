@@ -6,6 +6,7 @@
 #include "DatabaseManager.hpp"
 #include <QStringList>
 #include <QFile>
+#include <QDir>
 #include <QDebug>
 
 #define DB_FOLDER    "data"
@@ -17,7 +18,6 @@ DatabaseManager::DatabaseManager() : QObject(0)
 {
     _database = QSqlDatabase::addDatabase("QSQLITE");
     QString dbName = QString("./%1/%2").arg(DB_FOLDER).arg(DB_FILE_NAME);
-    qDebug() << dbName;
     _database.setDatabaseName(dbName);
 }
 
