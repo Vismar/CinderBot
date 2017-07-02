@@ -10,6 +10,7 @@
 #include <QTimer>
 #include "ChatMessage.hpp"
 #include "AI/BotAI.hpp"
+#include "Chat/ChatAnswer.hpp"
 
 /*!
  * Class TwtichClient
@@ -63,7 +64,7 @@ public slots:
     /*!
      * Sends bot message to twitch and emit signal about new message
      */
-    void NewBotMessage(QStringList message);
+    void NewBotMessage(ChatAnswer message);
     /*!
      * Reset msgLimit
      */
@@ -79,7 +80,7 @@ private:
      * Generates raw data that will be sent to channel via _SendIrcMessage
      * \param(IN) message - message that should be sent to channel
      */
-    void _SendChatMessage(const QStringList &message);
+    void _SendChatMessage(ChatAnswer &message);
 
     /*! BotAI. No direct calls, only signal-slot connections. */
     BotAI*      _bot;
@@ -93,6 +94,8 @@ private:
     QTimer*     _msgLimitTimer;
     /*! Number of messages that was sent to twitch */
     int         _msgCounter;
+    /*! Number of messages that was sent to twitch via whispers */
+    int         _whisperCounter;
     /*! Limit of messages that can be sent to twitch */
     int         _msgLimit;
 };

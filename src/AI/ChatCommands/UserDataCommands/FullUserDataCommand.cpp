@@ -27,14 +27,14 @@ FullUserDataCommand::FullUserDataCommand()
 void FullUserDataCommand::Initialize()
 {
     _name = "!me";
-    _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Covenant - MSG_COV.");
-    _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Not in covenant.");
-    _answers.push_back("@: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of covenant 'MSG_COV'.");
+    _answers.push_back("@: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Covenant - MSG_COV.");
+    _answers.push_back("@: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Not in covenant.");
+    _answers.push_back("@: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of covenant 'MSG_COV'.");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void FullUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void FullUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName() ,UDP_Covenant);
     DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
@@ -44,24 +44,24 @@ void FullUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &an
         {
             if (query->value("Leader").toString() == message.GetRealName())
             {
-                answer.append(_answers.at(MSG_IS_LEADER));
+                answer.AddAnswer(_answers.at(MSG_IS_LEADER));
             }
         }
     }
-    if (answer.isEmpty())
+    if (answer.GetAnswers().isEmpty())
     {
         if (covenant == "Viewer")
         {
-            answer.append(_answers.at(MSG_NO_COV));
+            answer.AddAnswer(_answers.at(MSG_NO_COV));
         }
         else
         {
-            answer.append(_answers.at(MSG_NOT_LEADER));
+            answer.AddAnswer(_answers.at(MSG_NOT_LEADER));
         }
     }
-    if (!answer.isEmpty())
+    if (!answer.GetAnswers().isEmpty())
     {
-        auto firstAnswer = answer.begin();
+        auto firstAnswer = answer.GetAnswers().begin();
         QString curName = "NomNom ";
         ConfigurationManager::Instance().GetStringParam(CFGP_CURRENCY, curName);
         (*firstAnswer).replace("MSG_NAME_CUR", curName);
@@ -73,7 +73,7 @@ void FullUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &an
 
 ///////////////////////////////////////////////////////////////////////////
 
-void FullUserDataCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void FullUserDataCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

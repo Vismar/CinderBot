@@ -9,6 +9,7 @@
 #include <QStringList>
 #include <QTimer>
 #include "Chat/ChatMessage.hpp"
+#include "Chat/ChatAnswer.hpp"
 #include "AI/ChatCommands/CommandList.hpp"
 
 /*!
@@ -27,7 +28,7 @@ signals:
      * Signal about new bot message
      * \param(IN) message - bot message
      */
-    void NewBotMessage(QStringList message);
+    void NewBotMessage(ChatAnswer message);
 
 public slots:
     /*!

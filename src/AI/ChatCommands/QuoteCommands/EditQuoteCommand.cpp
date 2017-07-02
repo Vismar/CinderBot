@@ -27,7 +27,7 @@ void EditQuoteCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void EditQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     if (_CheckModerationFlag(message.IsModerator()))
     {
@@ -50,8 +50,8 @@ void EditQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answe
                     // Update quote
                     if(DB_UPDATE("Quotes", QString("Quote = '%1'").arg(msg), QString("Number = %1").arg(number)))
                     {
-                        answer.append(_answers.at(0));
-                        (*answer.begin()).replace("QUOTE_NUMBER", QString::number(number));
+                        answer.AddAnswer(_answers.at(0));
+                        (*answer.GetAnswers().begin()).replace("QUOTE_NUMBER", QString::number(number));
                     }
                 }
             }
@@ -61,7 +61,7 @@ void EditQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answe
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditQuoteCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void EditQuoteCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

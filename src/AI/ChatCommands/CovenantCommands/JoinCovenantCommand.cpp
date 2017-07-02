@@ -36,7 +36,7 @@ void JoinCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     QString price;
     ConfigurationManager &configMng = ConfigurationManager::Instance();
@@ -52,12 +52,12 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &an
             // If user is leader, notify him about it
             if (queryLeader->value("Leader").toString() == message.GetRealName())
             {
-                answer.append(_answers.at(MSG_USER_IS_LEADER));
+                answer.AddAnswer(_answers.at(MSG_USER_IS_LEADER));
             }
         }
     }
     // If user Viewer or not a leader of its covenant
-    if (answer.isEmpty())
+    if (answer.GetAnswers().isEmpty())
     {
         // Set default price value
         int priceToJoin(100);
@@ -90,8 +90,8 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &an
                         if (UD_GET_PARAM(message.GetRealName(), UDP_Covenant) != *iter)
                         {
                             // Join user to covenant and take currency for it
-                            answer.append(_answers.at(MSG_JOINING_COV));
-                            (*answer.begin()).replace("COV_NAME", *iter);
+                            answer.AddAnswer(_answers.at(MSG_JOINING_COV));
+                            (*answer.GetAnswers().begin()).replace("COV_NAME", *iter);
                             UD_UPDATE(message.GetRealName(), UDP_Covenant, *iter);
                             _TakeDefaultPriceFromUser(message.GetRealName());
                         }
@@ -99,7 +99,7 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &an
                         else
                         {
                             // Second answer
-                            answer.append(_answers.at(MSG_ALREADY_IN_COV));
+                            answer.AddAnswer(_answers.at(MSG_ALREADY_IN_COV));
                         }
                         break;
                     }
@@ -108,14 +108,14 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &an
         }
         else
         {
-            answer.append(_answers.at(MSG_NO_CURRENCY));
+            answer.AddAnswer(_answers.at(MSG_NO_CURRENCY));
         }
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void JoinCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void JoinCovenantCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

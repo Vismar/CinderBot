@@ -5,6 +5,7 @@
 **************************************************************************/
 #pragma once
 #include "AI/ChatCommands/BaseChatCommand.hpp"
+#include "Chat/ChatAnswer.hpp"
 #include <QVector>
 
 namespace Command
@@ -24,7 +25,7 @@ public:
      * \param answer - returning answer
      * \return true if one of commands from command list was executed
      */
-    virtual bool TryExecute(const ChatMessage &message, QStringList &answer);
+    virtual bool TryExecute(const ChatMessage &message, ChatAnswer &answer);
 
 protected:
     /*!

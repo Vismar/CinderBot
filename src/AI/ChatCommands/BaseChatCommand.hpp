@@ -5,6 +5,7 @@
 **************************************************************************/
 #pragma once
 #include "Chat/ChatMessage.hpp"
+#include "Chat/ChatAnswer.hpp"
 #include <QStringList>
 #include <QTime>
 #include <QDateTime>
@@ -35,7 +36,7 @@ public:
      * \param answer - reference to variable which will store answer
      * \return true if command was executed
      */
-    bool Execute(const ChatMessage &message, QStringList &answer);
+    bool Execute(const ChatMessage &message, ChatAnswer &answer);
 
 protected:
     /*!
@@ -43,13 +44,13 @@ protected:
      * \param message - chat message
      * \param answer - reference to variable which will store answer
      */
-    virtual void _GetAnswer(const ChatMessage &message, QStringList &answer) = 0;
+    virtual void _GetAnswer(const ChatMessage &message, ChatAnswer &answer) = 0;
     /*!
      * Get random answer
      * \param message - chat message
      * \param answer - reference to variable which will store answer
      */
-    virtual void _GetRandomAnswer(const ChatMessage &message, QStringList &answer) = 0;
+    virtual void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer) = 0;
 
     /* Utility functions */
     /*!

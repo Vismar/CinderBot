@@ -32,7 +32,7 @@ void DisbandCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void DisbandCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void DisbandCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     if (covenant != "Viewer")
@@ -56,26 +56,26 @@ void DisbandCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList 
                             UD_UPDATE(query->value("Name").toString(), UDP_Covenant, "Viewer");
                         }
                     }
-                    answer.append(_answers.at(MSG_DISBANDING));
+                    answer.AddAnswer(_answers.at(MSG_DISBANDING));
                 }
             }
             // If user not leader, say it
             else
             {
-                answer.append(_answers.at(MSG_NOT_LEADER));
+                answer.AddAnswer(_answers.at(MSG_NOT_LEADER));
             }
         }
     }
     // If user is not a member of any covenant
     else
     {
-        answer.append(_answers.at(MSG_NO_COVENANT));
+        answer.AddAnswer(_answers.at(MSG_NO_COVENANT));
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void DisbandCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void DisbandCovenantCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

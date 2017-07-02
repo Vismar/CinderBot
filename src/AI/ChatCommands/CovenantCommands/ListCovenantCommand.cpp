@@ -27,7 +27,7 @@ void ListCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ListCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void ListCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
 
@@ -36,7 +36,7 @@ void ListCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &an
     DB_QUERY_PTR query = DB_SELECT("Covenants", "Name");
     if (query->exec())
     {
-        answer.append(_answers.first());
+        answer.AddAnswer(_answers.first());
         while (query->next())
         {
             covList.append(query->value("Name").toString() + ", ");
@@ -46,12 +46,12 @@ void ListCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &an
             covList = covList.left(covList.size() - 2);
         }
     }
-    (*answer.begin()).replace("COV_LIST", covList);
+    (*answer.GetAnswers().begin()).replace("COV_LIST", covList);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ListCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void ListCovenantCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

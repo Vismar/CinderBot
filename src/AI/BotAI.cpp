@@ -82,12 +82,24 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
     if (!botMessage)
     {
         // Update user data
-        _UpdateUserData(message);
+        if (message.GetType() == PRIVMSG)
+        {
+            _UpdateUserData(message);
+        }
 
         // If user is not in ignore list, try to find commands
         if (!(_CheckIgnoreList(message.GetAuthor()) || _CheckIgnoreList(message.GetRealName())))
         {
-            QStringList answer;
+            ChatAnswer answer;
+            if (message.GetType() == PRIVMSG)
+            {
+                answer.SetType(Twitch_Chat);
+            }
+            else if (message.GetType() == WHISPER)
+            {
+                answer.SetType(Twitch_Whisper);
+            }
+            answer.SetRealName(message.GetRealName());
             for (int i = 0; i < _chatCommands.size(); ++i)
             {
                 // If we found a command, emit event with result and break the loop

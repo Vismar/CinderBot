@@ -30,11 +30,11 @@ void CovenantUserDataCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CovenantUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void CovenantUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
-    answer.append(_answers.at(MSG_COVENANT));
+    answer.AddAnswer(_answers.at(MSG_COVENANT));
     QString covenant = UD_GET_PARAM(message.GetRealName() ,UDP_Covenant);
-    (*answer.begin()).replace("MSG_COV", covenant);
+    (*answer.GetAnswers().begin()).replace("MSG_COV", covenant);
     DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
     if (query != nullptr)
     {
@@ -42,7 +42,7 @@ void CovenantUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList
             {
             if (query->value("Leader").toString() == message.GetRealName())
             {
-                (*answer.begin()).append(_answers.at(MSG_IS_LEADER));
+                (*answer.GetAnswers().begin()).append(_answers.at(MSG_IS_LEADER));
             }
         }
     }
@@ -50,7 +50,7 @@ void CovenantUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CovenantUserDataCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void CovenantUserDataCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);
