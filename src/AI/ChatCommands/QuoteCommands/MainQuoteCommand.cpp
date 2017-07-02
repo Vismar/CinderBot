@@ -25,7 +25,7 @@ void MainQuoteCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void MainQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void MainQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     QString val;
     DB_QUERY_PTR numberQuery = DB_SELECT("Quotes", "MAX(Number)");
@@ -45,13 +45,13 @@ void MainQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answe
                 if (query != NULL)
                 {
                     query->first();
-                    answer.append(query->value("quote").toString());
-                    (*answer.begin()).append(" - #" + QString::number(number));
+                    answer.AddAnswer(query->value("quote").toString());
+                    (*answer.GetAnswers().begin()).append(" - #" + QString::number(number));
                 }
             }
         }
         // If check failed return random quote
-        if (answer.isEmpty())
+        if (answer.GetAnswers().isEmpty())
         {
             int k = qrand() % maxValue;
             DB_QUERY_PTR query = DB_SELECT("Quotes", "Quote", QString("Number = %1").arg(k+1));
@@ -59,8 +59,8 @@ void MainQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answe
             {
                 if (query->first())
                 {
-                    answer.append(query->value("Quote").toString());
-                    (*answer.begin()).append(" - #" + QString::number(k+1));
+                    answer.AddAnswer(query->value("Quote").toString());
+                    (*answer.GetAnswers().begin()).append(" - #" + QString::number(k+1));
                 }
             }
         }
@@ -69,7 +69,7 @@ void MainQuoteCommand::_GetAnswer(const ChatMessage &message, QStringList &answe
 
 ///////////////////////////////////////////////////////////////////////////
 
-void MainQuoteCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void MainQuoteCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

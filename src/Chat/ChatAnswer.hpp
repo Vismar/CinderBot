@@ -38,6 +38,16 @@ public:
      */
     void SetType(ChatAnswerType type);
     /*!
+     * Return real name of user for whom answer should be sent if it was a whisper
+     * \return string with real user name
+     */
+    const QString& GetRealName() const;
+    /*!
+     * Set real name of user for whom answer should be sent if it was a whisper
+     * \param realName - real name which will be setted
+     */
+    void SetRealName(const QString &realName);
+    /*!
      * Add new answer to list
      * \param answer - new message in list
      */
@@ -46,11 +56,13 @@ public:
      * Return reference to list of answers
      * \return const reference to list of answers
      */
-    const QStringList& GetAnswers() const;
+    QStringList& GetAnswers();
 
 private:
     /*! Type of answer */
     ChatAnswerType _type;
+    /*! Real name of user for whom answer should be sent if it was a whisper */
+    QString _realName;
     /*! List of answers */
     QStringList _answers;
 };

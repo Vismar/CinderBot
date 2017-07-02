@@ -51,7 +51,7 @@ void CustomChatCommand::InitializeByName(const QString &commandName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomChatCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void CustomChatCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);
@@ -59,7 +59,7 @@ void CustomChatCommand::_GetAnswer(const ChatMessage &message, QStringList &answ
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomChatCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void CustomChatCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     if (_CheckModerationFlag(message.IsModerator()) &&
         _CheckCooldown() &&
@@ -83,7 +83,7 @@ void CustomChatCommand::_GetRandomAnswer(const ChatMessage &message, QStringList
                 // If answer is less than 500 symbols, then everything ok
                 if (longAnswer.length() <= 500)
                 {
-                    answer.append(longAnswer);
+                    answer.AddAnswer(longAnswer);
                 }
                 // If answer is longer than 500 symbols, so it should be sliced
                 else
@@ -98,13 +98,13 @@ void CustomChatCommand::_GetRandomAnswer(const ChatMessage &message, QStringList
                         // If in this part no space were found, just use 500 symbols there
                         if (lastSpace != -1)
                         {
-                            answer.append(longAnswer.left(lastSpace+1));
+                            answer.AddAnswer(longAnswer.left(lastSpace+1));
                             longAnswer.remove(0, lastSpace+1);
                         }
                         // If last space were found, cut the message until this index
                         else
                         {
-                            answer.append(part);
+                            answer.AddAnswer(part);
                             longAnswer.remove(0, 500);
                         }
                     }

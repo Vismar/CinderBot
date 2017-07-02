@@ -32,7 +32,7 @@ void DescriptionCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void DescriptionCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void DescriptionCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     if (covenant != "Viewer")
@@ -50,7 +50,7 @@ void DescriptionCovenantCommand::_GetAnswer(const ChatMessage &message, QStringL
                     if (message.GetMessage().size() <= _name.size() + 2)
                     {
                         DB_UPDATE("Covenants", "Description = ''", QString("Name = '%1'").arg(covenant));
-                        answer.append(_answers.at(MSG_DESCRIPTION_CHANGED));
+                        answer.AddAnswer(_answers.at(MSG_DESCRIPTION_CHANGED));
                     }
                     // User provided something, get it and save as description
                     else
@@ -64,17 +64,17 @@ void DescriptionCovenantCommand::_GetAnswer(const ChatMessage &message, QStringL
                         QString description = message.GetMessage().mid(_name.size()+1, lengthOfDescription);
                         DB_UPDATE("Covenants", QString("Description = '%1'").arg(description),
                                                QString("Name = '%1'").arg(covenant));
-                        answer.append(_answers.at(MSG_DESCRIPTION_CHANGED));
+                        answer.AddAnswer(_answers.at(MSG_DESCRIPTION_CHANGED));
                     }
                 }
                 // If user not leader of its covenant, notify
                 else
                 {
-                    answer.append(_answers.at(MSG_USER_NOT_LEADER));
+                    answer.AddAnswer(_answers.at(MSG_USER_NOT_LEADER));
                 }
             }
             // If user is a leader, he is allowed to create/edit covenant description
-            if (answer.isEmpty())
+            if (answer.GetAnswers().isEmpty())
             {
             }
         }
@@ -82,13 +82,13 @@ void DescriptionCovenantCommand::_GetAnswer(const ChatMessage &message, QStringL
     // If user not in covenant, notify
     else
     {
-        answer.append(_answers.at(MSG_NOT_IN_COVENANT));
+        answer.AddAnswer(_answers.at(MSG_NOT_IN_COVENANT));
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void DescriptionCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void DescriptionCovenantCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

@@ -30,16 +30,16 @@ void CheckUserDataCommand::Initialize()
 {
     _name = "!check";
     _moderatorOnly = true;
-    _answers.push_back("USER_NAME: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Covenant - MSG_COV.");
-    _answers.push_back("USER_NAME: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Not in covenant.");
-    _answers.push_back("USER_NAME: Message - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of covenant 'MSG_COV'.");
+    _answers.push_back("USER_NAME: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Covenant - MSG_COV.");
+    _answers.push_back("USER_NAME: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Not in covenant.");
+    _answers.push_back("USER_NAME: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of covenant 'MSG_COV'.");
     _answers.push_back("Please provide a name, @!");
     _answers.push_back("User with such name is not exist, @!");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CheckUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void CheckUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     if (_CheckModerationFlag(message.IsModerator()))
     {
@@ -48,7 +48,6 @@ void CheckUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &a
         {
             userName = message.GetMessage().right(message.GetMessage().size() - _name.size() - 1);
         }
-        qDebug() << userName;
         if (!userName.isEmpty())
         {
             DB_QUERY_PTR userQuery = DB_SELECT("UserData", "*", QString("Author='%1'").arg(userName));
@@ -62,24 +61,24 @@ void CheckUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &a
                     {
                         if (query->value("Leader").toString() == userQuery->value("Name"))
                         {
-                            answer.append(_answers.at(MSG_IS_LEADER));
+                            answer.AddAnswer(_answers.at(MSG_IS_LEADER));
                         }
                     }
                 }
-                if (answer.isEmpty())
+                if (answer.GetAnswers().isEmpty())
                 {
                     if (covenant == "Viewer")
                     {
-                        answer.append(_answers.at(MSG_NO_COV));
+                        answer.AddAnswer(_answers.at(MSG_NO_COV));
                     }
                     else
                     {
-                        answer.append(_answers.at(MSG_NOT_LEADER));
+                        answer.AddAnswer(_answers.at(MSG_NOT_LEADER));
                     }
                 }
-                if (!answer.isEmpty())
+                if (!answer.GetAnswers().isEmpty())
                 {
-                    auto firstAnswer = answer.begin();
+                    auto firstAnswer = answer.GetAnswers().begin();
                     QString curName = "NomNom ";
                     ConfigurationManager::Instance().GetStringParam(CFGP_CURRENCY, curName);
                     (*firstAnswer).replace("MSG_NAME_CUR", curName);
@@ -91,19 +90,19 @@ void CheckUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &a
             }
             else
             {
-                answer.append(_answers.at(MSG_NO_USER));
+                answer.AddAnswer(_answers.at(MSG_NO_USER));
             }
         }
         else
         {
-            answer.append(_answers.at(MSG_NO_NAME));
+            answer.AddAnswer(_answers.at(MSG_NO_NAME));
         }
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CheckUserDataCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void CheckUserDataCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

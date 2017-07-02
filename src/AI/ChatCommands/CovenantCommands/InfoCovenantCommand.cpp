@@ -33,7 +33,7 @@ void InfoCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void InfoCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void InfoCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     // Get covenant name
     QString covenant = message.GetMessage().right(message.GetMessage().size() - _name.size() - 1);
@@ -72,25 +72,25 @@ void InfoCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &an
                 temp.replace("COV_NEED_EXP", QString::number(query->value("Level").toInt()*1000));
 
                 // Add result to answer
-                answer.append(temp);
+                answer.AddAnswer(temp);
                 // Get description
                 temp = query->value("Description").toString();
                 if (!temp.isEmpty())
                 {
-                    answer.push_back(_answers.at(MSG_DESCRIPTION)+temp);
+                    answer.AddAnswer(_answers.at(MSG_DESCRIPTION)+temp);
                 }
             }
         }
     }
     else
     {
-        answer.append(_answers.at(MSG_NOT_PROVIDED));
+        answer.AddAnswer(_answers.at(MSG_NOT_PROVIDED));
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void InfoCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void InfoCovenantCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

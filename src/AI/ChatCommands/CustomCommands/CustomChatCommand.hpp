@@ -31,8 +31,8 @@ public:
 protected:
     ////////////////////////////////
     /// BaseChatCommand overrides
-    virtual void _GetAnswer(const ChatMessage &message, QStringList &answer);
-    virtual void _GetRandomAnswer(const ChatMessage &message, QStringList &answer);
+    virtual void _GetAnswer(const ChatMessage &message, ChatAnswer &answer);
+    virtual void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
 
     /*! Name of table from which data should be grabbed */
     QString _commandTableName;

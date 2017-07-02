@@ -32,6 +32,20 @@ void ChatAnswer::SetType(ChatAnswerType type)
 
 ///////////////////////////////////////////////////////////////////////////
 
+const QString& ChatAnswer::GetRealName() const
+{
+    return _realName;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatAnswer::SetRealName(const QString &realName)
+{
+    _realName = realName;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void ChatAnswer::AddAnswer(const QString &answer)
 {
     _answers.append(answer);
@@ -39,7 +53,7 @@ void ChatAnswer::AddAnswer(const QString &answer)
 
 ///////////////////////////////////////////////////////////////////////////
 
-const QStringList& ChatAnswer::GetAnswers() const
+QStringList& ChatAnswer::GetAnswers()
 {
     return _answers;
 }

@@ -25,15 +25,15 @@ void MessagesUserDataCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void MessagesUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void MessagesUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
-    answer.append(_answers.first());
-    (*answer.begin()).replace("MSG_COUNT", UD_GET_PARAM(message.GetRealName(), UDP_Messages));
+    answer.AddAnswer(_answers.first());
+    (*answer.GetAnswers().begin()).replace("MSG_COUNT", UD_GET_PARAM(message.GetRealName(), UDP_Messages));
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void MessagesUserDataCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void MessagesUserDataCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

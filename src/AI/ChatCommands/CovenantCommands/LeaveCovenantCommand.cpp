@@ -38,7 +38,7 @@ void LeaveCovenantCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void LeaveCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void LeaveCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
     if (covenant != "Viewer")
@@ -63,54 +63,54 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage &message, QStringList &a
                         // Check if user provided his own name
                         if (newLeader.toLower() == message.GetRealName())
                         {
-                            answer.append(_answers.at(MSG_USER_LEADER));
+                            answer.AddAnswer(_answers.at(MSG_USER_LEADER));
                         }
                         // If user provided different name
-                        if (answer.isEmpty())
+                        if (answer.GetAnswers().isEmpty())
                         {
                             if (_SetNewLeaderToCovenant(newLeader, message.GetRealName(), covenant))
                             {
-                                answer.append(_answers.at(MSG_LEFT_AND_NEW_LEADER));
-                                (*answer.begin()).replace("COV_NAME", covenant);
-                                (*answer.begin()).replace("LEADER_NAME", newLeader);
+                                answer.AddAnswer(_answers.at(MSG_LEFT_AND_NEW_LEADER));
+                                (*answer.GetAnswers().begin()).replace("COV_NAME", covenant);
+                                (*answer.GetAnswers().begin()).replace("LEADER_NAME", newLeader);
                             }
                             // Notify that user is not member of covenant
                             else
                             {
-                                answer.append(_answers.at(MSG_SPECIFIE_NEW_LEADER));
+                                answer.AddAnswer(_answers.at(MSG_SPECIFIE_NEW_LEADER));
                             }
                         }
                     }
                     // Notify that name was not specified
                     else
                     {
-                        answer.append(_answers.at(MSG_USER_LEADER));
+                        answer.AddAnswer(_answers.at(MSG_USER_LEADER));
                     }
                 }
                 // If message do not contain ampersand, so that means user do not provide name of new leader
                 else
                 {
-                    answer.append(_answers.at(MSG_USER_LEADER));
+                    answer.AddAnswer(_answers.at(MSG_USER_LEADER));
                 }
             }
             // If user is not a leader of covenant, that just change its state
             else
             {
                 UD_UPDATE(message.GetRealName(), UDP_Covenant, "Viewer");
-                answer.append(_answers.at(MSG_LEFT_COV));
+                answer.AddAnswer(_answers.at(MSG_LEFT_COV));
             }
         }
     }
     // If user is not in any covenant
     else
     {
-        answer.append(_answers.at(MSG_NOT_IN_COVENANT));
+        answer.AddAnswer(_answers.at(MSG_NOT_IN_COVENANT));
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void LeaveCovenantCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void LeaveCovenantCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);

@@ -22,7 +22,7 @@ BaseChatCommand::~BaseChatCommand() { }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BaseChatCommand::Execute(const ChatMessage &message, QStringList &answer)
+bool BaseChatCommand::Execute(const ChatMessage &message, ChatAnswer &answer)
 {
     bool result(false);
     QString messageInLowerCase = message.GetMessage().toLower();
@@ -34,18 +34,18 @@ bool BaseChatCommand::Execute(const ChatMessage &message, QStringList &answer)
         if (_isRandom)
         {
             _GetRandomAnswer(message, answer);
-            result = !answer.isEmpty();
+            result = !answer.GetAnswers().isEmpty();
         }
         // If answer will be specified by some conditions
         else
         {
             _GetAnswer(message, answer);
-            result = !answer.isEmpty();
+            result = !answer.GetAnswers().isEmpty();
         }
     }
     if (result)
     {
-        _ReplacePlaceHolders(message, answer);
+        _ReplacePlaceHolders(message, answer.GetAnswers());
     }
 
     return result;

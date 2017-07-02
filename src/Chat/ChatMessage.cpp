@@ -8,8 +8,6 @@
 #include "Utils/Config/ConfigurationParameters.hpp"
 #include <QTime>
 
-#include <QDebug>
-
 #define STR_PRIVMSG "PRIVMSG"
 #define STR_WHISPER "WHISPER"
 
@@ -18,9 +16,12 @@
 ChatMessage::ChatMessage()
 {
     _author = "NoAuthor";
+    _realName = "NoName";
     _color = "Black";
+    _timeStamp = "0:0:0";
     _message = "No message";
     _isModerator = false;
+    _type = Undefined;
 }
 
 ///////////////////////////////////////////////////////////////////////////

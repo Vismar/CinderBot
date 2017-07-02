@@ -144,8 +144,8 @@ void TwitchClient::ReadLine()
         case INFO:
             if (message.GetMessage() == SYSTEM_MESSAGE_CR)
             {
-                QStringList hiMsg;
-                hiMsg.append("Poooound Всем приветище! Poooound");
+                ChatAnswer hiMsg;
+                hiMsg.AddAnswer("Poooound Всем приветище! Poooound");
                 _SendChatMessage(hiMsg);
             }
             emit NewMessage(message, true);
@@ -187,6 +187,9 @@ void TwitchClient::ReadLine()
             RealTimeUserData::Instance()->IncrementMsgCounter();
             emit NewMessage(message, false);
             break;
+        case WHISPER:
+            emit NewMessage(message, false);
+            break;
         default:
             break;
         }
@@ -221,10 +224,12 @@ void TwitchClient::HandleStateChange(QAbstractSocket::SocketState state)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void TwitchClient::NewBotMessage(QStringList message)
+void TwitchClient::NewBotMessage(ChatAnswer message)
 {
     _SendChatMessage(message);
-    if ((_msgCounter + message.size()) < _msgLimit)
+    QStringList& answers = message.GetAnswers();
+
+    if ((_msgCounter + answers.size()) < _msgLimit)
     {
         ChatMessage botMessage;
         QString param;
@@ -235,7 +240,7 @@ void TwitchClient::NewBotMessage(QStringList message)
             // it is possible that last one would be checked first, so the last message will be displayed
             // in the first place, and the first message will become last
             int additionalDelay(0);
-            for (auto iter = message.begin(); iter != message.end(); ++iter)
+            for (auto iter = answers.begin(); iter != answers.end(); ++iter)
             {
                 // Prepare chat message
                 botMessage.SetAuthor(param);
@@ -268,25 +273,39 @@ void TwitchClient::_SendIrcMessage(const QString &message)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void TwitchClient::_SendChatMessage(const QStringList &message)
+void TwitchClient::_SendChatMessage(ChatAnswer &message)
 {
-    if ((_msgCounter + message.size()) < _msgLimit)
+    QStringList& answers = message.GetAnswers();
+    if ((_msgCounter + answers.size()) < _msgLimit)
     {
         QString param;
         // Try to get channel name
+        ChatAnswerType answerType = message.GetType();
         if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
         {
-            for (auto iter = message.begin(); iter != message.end(); ++iter)
+            for (auto iter = answers.begin(); iter != answers.end(); ++iter)
             {
                 QString msg("PRIVMSG #" + param);
                 msg.push_back(" :");
+                if (answerType == Twitch_Whisper)
+                {
+                    msg.push_back(QString("/w %1 ").arg(message.GetRealName()));
+                }
                 msg.push_back(*iter);
                 msg.push_back("\r\n");
                 _SendIrcMessage(msg);
                 qDebug() << msg;
             }
         }
-        ++_msgCounter;
+        switch (answerType)
+        {
+        case Twitch_Chat:
+            ++_msgCounter;
+            break;
+        case Twitch_Whisper:
+            ++_whisperCounter;
+            break;
+        }
     }
 }
 

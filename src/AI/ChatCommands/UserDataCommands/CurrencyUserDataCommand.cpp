@@ -27,18 +27,18 @@ void CurrencyUserDataCommand::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CurrencyUserDataCommand::_GetAnswer(const ChatMessage &message, QStringList &answer)
+void CurrencyUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
-    answer.append(_answers.first());
-    (*answer.begin()).replace("MSG_CUR", UD_GET_PARAM(message.GetRealName(), UDP_Currency));
+    answer.AddAnswer(_answers.first());
+    (*answer.GetAnswers().begin()).replace("MSG_CUR", UD_GET_PARAM(message.GetRealName(), UDP_Currency));
     QString curName = "NomNom ";
     ConfigurationManager::Instance().GetStringParam(CFGP_CURRENCY, curName);
-    (*answer.begin()).replace("MSG_NAME_CUR", curName);
+    (*answer.GetAnswers().begin()).replace("MSG_NAME_CUR", curName);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CurrencyUserDataCommand::_GetRandomAnswer(const ChatMessage &message, QStringList &answer)
+void CurrencyUserDataCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);
