@@ -6,99 +6,39 @@
 #include "QuotesWidget.hpp"
 #include "SingleQuoteWidget.hpp"
 #include "Utils/DatabaseManager.hpp"
-#include <QScrollBar>
 
 using namespace Ui;
 
 ///////////////////////////////////////////////////////////////////////////
 
-QuotesWidget::QuotesWidget(QWidget* parent) : QScrollArea(parent)
+QuotesWidget::QuotesWidget(QWidget *parent) : PageListWidget(parent) {}
+
+///////////////////////////////////////////////////////////////////////////
+
+QuotesWidget::~QuotesWidget() {}
+
+///////////////////////////////////////////////////////////////////////////
+
+void QuotesWidget::_CreateAndAddWidget()
 {
-    // Initialize layout
-    setWidgetResizable(true);
-    _container = new QWidget();
-    this->setWidget(_container);
-    _layout = new QVBoxLayout(_container);
-    _layout->setMargin(10);
-    _layout->setAlignment(Qt::AlignTop);
-
-    // Create needed widgets and get all quotes
-    UpdateQuotes("Quotes");
-
-    // Connect events from database manager to know, when we need to update quote widgets
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnInsertEvent,
-            this, &QuotesWidget::UpdateQuotes);
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnUpdateEvent,
-            this, &QuotesWidget::UpdateQuotes);
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnDeleteEvent,
-            this, &QuotesWidget::UpdateQuotes);
+    SingleQuoteWidget *widget = new SingleQuoteWidget();
+    _AddWidget(widget);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-QuotesWidget::~QuotesWidget()
+void QuotesWidget::_UpdateEntry(QWidget *entry, int id)
 {
-
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void QuotesWidget::UpdateQuotes(const QString &tableName)
-{
-    // If table name is that, then we can handle it
-    if (tableName == "Quotes")
+    SingleQuoteWidget *entryWidget = static_cast<SingleQuoteWidget*>(entry);
+    if (entryWidget != nullptr)
     {
-        // Get last quote number
-        std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
-        if (numberQuery != NULL)
+        DB_QUERY_PTR query = DB_SELECT("Quotes", "Quote, Number", QString("Id=%1").arg(id));
+        if (query != nullptr)
         {
-            numberQuery->first();
-            int maxValue = numberQuery->value(0).toInt();
-            // If we do not have enough widgets, create them
-            if (maxValue > _layout->count())
+            if (query->first())
             {
-                for (int i = _layout->count()+1; i <= maxValue; ++i)
-                {
-                    SingleQuoteWidget* newQuote = new SingleQuoteWidget(this);
-                    _layout->addWidget(newQuote);
-                }
-            }
-            // If we have more widgets than quotes, then delete redundant widgets
-            else if (_layout->count() > maxValue)
-            {
-                for (int i = _layout->count(); i > maxValue; --i)
-                {
-                    QLayoutItem* item = _layout->itemAt(i-1);
-                    if (item != NULL)
-                    {
-                        _layout->removeItem(item);
-                        delete item->widget();
-                        delete item;
-                    }
-                }
-            }
-
-            // Update quote data in widgets
-            std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes",
-                                                         "Number, Quote",
-                                                         "Number > 0 ORDER BY Number ASC");
-            if (query != NULL)
-            {
-                while (query->next())
-                {
-                    // Get layout item
-                    QLayoutItem* item = _layout->itemAt(query->value("Number").toInt() - 1);
-                    if (item != NULL)
-                    {
-                        SingleQuoteWidget* quoteWidget = dynamic_cast<SingleQuoteWidget*>(item->widget());
-                        // Update widget data
-                        if (quoteWidget != NULL)
-                        {
-                            quoteWidget->SetQuoteNumber(query->value("Number").toString());
-                            quoteWidget->SetQuoteText(query->value("Quote").toString());
-                        }
-                    }
-                }
+                entryWidget->SetQuoteText(query->value("Quote").toString());
+                entryWidget->SetQuoteNumber(query->value("Number").toString());
             }
         }
     }

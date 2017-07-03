@@ -4,39 +4,28 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QWidget>
-#include <QScrollArea>
-#include <QVBoxLayout>
+#include "Widgets/Common/PageListWidget.hpp"
 
 namespace Ui
 {
 
-class QuotesWidget : public QScrollArea
+class QuotesWidget : public PageListWidget
 {
-    Q_OBJECT
 public:
     /*!
      * Constructor
-     * \param parent - parent widget
      */
-    explicit QuotesWidget(QWidget* parent = 0);
+    explicit QuotesWidget(QWidget *parent = 0);
     /*!
      * Destructor
      */
-    ~QuotesWidget();
+    virtual ~QuotesWidget();
 
-public slots:
-    /*!
-     * Update quotes. Create or delete widgets, then update quote numbers and text fields
-     * \param tableName - name of table
-     */
-    void UpdateQuotes(const QString &tableName);
-
-private:
-    /*! Vertical layout */
-    QVBoxLayout* _layout;
-    /*! Simple container to store scrol layout */
-    QWidget*     _container;
+protected:
+    ////////////////////////////////
+    /// PageListWidget override
+    void _CreateAndAddWidget();
+    void _UpdateEntry(QWidget *entry, int id);
 };
 
 }
