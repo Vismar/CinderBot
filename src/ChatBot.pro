@@ -38,7 +38,6 @@ SOURCES += main.cpp\
     Widgets/Quotes/QuotesWidget.cpp \
     Widgets/Quotes/SingleQuoteWidget.cpp \
     Widgets/Quotes/CreateQuoteWidget.cpp \
-    Widgets/Quotes/QuoteTabWidget.cpp \
     AI/ChatCommands/CovenantCommands/LeaveCovenantCommand.cpp \
     AI/ChatCommands/CovenantCommands/JoinCovenantCommand.cpp \
     AI/ChatCommands/CovenantCommands/ListCovenantCommand.cpp \
@@ -72,7 +71,8 @@ SOURCES += main.cpp\
     Widgets/CustomCommands/EntryCustomCommandWidget.cpp \
     Widgets/CustomCommands/ListCustomCommandWidget.cpp \
     Widgets/CustomCommands/CustomCommandWindow.cpp \
-    Chat/ChatAnswer.cpp
+    Chat/ChatAnswer.cpp \
+    Widgets/Quotes/QuoteWindow.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -99,7 +99,6 @@ HEADERS  += MainWindow.hpp \
     Widgets/Quotes/QuotesWidget.hpp \
     Widgets/Quotes/SingleQuoteWidget.hpp \
     Widgets/Quotes/CreateQuoteWidget.hpp \
-    Widgets/Quotes/QuoteTabWidget.hpp \
     AI/ChatCommands/CovenantCommands/LeaveCovenantCommand.hpp \
     AI/ChatCommands/CovenantCommands/JoinCovenantCommand.hpp \
     AI/ChatCommands/CovenantCommands/ListCovenantCommand.hpp \
@@ -133,7 +132,8 @@ HEADERS  += MainWindow.hpp \
     Widgets/CustomCommands/EntryCustomCommandWidget.hpp \
     Widgets/CustomCommands/ListCustomCommandWidget.hpp \
     Widgets/CustomCommands/CustomCommandWindow.hpp \
-    Chat/ChatAnswer.hpp
+    Chat/ChatAnswer.hpp \
+    Widgets/Quotes/QuoteWindow.hpp
 
 RESOURCES += \
     Resources.qrc
