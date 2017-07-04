@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QWidget>
+#include <QMainWindow>
 #include <QVBoxLayout>
 #include "CreateQuoteWidget.hpp"
 #include "QuotesWidget.hpp"
@@ -12,7 +12,7 @@
 namespace Ui
 {
 
-class QuoteTabWidget : public QWidget
+class QuoteWindow : public QMainWindow
 {
     Q_OBJECT
 public:
@@ -20,15 +20,15 @@ public:
      * Constructor
      * \param parent - parent widget
      */
-    explicit QuoteTabWidget(QWidget* parent = 0);
+    explicit QuoteWindow(QWidget* parent = 0);
     /*!
      * Destructor
      */
-    ~QuoteTabWidget();
+    ~QuoteWindow();
 
 public slots:
     /*!
-     * Update quotes. Create or delete widgets, then update quote numbers and text fields
+     * Update quotes data in paage list widget
      * \param tableName - name of table
      */
     void UpdateQuotes(const QString &tableName);

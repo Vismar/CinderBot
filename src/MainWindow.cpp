@@ -6,6 +6,7 @@
 #include "MainWindow.hpp"
 
 #include "Widgets/CustomCommands/CustomCommandWindow.hpp"
+#include "Widgets/Quotes/QuoteWindow.hpp"
 
 using namespace Ui;
 
@@ -80,17 +81,14 @@ void MainWindow::_CreateTabWidget()
     _tabWidget->addTab(_statisticsWidget, iconStat, "");
     _tabWidget->setTabToolTip(0, "Statistics");
 
-    /***** Second tab - Quotes *****/
-    // Create and add quotes widget
-    _CreateQuotesWidget();
-    QIcon iconQuotes(":/Resources/Icons/QuotesIcon.ico");
-    _tabWidget->addTab(_quoteTabWidget, iconQuotes, "");
-    _tabWidget->setTabToolTip(1, "Quotes");
-
-
     /***** SHOULD BE REMOVED WHEN NEW INTERFACE WILL BE IMPLEMENTED *****/
-    CustomCommandWindow *listWindow = new CustomCommandWindow(this);
-    listWindow->show();
+    CustomCommandWindow *ccListWindow = new CustomCommandWindow(this);
+    ccListWindow->setAttribute(Qt::WA_DeleteOnClose);
+    ccListWindow->show();
+
+    QuoteWindow *quoteWindow = new QuoteWindow(this);
+    quoteWindow->setAttribute(Qt::WA_DeleteOnClose);
+    quoteWindow->show();
     /***** SHOULD BE REMOVED WHEN NEW INTERFACE WILL BE IMPLEMENTED *****/
 
     // Add tab widget to layout
@@ -102,13 +100,6 @@ void MainWindow::_CreateTabWidget()
 void MainWindow::_CreateStatisticsWidget()
 {
     _statisticsWidget = new StatisticsWidget();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void MainWindow::_CreateQuotesWidget()
-{
-    _quoteTabWidget = new QuoteTabWidget();
 }
 
 ///////////////////////////////////////////////////////////////////////////

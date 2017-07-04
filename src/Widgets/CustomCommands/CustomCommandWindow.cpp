@@ -16,6 +16,7 @@ CustomCommandWindow::CustomCommandWindow(QWidget *parent) : QMainWindow(parent)
 {
     // Initialize dialog window
     this->setWindowTitle("Custom commands");
+    this->setMinimumSize(350, 330);
     // Initialize widgets
     QWidget* container = new QWidget();
     this->setCentralWidget(container);
