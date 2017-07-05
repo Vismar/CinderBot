@@ -26,21 +26,10 @@ QString ConfigurationManager::Initialize()
 {
     QString error;
     // Check if folders are exist
-    QDir dir(CFG_FOLDER);
-    if (!dir.exists())
+    if (_CreateFolders(error))
     {
-        qDebug() << "WARNING: ./data/config do not exist. Trying to create.";
-        // Try to create folders
-        if (!dir.mkpath("."))
-        {
-            qDebug() << "ERROR: Folder cannot be created!";
-            error = "Folder cannot be created! Please run app as administrator.";
-        }
-        else
-        {
-            // Create default config file
-            _CreateDefaultConfigFile();
-        }
+        // Create default config file
+        _CreateDefaultConfigFile();
     }
     // If folders and config file were created, try to read it
     if (error.isEmpty())
@@ -103,6 +92,32 @@ bool ConfigurationManager::GetStringParam(const QString &parameter, QString &val
 void ConfigurationManager::SetStringParam(const QString &parameter, QString &value)
 {
     _params.insert(parameter, value);
+    _SaveConfiguration();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ConfigurationManager::_CreateFolders(QString &error)
+{
+    bool result(false);
+
+    QDir dir(CFG_FOLDER);
+    if (!dir.exists())
+    {
+        qDebug() << "WARNING: ./data/config do not exist. Trying to create.";
+        // Try to create folders
+        if (!dir.mkpath("."))
+        {
+            qDebug() << "ERROR: Folder cannot be created!";
+            error = "Folder cannot be created! Please run app as administrator.";
+        }
+        else
+        {
+            result = true;
+        }
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -125,15 +140,15 @@ void ConfigurationManager::_CreateDefaultConfigFile()
                   "\t\t<LoginChannel></LoginChannel>\n"
                   "\t</LoginData>\n"
                   "\t<ConfigData>\n"
-                  "\t\t<Currency>Kappa</Currency>\n"
-                  "\t\t<CurrencyPerMsg>1</CurrencyPerMsg>\n"
-                  "\t\t<CurrencyOverTime>1</CurrencyOverTime>\n"
-                  "\t\t<CurrencyTimer>60000</CurrencyTimer>\n"
                   "\t\t<IgnoreList>\n"
                   "\t\t\t<User>nightbot</User>\n"
                   "\t\t\t<User>moobot</User>\n"
                   "\t\t\t<User>system message</User>\n"
                   "\t\t</IgnoreList>\n"
+                  "\t\t<Currency>Kappa</Currency>\n"
+                  "\t\t<CurrencyPerMsg>1</CurrencyPerMsg>\n"
+                  "\t\t<CurrencyOverTime>1</CurrencyOverTime>\n"
+                  "\t\t<CurrencyTimer>60000</CurrencyTimer>\n"
                   "\t\t<CovJoinPrice>100</CovJoinPrice>\n"
                   "\t\t<CovCreatePrice>2000</CovCreatePrice>\n"
                   "\t\t<CovRenamePrice>500</CovRenamePrice>\n"
@@ -230,7 +245,192 @@ void ConfigurationManager::_ReadIgnoreList()
             }
         }
     }
-    _params.insert("IgnoreList", ignoreList);
+    _params.insert(CFGS_IGNORE, ignoreList);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::_SaveConfiguration()
+{
+    QString error;
+    // Check if folders are exist
+    _CreateFolders(error);
+    // If folders exist, try to write to file
+    if (error.isEmpty())
+    {
+        QString cfgFileName = QString("./%1/%2").arg(CFG_FOLDER).arg(CFG_FILE_NAME);
+        QFile configFile(cfgFileName);
+        // Try to open config file
+        if (configFile.open(QIODevice::WriteOnly))
+        {
+            _xmlWriter.setDevice(&configFile);
+            _xmlWriter.setAutoFormatting(true);
+            _xmlWriter.writeStartDocument();
+
+            _xmlWriter.writeStartElement(CFGS_CONFIG_ROOT);
+            _WriteLoginData();            // Login section
+            _WriteConfigData();           // Config section
+            _xmlWriter.writeEndElement(); // Configuration section end
+
+            _xmlWriter.writeEndDocument();
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::_WriteLoginData()
+{
+    QString value;
+    _xmlWriter.writeStartElement(CFGS_LOGIN);
+
+    // LoginName
+    _xmlWriter.writeComment("Login name of your bot");
+    GetStringParam(CFGP_LOGIN_NAME, value);
+    _xmlWriter.writeTextElement(CFGP_LOGIN_NAME, value);
+    value.clear();
+    // LoginOauthKey
+    _xmlWriter.writeComment("Oauth key which required to login on twitch, should starts with \"oauth:\"");
+    GetStringParam(CFGP_LOGIN_OATH_KEY, value);
+    _xmlWriter.writeTextElement(CFGP_LOGIN_OATH_KEY, value);
+    value.clear();
+    // LoginOauthKey
+    _xmlWriter.writeComment("Channel to connect");
+    GetStringParam(CFGP_LOGIN_CHANNEL, value);
+    _xmlWriter.writeTextElement(CFGP_LOGIN_CHANNEL, value);
+
+    _xmlWriter.writeEndElement(); // Login section end
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::_WriteConfigData()
+{
+    _xmlWriter.writeStartElement(CFGS_CONFIG);
+
+    // Ignore list
+    _WriteIgnoreList();
+    // Currency params
+    _WriteConfigCurrencyData();
+    // Covenant params
+    _WriteConfigCovenantData();
+    // Analytics params
+    _WriteConfigAnalyticsData();
+
+    _xmlWriter.writeEndElement(); // Config section end
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::_WriteConfigCurrencyData()
+{
+    QString value;
+    /*** Currency parameters ***/
+    // Currency
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Currency\n\t\t"
+                            "Description: Use any emoticon or definition which you like.\n\t\t"
+                            "             Defines how your currency will be represented for viewers.");
+    GetStringParam(CFGP_CURRENCY, value);
+    _xmlWriter.writeTextElement(CFGP_CURRENCY, value);
+    value.clear();
+    // Currency per msg
+    _xmlWriter.writeComment("Parameter: Currency per message\n\t\t"
+                            "Description: Set value (integer) which will represent\n\t\t"
+                            "             how many currency will be given to user per message.");
+    GetStringParam(CFGP_CURRENCY_PER_MSG, value);
+    _xmlWriter.writeTextElement(CFGP_CURRENCY_PER_MSG, value);
+    value.clear();
+    // Currency over time
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Currency per timer\n\t\t"
+                            "Description: Set value (integer) which will represent\n\t\t"
+                            "             how many currency will be given to user per specified time.");
+    GetStringParam(CFGP_CURRENCY_OVER_TIME, value);
+    _xmlWriter.writeTextElement(CFGP_CURRENCY_OVER_TIME, value);
+    value.clear();
+    // Currency timer
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Currency timer\n\t\t"
+                            "Description: Timer, which specifies how often bot will give currency to users in chat.\n\t\t"
+                            "             Should be in milliseconds, bigger than 0.");
+    GetStringParam(CFGP_CURRECY_TIMER, value);
+    _xmlWriter.writeTextElement(CFGP_CURRECY_TIMER, value);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::_WriteConfigCovenantData()
+{
+    QString value;
+    /*** Covenant parameters ***/
+    // Covenant join price
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Covenant join price\n\t\t"
+                            "Description: Price for joining any covenant.\n\t\t"
+                            "             Any integer number, bigger than -1.");
+    GetStringParam(CFGP_COV_JOIN_PRICE, value);
+    _xmlWriter.writeTextElement(CFGP_COV_JOIN_PRICE, value);
+    value.clear();
+    // Covenant create price
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Covenant create price\n\t\t"
+                            "Description: Price for creating covenant.\n\t\t"
+                            "             Any integer number, bigger than -1.");
+    GetStringParam(CFGP_COV_CREATE_PRICE, value);
+    _xmlWriter.writeTextElement(CFGP_COV_CREATE_PRICE, value);
+    value.clear();
+    // Covenant rename price
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Covenant rename price\n\t\t"
+                            "Description: Price for renaming covenant.\n\t\t"
+                            "             Any integer number, bigger than -1.");
+    GetStringParam(CFGP_COV_RENAME_PRICE, value);
+    _xmlWriter.writeTextElement(CFGP_COV_RENAME_PRICE, value);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::_WriteConfigAnalyticsData()
+{
+    QString value;
+    /*** Analytics parameters ***/
+    // Analytics viewer graph update time
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Analytics viewer graph update time\n\t\t"
+                            "Description: Timer, which specifies how often viewer graph should be updated.\n\t\t"
+                            "             In milliseconds, bigger than 0.");
+    GetStringParam(CFGP_VGRAPH_UPD_TIME, value);
+    _xmlWriter.writeTextElement(CFGP_VGRAPH_UPD_TIME, value);
+    value.clear();
+    // Analytics message graph update time
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Analytics message graph update time\n\t\t"
+                            "Description: Timer, which specifies how often message graph should be updated.\n\t\t"
+                            "             In milliseconds, bigger than 0.");
+    GetStringParam(CFGP_MESSAGE_GRAPH_UPD_TIME, value);
+    _xmlWriter.writeTextElement(CFGP_MESSAGE_GRAPH_UPD_TIME, value);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::_WriteIgnoreList()
+{
+    QString value;
+    _xmlWriter.writeComment("\n\t\t"
+                            "Bot will ignore these users.");
+    _xmlWriter.writeStartElement(CFGS_IGNORE);
+
+    // Get ignore list and split it to users
+    GetStringParam(CFGS_IGNORE, value);
+    QStringList users = value.split(',');
+    for (int i = 0; i < users.count(); ++i)
+    {
+        // Write every user to ignore list
+        _xmlWriter.writeTextElement(CFGS_USER, users[i]);
+    }
+
+    _xmlWriter.writeEndElement(); // Ignore list section end
 }
 
 ///////////////////////////////////////////////////////////////////////////

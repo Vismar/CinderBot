@@ -52,7 +52,7 @@ void QuoteWindow::UpdateQuotes(const QString &tableName)
     // If table name is that, then we can handle it
     if (tableName == "Quotes")
     {
-        std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes","Id", "Id>0");
+        std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes","Id", "Number>0");
         if (query != nullptr)
         {
             QVector<int> ids;
