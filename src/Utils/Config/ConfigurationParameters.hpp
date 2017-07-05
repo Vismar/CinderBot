@@ -6,11 +6,12 @@
 #pragma once
 
 // Section names
-#define CFGS_LOGIN     "LoginData"
-#define CFGS_CONFIG    "ConfigData"
-#define CFGS_IGNORE    "IgnoreList"
-#define CFGS_USER      "User"
-#define CFGS_COVENANT  "Covenant"
+#define CFGS_CONFIG_ROOT "Configuration"
+#define CFGS_LOGIN       "LoginData"
+#define CFGS_CONFIG      "ConfigData"
+#define CFGS_IGNORE      "IgnoreList"
+#define CFGS_USER        "User"
+#define CFGS_COVENANT    "Covenant"
 
 /*============================================*/
 /*================ Parameters ================*/
@@ -28,6 +29,6 @@
 #define CFGP_COV_JOIN_PRICE         "CovJoinPrice"
 #define CFGP_COV_CREATE_PRICE       "CovCreatePrice"
 #define CFGP_COV_RENAME_PRICE       "CovRenamePrice"
+/* Analytics params */
 #define CFGP_VGRAPH_UPD_TIME        "ViewerGraphUpdateTime"
-/* Message params */
-#define CFGP_MESSAGE_GRAPH_UPD_TIME "MessagegraphUpdateTime"
+#define CFGP_MESSAGE_GRAPH_UPD_TIME "MessageGraphUpdateTime"

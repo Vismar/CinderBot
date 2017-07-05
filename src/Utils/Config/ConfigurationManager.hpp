@@ -45,9 +45,15 @@ public:
 
 private:
     /*!
+     * Create folders if they are not exist
+     * \param error - string which will be used if any kind of error will appear during creation
+     */
+    bool _CreateFolders(QString &error);
+    /*!
      * Creating config file that doesn't exist
      */
     void _CreateDefaultConfigFile();
+    /*** Read XML data ***/
     /*!
      * Read login data section in xml file
      */
@@ -60,10 +66,41 @@ private:
      * Read ignore list section in xml file
      */
     void _ReadIgnoreList();
+    /*** Write XML data ***/
+    /*!
+     * Save all configuration parameters to xml file
+     */
+    void _SaveConfiguration();
+    /*!
+     * Write login data section to xml file
+     */
+    void _WriteLoginData();
+    /*!
+     * Write config data section to xml file
+     */
+    void _WriteConfigData();
+    /*!
+     * Write config currency data section to xml file
+     */
+    void _WriteConfigCurrencyData();
+    /*!
+     * Write config covenant data section to xml file
+     */
+    void _WriteConfigCovenantData();
+    /*!
+     * Write config analytics data section to xml file
+     */
+    void _WriteConfigAnalyticsData();
+    /*!
+     * Write ignore list section to xml file
+     */
+    void _WriteIgnoreList();
 
     /*! Hash table of parameters */
     QHash<QString, QString> _params;
 
     /*! Xml stream reader */
     QXmlStreamReader _xmlReader;
+    /*! Xml stream writer */
+    QXmlStreamWriter _xmlWriter;
 };
