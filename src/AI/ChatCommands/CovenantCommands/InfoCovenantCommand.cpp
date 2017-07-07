@@ -59,7 +59,8 @@ void InfoCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
                 {
                     if (memberQuery->first())
                     {
-                        temp.replace("COV_MEMBERS", (memberQuery->value(0).toString()));
+                        temp.replace("COV_MEMBERS", (memberQuery->value(0).toString() +
+                                                     QString("/%1").arg(query->value("MaxMembers").toString())));
                     }
                 }
                 // Number of available commands

@@ -15,6 +15,7 @@ using namespace Command;
 #define MSG_ALREADY_IN_COV 1
 #define MSG_NO_CURRENCY    2
 #define MSG_USER_IS_LEADER 3
+#define MSG_COVENANT_FULL  4
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +33,7 @@ void JoinCovenantCommand::Initialize()
     _answers.push_back("You are already in that covenant, @!");
     _answers.push_back("Not enough currency, @!");
     _answers.push_back("You are leader of your covenant, @! Please leave before trying to join.");
+    _answers.push_back("Covenant is full, @!");
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -45,7 +47,7 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
     // Check if user is leader of its covenant
     if (covenant != "Viewer")
     {
-        DB_QUERY_PTR queryLeader = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
+        DB_QUERY_PTR queryLeader = DB_SELECT("Covenants", "Leader", QString("Name='%1'").arg(covenant));
         if (queryLeader->exec())
         {
             queryLeader->first();
@@ -89,11 +91,32 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
                         // Check if user already in this covenant
                         if (UD_GET_PARAM(message.GetRealName(), UDP_Covenant) != *iter)
                         {
-                            // Join user to covenant and take currency for it
-                            answer.AddAnswer(_answers.at(MSG_JOINING_COV));
-                            (*answer.GetAnswers().begin()).replace("COV_NAME", *iter);
-                            UD_UPDATE(message.GetRealName(), UDP_Covenant, *iter);
-                            _TakeDefaultPriceFromUser(message.GetRealName());
+                            // Number of members
+                            DB_QUERY_PTR memberQuery = DB_SELECT("UserData", "COUNT(*)",
+                                                                             QString("Covenant = '%1'").arg(covenant));
+                            // Maximum of members in selected covenant
+                            DB_QUERY_PTR maxQuery = DB_SELECT("Covenants", "MaxMembers",
+                                                                           QString("Name='%1'").arg(*iter));
+                            // Check if covenant is not full
+                            if ((memberQuery != NULL) && (maxQuery != NULL))
+                            {
+                                if (memberQuery->first() && maxQuery->first())
+                                {
+                                    // If covenant full, notify about it
+                                    if (maxQuery->value("MaxMembers").toInt() <= memberQuery->value(0).toInt())
+                                    {
+                                        answer.AddAnswer(_answers.at(MSG_COVENANT_FULL));
+                                    }
+                                    else
+                                    {
+                                        // Join user to covenant and take currency for it
+                                        answer.AddAnswer(_answers.at(MSG_JOINING_COV));
+                                        (*answer.GetAnswers().begin()).replace("COV_NAME", *iter);
+                                        UD_UPDATE(message.GetRealName(), UDP_Covenant, *iter);
+                                        _TakeDefaultPriceFromUser(message.GetRealName());
+                                    }
+                                }
+                            }
                         }
                         // User is already in that covenant
                         else

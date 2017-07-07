@@ -44,7 +44,8 @@ void CovenantCommandList::_Initialize()
                                  "Description TEXT NOT NULL,"
                                  "CmdSlots INTEGER NOT NULL,"
                                  "Level INTEGER NOT NULL,"
-                                 "Exp INTEGER NOT NULL");
+                                 "Exp INTEGER NOT NULL,"
+                                 "MaxMembers INTEGER 10");
 }
 
 ///////////////////////////////////////////////////////////////////////////
