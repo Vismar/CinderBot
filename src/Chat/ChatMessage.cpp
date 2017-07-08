@@ -7,9 +7,42 @@
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 #include <QTime>
+#include <QRegularExpressionMatch>
 
 #define STR_PRIVMSG "PRIVMSG"
 #define STR_WHISPER "WHISPER"
+
+///////////////////////////////////////////////////////////////////////////
+/************************** Regular expressions **************************/
+///////////////////////////////////////////////////////////////////////////
+
+/*** PING ***/
+QRegularExpression ChatMessage::_regExpPing("PING :tmi.twitch.tv\\r\\n");
+/*** PONG ***/
+QRegularExpression ChatMessage::_regExpPong("PONG :tmi.twitch.tv\\r\\n");
+/*** USERSTATE ***/
+QRegularExpression ChatMessage::_regExpUserstate("@badges=.*;color=.*;display-name=.*;"
+                                                 "emote-sets=.*;mod=.*;subscriber=.*;user-type=.* "
+                                                 ":tmi.twitch.tv USERSTATE #.*\\r\\n");
+/*** JOIN ***/
+QRegularExpression ChatMessage::_regExpJoin(":.*!.*@.*.tmi.twitch.tv JOIN #.*\\r\\n");
+/*** PART ***/
+QRegularExpression ChatMessage::_regExpPart(":.*!.*@.*.tmi.twitch.tv PART #.*\\r\\n");
+/*** MODE ***/
+QRegularExpression ChatMessage::_regExpMode(":jtv MODE #.* \\+o .*\\r\\n");
+/*** UNMODE ***/
+QRegularExpression ChatMessage::_regExpUnmode(":jtv MODE #.* -o .*\\r\\n");
+/*** PRIVMSG ***/
+QRegularExpression ChatMessage::_regExpPrivmsg("@badges=.*;color=.*;display-name=.*;"
+                                               "emotes=.*;id=.*;mod=.*;room-id=.*;"
+                                               "sent-ts=.*;subscriber=.*;tmi-sent-ts=.*;"
+                                               "turbo=.*;user-id=.*;user-type=.* "
+                                               ":.*!.*@.*.tmi.twitch.tv PRIVMSG #.* :.*\\r\\n");
+/*** WHISPER ***/
+QRegularExpression ChatMessage::_regExpWhisper("@badges=.*;color=.*;display-name=.*;"
+                                               "emotes=.*;message-id=.*;thread-id=.*;"
+                                               "turbo=.*;user-id=.*;user-type=.* "
+                                               ":.*!.*@.*.tmi.twitch.tv WHISPER .* :.*\\r\\n");
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -24,6 +57,8 @@ ChatMessage::ChatMessage()
     _type = Undefined;
 }
 
+///////////////////////////////////////////////////////////////////////////
+/***************************** Get functions *****************************/
 ///////////////////////////////////////////////////////////////////////////
 
 const QString &ChatMessage::GetAuthor() const
@@ -82,6 +117,8 @@ MessageType ChatMessage::GetType() const
     return _type;
 }
 
+///////////////////////////////////////////////////////////////////////////
+/************************* Manual set functions **************************/
 ///////////////////////////////////////////////////////////////////////////
 
 void ChatMessage::SetAuthor(const QString &author)
@@ -219,6 +256,8 @@ MessageType ChatMessage::ParseRawMessage(const QString &message)
 }
 
 ///////////////////////////////////////////////////////////////////////////
+/**************************** Check functions ****************************/
+///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsNetworkMsg(const QString &message) const
 {
@@ -229,14 +268,14 @@ bool ChatMessage::_IsNetworkMsg(const QString &message) const
 
 bool ChatMessage::_IsPingCommand(const QString &message) const
 {
-    return message.startsWith("PING");
+    return _regExpPing.match(message).hasMatch();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsPongCommand(const QString &message) const
 {
-    return message.startsWith("PONG");
+    return _regExpPong.match(message).hasMatch();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -272,51 +311,53 @@ bool ChatMessage::_IsConnectedToRoom(const QString &message) const
 
 bool ChatMessage::_IsUserState(const QString &message) const
 {
-    return message.contains("USERSTATE");
+    return _regExpUserstate.match(message).hasMatch();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsPrivMsg(const QString &message) const
 {
-    return (message.startsWith("@badges=") && (message.contains(STR_PRIVMSG)));
+    return _regExpPrivmsg.match(message).hasMatch();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsJoinMsg(const QString &message) const
 {
-    return message.contains("JOIN");
+    return _regExpJoin.match(message).hasMatch();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsPartMsg(const QString &message) const
 {
-    return message.contains("PART");
+    return _regExpPart.match(message).hasMatch();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsModeMessage(const QString &message) const
 {
-    return (message.contains("MODE") && message.contains("+o"));
+    return _regExpMode.match(message).hasMatch();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsUnmodeMessage(const QString &message) const
 {
-    return (message.contains("MODE") && message.contains("-o"));
+    return _regExpUnmode.match(message).hasMatch();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 bool ChatMessage::_IsWhisper(const QString &message) const
 {
-    return (message.startsWith("@badges=") && (message.contains(STR_WHISPER)));
+    return _regExpWhisper.match(message).hasMatch();
 }
 
+///////////////////////////////////////////////////////////////////////////
+/***************************** Set functions *****************************/
 ///////////////////////////////////////////////////////////////////////////
 
 void ChatMessage::_SetTimeStamp()

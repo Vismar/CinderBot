@@ -5,6 +5,7 @@
 **************************************************************************/
 #pragma once
 #include <QString>
+#include <QRegularExpression>
 
 #define SYSTEM_MESSAGE    "System Message"
 #define SYSTEM_MESSAGE_CR "Connected to the room!"
@@ -37,6 +38,7 @@ class ChatMessage
 {
 public:
     ChatMessage();
+    /*** Get functions ***/
     /*!
      * Returns author name
      * \return author name
@@ -78,6 +80,7 @@ public:
      */
     MessageType GetType() const;
 
+    /*** Manual set functions ***/
     /*!
      * Set author name
      * \param(IN) author - Author name
@@ -117,6 +120,7 @@ public:
     MessageType ParseRawMessage(const QString &message);
 
 private:
+    /*** Check functions ***/
     /*!
      * Check message if it is a network message
      * \param(IN) message - message to check
@@ -190,11 +194,12 @@ private:
      * \return true if it is a whisper message
      */
     bool _IsWhisper(const QString &message) const;
+
+    /*** Set functions ***/
     /*!
      * Set timestamp
      */
     void _SetTimeStamp();
-
     /*!
      * Parse message and get custom name color, then set it
      * \param(IN) message - message to parse
@@ -221,6 +226,7 @@ private:
      */
     void _GetAndSetModeratorFlag(const QString &message);
 
+    /*** Chat message parameters ***/
     /*! Author of message*/
     QString _author;
     /*! Real user name */
@@ -235,4 +241,15 @@ private:
     bool    _isModerator;
     /*! Type of the message */
     MessageType _type;
+
+    /*** Regular expressions ***/
+    static QRegularExpression _regExpPing;
+    static QRegularExpression _regExpPong;
+    static QRegularExpression _regExpUserstate;
+    static QRegularExpression _regExpJoin;
+    static QRegularExpression _regExpPart;
+    static QRegularExpression _regExpMode;
+    static QRegularExpression _regExpUnmode;
+    static QRegularExpression _regExpPrivmsg;
+    static QRegularExpression _regExpWhisper;
 };
