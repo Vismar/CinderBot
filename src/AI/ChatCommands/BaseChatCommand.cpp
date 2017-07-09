@@ -46,6 +46,8 @@ bool BaseChatCommand::Execute(const ChatMessage &message, ChatAnswer &answer)
     if (result)
     {
         _ReplacePlaceHolders(message, answer.GetAnswers());
+        // Update last time used
+        _lastTimeUsed = QDateTime::currentDateTime();
     }
 
     return result;

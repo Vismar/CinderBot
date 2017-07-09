@@ -30,12 +30,12 @@ CovenantCommandList::CovenantCommandList()
     _commands.push_back(new InfoCovenantCommand());
     _commands.push_back(new DisbandCovenantCommand());
 
-    _Initialize();
+    Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CovenantCommandList::_Initialize()
+void CovenantCommandList::Initialize()
 {
     // Initialize data table in database
     DB_CREATE_TABLE("Covenants", "id INTEGER PRIMARY KEY AUTOINCREMENT,"

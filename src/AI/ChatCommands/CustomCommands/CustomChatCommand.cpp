@@ -68,8 +68,7 @@ void CustomChatCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer 
     {
         // Update user currency value
         _TakeDefaultPriceFromUser(message.GetRealName());
-        // Save time of exection
-        _lastTimeUsed = QDateTime::currentDateTime();
+
         // Get random answer
         DB_QUERY_PTR query = DB_SELECT(_commandAnswersTableName, "*",
                                        QString("Answer IN (SELECT Answer FROM %1 "

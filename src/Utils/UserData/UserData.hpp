@@ -20,6 +20,7 @@ enum UserDataParam
     UDP_Currency,
     UDP_Covenant,
     UDP_Author,
+    UDP_LastTimeVisited,
     UDP_End
 };
 

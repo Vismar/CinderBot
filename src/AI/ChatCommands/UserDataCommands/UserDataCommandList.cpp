@@ -16,12 +16,12 @@ using namespace Command::UserDataCmd;
 
 UserDataCommandList::UserDataCommandList()
 {
-    _Initialize();
+    Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void UserDataCommandList::_Initialize()
+void UserDataCommandList::Initialize()
 {
     _commands.push_back(new MessagesUserDataCommand());
     _commands.push_back(new CurrencyUserDataCommand());
