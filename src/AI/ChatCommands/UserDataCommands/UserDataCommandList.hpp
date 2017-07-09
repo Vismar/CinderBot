@@ -24,7 +24,7 @@ public:
 protected:
     ////////////////////////////////
     /// CommandList override
-    void _Initialize();
+    void Initialize();
 };
 
 }

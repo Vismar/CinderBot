@@ -26,13 +26,12 @@ public:
      * \return true if one of commands from command list was executed
      */
     virtual bool TryExecute(const ChatMessage &message, ChatAnswer &answer);
-
-protected:
     /*!
      * Initialize command list. Should be overridden by derived class.
      */
-    virtual void _Initialize() = 0;
+    virtual void Initialize() = 0;
 
+protected:
     /*! List of commands */
     QVector<BaseChatCommand*> _commands;
 };

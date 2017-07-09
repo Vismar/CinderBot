@@ -15,7 +15,6 @@ CustomCommandList::CustomCommandList()
 {
     _commandTableName = "CustomCommands";
     _commandAnswersTableName = "CustomCommandAnswers";
-    _Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -26,7 +25,7 @@ CustomCommandList::~CustomCommandList() { }
 
 void CustomCommandList::_UpdateCommands(const QString &tableName)
 {
-    if (tableName == "CustomCommands")
+    if (tableName == _commandTableName)
     {
         _InitializeCommands();
     }
@@ -34,7 +33,7 @@ void CustomCommandList::_UpdateCommands(const QString &tableName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomCommandList::_Initialize()
+void CustomCommandList::Initialize()
 {
     DB_CREATE_TABLE(_commandTableName, "Id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                        "Name TEXT NOT NULL,"

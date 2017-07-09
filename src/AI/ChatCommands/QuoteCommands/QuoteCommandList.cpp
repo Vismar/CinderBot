@@ -21,7 +21,7 @@ QuoteCommandList::QuoteCommandList()
     _commands.push_back(new DeleteQuoteCommand());
     _commands.push_back(new EditQuoteCommand());
 
-    _Initialize();
+    Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ QuoteCommandList::~QuoteCommandList() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-void QuoteCommandList::_Initialize()
+void QuoteCommandList::Initialize()
 {
     // Initialize data table in database
     DB_CREATE_TABLE("Quotes", "Id INTEGER PRIMARY KEY AUTOINCREMENT,"

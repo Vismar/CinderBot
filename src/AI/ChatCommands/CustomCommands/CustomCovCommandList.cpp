@@ -15,13 +15,19 @@ CustomCovCommandList::CustomCovCommandList()
 {
     _commandTableName = "CustomCovCommands";
     _commandAnswersTableName = "CustomCovCommandAnswers";
-    _Initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void CustomCovCommandList::_InitializeCommands()
 {
+    // Clear all commands that was already created
+    for (int i = 0; i < _commands.size(); ++i)
+    {
+        delete _commands[i];
+    }
+    _commands.clear();
+
     DB_QUERY_PTR query = DB_SELECT(_commandTableName, "Name");
     if (query != NULL)
     {

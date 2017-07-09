@@ -23,12 +23,13 @@ UserData::~UserData() {}
 void UserData::Initialize()
 {
     _InitializeDefaultUserData();
-    DB_CREATE_TABLE("UserData", "Id       INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                "Name     TEXT    NOT NULL UNIQUE,"
-                                "Author   TEXT,"
-                                "Messages INTEGER NOT NULL,"
-                                "Currency INTEGER NOT NULL,"
-                                "Covenant TEXT    NOT NULL");
+    DB_CREATE_TABLE("UserData", "Id              INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                "Name            TEXT    NOT NULL UNIQUE,"
+                                "Author          TEXT,"
+                                "Messages        INTEGER NOT NULL,"
+                                "Currency        INTEGER NOT NULL,"
+                                "Covenant        TEXT    NOT NULL,"
+                                "LastTimeVisited TEXT");
     DB_CREATE_INDEX("UserData", "Covenant_Index", "Covenant");
 }
 
@@ -87,12 +88,13 @@ void UserData::UpdateUserData(const QString &userName,
 
 void UserData::_AddUserData(const QString &userName, const QHash<QString, QString> &params)
 {
-    QString values = "NULL, ':name', ':author', :msg, :cur, ':cov'";
+    QString values = "NULL, ':name', ':author', :msg, :cur, ':cov', ':ltv'";
     values.replace(":name", userName);
     values.replace(":author", params[_GetUDPParam(UDP_Author)]);
     values.replace(":msg", params[_GetUDPParam(UDP_Messages)]);
     values.replace(":cur", params[_GetUDPParam(UDP_Currency)]);
     values.replace(":cov", params[_GetUDPParam(UDP_Covenant)]);
+    values.replace(":ltv", QDateTime::currentDateTime().toString("d-M-yyy h:m:s"));
     DB_INSERT("UserData", values);
 }
 
@@ -132,6 +134,9 @@ QString UserData::_GetUDPParam(UserDataParam UDP)
         break;
     case UDP_Author:
         param = "Author";
+        break;
+    case UDP_LastTimeVisited:
+        param = "LastTimeVisited";
         break;
     default:
         param = "NoParam";

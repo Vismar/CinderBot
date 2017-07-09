@@ -26,7 +26,7 @@ public:
 protected:
     ////////////////////////////////
     /// CommandList override
-    void _Initialize();
+    void Initialize();
 
     /*!
      * Initialize command list with proper commands from database

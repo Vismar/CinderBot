@@ -46,7 +46,9 @@ BotAI::BotAI(QObject *parent) : QObject(parent)
     _chatCommands.push_back(new QuoteCommandList());
     // Custom commands for all users and covenants
     _chatCommands.push_back(new CustomCommandList());
+    _chatCommands.last()->Initialize();
     _chatCommands.push_back(new CustomCovCommandList());
+    _chatCommands.last()->Initialize();
 
     // Connect and start currency timer
     connect(&_currencyTimer, &QTimer::timeout,
