@@ -12,7 +12,7 @@ using namespace Ui;
 
 ///////////////////////////////////////////////////////////////////////////
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent, Qt::Window)
 {
     // Initialize UI
     _InitUi();
@@ -39,9 +39,6 @@ void MainWindow::_InitUi()
     // Setting up layout
     _layout = new QHBoxLayout(this);
     _layout->setAlignment(Qt::AlignLeft);
-    QWidget* window = new QWidget();
-    window->setLayout(_layout);
-    this->setCentralWidget(window);
     // Set minimum size for main window
     this->setMinimumSize(850, 605);
 

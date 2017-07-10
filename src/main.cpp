@@ -53,8 +53,8 @@ int main(int argc, char *argv[])
         // Initialize real time user data
         RealTimeUserData::Instance();
         // Create main window
-        Ui::MainWindow w;
-        w.show();
+        Ui::MainWindow mainWindow;
+        mainWindow.show();
 
         returningCode = a.exec();
     }

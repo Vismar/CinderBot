@@ -4,7 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QMainWindow>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include "Widgets/CustomCommands/ListCustomCommandWidget.hpp"
@@ -12,7 +11,7 @@
 namespace Ui
 {
 
-class CustomCommandWindow : public QMainWindow
+class CustomCommandWindow : public QWidget
 {
     Q_OBJECT
 public:
