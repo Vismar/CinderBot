@@ -12,15 +12,13 @@ using namespace Ui;
 
 ///////////////////////////////////////////////////////////////////////////
 
-CustomCommandWindow::CustomCommandWindow(QWidget *parent) : QMainWindow(parent)
+CustomCommandWindow::CustomCommandWindow(QWidget *parent) : QWidget(parent, Qt::Window)
 {
     // Initialize dialog window
     this->setWindowTitle("Custom commands");
     this->setMinimumSize(350, 330);
     // Initialize widgets
-    QWidget* container = new QWidget();
-    this->setCentralWidget(container);
-    _mainLayout = new QVBoxLayout(container);
+    _mainLayout = new QVBoxLayout(this);
     _mainLayout->setAlignment(Qt::AlignTop);
     _createButton = new QPushButton("Create");
     _commandList = new ListCustomCommandWidget();

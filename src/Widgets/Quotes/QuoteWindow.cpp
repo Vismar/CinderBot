@@ -10,15 +10,15 @@ using namespace Ui;
 
 ///////////////////////////////////////////////////////////////////////////
 
-QuoteWindow::QuoteWindow(QWidget* parent) : QMainWindow(parent)
+QuoteWindow::QuoteWindow(QWidget* parent) : QWidget(parent, Qt::Window)
 {
     // Initialize dialog window
     this->setWindowTitle("Quotes");
     this->setMinimumSize(450, 330);
     // Initialize layout
-    QWidget* container = new QWidget();
-    this->setCentralWidget(container);
-    _layout = new QVBoxLayout(container);
+    //QWidget* container = new QWidget();
+    //this->setCentralWidget(container);
+    _layout = new QVBoxLayout(this);
     _layout->setMargin(10);
     _layout->setAlignment(Qt::AlignTop);
 

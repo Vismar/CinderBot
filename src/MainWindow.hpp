@@ -4,7 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QMainWindow>
 #include <QTabWidget>
 #include "Widgets/Chat/ChatWidget.hpp"
 #include "Widgets/Statistics/StatisticsWidget.hpp"
@@ -17,7 +16,7 @@ namespace Ui
  * Class MainWindow
  * The MainWindow class contains all widgets and TwtichClient
  */
-class MainWindow : public QMainWindow
+class MainWindow : public QWidget
 {
     Q_OBJECT
 public:

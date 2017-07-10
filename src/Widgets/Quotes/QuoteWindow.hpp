@@ -4,7 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QMainWindow>
 #include <QVBoxLayout>
 #include "CreateQuoteWidget.hpp"
 #include "QuotesWidget.hpp"
@@ -12,7 +11,7 @@
 namespace Ui
 {
 
-class QuoteWindow : public QMainWindow
+class QuoteWindow : public QWidget
 {
     Q_OBJECT
 public:
