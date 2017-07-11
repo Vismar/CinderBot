@@ -54,7 +54,7 @@ void MainWindow::_CreateChatWindow()
     {
         _chatWindow = new ChatWindow(this);
         connect(_twitchClient, &TwitchClient::NewMessage,
-                _chatWindow, &ChatWindow::AddEntryToChat);
+                _chatWindow.data(), &ChatWindow::AddEntryToChat);
         _chatWindow->setAttribute(Qt::WA_DeleteOnClose);
         _chatWindow->show();
     }
