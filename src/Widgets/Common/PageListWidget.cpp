@@ -70,7 +70,12 @@ void PageListWidget::OnNumberOfEntriesPerPageChanged(const QString &newValue)
 
 void PageListWidget::OnSliderMoved(int newPage)
 {
-    _pageSlider->setValue(newPage);
+    if (newPage != _pageSlider->value())
+    {
+        _pageSlider->blockSignals(true);
+        _pageSlider->setValue(newPage);
+        _pageSlider->blockSignals(false);
+    }
     _UpdatePageNumber();
     _UpdateContent();
 }
@@ -108,6 +113,8 @@ void PageListWidget::_InitializeHeader()
     _pageSlider->setSingleStep(1);
     _headerLayout->addWidget(_pageSlider);
     connect(_pageSlider, &QSlider::sliderMoved,
+            this, &PageListWidget::OnSliderMoved);
+    connect(_pageSlider, &QSlider::valueChanged,
             this, &PageListWidget::OnSliderMoved);
     _UpdateSlider();
 
