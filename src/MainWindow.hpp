@@ -5,7 +5,10 @@
 **************************************************************************/
 #pragma once
 #include <QTabWidget>
-#include "Widgets/Chat/ChatWidget.hpp"
+#include <QPointer>
+#include "Widgets/Chat/ChatWindow.hpp"
+#include "Widgets/CustomCommands/CustomCommandWindow.hpp"
+#include "Widgets/Quotes/QuoteWindow.hpp"
 #include "Widgets/Statistics/StatisticsWidget.hpp"
 #include "Chat/TwitchClient.hpp"
 
@@ -23,16 +26,26 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    /*** Creatign windows ***/
+    /*!
+     * Create and initialize chat window
+     */
+    void _CreateChatWindow();
+    /*!
+     * Create and inititalize custom command window
+     */
+    void _CreateCustomCommandWindow();
+    /*!
+     * Create and initialize quote window
+     */
+    void _CreateQuoteWindow();
+
 private:
     /*!
      * Initialize UI stuff.
      */
     void _InitUi();
-
-    /*!
-     * Create and initialize chat widget
-     */
-    void _CreateChatWidget();
 
     /*!
      * Create and initialize tab widget
@@ -45,15 +58,21 @@ private:
     void _CreateStatisticsWidget();
 
     /*! Horizontal layout */
-    QHBoxLayout*      _layout;
-    /*! Scrollable chat widget */
-    ChatWidget*       _chat;
-    /*! Tab widhet */
-    QTabWidget*       _tabWidget;
+    QHBoxLayout *_layout;
+    /*** Windows **/
+    /*! Chat window */
+    QPointer<ChatWindow> _chatWindow;
+    /*! Custom command window */
+    QPointer<CustomCommandWindow> _ccListWindow;
+    /*! Quote window */
+    QPointer<QuoteWindow> _quoteWindow;
+
+    /*! Tab widget */
+    QTabWidget *_tabWidget;
     /*! Statistics widget */
     StatisticsWidget* _statisticsWidget;
     /*! Twitch client. Handles all network stuff. */
-    TwitchClient*     _twitchClient;
+    TwitchClient *_twitchClient;
 };
 
 }

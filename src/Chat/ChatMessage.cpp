@@ -34,8 +34,8 @@ QRegularExpression ChatMessage::_regExpMode(":jtv MODE #.* \\+o .*\\r\\n");
 QRegularExpression ChatMessage::_regExpUnmode(":jtv MODE #.* -o .*\\r\\n");
 /*** PRIVMSG ***/
 QRegularExpression ChatMessage::_regExpPrivmsg("@badges=.*;color=.*;display-name=.*;"
-                                               "emotes=.*;id=.*;mod=.*;room-id=.*;"
-                                               "sent-ts=.*;subscriber=.*;tmi-sent-ts=.*;"
+                                               "emotes=.*;id=.*;mod=.*;"
+                                               "room-id=.*;subscriber=.*;tmi-sent-ts=.*;"
                                                "turbo=.*;user-id=.*;user-type=.* "
                                                ":.*!.*@.*.tmi.twitch.tv PRIVMSG #.* :.*\\r\\n");
 /*** WHISPER ***/

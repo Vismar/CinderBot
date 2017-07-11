@@ -4,24 +4,28 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "Chat/ChatMessage.hpp"
-#include <QScrollArea>
-#include <QWidget>
-#include <QVBoxLayout>
+#include "Widgets/Chat/ChatWidget.hpp"
 
 namespace Ui
 {
 
 /*!
- * Class ChatWidget
- * Stores chat messages in vertical scrollable area.
+ * class ChatWindow
+ * Simple chat window which display chat widget and other things
  */
-class ChatWidget : public QScrollArea
+class ChatWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ChatWidget(QWidget *parent = 0);
-    ~ChatWidget();
+    /*!
+     * Constructor
+     * \param parent - parent widget
+     */
+    explicit ChatWindow(QWidget *parent);
+    /*!
+     * Destructor
+     */
+    ~ChatWindow();
 
 public slots:
     /*!
@@ -29,19 +33,15 @@ public slots:
      * \param(IN) message
      * \param(IN) botMessage
      */
-    void AddEntry(ChatMessage message, bool botMessage);
-
-private slots:
-    /*!
-     * Scrolls area to the bottom.
-     */
-    void _AutoScrollDown();
+    void AddEntryToChat(ChatMessage message, bool botMessage);
 
 private:
-    /*! Vertical layout */
+    /*! Layout for window */
     QVBoxLayout *_layout;
-    /*! Simple container to store scrol layout */
-    QWidget     *_container;
+
+    /*** Widgets ***/
+    /*! Chat widget */
+    ChatWidget *_chat;
 };
 
 }

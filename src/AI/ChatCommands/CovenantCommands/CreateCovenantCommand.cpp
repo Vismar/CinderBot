@@ -75,6 +75,7 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                 if (message.GetMessage().size() > _name.size())
                 {
                    newCovenant = message.GetMessage().right(message.GetMessage().size()-_name.size()-1);
+                   newCovenant.replace("'", "");
                 }
                 // If covenant name too long, just make it shorter
                 if (newCovenant.size() > MAX_COVENANT_NAME_LENGTH)
@@ -99,9 +100,11 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                     }
 
                     // Create new covenant if such covenant not exist
+                    // Columns: Id | Name | Leader | Description | CmdSlots | Level | Exp | MaxMembers
                     if ((answer.GetAnswers().isEmpty()) &&
                         (DB_INSERT("Covenants", QString("NULL, '%1', '%2', "
-                                                        "'', 1, 1, 0").arg(newCovenant).arg(message.GetRealName()))))
+                                                        "'',   1,    1,"
+                                                        "0,    10").arg(newCovenant).arg(message.GetRealName()))))
                     {
                         // Update covenant field for user
                         UD_UPDATE(message.GetRealName(), UDP_Covenant, newCovenant);
