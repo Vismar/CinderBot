@@ -5,9 +5,6 @@
 **************************************************************************/
 #include "MainWindow.hpp"
 
-#include "Widgets/CustomCommands/CustomCommandWindow.hpp"
-#include "Widgets/Quotes/QuoteWindow.hpp"
-
 using namespace Ui;
 
 ///////////////////////////////////////////////////////////////////////////
@@ -19,8 +16,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent, Qt::Window)
 
     // Initialize twitch client
     _twitchClient = new TwitchClient(this);
-    connect(_twitchClient, &TwitchClient::NewMessage,
-            _chat, &ChatWidget::AddEntry);
+
+    _CreateChatWindow();
+    _CreateCustomCommandWindow();
+    _CreateQuoteWindow();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -43,21 +42,48 @@ void MainWindow::_InitUi()
     this->setMinimumSize(850, 605);
 
     // Create widgets
-    _CreateChatWidget();
     _CreateTabWidget();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void MainWindow::_CreateChatWidget()
+void MainWindow::_CreateChatWindow()
 {
-    // Create chat widget
-    _chat = new ChatWidget(this);
-    // Set chat widget size
-    _chat->setFixedWidth(300);
-    _chat->setMinimumHeight(370);
-    // Add widget to layout
-    _layout->addWidget(_chat);
+    // If window is closed, then create, connect and initialize
+    if (_chatWindow.isNull())
+    {
+        _chatWindow = new ChatWindow(this);
+        connect(_twitchClient, &TwitchClient::NewMessage,
+                _chatWindow.data(), &ChatWindow::AddEntryToChat);
+        _chatWindow->setAttribute(Qt::WA_DeleteOnClose);
+        _chatWindow->show();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void MainWindow::_CreateCustomCommandWindow()
+{
+    // If window is closed, then create, connect and initialize
+    if (_ccListWindow.isNull())
+    {
+        _ccListWindow = new CustomCommandWindow(this);
+        _ccListWindow->setAttribute(Qt::WA_DeleteOnClose);
+        _ccListWindow->show();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void MainWindow::_CreateQuoteWindow()
+{
+    // If window is closed, then create, connect and initialize
+    if (_quoteWindow.isNull())
+    {
+        _quoteWindow = new QuoteWindow(this);
+        _quoteWindow->setAttribute(Qt::WA_DeleteOnClose);
+        _quoteWindow->show();
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -77,16 +103,6 @@ void MainWindow::_CreateTabWidget()
     QIcon iconStat(":/Resources/Icons/StatisticsIcon.ico");
     _tabWidget->addTab(_statisticsWidget, iconStat, "");
     _tabWidget->setTabToolTip(0, "Statistics");
-
-    /***** SHOULD BE REMOVED WHEN NEW INTERFACE WILL BE IMPLEMENTED *****/
-    CustomCommandWindow *ccListWindow = new CustomCommandWindow(this);
-    ccListWindow->setAttribute(Qt::WA_DeleteOnClose);
-    ccListWindow->show();
-
-    QuoteWindow *quoteWindow = new QuoteWindow(this);
-    quoteWindow->setAttribute(Qt::WA_DeleteOnClose);
-    quoteWindow->show();
-    /***** SHOULD BE REMOVED WHEN NEW INTERFACE WILL BE IMPLEMENTED *****/
 
     // Add tab widget to layout
     _layout->addWidget(_tabWidget);
