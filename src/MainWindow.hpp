@@ -9,7 +9,7 @@
 #include "Widgets/Chat/ChatWindow.hpp"
 #include "Widgets/CustomCommands/CustomCommandWindow.hpp"
 #include "Widgets/Quotes/QuoteWindow.hpp"
-#include "Widgets/Statistics/StatisticsWidget.hpp"
+#include "Widgets/Statistics/StatisticsWindow.hpp"
 #include "Chat/TwitchClient.hpp"
 
 namespace Ui
@@ -40,22 +40,16 @@ private slots:
      * Create and initialize quote window
      */
     void _CreateQuoteWindow();
+    /*!
+     * Create and initialize statistics window
+     */
+    void _CreateStatisticsWindow();
 
 private:
     /*!
      * Initialize UI stuff.
      */
     void _InitUi();
-
-    /*!
-     * Create and initialize tab widget
-     */
-    void _CreateTabWidget();
-
-    /*!
-     * Create and initialize statistics widget
-     */
-    void _CreateStatisticsWidget();
 
     /*! Horizontal layout */
     QHBoxLayout *_layout;
@@ -66,11 +60,9 @@ private:
     QPointer<CustomCommandWindow> _ccListWindow;
     /*! Quote window */
     QPointer<QuoteWindow> _quoteWindow;
+    /*! Statistics window */
+    QPointer<StatisticsWindow> _statisticsWindow;
 
-    /*! Tab widget */
-    QTabWidget *_tabWidget;
-    /*! Statistics widget */
-    StatisticsWidget* _statisticsWidget;
     /*! Twitch client. Handles all network stuff. */
     TwitchClient *_twitchClient;
 };

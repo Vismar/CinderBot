@@ -73,7 +73,8 @@ SOURCES += main.cpp\
     Widgets/CustomCommands/CustomCommandWindow.cpp \
     Chat/ChatAnswer.cpp \
     Widgets/Quotes/QuoteWindow.cpp \
-    Widgets/Chat/ChatWindow.cpp
+    Widgets/Chat/ChatWindow.cpp \
+    Widgets/Statistics/StatisticsWindow.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -135,7 +136,8 @@ HEADERS  += MainWindow.hpp \
     Widgets/CustomCommands/CustomCommandWindow.hpp \
     Chat/ChatAnswer.hpp \
     Widgets/Quotes/QuoteWindow.hpp \
-    Widgets/Chat/ChatWindow.hpp
+    Widgets/Chat/ChatWindow.hpp \
+    Widgets/Statistics/StatisticsWindow.hpp
 
 RESOURCES += \
     Resources.qrc
