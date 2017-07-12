@@ -4,7 +4,8 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QTabWidget>
+#include <QPushButton>
+#include <QGridLayout>
 #include <QPointer>
 #include "Widgets/Chat/ChatWindow.hpp"
 #include "Widgets/CustomCommands/CustomCommandWindow.hpp"
@@ -51,8 +52,17 @@ private:
      */
     void _InitUi();
 
+    /*** Widgets ***/
     /*! Horizontal layout */
-    QHBoxLayout *_layout;
+    QGridLayout *_layout;
+    /*! Chat button which will open chat window */
+    QPushButton *_chatButton;
+    /*! Analyutics button which will open analytics window */
+    QPushButton *_analyticsButton;
+    /*! CustomCommand button which will open custom command window */
+    QPushButton *_customCommandButton;
+    /*! Quotes button which will open quotes window */
+    QPushButton *_quoteButton;
     /*** Windows **/
     /*! Chat window */
     QPointer<ChatWindow> _chatWindow;
