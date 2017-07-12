@@ -16,11 +16,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent, Qt::Window)
 
     // Initialize twitch client
     _twitchClient = new TwitchClient(this);
-
-    _CreateChatWindow();
-    _CreateCustomCommandWindow();
-    _CreateQuoteWindow();
-    _CreateStatisticsWindow();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -36,11 +31,53 @@ void MainWindow::_InitUi()
     // Title of app
     this->setWindowTitle("Cinder Bot");
     this->setWindowIcon(QIcon(":/Resources/Icons/IconEmber.ico"));
-    // Setting up layout
-    _layout = new QHBoxLayout(this);
-    _layout->setAlignment(Qt::AlignLeft);
-    // Set minimum size for main window
-    this->setMinimumSize(850, 605);
+    // Fixed size
+    this->setFixedSize(300, 150);
+
+    /*** Setting up widgets ***/
+    _layout = new QGridLayout(this);
+
+    // ChatButton setup
+    _chatButton = new QPushButton(this);
+    _chatButton->setToolTip("Chat");
+    _chatButton->setIcon(QIcon(":/Resources/Icons/ChatIcon.ico"));
+    _chatButton->setIconSize(QSize(64,64));
+    _chatButton->setFixedSize(65,65);
+    connect(_chatButton, &QPushButton::clicked,
+            this, &MainWindow::_CreateChatWindow);
+
+    // AnalyticsButton setup
+    _analyticsButton = new QPushButton(this);
+    _analyticsButton->setToolTip("Analytics");
+    _analyticsButton->setIcon(QIcon(":/Resources/Icons/StatisticsIcon.ico"));
+    _analyticsButton->setIconSize(QSize(64,64));
+    _analyticsButton->setFixedSize(65,65);
+    connect(_analyticsButton, &QPushButton::clicked,
+            this, &MainWindow::_CreateStatisticsWindow);
+
+    // CustomCommandButton setup
+    _customCommandButton = new QPushButton(this);
+    _customCommandButton->setToolTip("Custom commands");
+    _customCommandButton->setIcon(QIcon(":/Resources/Icons/CustomCommandsIcon.ico"));
+    _customCommandButton->setIconSize(QSize(64,64));
+    _customCommandButton->setFixedSize(65,65);
+    connect(_customCommandButton, &QPushButton::clicked,
+            this, &MainWindow::_CreateCustomCommandWindow);
+
+    // QuotesButton setup
+    _quoteButton = new QPushButton(this);
+    _quoteButton->setToolTip("Quotes");
+    _quoteButton->setIcon(QIcon(":/Resources/Icons/QuotesIcon.ico"));
+    _quoteButton->setIconSize(QSize(64,64));
+    _quoteButton->setFixedSize(65,65);
+    connect(_quoteButton, &QPushButton::clicked,
+            this, &MainWindow::_CreateQuoteWindow);
+
+    // Add widgets to layout
+    _layout->addWidget(_chatButton, 0, 0);
+    _layout->addWidget(_analyticsButton, 0, 1);
+    _layout->addWidget(_customCommandButton, 1, 0);
+    _layout->addWidget(_quoteButton, 1, 1);
 }
 
 ///////////////////////////////////////////////////////////////////////////
