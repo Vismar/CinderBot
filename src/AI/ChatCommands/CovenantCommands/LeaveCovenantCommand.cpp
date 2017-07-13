@@ -31,7 +31,7 @@ void LeaveCovenantCommand::Initialize()
     _name = "!cov_leave";
     _answers.push_back("You left covenant! Now you are just a viewer, @");
     _answers.push_back("You are leader of covenant, @! Please provide name of the new leader.");
-    _answers.push_back("You left covenant, @! New leader of COV_NAME is LEADER_NAME.");
+    _answers.push_back("You left covenant, @! New leader of 'COV_NAME' is LEADER_NAME.");
     _answers.push_back("Specified user is not member of your covenant!");
     _answers.push_back("You are not in any covenant yet, @.");
 }
@@ -61,7 +61,7 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &an
                     if (!newLeader.isEmpty())
                     {
                         // Check if user provided his own name
-                        if (newLeader.toLower() == message.GetRealName())
+                        if ((newLeader == message.GetRealName()) || (newLeader == message.GetAuthor()))
                         {
                             answer.AddAnswer(_answers.at(MSG_USER_LEADER));
                         }
@@ -122,18 +122,20 @@ bool LeaveCovenantCommand::_SetNewLeaderToCovenant(const QString &newLeader, con
 {
     bool result(false);
     // Check if provided user is member of covenant
-    DB_QUERY_PTR newLeaderQuery = DB_SELECT("UserData", "Covenant", QString("Name = '%1'").arg(newLeader));
-    if (newLeaderQuery->exec())
+    DB_QUERY_PTR newLeaderQuery = DB_SELECT("UserData", "Name, Covenant",
+                                                        QString("Name='%1' OR Author='%1'").arg(newLeader));
+
+    if (newLeaderQuery != nullptr)
     {
         if (newLeaderQuery->first())
         {
-            // If so, make him leader
+            // If user in covenant, set him as leader
             if (newLeaderQuery->value("Covenant").toString() == covName)
             {
                 // Change covenant of user
                 UD_UPDATE(oldLeader, UDP_Covenant, "Viewer");
                 // Update leader name of covenant
-                DB_UPDATE("Covenants", QString("Leader = '%1'").arg(newLeader),
+                DB_UPDATE("Covenants", QString("Leader = '%1'").arg(newLeaderQuery->value("Name").toString()),
                                        QString("Name = '%1'").arg(covName));
                 result = true;
             }

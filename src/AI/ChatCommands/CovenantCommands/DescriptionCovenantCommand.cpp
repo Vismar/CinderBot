@@ -55,13 +55,14 @@ void DescriptionCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnsw
                     // User provided something, get it and save as description
                     else
                     {
-                        int lengthOfDescription = message.GetMessage().size()-_name.size()-3;
+                        int lengthOfDescription = message.GetMessage().size()-_name.size()-1;
                         // Description of covenant should not contain more than 400 symbols
                         if (lengthOfDescription > 400)
                         {
                             lengthOfDescription = 400;
                         }
                         QString description = message.GetMessage().mid(_name.size()+1, lengthOfDescription);
+                        description.replace("'", "");
                         DB_UPDATE("Covenants", QString("Description = '%1'").arg(description),
                                                QString("Name = '%1'").arg(covenant));
                         answer.AddAnswer(_answers.at(MSG_DESCRIPTION_CHANGED));

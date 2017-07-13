@@ -93,7 +93,7 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
                         {
                             // Number of members
                             DB_QUERY_PTR memberQuery = DB_SELECT("UserData", "COUNT(*)",
-                                                                             QString("Covenant = '%1'").arg(covenant));
+                                                                             QString("Covenant = '%1'").arg(*iter));
                             // Maximum of members in selected covenant
                             DB_QUERY_PTR maxQuery = DB_SELECT("Covenants", "MaxMembers",
                                                                            QString("Name='%1'").arg(*iter));

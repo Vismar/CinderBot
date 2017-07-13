@@ -66,6 +66,7 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                     if (_CheckCurrency(message.GetRealName()))
                     {
                         QString newCovenantName = message.GetMessage().mid(_name.size()+1);
+                        newCovenantName.replace("'", "");
                         // If covenant name too long, just make it shorter
                         if (newCovenantName.size() > MAX_COVENANT_NAME_LENGTH)
                         {
@@ -74,7 +75,7 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                         // If user provided covenant name, rename it
                         if (!newCovenantName.isEmpty())
                         {
-                            // If covenant was reanmed, set covenant field to a new value
+                            // If covenant was renamed, set covenant field to a new value
                             // for all users who are in that covenant
                             if (DB_UPDATE("Covenants", QString("Name = '%1'").arg(newCovenantName),
                                                        QString("Leader = '%1'").arg(message.GetRealName())))
