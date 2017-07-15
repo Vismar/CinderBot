@@ -99,7 +99,7 @@ void ConnectWidget::_OpenLoginWindow()
     if (_loginWindow.isNull())
     {
         _loginWindow = new LoginWindow();
-        connect(_loginWindow, &LoginWindow::LoginSuccess,
+        connect(_loginWindow.data(), &LoginWindow::LoginSuccess,
                 this, &ConnectWidget::LoginSuccess);
         _loginWindow->setAttribute(Qt::WA_DeleteOnClose);
         _loginWindow->exec();
