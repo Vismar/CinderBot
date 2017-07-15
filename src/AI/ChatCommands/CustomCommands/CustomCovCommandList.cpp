@@ -7,7 +7,7 @@
 #include "AI/ChatCommands/CustomCommands/CustomCovChatCommand.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Command;
+using namespace Command::CustomChatCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 

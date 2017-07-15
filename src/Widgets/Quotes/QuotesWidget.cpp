@@ -7,7 +7,7 @@
 #include "SingleQuoteWidget.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Ui;
+using namespace Ui::Quote;
 
 ///////////////////////////////////////////////////////////////////////////
 

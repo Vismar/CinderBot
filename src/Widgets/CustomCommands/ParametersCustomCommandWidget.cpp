@@ -7,7 +7,7 @@
 #include "Utils/DatabaseManager.hpp"
 #include <QStringList>
 
-using namespace Ui;
+using namespace Ui::CustomCommand;
 
 ///////////////////////////////////////////////////////////////////////////
 

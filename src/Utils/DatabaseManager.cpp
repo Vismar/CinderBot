@@ -122,7 +122,7 @@ bool DatabaseManager::CreateTable(const QString &tableName, const QString &colum
             if (pragmaQuery.exec())
             {
                 QStringList columnList = columns.split(",");
-                bool columnsExists[columnList.size()];
+                bool *columnsExists = new bool[columnList.size()];
                 // We have to initialize this array in that way
                 // because gcc do not allow to inititalize array with value which do not known in compile time
                 for (int i = 0; i < columnList.size(); ++i)
@@ -155,6 +155,7 @@ bool DatabaseManager::CreateTable(const QString &tableName, const QString &colum
                         }
                     }
                 }
+                delete[] columnsExists;
             }
         }
     }

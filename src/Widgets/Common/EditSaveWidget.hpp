@@ -12,6 +12,8 @@
 
 namespace Ui
 {
+namespace Common
+{
 
 /*!
  * class EditSaveWidget
@@ -84,4 +86,5 @@ private:
     QPushButton* _deleteButton;
 };
 
+}
 }

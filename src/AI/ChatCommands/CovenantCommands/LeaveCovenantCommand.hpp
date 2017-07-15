@@ -8,6 +8,8 @@
 
 namespace Command
 {
+namespace CovenantCmd
+{
 
 /*!
  * class LeaveCovenantCommand
@@ -39,4 +41,5 @@ private:
     bool _SetNewLeaderToCovenant(const QString &newLeader, const QString &oldLeader, const QString &covName);
 };
 
+}
 }

@@ -9,7 +9,7 @@
 #include "Utils/Config/ConfigurationParameters.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Command;
+using namespace Command::CovenantCmd;
 
 #define MSG_LEFT_COV            0
 #define MSG_USER_LEADER         1

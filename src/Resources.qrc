@@ -7,5 +7,8 @@
         <file>Resources/Icons/QuotesIcon.ico</file>
         <file>Resources/Icons/ChatIcon.ico</file>
         <file>Resources/Icons/CustomCommandsIcon.ico</file>
+        <file>Resources/Icons/ConnectionStateConnecting.ico</file>
+        <file>Resources/Icons/ConnectionStateEstablished.ico</file>
+        <file>Resources/Icons/ConnectionStateNotConnected.ico</file>
     </qresource>
 </RCC>

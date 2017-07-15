@@ -7,7 +7,7 @@
 #include "Utils/DatabaseManager.hpp"
 #include <QAbstractTextDocumentLayout>
 
-using namespace Ui;
+using namespace Ui::Common;
 
 ///////////////////////////////////////////////////////////////////////////
 

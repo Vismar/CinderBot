@@ -8,6 +8,8 @@
 
 namespace Command
 {
+namespace CovenantCmd
+{
 
 /*!
  * class InfoCovenantCommand
@@ -29,4 +31,5 @@ protected:
     void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
 };
 
+}
 }

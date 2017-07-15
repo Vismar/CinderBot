@@ -8,7 +8,7 @@
 #include <QAbstractTextDocumentLayout>
 #include <QApplication>
 
-using namespace Ui;
+using namespace Ui::Quote;
 
 ///////////////////////////////////////////////////////////////////////////
 

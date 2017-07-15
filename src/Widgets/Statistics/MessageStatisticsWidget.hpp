@@ -10,6 +10,8 @@
 
 namespace Ui
 {
+namespace Analytics
+{
 
 class MessageStatisticsWidget : public QGroupBox
 {
@@ -33,4 +35,5 @@ private:
     MessageGraphWidget* _msgGraph;
 };
 
+}
 }

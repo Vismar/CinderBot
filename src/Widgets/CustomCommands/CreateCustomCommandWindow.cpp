@@ -7,7 +7,7 @@
 #include "Utils/DatabaseManager.hpp"
 #include <QMessageBox>
 
-using namespace Ui;
+using namespace Ui::CustomCommand;
 
 ///////////////////////////////////////////////////////////////////////////
 

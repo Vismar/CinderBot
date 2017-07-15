@@ -8,6 +8,8 @@
 
 namespace Command
 {
+namespace QuoteCmd
+{
 
 /*!
  * Class BaseCovenantCommand
@@ -29,4 +31,5 @@ protected:
     bool _GetNumberAfterCommand(const QString &command, const QString &message, QString &value);
 };
 
+}
 }

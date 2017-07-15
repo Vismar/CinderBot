@@ -11,6 +11,8 @@
 
 namespace Ui
 {
+namespace Analytics
+{
 
 class ViewerStatisticsWidget : public QGroupBox
 {
@@ -36,4 +38,5 @@ private:
     ViewerGraphWidget* _viewerGraph;
 };
 
+}
 }

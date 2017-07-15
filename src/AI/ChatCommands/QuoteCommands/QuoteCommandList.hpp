@@ -8,6 +8,8 @@
 
 namespace Command
 {
+namespace QuoteCmd
+{
 
 /*!
  * Class QuoteCommandList
@@ -27,4 +29,5 @@ protected:
     void Initialize();
 };
 
+}
 }

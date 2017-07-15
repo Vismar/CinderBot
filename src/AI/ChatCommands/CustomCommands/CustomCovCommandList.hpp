@@ -8,6 +8,8 @@
 
 namespace Command
 {
+namespace CustomChatCmd
+{
 
 /*!
  * Class CustomCovCommandList
@@ -25,4 +27,5 @@ protected:
     void _InitializeCommands();
 };
 
+}
 }

@@ -6,7 +6,7 @@
 #include "ChatMessageWidget.hpp"
 #include <QAbstractTextDocumentLayout>
 
-using namespace Ui;
+using namespace Ui::Chat;
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -16,6 +16,8 @@
 
 namespace Ui
 {
+namespace Analytics
+{
 
 class MessageGraphWidget : public QGroupBox
 {
@@ -41,4 +43,5 @@ private:
     QString _timeToUpdate;
 };
 
+}
 }

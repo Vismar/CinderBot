@@ -8,8 +8,10 @@
 
 namespace Ui
 {
+namespace CustomCommand
+{
 
-class ListCustomCommandWidget : public PageListWidget
+class ListCustomCommandWidget : public Common::PageListWidget
 {
 public:
     /*!
@@ -28,4 +30,5 @@ protected:
     void _UpdateEntry(QWidget *entry, int id);
 };
 
+}
 }

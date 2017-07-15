@@ -6,7 +6,7 @@
 #include "EditSaveAnswerCustomCommandWidget.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Ui;
+using namespace Ui::CustomCommand;
 
 ///////////////////////////////////////////////////////////////////////////
 

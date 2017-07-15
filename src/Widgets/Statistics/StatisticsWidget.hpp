@@ -12,6 +12,8 @@
 
 namespace Ui
 {
+namespace Analytics
+{
 
 class StatisticsWidget : public QScrollArea
 {
@@ -40,4 +42,5 @@ private:
     MessageStatisticsWidget* _msgStatWidget;
 };
 
+}
 }

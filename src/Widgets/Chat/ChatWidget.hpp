@@ -11,6 +11,8 @@
 
 namespace Ui
 {
+namespace Chat
+{
 
 /*!
  * Class ChatWidget
@@ -44,4 +46,5 @@ private:
     QWidget     *_container;
 };
 
+}
 }

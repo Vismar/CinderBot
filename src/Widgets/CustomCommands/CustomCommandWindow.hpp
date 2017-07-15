@@ -10,6 +10,8 @@
 
 namespace Ui
 {
+namespace CustomCommand
+{
 
 class CustomCommandWindow : public QWidget
 {
@@ -49,4 +51,5 @@ private:
     ListCustomCommandWidget *_commandList;
 };
 
+}
 }

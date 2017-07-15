@@ -11,6 +11,8 @@
 
 namespace Ui
 {
+namespace CustomCommand
+{
 
 class CreateCustomCommandWindow : public QDialog
 {
@@ -52,4 +54,5 @@ private:
     QPushButton *_createButton;
 };
 
+}
 }

@@ -10,7 +10,7 @@
 #include "AI/ChatCommands/QuoteCommands/EditQuoteCommand.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Command;
+using namespace Command::QuoteCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -14,7 +14,7 @@
 #include "AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Command;
+using namespace Command::CovenantCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 

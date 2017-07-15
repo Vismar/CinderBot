@@ -6,7 +6,7 @@
 #include "ListCovenantCommand.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Command;
+using namespace Command::CovenantCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 

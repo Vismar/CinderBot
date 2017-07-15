@@ -17,6 +17,9 @@
 
 using namespace Command;
 using namespace Command::UserDataCmd;
+using namespace Command::QuoteCmd;
+using namespace Command::CustomChatCmd;
+using namespace Command::CovenantCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 
