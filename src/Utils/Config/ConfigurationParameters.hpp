@@ -20,6 +20,7 @@
 #define CFGP_LOGIN_NAME             "LoginName"
 #define CFGP_LOGIN_OATH_KEY         "LoginOauthKey"
 #define CFGP_LOGIN_CHANNEL          "LoginChannel"
+#define CFGP_LOGIN_AUTO             "LoginAuto"
 /* Currency params */
 #define CFGP_CURRENCY               "Currency"
 #define CFGP_CURRENCY_PER_MSG       "CurrencyPerMsg"

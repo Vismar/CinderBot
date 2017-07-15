@@ -91,7 +91,11 @@ bool ConfigurationManager::GetStringParam(const QString &parameter, QString &val
 
 void ConfigurationManager::SetStringParam(const QString &parameter, QString &value)
 {
-    _params.insert(parameter, value);
+    // If manager contains requested parameter, update it
+    if (_params.contains(parameter))
+    {
+        _params.insert(parameter, value);
+    }
     _SaveConfiguration();
 }
 
@@ -138,6 +142,7 @@ void ConfigurationManager::_CreateDefaultConfigFile()
                   "\t\t<LoginName></LoginName>\n"
                   "\t\t<LoginOauthKey></LoginOauthKey>\n"
                   "\t\t<LoginChannel></LoginChannel>\n"
+                  "\t\t<LoginAuto>false</LoginAuto>\n"
                   "\t</LoginData>\n"
                   "\t<ConfigData>\n"
                   "\t\t<IgnoreList>\n"
@@ -298,6 +303,10 @@ void ConfigurationManager::_WriteLoginData()
     _xmlWriter.writeComment("Channel to connect");
     GetStringParam(CFGP_LOGIN_CHANNEL, value);
     _xmlWriter.writeTextElement(CFGP_LOGIN_CHANNEL, value);
+    // LoginAuto
+    _xmlWriter.writeComment("Should bot try to connect automatically?");
+    GetStringParam(CFGP_LOGIN_AUTO, value);
+    _xmlWriter.writeTextElement(CFGP_LOGIN_AUTO, value);
 
     _xmlWriter.writeEndElement(); // Login section end
 }

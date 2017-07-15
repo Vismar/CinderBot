@@ -40,8 +40,6 @@ TwitchClient::TwitchClient(QObject *parent) : QObject(parent)
     // Create socket and botAi
     _socket = new QTcpSocket();
     _bot = new BotAI(this);
-    // Try to connect to twitch
-    Connect();
     // Connections between socket and twitch client
     connect(_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
             this,    SLOT(HandleStateChange(QAbstractSocket::SocketState)));
@@ -65,55 +63,15 @@ TwitchClient::~TwitchClient() {}
 void TwitchClient::Connect()
 {
     _socket->close();
+    ConnectionStateChanged(Connecting);
     _socket->connectToHost("irc.twitch.tv", 6667);
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void TwitchClient::Login()
-{
-    QString param;
-    QString line;
-    // Try to get oathkey
-    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_OATH_KEY, param))
-    {
-        // Send oath key
-        line = "PASS " + param + "\r\n";
-        _SendIrcMessage(line);
-        // Try to get login name
-        if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
-        {
-            // Send login name
-            line = "NICK " + param + "\r\n";
-           _SendIrcMessage(line);
-            line = "USER " + param + " 8 * :" + param + "\r\n";
-            _SendIrcMessage(line);
-            // Requst useful things
-            _SendIrcMessage("CAP REQ :twitch.tv/membership\r\n");
-            _SendIrcMessage("CAP REQ :twitch.tv/tags\r\n");
-            _SendIrcMessage("CAP REQ :twitch.tv/commands\r\n");
-        }
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void TwitchClient::JoinChannel()
-{
-    QString param;
-    // Try to get channel name
-    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
-    {
-        param.push_front("JOIN #");
-        param.push_back("\r\n");
-        _SendIrcMessage(param);
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void TwitchClient::Disconnect()
 {
+    ConnectionStateChanged(NoConnection);
     _socket->disconnectFromHost();
 }
 
@@ -157,9 +115,12 @@ void TwitchClient::ReadLine()
             _pingTimer->stop();
             break;
         case LOGIN_OK:
-            JoinChannel();
+            _JoinChannel();
             break;
         case USERSTATE:
+            break;
+        case ROOMSTATE:
+            ConnectionStateChanged(Connected);
             break;
         case JOIN:
             RealTimeUserData::Instance()->AddUserToList(message);
@@ -212,7 +173,7 @@ void TwitchClient::HandleStateChange(QAbstractSocket::SocketState state)
     case QAbstractSocket::ConnectedState:
         message.ParseRawMessage("INFO Connection established!<br>Authorizing...");
         emit NewMessage(message, true);
-        Login();
+        _Login();
         break;
     case QAbstractSocket::UnconnectedState:
         break;
@@ -262,6 +223,49 @@ void TwitchClient::ResetMsgLimit()
 {
     _msgCounter = 0;
     _msgLimitTimer->start(MSG_TIMER_TIME);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void TwitchClient::_Login()
+{
+    QString param;
+    QString line;
+    // Try to get oathkey
+    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_OATH_KEY, param))
+    {
+        param = "oauth:" + param;
+        // Send oath key
+        line = "PASS " + param + "\r\n";
+        _SendIrcMessage(line);
+        // Try to get login name
+        if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
+        {
+            // Send login name
+            line = "NICK " + param + "\r\n";
+           _SendIrcMessage(line);
+            line = "USER " + param + " 8 * :" + param + "\r\n";
+            _SendIrcMessage(line);
+            // Requst useful things
+            _SendIrcMessage("CAP REQ :twitch.tv/membership\r\n");
+            _SendIrcMessage("CAP REQ :twitch.tv/tags\r\n");
+            _SendIrcMessage("CAP REQ :twitch.tv/commands\r\n");
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void TwitchClient::_JoinChannel()
+{
+    QString param;
+    // Try to get channel name
+    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, param))
+    {
+        param.push_front("JOIN #");
+        param.push_back("\r\n");
+        _SendIrcMessage(param);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

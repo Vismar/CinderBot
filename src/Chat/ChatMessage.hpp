@@ -22,6 +22,7 @@ enum MessageType
     PONG,
     LOGIN_OK,
     USERSTATE,
+    ROOMSTATE,
     JOIN,
     PART,
     MODE,
@@ -158,6 +159,7 @@ private:
      * \return true, if it is a userstate message
      */
     bool _IsUserState(const QString &message) const;
+    bool _IsRoomState(const QString &message) const;
     /*!
      * Check message if it is a channel message
      * \param(IN) message - message to check
@@ -246,6 +248,7 @@ private:
     static QRegularExpression _regExpPing;
     static QRegularExpression _regExpPong;
     static QRegularExpression _regExpUserstate;
+    static QRegularExpression _regExpRoomState;
     static QRegularExpression _regExpJoin;
     static QRegularExpression _regExpPart;
     static QRegularExpression _regExpMode;

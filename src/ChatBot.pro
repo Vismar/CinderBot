@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network charts sql
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += core gui network charts sql widgets webenginewidgets
 
 TARGET = ChatBot
 TEMPLATE = app
@@ -74,7 +72,9 @@ SOURCES += main.cpp\
     Chat/ChatAnswer.cpp \
     Widgets/Quotes/QuoteWindow.cpp \
     Widgets/Chat/ChatWindow.cpp \
-    Widgets/Statistics/StatisticsWindow.cpp
+    Widgets/Statistics/StatisticsWindow.cpp \
+    Widgets/Login/ConnectWidget.cpp \
+    Widgets/Login/LoginWindow.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -137,7 +137,9 @@ HEADERS  += MainWindow.hpp \
     Chat/ChatAnswer.hpp \
     Widgets/Quotes/QuoteWindow.hpp \
     Widgets/Chat/ChatWindow.hpp \
-    Widgets/Statistics/StatisticsWindow.hpp
+    Widgets/Statistics/StatisticsWindow.hpp \
+    Widgets/Login/ConnectWidget.hpp \
+    Widgets/Login/LoginWindow.hpp
 
 RESOURCES += \
     Resources.qrc
