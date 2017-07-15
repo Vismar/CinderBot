@@ -18,6 +18,8 @@
 
 namespace Ui
 {
+namespace CustomCommand
+{
 
 /*!
  * class ParametersCustomCommandWidget
@@ -148,4 +150,5 @@ private:
     QComboBox *_covenant;
 };
 
+}
 }

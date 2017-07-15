@@ -12,6 +12,13 @@
 #include "AI/BotAI.hpp"
 #include "Chat/ChatAnswer.hpp"
 
+enum ConnectionState
+{
+    NoConnection,
+    Connecting,
+    Connected
+};
+
 /*!
  * Class TwtichClient
  * Handles all network stuff and include BotAI.
@@ -23,19 +30,6 @@ public:
     explicit TwitchClient(QObject *parent = 0);
     ~TwitchClient();
 
-    /*!
-     * Close socket and trying to connect to irc.twitch.tv
-     */
-    void Connect();
-    /*!
-     * Sends authentication messages to twitch
-     */
-    void Login();
-    /*!
-     * Sends JOIN command to channel
-     */
-    void JoinChannel();
-
 signals:
     /*!
      * Special event that emits to notify listeners about new chat message
@@ -44,7 +38,13 @@ signals:
      */
     void NewMessage(ChatMessage message, bool botMessage);
 
+    void ConnectionStateChanged(ConnectionState state);
+
 public slots:
+    /*!
+     * Close socket and trying to connect to irc.twitch.tv
+     */
+    void Connect();
     /*!
      * Disconnect from host
      */
@@ -71,6 +71,15 @@ public slots:
     void ResetMsgLimit();
 
 private:
+    /*!
+     * Sends authentication messages to twitch
+     */
+    void _Login();
+    /*!
+     * Sends JOIN command to channel
+     */
+    void _JoinChannel();
+
     /*!
      * Sends raw message to twitch
      * \param(IN) message - raw data

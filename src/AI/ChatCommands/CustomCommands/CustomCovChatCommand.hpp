@@ -8,6 +8,8 @@
 
 namespace Command
 {
+namespace CustomChatCmd
+{
 
 class CustomCovChatCommand : public CustomChatCommand
 {
@@ -16,4 +18,5 @@ public:
     CustomCovChatCommand();
 };
 
+}
 }

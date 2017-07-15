@@ -9,6 +9,8 @@
 
 namespace Command
 {
+namespace CustomChatCmd
+{
 
 /*!
  * Class CustomCommandList
@@ -46,4 +48,5 @@ private slots:
     void _UpdateCommands(const QString &tableName);
 };
 
+}
 }

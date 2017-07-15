@@ -12,6 +12,8 @@
 
 namespace Ui
 {
+namespace Quote
+{
 
 class SingleQuoteWidget : public QFrame
 {
@@ -66,4 +68,5 @@ private:
     QPushButton* _quoteDelete;
 };
 
+}
 }

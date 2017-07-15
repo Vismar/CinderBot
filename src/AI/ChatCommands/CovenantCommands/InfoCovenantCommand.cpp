@@ -6,7 +6,7 @@
 #include "InfoCovenantCommand.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Command;
+using namespace Command::CovenantCmd;
 
 #define MSG_BASE_INFO    0
 #define MSG_DESCRIPTION  1

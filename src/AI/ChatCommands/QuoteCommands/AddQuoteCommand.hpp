@@ -8,6 +8,8 @@
 
 namespace Command
 {
+namespace QuoteCmd
+{
 
 /*!
  * Class AddQuoteCommand
@@ -27,4 +29,5 @@ protected:
     void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
 };
 
+}
 }

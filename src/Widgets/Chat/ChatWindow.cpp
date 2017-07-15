@@ -4,7 +4,8 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "ChatWindow.hpp"
-using namespace Ui;
+
+using namespace Ui::Chat;
 
 ///////////////////////////////////////////////////////////////////////////
 

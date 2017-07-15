@@ -8,6 +8,8 @@
 
 namespace Ui
 {
+namespace Chat
+{
 
 /*!
  * Class ChatMessageWidget
@@ -27,4 +29,5 @@ private slots:
     void _AdjustMinimumSize(const QSizeF &size);
 };
 
+}
 }

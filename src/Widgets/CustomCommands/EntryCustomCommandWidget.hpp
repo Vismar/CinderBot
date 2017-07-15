@@ -10,6 +10,8 @@
 
 namespace Ui
 {
+namespace CustomCommand
+{
 
 class EntryCustomCommandWidget : public QFrame
 {
@@ -52,4 +54,5 @@ private:
     QPushButton* _deleteButton;
 };
 
+}
 }

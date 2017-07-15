@@ -7,7 +7,7 @@
 #include "Widgets/CustomCommands/EntryCustomCommandWidget.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Ui;
+using namespace Ui::CustomCommand;
 
 ///////////////////////////////////////////////////////////////////////////
 

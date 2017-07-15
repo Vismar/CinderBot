@@ -7,7 +7,7 @@
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Command;
+using namespace Command::CovenantCmd;
 
 #define MSG_DISBANDING  0
 #define MSG_NOT_LEADER  1

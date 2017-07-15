@@ -8,7 +8,7 @@
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 
-using namespace Ui;
+using namespace Ui::Analytics;
 using namespace QtCharts;
 
 ///////////////////////////////////////////////////////////////////////////

@@ -24,6 +24,10 @@ QRegularExpression ChatMessage::_regExpPong("PONG :tmi.twitch.tv\\r\\n");
 QRegularExpression ChatMessage::_regExpUserstate("@badges=.*;color=.*;display-name=.*;"
                                                  "emote-sets=.*;mod=.*;subscriber=.*;user-type=.* "
                                                  ":tmi.twitch.tv USERSTATE #.*\\r\\n");
+/*** ROOMSTATE ***/
+QRegularExpression ChatMessage::_regExpRoomState("@broadcaster-lang=.*;emote-only=.*;followers-only=.*;"
+                                                 "r9k=.*;room-id=.*;slow=.*;subs-only=.* "
+                                                 ":tmi.twitch.tv ROOMSTATE #.*\r\n");
 /*** JOIN ***/
 QRegularExpression ChatMessage::_regExpJoin(":.*!.*@.*.tmi.twitch.tv JOIN #.*\\r\\n");
 /*** PART ***/
@@ -211,6 +215,10 @@ MessageType ChatMessage::ParseRawMessage(const QString &message)
         {
             msgType = USERSTATE;
         }
+        else if (_IsRoomState(message))
+        {
+            msgType = ROOMSTATE;
+        }
         else if (_IsJoinMsg(message))
         {
             msgType = JOIN;
@@ -312,6 +320,13 @@ bool ChatMessage::_IsConnectedToRoom(const QString &message) const
 bool ChatMessage::_IsUserState(const QString &message) const
 {
     return _regExpUserstate.match(message).hasMatch();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsRoomState(const QString &message) const
+{
+    return _regExpRoomState.match(message).hasMatch();
 }
 
 ///////////////////////////////////////////////////////////////////////////

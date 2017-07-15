@@ -10,6 +10,8 @@
 
 namespace Ui
 {
+namespace Quote
+{
 
 class QuoteWindow : public QWidget
 {
@@ -41,4 +43,5 @@ private:
     QuotesWidget*      _quotesWidget;
 };
 
+}
 }

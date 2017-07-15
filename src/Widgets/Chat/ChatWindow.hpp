@@ -8,6 +8,8 @@
 
 namespace Ui
 {
+namespace Chat
+{
 
 /*!
  * class ChatWindow
@@ -44,4 +46,5 @@ private:
     ChatWidget *_chat;
 };
 
+}
 }

@@ -11,6 +11,8 @@
 
 namespace Ui
 {
+namespace Analytics
+{
 
 class ViewerCounterWidget : public QGroupBox
 {
@@ -36,4 +38,5 @@ private:
     QLabel* _maxViewers;
 };
 
+}
 }

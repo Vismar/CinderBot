@@ -6,7 +6,7 @@
 #include "CustomChatCommand.hpp"
 #include "Utils/DatabaseManager.hpp"
 
-using namespace Command;
+using namespace Command::CustomChatCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 

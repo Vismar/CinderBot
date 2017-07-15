@@ -9,6 +9,8 @@
 
 namespace Ui
 {
+namespace Analytics
+{
 
 class StatisticsWindow : public QWidget
 {
@@ -31,4 +33,5 @@ private:
     StatisticsWidget* _statisticsWidget;
 };
 
+}
 }

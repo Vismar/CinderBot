@@ -8,6 +8,8 @@
 
 namespace Command
 {
+namespace CustomChatCmd
+{
 
 class CustomChatCommand : public BaseChatCommand
 {
@@ -40,4 +42,5 @@ protected:
     QString _commandAnswersTableName;
 };
 
+}
 }

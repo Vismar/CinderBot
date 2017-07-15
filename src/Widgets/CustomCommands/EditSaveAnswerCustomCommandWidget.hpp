@@ -8,8 +8,10 @@
 
 namespace Ui
 {
+namespace CustomCommand
+{
 
-class EditSaveAnswerCustomCommandWidget : public EditSaveWidget
+class EditSaveAnswerCustomCommandWidget : public Common::EditSaveWidget
 {
     Q_OBJECT
 public:
@@ -30,4 +32,5 @@ protected:
     void _DeleteEntry();
 };
 
+}
 }

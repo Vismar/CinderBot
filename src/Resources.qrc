@@ -4,8 +4,11 @@
         <file>Resources/Icons/modIcon.ico</file>
         <file>Resources/Icons/StatisticsIcon.ico</file>
         <file>Resources/Icons/broadcasterIcon.ico</file>
-        <file>Resources/Icons/QuotesIcon.ico</file>
         <file>Resources/Icons/ChatIcon.ico</file>
         <file>Resources/Icons/CustomCommandsIcon.ico</file>
+        <file>Resources/Icons/ConnectionStateConnecting.ico</file>
+        <file>Resources/Icons/ConnectionStateEstablished.ico</file>
+        <file>Resources/Icons/ConnectionStateNotConnected.ico</file>
+        <file>Resources/Icons/QuotesIcon.ico</file>
     </qresource>
 </RCC>

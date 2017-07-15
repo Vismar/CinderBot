@@ -14,6 +14,8 @@
 
 namespace Ui
 {
+namespace CustomCommand
+{
 
 class EditCustomCommandWindow : public QDialog
 {
@@ -72,4 +74,5 @@ private:
     AnswersCustomCommandWidget *_answers;
 };
 
+}
 }

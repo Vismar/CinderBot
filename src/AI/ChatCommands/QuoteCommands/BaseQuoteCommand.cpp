@@ -5,7 +5,7 @@
 **************************************************************************/
 #include "BaseQuoteCommand.hpp"
 
-using namespace Command;
+using namespace Command::QuoteCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 

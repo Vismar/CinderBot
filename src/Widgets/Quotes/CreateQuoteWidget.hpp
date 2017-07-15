@@ -11,6 +11,8 @@
 
 namespace Ui
 {
+namespace Quote
+{
 
 class CreateQuoteWidget : public QFrame
 {
@@ -46,4 +48,5 @@ private:
     QTextEdit*   _quoteText;
 };
 
+}
 }

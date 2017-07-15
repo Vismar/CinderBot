@@ -5,7 +5,7 @@
 **************************************************************************/
 #include "CustomCovChatCommand.hpp"
 
-using namespace Command;
+using namespace Command::CustomChatCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -11,7 +11,7 @@
 
 #define MAX_NUMBER_OF_ENTRIES 50
 
-using namespace Ui;
+using namespace Ui::Chat;
 
 ///////////////////////////////////////////////////////////////////////////
 

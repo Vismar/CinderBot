@@ -8,6 +8,8 @@
 
 namespace Command
 {
+namespace CovenantCmd
+{
 
 /*!
  * class CovenantCommandList
@@ -25,4 +27,5 @@ protected:
     void Initialize();
 };
 
+}
 }

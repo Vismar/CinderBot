@@ -15,6 +15,8 @@
 
 namespace Ui
 {
+namespace Common
+{
 
 /*!
  * class PageListWidget
@@ -131,4 +133,5 @@ private:
     QVector<int> _ids;
 };
 
+}
 }

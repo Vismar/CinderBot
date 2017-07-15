@@ -8,7 +8,7 @@
 #include "Widgets/CustomCommands/CreateCustomCommandWindow.hpp"
 #include "Widgets/CustomCommands/EditCustomCommandWindow.hpp"
 
-using namespace Ui;
+using namespace Ui::CustomCommand;
 
 ///////////////////////////////////////////////////////////////////////////
 

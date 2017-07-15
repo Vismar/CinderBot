@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
     qsrand(QTime::currentTime().second());
     int returningCode(0);
     QString error;
+
     QApplication a(argc, argv);
 
     // Try to initialize database manager

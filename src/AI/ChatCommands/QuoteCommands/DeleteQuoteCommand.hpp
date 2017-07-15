@@ -8,6 +8,8 @@
 
 namespace Command
 {
+namespace QuoteCmd
+{
 
 /*!
  * Class DeleteQuoteCommand
@@ -34,4 +36,5 @@ private:
     void _RefreshQuoteNumbers(int quoteNumber);
 };
 
+}
 }
