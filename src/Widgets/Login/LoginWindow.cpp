@@ -272,8 +272,13 @@ void LoginWindow::_LoadWebView()
 {
     // Save entered params
     ConfigurationManager &cfgMng = ConfigurationManager::Instance();
-    cfgMng.SetStringParam(CFGP_LOGIN_NAME, _login->text());
-    cfgMng.SetStringParam(CFGP_LOGIN_CHANNEL, _room->text());
+    QString temp;
+    // Login
+    temp = _login->text();
+    cfgMng.SetStringParam(CFGP_LOGIN_NAME, temp);
+    // Room
+    temp = _room->text();
+    cfgMng.SetStringParam(CFGP_LOGIN_CHANNEL, temp);
     QString autoLogin = (_autoLogin->checkState() == Qt::Checked) ? "true" : "false";
     ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_AUTO, autoLogin);
 
