@@ -10,8 +10,14 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 
+/*!
+ * \brief All Ui widgets and windows.
+ */
 namespace Ui
 {
+/*!
+ * \brief Common widgets that required by multiple other windows and widgets.
+ */
 namespace Common
 {
 

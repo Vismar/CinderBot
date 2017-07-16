@@ -58,7 +58,14 @@ void PageListWidget::UpdateIds(const QVector<int> &newIds)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void PageListWidget::OnNumberOfEntriesPerPageChanged(const QString &newValue)
+void PageListWidget::_AddWidget(QWidget *widget)
+{
+    _contentLayout->addWidget(widget);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void PageListWidget::_OnNumberOfEntriesPerPageChanged(const QString &newValue)
 {
     Q_UNUSED(newValue);
     _UpdateSlider();
@@ -68,7 +75,7 @@ void PageListWidget::OnNumberOfEntriesPerPageChanged(const QString &newValue)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void PageListWidget::OnSliderMoved(int newPage)
+void PageListWidget::_OnSliderMoved(int newPage)
 {
     if (newPage != _pageSlider->value())
     {
@@ -82,9 +89,18 @@ void PageListWidget::OnSliderMoved(int newPage)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void PageListWidget::_AddWidget(QWidget *widget)
+void PageListWidget::_OnPrevPageButtonPress()
 {
-    _contentLayout->addWidget(widget);
+    // setValue handles check for value to be in legal range
+    _pageSlider->setValue(_pageSlider->value() - 1);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void PageListWidget::_OnNextPageButtonPress()
+{
+    // setValue handles check for value to be in legal range
+    _pageSlider->setValue(_pageSlider->value() + 1);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -97,14 +113,22 @@ void PageListWidget::_InitializeHeader()
     _mainLayout->addWidget(_header);
 
     // Entries per page
-    _numberOfEntriesPerPage = new QComboBox();
+    _numberOfEntriesPerPage = new QComboBox(this);
     _numberOfEntriesPerPage->addItem("5");
     _numberOfEntriesPerPage->addItem("10");
     _numberOfEntriesPerPage->addItem("20");
     _numberOfEntriesPerPage->addItem("40");
     _headerLayout->addWidget(_numberOfEntriesPerPage);
     connect(_numberOfEntriesPerPage, &QComboBox::currentTextChanged,
-            this, &PageListWidget::OnNumberOfEntriesPerPageChanged);
+            this, &PageListWidget::_OnNumberOfEntriesPerPageChanged);
+
+    // Previous page button
+    _prevPage = new QPushButton(this);
+    _prevPage->setText("<");
+    _prevPage->setFixedWidth(25);
+    _headerLayout->addWidget(_prevPage);
+    connect(_prevPage, &QPushButton::clicked,
+            this, &PageListWidget::_OnPrevPageButtonPress);
 
     // Page slider
     _pageSlider = new QSlider(this);
@@ -113,10 +137,18 @@ void PageListWidget::_InitializeHeader()
     _pageSlider->setSingleStep(1);
     _headerLayout->addWidget(_pageSlider);
     connect(_pageSlider, &QSlider::sliderMoved,
-            this, &PageListWidget::OnSliderMoved);
+            this, &PageListWidget::_OnSliderMoved);
     connect(_pageSlider, &QSlider::valueChanged,
-            this, &PageListWidget::OnSliderMoved);
+            this, &PageListWidget::_OnSliderMoved);
     _UpdateSlider();
+
+    // Next page button
+    _nextPage = new QPushButton(this);
+    _nextPage->setText(">");
+    _nextPage->setFixedWidth(25);
+    _headerLayout->addWidget(_nextPage);
+    connect(_nextPage, &QPushButton::clicked,
+            this, &PageListWidget::_OnNextPageButtonPress);
 
     // Page number
     _pageNumber = new QLabel(this);
@@ -167,6 +199,9 @@ void PageListWidget::_UpdateSlider()
 void PageListWidget::_UpdatePageNumber()
 {
     _pageNumber->setText(QString("Page %1/%2").arg(_pageSlider->value()).arg(_pageSlider->maximum()));
+
+    _prevPage->setDisabled(_pageSlider->value() == _pageSlider->minimum());
+    _nextPage->setDisabled(_pageSlider->value() == _pageSlider->maximum());
 }
 
 ///////////////////////////////////////////////////////////////////////////
