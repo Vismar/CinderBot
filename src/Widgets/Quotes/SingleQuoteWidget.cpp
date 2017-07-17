@@ -8,6 +8,7 @@
 #include <QAbstractTextDocumentLayout>
 
 using namespace Ui::Quote;
+using namespace Ui::Common;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -21,10 +22,10 @@ SingleQuoteWidget::SingleQuoteWidget(QWidget* parent) : QFrame(parent)
     _quoteNumber->setFixedHeight(23);
 
     // Quote text
-    _quoteText = new QTextEdit(this);
+    _quoteText = new EnhTextEdit(this);
     _quoteText->setLineWrapMode(QTextEdit::WidgetWidth);
     _quoteText->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    _quoteText->setReadOnly(true);
+    _quoteText->SetEditable(false);
     connect(_quoteText->document()->documentLayout(), &QAbstractTextDocumentLayout::documentSizeChanged,
             this, &SingleQuoteWidget::_AdjustMinimumSize);
 
@@ -92,7 +93,7 @@ void SingleQuoteWidget::_HandleEditSaveButton()
     // If button in "edit" state, turn edit on and change button state to "save"
     if (_quoteEditSave->text() == "Edit")
     {
-        _quoteText->setReadOnly(false);
+        _quoteText->SetEditable(true);
         _quoteEditSave->setText("Save");
         _quoteEditSave->setStyleSheet("QPushButton {background-color: rgb(155,200,155)}"
                                       "QPushButton:hover {background-color: rgb(155,230,155)}");
@@ -101,7 +102,7 @@ void SingleQuoteWidget::_HandleEditSaveButton()
     // and save new quote text if it was really changed
     else if (_quoteEditSave->text() == "Save")
     {
-        _quoteText->setReadOnly(true);
+        _quoteText->SetEditable(false);
         _quoteEditSave->setText("Edit");
         _quoteEditSave->setStyleSheet("");
         std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes",

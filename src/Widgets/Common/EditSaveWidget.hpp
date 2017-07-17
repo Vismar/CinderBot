@@ -6,9 +6,9 @@
 #pragma once
 #include <QFrame>
 #include <QLabel>
-#include <QTextEdit>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include "Widgets/Common/EnhTextEdit.hpp"
 
 /*!
  * \brief All Ui widgets and windows.
@@ -30,14 +30,7 @@ class EditSaveWidget : public QFrame
 {
     Q_OBJECT
 public:
-    /*!
-     * Constructor
-     * \param parent - parent widget
-     */
     explicit EditSaveWidget(QWidget* parent = 0);
-    /*!
-     * Destructor
-     */
     virtual ~EditSaveWidget();
 
     /*!
@@ -64,7 +57,7 @@ protected:
     /*! Id of entry */
     int _id;
     /*! Text field */
-    QTextEdit*   _text;
+    EnhTextEdit*   _text;
 
 private slots:
     /*!

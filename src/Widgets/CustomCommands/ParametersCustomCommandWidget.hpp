@@ -5,7 +5,6 @@
 **************************************************************************/
 #pragma once
 #include <QFrame>
-#include <QLineEdit>
 #include <QTimeEdit>
 #include <QCheckBox>
 #include <QSpinBox>
@@ -15,6 +14,7 @@
 #include <QLabel>
 #include <QString>
 #include <QTime>
+#include "Widgets/Common/EnhLineEdit.hpp"
 
 namespace Ui
 {
@@ -131,7 +131,7 @@ private:
     /*! Label for command name */
     QLabel *_commandNameLabel;
     /*! Command name, editable text widget */
-    QLineEdit *_commandName;
+    Common::EnhLineEdit *_commandName;
     /*! Label for cooldown */
     QLabel *_cooldownLabel;
     /*! Cooldown editable time */

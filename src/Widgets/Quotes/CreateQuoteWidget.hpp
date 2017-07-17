@@ -5,9 +5,9 @@
 **************************************************************************/
 #pragma once
 #include <QFrame>
-#include <QTextEdit>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include "Widgets/Common/EnhTextEdit.hpp"
 
 namespace Ui
 {
@@ -45,7 +45,7 @@ private:
     /*! Add button */
     QPushButton* _addButton;
     /*! Text field */
-    QTextEdit*   _quoteText;
+    Common::EnhTextEdit*   _quoteText;
 };
 
 }
