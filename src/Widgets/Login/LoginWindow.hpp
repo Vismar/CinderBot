@@ -8,11 +8,11 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
-#include <QLineEdit>
 #include <QCheckBox>
 #include <QWebEngineView>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include "Widgets/Common/EnhLineEdit.hpp"
 
 /*!
  * \brief All Ui widgets and windows.
@@ -138,11 +138,11 @@ private:
     /*! Log-in label. */
     QLabel *_loginLabel;
     /*! Log-in field which stores log-in that will be used by bot. */
-    QLineEdit *_login;
+    Common::EnhLineEdit *_login;
     /*! Channel label. */
     QLabel *_roomLabel;
     /*! Room field which stores channel to which bot should connect. */
-    QLineEdit *_room;
+    Common::EnhLineEdit *_room;
     /*! Check bot to try auto logi-in procces on the next start of bot, */
     QCheckBox *_autoLogin;
     /*! Push button start log-in process. */

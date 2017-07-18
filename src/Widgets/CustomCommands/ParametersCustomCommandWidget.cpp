@@ -8,6 +8,7 @@
 #include <QStringList>
 
 using namespace Ui::CustomCommand;
+using namespace Ui::Common;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -27,7 +28,7 @@ ParametersCustomCommandWidget::~ParametersCustomCommandWidget() {}
 
 void ParametersCustomCommandWidget::SetCommandNameChangeable(bool state)
 {
-    _commandName->setReadOnly(!state);
+    _commandName->SetEditable(state);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -135,11 +136,11 @@ void ParametersCustomCommandWidget::_InitializeCmdName()
     _commandNameLabel = new QLabel();
     _commandNameLabel->setText("Command");
     _mainLayout->addWidget(_commandNameLabel, 0, 0, Qt::AlignRight);
-    _commandName = new QLineEdit();
+    _commandName = new EnhLineEdit();
     _commandName->setPlaceholderText("!command");
     _commandName->setMaxLength(25);
     _commandName->setFixedWidth(160);
-    connect(_commandName, &QLineEdit::textChanged,
+    connect(_commandName, &EnhLineEdit::textChanged,
             this, &ParametersCustomCommandWidget::_OnCmdNameChanged);
     _mainLayout->addWidget(_commandName, 0, 1, Qt::AlignLeft);
 }

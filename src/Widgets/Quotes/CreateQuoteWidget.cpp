@@ -9,6 +9,7 @@
 #include <QApplication>
 
 using namespace Ui::Quote;
+using namespace Ui::Common;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -30,7 +31,7 @@ CreateQuoteWidget::CreateQuoteWidget(QWidget* parent) : QFrame(parent)
             this, &CreateQuoteWidget::_AddQuote);
 
     // Inititalize text field
-    _quoteText = new QTextEdit(this);
+    _quoteText = new EnhTextEdit(this);
     _layout->addWidget(_quoteText);
 
     // Connect event to proper size change

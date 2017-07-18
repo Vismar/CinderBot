@@ -41,8 +41,8 @@ TwitchClient::TwitchClient(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket();
     _bot = new BotAI(this);
     // Connections between socket and twitch client
-    connect(_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
-            this,    SLOT(HandleStateChange(QAbstractSocket::SocketState)));
+    connect(_socket, &QTcpSocket::stateChanged,
+            this,    &TwitchClient::HandleStateChange);
     connect(_socket, &QTcpSocket::disconnected,
             this,    &TwitchClient::Connect);
     connect(_socket, &QTcpSocket::readyRead,
@@ -241,6 +241,7 @@ void TwitchClient::_Login()
         // Try to get login name
         if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
         {
+            qDebug() << param;
             // Send login name
             line = "NICK " + param + "\r\n";
            _SendIrcMessage(line);

@@ -11,6 +11,7 @@
 #include <QRegularExpressionMatch>
 
 using namespace Ui::Login;
+using namespace Ui::Common;
 
 #define WINDOW_HEIGHT_NORMAL 125
 #define WINDOW_HEIGHT_ERROR  150
@@ -165,15 +166,15 @@ void LoginWindow::_InitializeLayout()
 
     // Login section
     _loginLabel = new QLabel(this);
-    _loginLabel->setText("Login:");
+    _loginLabel->setText("Bot login:");
     _layout->addWidget(_loginLabel, 1, 0, Qt::AlignRight);
 
-    _login = new QLineEdit(this);
+    _login = new EnhLineEdit(this);
     _login->setPlaceholderText("Your bot account login");
     ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, temp);
     _login->setText(temp);
     _layout->addWidget(_login, 1, 1);
-    connect(_login, &QLineEdit::textChanged,
+    connect(_login, &EnhLineEdit::textChanged,
             this, &LoginWindow::_ResetLoginError);
 
     // Room section
@@ -181,12 +182,12 @@ void LoginWindow::_InitializeLayout()
     _roomLabel->setText("Channel:");
     _layout->addWidget(_roomLabel, 2, 0);
 
-    _room = new QLineEdit(this);
+    _room = new EnhLineEdit(this);
     _room->setPlaceholderText("Channel to which bot should connect");
     ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, temp);
     _room->setText(temp);
     _layout->addWidget(_room, 2, 1);
-    connect(_room, &QLineEdit::textChanged,
+    connect(_room, &EnhLineEdit::textChanged,
             this, &LoginWindow::_ResetRoomError);
 
     // Auto login section
@@ -202,7 +203,7 @@ void LoginWindow::_InitializeLayout()
     // Button section
     _loginButton = new QPushButton(this);
     _loginButton->setFixedSize(200, 30);
-    _loginButton->setText("Log In");
+    _loginButton->setText("Authorize");
     _layout->addWidget(_loginButton, 4, 0, 1, 2, Qt::AlignCenter);
     connect(_loginButton, &QPushButton::clicked,
             this, &LoginWindow::_CheckLogin);
@@ -220,8 +221,8 @@ void LoginWindow::_InitializeLayout()
 void LoginWindow::_SetHeaderWidgetsActive(bool active)
 {
     // We need to use opposite value to proper call this functions
-    _login->setReadOnly(!active);
-    _room->setReadOnly(!active);
+    _login->SetEditable(active);
+    _room->SetEditable(active);
     _loginButton->setDisabled(!active);
 }
 
@@ -288,8 +289,8 @@ void LoginWindow::_LoadWebView()
     _webView->load(QUrl("https://api.twitch.tv/kraken/oauth2/authorize"
                         "?client_id=we0qz5ot41crhkeo1w6mv9t769x1q5"
                         "&redirect_uri=http://localhost&response_type=token"
-                        "&scope=channel_check_subscription channel_commercial "
-                        "channel_editor channel_feed_edit channel_subscriptions chat_login"));
+                        "&force_verify=true"
+                        "&scope=channel_editor+channel_subscriptions+chat_login"));
     _webView->show();
 }
 

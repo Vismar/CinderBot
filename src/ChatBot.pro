@@ -74,7 +74,9 @@ SOURCES += main.cpp\
     Widgets/Chat/ChatWindow.cpp \
     Widgets/Statistics/StatisticsWindow.cpp \
     Widgets/Login/ConnectWidget.cpp \
-    Widgets/Login/LoginWindow.cpp
+    Widgets/Login/LoginWindow.cpp \
+    Widgets/Common/EnhLineEdit.cpp \
+    Widgets/Common/EnhTextEdit.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -139,7 +141,9 @@ HEADERS  += MainWindow.hpp \
     Widgets/Chat/ChatWindow.hpp \
     Widgets/Statistics/StatisticsWindow.hpp \
     Widgets/Login/ConnectWidget.hpp \
-    Widgets/Login/LoginWindow.hpp
+    Widgets/Login/LoginWindow.hpp \
+    Widgets/Common/EnhLineEdit.hpp \
+    Widgets/Common/EnhTextEdit.hpp
 
 RESOURCES += \
     Resources.qrc

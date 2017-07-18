@@ -17,10 +17,10 @@ EditSaveWidget::EditSaveWidget(QWidget* parent) : QFrame(parent)
     this->setFrameShape(QFrame::Box);
 
     // Text
-    _text = new QTextEdit(this);
-    _text->setLineWrapMode(QTextEdit::WidgetWidth);
+    _text = new EnhTextEdit(this);
+    _text->setLineWrapMode(EnhTextEdit::WidgetWidth);
     _text->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    _text->setReadOnly(true);
+    _text->SetEditable(false);
     connect(_text->document()->documentLayout(), &QAbstractTextDocumentLayout::documentSizeChanged,
             this, &EditSaveWidget::_AdjustMinimumSize);
 
@@ -85,7 +85,7 @@ void EditSaveWidget::_HandleEditSaveButton()
     // If button in "edit" state, turn edit on and change button state to "save"
     if (_editState)
     {
-        _text->setReadOnly(false);
+        _text->SetEditable(true);
         _editSaveButton->setText("Save");
         _editSaveButton->setStyleSheet("QPushButton {background-color: rgb(155,200,155)}"
                                        "QPushButton:hover {background-color: rgb(155,230,155)}");
@@ -94,7 +94,7 @@ void EditSaveWidget::_HandleEditSaveButton()
     // If button in "save" state, turn edit off and change button state to "edit" and save new text
     else if (!_editState)
     {
-        _text->setReadOnly(true);
+        _text->SetEditable(false);
         _editSaveButton->setText("Edit");
         _editSaveButton->setStyleSheet("");
         _editState = !_editState;

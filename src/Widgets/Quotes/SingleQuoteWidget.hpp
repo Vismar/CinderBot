@@ -6,9 +6,9 @@
 #pragma once
 #include <QFrame>
 #include <QLabel>
-#include <QTextEdit>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include "Widgets/Common/EnhTextEdit.hpp"
 
 namespace Ui
 {
@@ -61,7 +61,7 @@ private:
     /*! Quote number field */
     QLabel*      _quoteNumber;
     /*! Quote text field */
-    QTextEdit*   _quoteText;
+    Common::EnhTextEdit*   _quoteText;
     /*! Quote edit/save button */
     QPushButton* _quoteEditSave;
     /*! Quote delete button */
