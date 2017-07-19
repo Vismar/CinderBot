@@ -7,6 +7,8 @@
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 #include <QNetworkRequest>
+#include <QWebEngineProfile>
+#include <QWebEngineCookieStore>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 
@@ -15,7 +17,7 @@ using namespace Ui::Common;
 
 #define WINDOW_HEIGHT_NORMAL 125
 #define WINDOW_HEIGHT_ERROR  150
-#define WINDOW_HEIGHT_OATH   600
+#define WINDOW_HEIGHT_OAUTH  675
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -71,6 +73,7 @@ void LoginWindow::_CheckRoom()
 
 void LoginWindow::_CheckReply(QNetworkReply* reply)
 {
+    QString temp;
     QString replyString = reply->readAll();
     // If such user do not exist, show error
     if (replyString.startsWith("{\"error\":"))
@@ -83,11 +86,30 @@ void LoginWindow::_CheckReply(QNetworkReply* reply)
     {
         if (_lastRequestType == LoginRequest)
         {
+            // Login param
+            temp = _login->text();
+            ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_NAME, temp);
             _CheckRoom();
         }
         else if ( _lastRequestType == RoomRequest)
         {
-            _LoadWebView();
+            // Channel param
+            temp = _room->text();
+            ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_CHANNEL, temp);
+            // Check if user already authorized
+            QString loginOAuth;
+            QString channelOAuth;
+            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_OAUTH_KEY, loginOAuth);
+            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL_OAUTH_KEY, channelOAuth);
+            if (!loginOAuth.isEmpty() && !channelOAuth.isEmpty())
+            {
+                _CloseSuccess();
+            }
+            // If at least 1 oath key do not exist, start authorizatin process
+            else
+            {
+                _LoadWebView();
+            }
         }
     }
     // Wee MUST delete reply with delay
@@ -126,13 +148,23 @@ void LoginWindow::_CheckAndSaveToken(const QUrl &url)
         if (match.hasMatch())
         {
             QString token = match.captured("token");
-            ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_OATH_KEY, token);
-
-            // Notify about cussess athorization process
-            emit LoginSuccess();
-
-            // Close dialog window
-            this->close();
+            switch (_currentToken)
+            {
+            case LoginToken:
+                // Set login oauth key in config
+                ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_OAUTH_KEY, token);
+                _currentToken = ChannelToken;
+                // Hide loading second authorization
+                _webView->hide();
+                this->setFixedHeight(WINDOW_HEIGHT_NORMAL);
+                _LoadWebView();
+                break;
+            case ChannelToken:
+                // Set channel oauth key in config
+                ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_CHANNEL_OAUTH_KEY, token);
+                _CloseSuccess();
+                break;
+            }
         }
         else
         {
@@ -145,30 +177,49 @@ void LoginWindow::_CheckAndSaveToken(const QUrl &url)
 
 void LoginWindow::_InitializeLayout()
 {
-    QString temp;
     // Default value
     _lastRequestType = NoRequest;
+    _currentToken = LoginToken;
     // Init layout
     _layout = new QGridLayout(this);
 
-    // State section
-    _stateLabel = new QLabel(this);
-    _stateLabel->setFixedSize(this->width() - 150, 22);
-    _stateLabel->setAlignment(Qt::AlignCenter);
+    // Inititalize widget sections
+    _InitErrorSection();
+    _InitLoginSection();
+    _InitRoomSection();
+    _InitAutoLoginSection();
+    _InitButtonSection();
+    _InitAuthSection();
+    _InitWebViewSection();
+}
 
-    _stateLabel->setStyleSheet("QLabel {"
+///////////////////////////////////////////////////////////////////////////
+
+void LoginWindow::_InitErrorSection()
+{
+    _errorLabel = new QLabel(this);
+    _errorLabel->setFixedSize(this->width() - 150, 22);
+    _errorLabel->setAlignment(Qt::AlignCenter);
+
+    _errorLabel->setStyleSheet("QLabel {"
                                "font: 11pt;"
                                "border: 1px solid black;"
                                "background-color : #FFFFFF;"
                                "color : #C00101; }");
-    _layout->addWidget(_stateLabel, 0, 0, 1, 2, Qt::AlignCenter);
-    _stateLabel->hide();
+    _layout->addWidget(_errorLabel, 0, 0, 1, 2, Qt::AlignCenter);
+    _errorLabel->hide();
+}
 
-    // Login section
+///////////////////////////////////////////////////////////////////////////
+
+void LoginWindow::_InitLoginSection()
+{
+    QString temp;
+    // Label
     _loginLabel = new QLabel(this);
     _loginLabel->setText("Bot login:");
     _layout->addWidget(_loginLabel, 1, 0, Qt::AlignRight);
-
+    // Text field
     _login = new EnhLineEdit(this);
     _login->setPlaceholderText("Your bot account login");
     ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, temp);
@@ -176,12 +227,18 @@ void LoginWindow::_InitializeLayout()
     _layout->addWidget(_login, 1, 1);
     connect(_login, &EnhLineEdit::textChanged,
             this, &LoginWindow::_ResetLoginError);
+}
 
-    // Room section
+///////////////////////////////////////////////////////////////////////////
+
+void LoginWindow::_InitRoomSection()
+{
+    QString temp;
+    // Label
     _roomLabel = new QLabel(this);
     _roomLabel->setText("Channel:");
     _layout->addWidget(_roomLabel, 2, 0);
-
+    // Text field
     _room = new EnhLineEdit(this);
     _room->setPlaceholderText("Channel to which bot should connect");
     ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, temp);
@@ -189,8 +246,13 @@ void LoginWindow::_InitializeLayout()
     _layout->addWidget(_room, 2, 1);
     connect(_room, &EnhLineEdit::textChanged,
             this, &LoginWindow::_ResetRoomError);
+}
 
-    // Auto login section
+///////////////////////////////////////////////////////////////////////////
+
+void LoginWindow::_InitAutoLoginSection()
+{
+    QString temp;
     _autoLogin = new QCheckBox(this);
     ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_AUTO, temp);
     if (temp == "true")
@@ -199,21 +261,39 @@ void LoginWindow::_InitializeLayout()
     }
     _autoLogin->setText("Enable auto login");
     _layout->addWidget(_autoLogin, 3, 0, 1, 2, Qt::AlignCenter);
+}
 
-    // Button section
+///////////////////////////////////////////////////////////////////////////
+
+void LoginWindow::_InitButtonSection()
+{
     _loginButton = new QPushButton(this);
     _loginButton->setFixedSize(200, 30);
     _loginButton->setText("Authorize");
     _layout->addWidget(_loginButton, 4, 0, 1, 2, Qt::AlignCenter);
     connect(_loginButton, &QPushButton::clicked,
             this, &LoginWindow::_CheckLogin);
+}
 
-    // OAth section
+///////////////////////////////////////////////////////////////////////////
+
+void LoginWindow::_InitAuthSection()
+{
+    _authInfo = new QLabel(this);
+    _authInfo->setStyleSheet("QLabel {background-color=\"white\"}");
+    _layout->addWidget(_authInfo, 5, 0, 1, 2, Qt::AlignCenter);
+    _authInfo->hide();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void LoginWindow::_InitWebViewSection()
+{
     _webView = new QWebEngineView(this);
-    _layout->addWidget(_webView, 5, 0, 1, 2, Qt::AlignCenter);
+    _webView->page()->profile()->setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
+    _layout->addWidget(_webView, 6, 0, 1, 2, Qt::AlignCenter);
     connect(_webView, &QWebEngineView::urlChanged,
             this, &LoginWindow::_CheckAndSaveToken);
-    _webView->hide();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -232,7 +312,7 @@ void LoginWindow::_DismissError()
 {
     _login->setStyleSheet("");
     _room->setStyleSheet("");
-    _stateLabel->hide();
+    _errorLabel->hide();
     this->setFixedHeight(WINDOW_HEIGHT_NORMAL);
 }
 
@@ -247,51 +327,86 @@ void LoginWindow::_ShowError()
     {
     case LoginRequest:
         _login->setStyleSheet("border: 1px solid red");
-        _stateLabel->setText("Error in login name");
-        _stateLabel->show();
+        _errorLabel->setText("Error in login name");
+        _errorLabel->show();
         break;
     case RoomRequest:
         _room->setStyleSheet("border: 1px solid red");
-        _stateLabel->setText("Error in room name");
-        _stateLabel->show();
+        _errorLabel->setText("Error in room name");
+        _errorLabel->show();
         break;
-    case OAthRequest:
-        _stateLabel->setText("Error while authorization");
-        _stateLabel->show();
+    case OAuthRequest:
+        _errorLabel->setText("Error while authorization");
+        _errorLabel->show();
         _webView->hide();
+        _authInfo->hide();
         break;
     default:
         break;
     }
 
     _lastRequestType = NoRequest;
+    _currentToken = LoginToken;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void LoginWindow::_LoadWebView()
 {
-    // Save entered params
-    ConfigurationManager &cfgMng = ConfigurationManager::Instance();
-    QString temp;
-    // Login
-    temp = _login->text();
-    cfgMng.SetStringParam(CFGP_LOGIN_NAME, temp);
-    // Room
-    temp = _room->text();
-    cfgMng.SetStringParam(CFGP_LOGIN_CHANNEL, temp);
+    // Show web view
+    this->setFixedHeight(WINDOW_HEIGHT_OAUTH);
+    _webView->show();
+
+    // Check state
+    if (_currentToken == LoginToken)
+    {
+        // Load url
+        _lastRequestType = OAuthRequest;
+        _webView->load(QUrl("https://api.twitch.tv/kraken/oauth2/authorize"
+                            "?client_id=we0qz5ot41crhkeo1w6mv9t769x1q5"
+                            "&redirect_uri=http://localhost&response_type=token"
+                            "&force_verify=true"
+                            "&scope=channel_editor+channel_subscriptions+chat_login"));
+
+        // Notify user about first authorization
+        _authInfo->setText("<center><font size=\"5\" color=\"green\">"
+                           "<b>First authorization</b> - Bot account</font></center>"
+                           "<center><font size=\"4\" color=\"grey\">"
+                           "<b>Second authorization</b> - Stream account</font></center>");
+        _authInfo->show();
+    }
+    else
+    {
+        // Reset cookies to auto log out user before second authorization
+        _webView->page()->profile()->cookieStore()->deleteAllCookies();
+        // Load url for channel auth
+        _webView->load(QUrl("https://api.twitch.tv/kraken/oauth2/authorize"
+                            "?client_id=we0qz5ot41crhkeo1w6mv9t769x1q5"
+                            "&redirect_uri=http://localhost&response_type=token"
+                            "&force_verify=true"
+                            "&scope=channel_commercial+channel_editor+"
+                                   "channel_feed_edit+channel_subscriptions"));
+
+        // Notify user about second authorization
+        _authInfo->setText("<center><font size=\"4\" color=\"grey\">"
+                           "<b>&#10004; First authorization</b> - Bot account</font></center>"
+                           "<center><font size=\"5\" color=\"green\">"
+                           "<b>Second authorization</b> - Stream account</font></center>");
+        _authInfo->show();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void LoginWindow::_CloseSuccess()
+{
+    //Save auto login param
     QString autoLogin = (_autoLogin->checkState() == Qt::Checked) ? "true" : "false";
     ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_AUTO, autoLogin);
-
-    // Load url
-    _lastRequestType = OAthRequest;
-    this->setFixedHeight(WINDOW_HEIGHT_OATH);
-    _webView->load(QUrl("https://api.twitch.tv/kraken/oauth2/authorize"
-                        "?client_id=we0qz5ot41crhkeo1w6mv9t769x1q5"
-                        "&redirect_uri=http://localhost&response_type=token"
-                        "&force_verify=true"
-                        "&scope=channel_editor+channel_subscriptions+chat_login"));
-    _webView->show();
+    // Notify about cussess athorization process
+    emit LoginSuccess();
+    // Close dialog window
+    this->close();
 }
 
 ///////////////////////////////////////////////////////////////////////////

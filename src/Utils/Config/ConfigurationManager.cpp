@@ -142,6 +142,7 @@ void ConfigurationManager::_CreateDefaultConfigFile()
                   "\t\t<LoginName></LoginName>\n"
                   "\t\t<LoginOauthKey></LoginOauthKey>\n"
                   "\t\t<LoginChannel></LoginChannel>\n"
+                  "\t\t<LoginChannelOauthKey></LoginChannelOauthKey>\n"
                   "\t\t<LoginAuto>false</LoginAuto>\n"
                   "\t</LoginData>\n"
                   "\t<ConfigData>\n"
@@ -158,6 +159,7 @@ void ConfigurationManager::_CreateDefaultConfigFile()
                   "\t\t<CovCreatePrice>2000</CovCreatePrice>\n"
                   "\t\t<CovRenamePrice>500</CovRenamePrice>\n"
                   "\t\t<ViewerGraphUpdateTime>10000</ViewerGraphUpdateTime>\n"
+                  "\t\t<MessageGraphUpdateTime>60000</MessageGraphUpdateTime>\n"
                   "\t</ConfigData>\n"
                   "</Configuration>\n";
     }
@@ -295,14 +297,18 @@ void ConfigurationManager::_WriteLoginData()
     _xmlWriter.writeTextElement(CFGP_LOGIN_NAME, value);
     value.clear();
     // LoginOauthKey
-    _xmlWriter.writeComment("Oauth key which required to login on twitch, should starts with \"oauth:\"");
-    GetStringParam(CFGP_LOGIN_OATH_KEY, value);
-    _xmlWriter.writeTextElement(CFGP_LOGIN_OATH_KEY, value);
+    _xmlWriter.writeComment("Oauth key which required to login on twitch");
+    GetStringParam(CFGP_LOGIN_OAUTH_KEY, value);
+    _xmlWriter.writeTextElement(CFGP_LOGIN_OAUTH_KEY, value);
     value.clear();
-    // LoginOauthKey
+    // LoginChannel
     _xmlWriter.writeComment("Channel to connect");
     GetStringParam(CFGP_LOGIN_CHANNEL, value);
     _xmlWriter.writeTextElement(CFGP_LOGIN_CHANNEL, value);
+    // LoginChannelOauthKey
+    _xmlWriter.writeComment("Channel oauth key which required to get stream info");
+    GetStringParam(CFGP_LOGIN_CHANNEL_OAUTH_KEY, value);
+    _xmlWriter.writeTextElement(CFGP_LOGIN_CHANNEL_OAUTH_KEY, value);
     // LoginAuto
     _xmlWriter.writeComment("Should bot try to connect automatically?");
     GetStringParam(CFGP_LOGIN_AUTO, value);
