@@ -17,19 +17,20 @@
 /*================ Parameters ================*/
 /*============================================*/
 /* Login params */
-#define CFGP_LOGIN_NAME             "LoginName"
-#define CFGP_LOGIN_OATH_KEY         "LoginOauthKey"
-#define CFGP_LOGIN_CHANNEL          "LoginChannel"
-#define CFGP_LOGIN_AUTO             "LoginAuto"
+#define CFGP_LOGIN_NAME              "LoginName"
+#define CFGP_LOGIN_OAUTH_KEY         "LoginOauthKey"
+#define CFGP_LOGIN_CHANNEL           "LoginChannel"
+#define CFGP_LOGIN_CHANNEL_OAUTH_KEY "LoginChannelOauthKey"
+#define CFGP_LOGIN_AUTO              "LoginAuto"
 /* Currency params */
-#define CFGP_CURRENCY               "Currency"
-#define CFGP_CURRENCY_PER_MSG       "CurrencyPerMsg"
-#define CFGP_CURRENCY_OVER_TIME     "CurrencyOverTime"
-#define CFGP_CURRECY_TIMER          "CurrencyTimer"
+#define CFGP_CURRENCY                "Currency"
+#define CFGP_CURRENCY_PER_MSG        "CurrencyPerMsg"
+#define CFGP_CURRENCY_OVER_TIME      "CurrencyOverTime"
+#define CFGP_CURRECY_TIMER           "CurrencyTimer"
 /* Covenant params */
-#define CFGP_COV_JOIN_PRICE         "CovJoinPrice"
-#define CFGP_COV_CREATE_PRICE       "CovCreatePrice"
-#define CFGP_COV_RENAME_PRICE       "CovRenamePrice"
+#define CFGP_COV_JOIN_PRICE          "CovJoinPrice"
+#define CFGP_COV_CREATE_PRICE        "CovCreatePrice"
+#define CFGP_COV_RENAME_PRICE        "CovRenamePrice"
 /* Analytics params */
-#define CFGP_VGRAPH_UPD_TIME        "ViewerGraphUpdateTime"
-#define CFGP_MESSAGE_GRAPH_UPD_TIME "MessageGraphUpdateTime"
+#define CFGP_VGRAPH_UPD_TIME         "ViewerGraphUpdateTime"
+#define CFGP_MESSAGE_GRAPH_UPD_TIME  "MessageGraphUpdateTime"

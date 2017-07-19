@@ -231,11 +231,11 @@ void TwitchClient::_Login()
 {
     QString param;
     QString line;
-    // Try to get oathkey
-    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_OATH_KEY, param))
+    // Try to get oauthkey
+    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_OAUTH_KEY, param))
     {
         param = "oauth:" + param;
-        // Send oath key
+        // Send oauth key
         line = "PASS " + param + "\r\n";
         _SendIrcMessage(line);
         // Try to get login name

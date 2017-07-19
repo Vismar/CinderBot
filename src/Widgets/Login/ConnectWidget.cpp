@@ -48,17 +48,17 @@ ConnectWidget::~ConnectWidget() {}
 void ConnectWidget::CheckAndRunAutoLogin()
 {
     QString paramLogin;
-    QString paramOAth;
+    QString paramOAuth;
     QString paramChannel;
     QString paramAuto;
     ConfigurationManager& cfgMng = ConfigurationManager::Instance();
 
     cfgMng.GetStringParam(CFGP_LOGIN_NAME, paramLogin);
-    cfgMng.GetStringParam(CFGP_LOGIN_OATH_KEY, paramOAth);
+    cfgMng.GetStringParam(CFGP_LOGIN_OAUTH_KEY, paramOAuth);
     cfgMng.GetStringParam(CFGP_LOGIN_CHANNEL, paramChannel);
 
-    // Wee ned to check that login, channel and oath key exist in config file
-    if (!paramLogin.isEmpty() && !paramChannel.isEmpty() && !paramOAth.isEmpty())
+    // Wee ned to check that login, channel and oauth key exist in config file
+    if (!paramLogin.isEmpty() && !paramChannel.isEmpty() && !paramOAuth.isEmpty())
     {
         cfgMng.GetStringParam(CFGP_LOGIN_AUTO, paramAuto);
         if (paramAuto == "true")

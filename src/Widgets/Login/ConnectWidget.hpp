@@ -42,7 +42,7 @@ public:
     /*!
      * \brief Checks possibility of auto login and does it if everything is ok.
      *
-     * Checks if login, channel and oath key exist in config manager
+     * Checks if login, channel and oauth key exist in config manager
      * when checks if auto login param is "true".
      * If everything exists and param value is correct, auto-login process will be launched.
      */

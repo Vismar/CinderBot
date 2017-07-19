@@ -100,8 +100,53 @@ private slots:
 private:
     /*!
      * \brief Initializes ui layout.
+     *
+     * Creates all widgets the are required and sets it to layout;
      */
     void _InitializeLayout();
+    /*!
+     * \brief Initializes error section.
+     *
+     * Initializes error label, sets its font size, alignment and etc.
+     */
+    void _InitErrorSection();
+    /*!
+     * \brief Initializes login section.
+     *
+     * Initializes login section that contains label and text field.
+     */
+    void _InitLoginSection();
+    /*!
+     * \brief Initializes room section.
+     *
+     * Initializes room section that contains label and text field.
+     */
+    void _InitRoomSection();
+    /*!
+     * \brief Initializes auto login section.
+     *
+     * Initializes auto login section which represented as check box.
+     */
+    void _InitAutoLoginSection();
+    /*!
+     * \brief Initializes button section.
+     *
+     *  Initializes authorization button.
+     */
+    void _InitButtonSection();
+    /*!
+     * \brief Initializes auth section.
+     *
+     * Initializes auth section that contains label which notify user about current auth step.
+     */
+    void _InitAuthSection();
+    /*!
+     * \brief Initializes web view section.
+     *
+     * Initializes web view to display authorization.
+     */
+    void _InitWebViewSection();
+
     /*!
      * \brief Turns on/off widgets in header.
      * \param active - flag to define active state of widgets.
@@ -127,14 +172,20 @@ private:
      * Resizes window to fir web view and opens web page to authorize bot to do stuff in channel.
      */
     void _LoadWebView();
+    /*!
+     * \brief Close window and emit succes event.
+     *
+     * Save auto login param, emit success event and close dialog window.
+     */
+    void _CloseSuccess();
 
     /*! Network manager to check if entered channels exist. */
     QNetworkAccessManager *_netManager;
 
     /*! Simple layout to store widgets. */
     QGridLayout *_layout;
-    /*! Label whioch displays errors. */
-    QLabel *_stateLabel;
+    /*! Label which displays errors. */
+    QLabel *_errorLabel;
     /*! Log-in label. */
     QLabel *_loginLabel;
     /*! Log-in field which stores log-in that will be used by bot. */
@@ -147,6 +198,8 @@ private:
     QCheckBox *_autoLogin;
     /*! Push button start log-in process. */
     QPushButton *_loginButton;
+    /*! Authorization label displays information about current authorization step. */
+    QLabel *_authInfo;
     /*! WebView widget to authorization process to get the token. */
     QWebEngineView *_webView;
 
@@ -156,8 +209,15 @@ private:
         NoRequest,
         LoginRequest,
         RoomRequest,
-        OAthRequest
+        OAuthRequest
     } _lastRequestType;
+
+    /*! Small enum to store currently requested token. */
+    enum
+    {
+        LoginToken,
+        ChannelToken
+    } _currentToken;
 };
 
 }
