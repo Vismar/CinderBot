@@ -47,6 +47,12 @@ QRegularExpression ChatMessage::_regExpWhisper("@badges=.*;color=.*;display-name
                                                "emotes=.*;message-id=.*;thread-id=.*;"
                                                "turbo=.*;user-id=.*;user-type=.* "
                                                ":.*!.*@.*.tmi.twitch.tv WHISPER .* :.*\\r\\n");
+/*** BITS ***/
+QRegularExpression ChatMessage::_regExpBits("@badges=.*;bits=.*;color=.*;"
+                                            "display-name=.*;emotes=.*;id=.*;"
+                                            "mod=.*;room-id=.*;subscriber=.*;"
+                                            ".*;turbo=.*;user-id=.*;user-type=.* "
+                                            ":.*!.*@.*.tmi.twitch.tv PRIVMSG #.* :.*\r\n");
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -122,6 +128,13 @@ MessageType ChatMessage::GetType() const
 }
 
 ///////////////////////////////////////////////////////////////////////////
+
+const QString &ChatMessage::GetBits() const
+{
+    return _bits;
+}
+
+///////////////////////////////////////////////////////////////////////////
 /************************* Manual set functions **************************/
 ///////////////////////////////////////////////////////////////////////////
 
@@ -164,6 +177,13 @@ void ChatMessage::SetModFlag(bool modFlag)
 void ChatMessage::SetType(MessageType type)
 {
     _type = type;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::SetBits(const QString &bits)
+{
+    _bits = bits;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -238,6 +258,15 @@ MessageType ChatMessage::ParseRawMessage(const QString &message)
         {
             msgType = UNMODE;
             _GetAndSetAuthorForMode(message, msgType);
+        }
+        else if (_IsBits(message))
+        {
+            msgType = BITS;
+            _GetAndSetNameColor(message);
+            _GetAndSetAuthor(message);
+            _GetAndSetChatMessage(message);
+            _GetAndSetModeratorFlag(message);
+            _GetAndSetBits(message);
         }
         else if (_IsPrivMsg(message))
         {
@@ -372,6 +401,13 @@ bool ChatMessage::_IsWhisper(const QString &message) const
 }
 
 ///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::_IsBits(const QString &message) const
+{
+    return _regExpBits.match(message).hasMatch();
+}
+
+///////////////////////////////////////////////////////////////////////////
 /***************************** Set functions *****************************/
 ///////////////////////////////////////////////////////////////////////////
 
@@ -480,6 +516,18 @@ void ChatMessage::_GetAndSetModeratorFlag(const QString &message)
     {
         int index = message.indexOf("mod=");
         _isModerator = message.mid(index + 4,1).toInt();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::_GetAndSetBits(const QString &message)
+{
+    QRegularExpression regExp("@badges=.*;bits=(?<bits>.*);color=.*\r\n");
+    QRegularExpressionMatch match = regExp.match(message);
+    if (match.hasMatch())
+    {
+        _bits = match.captured("bits");
     }
 }
 

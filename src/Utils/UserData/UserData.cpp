@@ -29,7 +29,8 @@ void UserData::Initialize()
                                 "Messages        INTEGER NOT NULL,"
                                 "Currency        INTEGER NOT NULL,"
                                 "Covenant        TEXT    NOT NULL,"
-                                "LastTimeVisited TEXT");
+                                "LastTimeVisited TEXT,"
+                                "Bits            INTEGER DEFAULT 0");
     DB_CREATE_INDEX("UserData", "Covenant_Index", "Covenant");
 }
 
@@ -74,6 +75,7 @@ void UserData::UpdateUserData(const QString &userName,
     {
     case UDP_Messages:
     case UDP_Currency:
+    case UDP_Bits:
         DB_UPDATE("UserData", QString("%1 = %2").arg(_GetUDPParam(UDP)).arg(newValue),
                               QString("Name = '%1'").arg(userName));
         break;
@@ -88,13 +90,14 @@ void UserData::UpdateUserData(const QString &userName,
 
 void UserData::_AddUserData(const QString &userName, const QHash<QString, QString> &params)
 {
-    QString values = "NULL, ':name', ':author', :msg, :cur, ':cov', ':ltv'";
+    QString values = "NULL, ':name', ':author', :msg, :cur, ':cov', ':ltv', :bits";
     values.replace(":name", userName);
     values.replace(":author", params[_GetUDPParam(UDP_Author)]);
     values.replace(":msg", params[_GetUDPParam(UDP_Messages)]);
     values.replace(":cur", params[_GetUDPParam(UDP_Currency)]);
     values.replace(":cov", params[_GetUDPParam(UDP_Covenant)]);
     values.replace(":ltv", QDateTime::currentDateTime().toString("d-M-yyy h:m:s"));
+    values.replace(":bits", params[_GetUDPParam(UDP_Bits)]);
     DB_INSERT("UserData", values);
 }
 
@@ -114,6 +117,7 @@ void UserData::_InitializeDefaultUserData()
     _defaultParams.insert(_GetUDPParam(UDP_Messages), "0");
     _defaultParams.insert(_GetUDPParam(UDP_Currency), "0");
     _defaultParams.insert(_GetUDPParam(UDP_Covenant), "Viewer");
+    _defaultParams.insert(_GetUDPParam(UDP_Bits), "0");
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -137,6 +141,9 @@ QString UserData::_GetUDPParam(UserDataParam UDP)
         break;
     case UDP_LastTimeVisited:
         param = "LastTimeVisited";
+        break;
+    case UDP_Bits:
+        param = "Bits";
         break;
     default:
         param = "NoParam";

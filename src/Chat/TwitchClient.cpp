@@ -61,7 +61,7 @@ TwitchClient::~TwitchClient() {}
 ///////////////////////////////////////////////////////////////////////////
 
 void TwitchClient::Connect()
-{
+{    
     _socket->close();
     ConnectionStateChanged(Connecting);
     _socket->connectToHost("irc.twitch.tv", 6667);
@@ -87,13 +87,16 @@ void TwitchClient::PingTwitch()
 
 void TwitchClient::ReadLine()
 {
+
+    ChatMessage chatMessage;
+
     // If message was received, timer should be stoped
     _msgTimer->stop();
     QString line;
     while (_socket->canReadLine())
     {
         line = _socket->readLine();
-        qDebug() << line;
+        qDebug() << "<< " << line;
         ChatMessage message;
         // Parse message and get type of it
         MessageType msgType = message.ParseRawMessage(line);
@@ -145,6 +148,10 @@ void TwitchClient::ReadLine()
             }
             break;
         case PRIVMSG:
+            RealTimeUserData::Instance()->IncrementMsgCounter();
+            emit NewMessage(message, false);
+            break;
+        case BITS:
             RealTimeUserData::Instance()->IncrementMsgCounter();
             emit NewMessage(message, false);
             break;
@@ -241,7 +248,6 @@ void TwitchClient::_Login()
         // Try to get login name
         if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
         {
-            qDebug() << param;
             // Send login name
             line = "NICK " + param + "\r\n";
            _SendIrcMessage(line);
@@ -299,7 +305,7 @@ void TwitchClient::_SendChatMessage(ChatAnswer &message)
                 msg.push_back(*iter);
                 msg.push_back("\r\n");
                 _SendIrcMessage(msg);
-                qDebug() << msg;
+                qDebug() << ">> " << msg;
             }
         }
         switch (answerType)

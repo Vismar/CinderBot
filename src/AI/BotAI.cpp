@@ -87,9 +87,14 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
     if (!botMessage)
     {
         // Update user data
-        if (message.GetType() == PRIVMSG)
+        switch (message.GetType())
         {
+        case PRIVMSG:
+        case BITS:
             _UpdateUserData(message);
+            break;
+        default:
+            break;
         }
 
         // If user is not in ignore list, try to find commands
@@ -155,6 +160,11 @@ void BotAI::_UpdateUserData(const ChatMessage &message)
         // Add currency for message
         ConfigurationManager::Instance().GetStringParam(CFGP_CURRENCY_PER_MSG, tempString);
         _AddCurrency(message.GetRealName(), tempString.toInt());
+        // Update bits number
+        if (!message.GetBits().isEmpty())
+        {
+            _AddBits(message.GetRealName(), message.GetBits().toInt());
+        }
     }
 }
 
@@ -189,6 +199,17 @@ void BotAI::_AddCurrency(const QString &userName, const int value)
     param = QString::number(param.toInt() + value);
     // Set new value
     UD_UPDATE(userName, UDP_Currency, param);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void BotAI::_AddBits(const QString &userName, int bits)
+{
+    QString param;
+    // Get bits number
+    param = UD_GET_PARAM(userName, UDP_Bits);
+    param = QString::number(param.toInt() + bits);
+    UD_UPDATE(userName, UDP_Bits, param);
 }
 
 ///////////////////////////////////////////////////////////////////////////
