@@ -73,6 +73,12 @@ private:
      * \param(IN) value - amount of currency that should be added
      */
     void _AddCurrency(const QString &userName, const int value);
+    /*!
+     * \brief _AddBits
+     * \param userName
+     * \param bits
+     */
+    void _AddBits(const QString &userName, int bits);
 
     /*! Array of commands */
     QVector<Command::CommandList*> _chatCommands;

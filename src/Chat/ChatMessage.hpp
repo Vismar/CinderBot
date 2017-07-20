@@ -28,7 +28,8 @@ enum MessageType
     MODE,
     UNMODE,
     PRIVMSG,
-    WHISPER
+    WHISPER,
+    BITS
 };
 
 /*!
@@ -80,6 +81,13 @@ public:
      * \return type of message that was assigned during the parsing
      */
     MessageType GetType() const;
+    /*!
+     * \brief Gets number of bits.
+     * \return string which contains bits
+     *
+     * Gets number of bits as string that was transfered through message.
+     */
+    const QString &GetBits() const;
 
     /*** Manual set functions ***/
     /*!
@@ -112,6 +120,13 @@ public:
      * \param type - type which will be setted
      */
     void SetType(MessageType type);
+    /*!
+     * \brief Sets specified number of bits.
+     * \param bits - number of bits as string.
+     *
+     * Manually sets number of bits to message.
+     */
+    void SetBits(const QString &bits);
 
     /*!
      * Parse raw message data
@@ -159,6 +174,13 @@ private:
      * \return true, if it is a userstate message
      */
     bool _IsUserState(const QString &message) const;
+    /*!
+     * \brief Chechs if current message is a roomstate message.
+     * \param message - message to check.
+     * \return true, if it is a roomstate message.
+     *
+     * Checks if current message matches room state regular expression.
+     */
     bool _IsRoomState(const QString &message) const;
     /*!
      * Check message if it is a channel message
@@ -196,6 +218,14 @@ private:
      * \return true if it is a whisper message
      */
     bool _IsWhisper(const QString &message) const;
+    /*!
+     * \brief Checks if current messages contains bits.
+     * \param message - message to check
+     * \return true if it is a bits message
+     *
+     * Checks if current message matches bits regular expression.
+     */
+    bool _IsBits(const QString &message) const;
 
     /*** Set functions ***/
     /*!
@@ -227,6 +257,13 @@ private:
      * \param(IN) message - message to parse
      */
     void _GetAndSetModeratorFlag(const QString &message);
+    /*!
+     * \brief Parse message and get number of bits.
+     * \param message - message to parse.
+     *
+     * Parse message to find needed tag and get number of bits that were given through message.
+     */
+    void _GetAndSetBits(const QString &message);
 
     /*** Chat message parameters ***/
     /*! Author of message*/
@@ -240,9 +277,11 @@ private:
     /*! Message itself */
     QString _message;
     /*! Moderator flag */
-    bool    _isModerator;
+    bool _isModerator;
     /*! Type of the message */
     MessageType _type;
+    /*! Bits */
+    QString _bits;
 
     /*** Regular expressions ***/
     static QRegularExpression _regExpPing;
@@ -255,4 +294,5 @@ private:
     static QRegularExpression _regExpUnmode;
     static QRegularExpression _regExpPrivmsg;
     static QRegularExpression _regExpWhisper;
+    static QRegularExpression _regExpBits;
 };

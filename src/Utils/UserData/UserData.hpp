@@ -21,6 +21,7 @@ enum UserDataParam
     UDP_Covenant,
     UDP_Author,
     UDP_LastTimeVisited,
+    UDP_Bits,
     UDP_End
 };
 
