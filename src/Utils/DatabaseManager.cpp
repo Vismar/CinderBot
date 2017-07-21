@@ -177,7 +177,7 @@ bool DatabaseManager::Insert(const QString &tableName, const QString &recordValu
     {
         // If command failed, return error
         result = false;
-        qDebug() << "Database error(Insert): " << query.lastError().text();
+        qDebug() << "Database error(Insert)" << tableName << ": " << query.lastError().text();
     }
     else
     {
@@ -208,7 +208,7 @@ DB_QUERY_PTR DatabaseManager::Select(const QString &tableName, const QString &co
         return query;
     }
     // If command failed, return error
-    qDebug() << "Database error(Select): " << query->lastError().text();
+    qDebug() << "Database error(Select)" << tableName << ": " << query->lastError().text();
 
     return nullptr;
 }
@@ -234,7 +234,7 @@ bool DatabaseManager::Update(const QString &tableName, const QString &columnValu
     {
         // If command failed, return error
         result = false;
-        qDebug() << "Database error(Update): " << query.lastError().text();
+        qDebug() << "Database error(Update)" << tableName << ": " << query.lastError().text();
     }
     else
     {
@@ -266,7 +266,7 @@ bool DatabaseManager::Delete(const QString &tableName, const QString &conditions
     {
         // If command failed, return error
         result = false;
-        qDebug() << "Database error(Delete): " << query.lastError().text();
+        qDebug() << "Database error(Delete)" << tableName << ": " << query.lastError().text();
     }
     else
     {
