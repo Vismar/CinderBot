@@ -9,10 +9,7 @@
 #include <QTime>
 #include <QRegularExpressionMatch>
 
-#include <QDebug>
-
-#define STR_PRIVMSG "PRIVMSG"
-#define STR_WHISPER "WHISPER"
+using namespace Chat;
 
 ///////////////////////////////////////////////////////////////////////////
 /************************** Regular expressions **************************/
@@ -27,34 +24,35 @@ QRegularExpression ChatMessage::_regExpUserstate("@badges=.*;color=(?<color>#\\w
                                                  "emote-sets=.*;mod=(?<mod>\\d);subscriber=.*;user-type=.* "
                                                  ":tmi.twitch.tv USERSTATE #.*\\r\\n");
 /*** ROOMSTATE ***/
-QRegularExpression ChatMessage::_regExpRoomState("@broadcaster-lang=.*;emote-only=.*;followers-only=.*;"
-                                                 "r9k=.*;room-id=.*;slow=.*;subs-only=.* "
+QRegularExpression ChatMessage::_regExpRoomState("@broadcaster-lang=(?<lang>.*);emote-only=(?<emote>\\d);"
+                                                 "followers-only=(?<followers>.*);r9k=(?<r9k>\\d);"
+                                                 "room-id=.*;slow=(?<slow>.*);subs-only=(?<subs>\\d) "
                                                  ":tmi.twitch.tv ROOMSTATE #.*\r\n");
 /*** JOIN ***/
-QRegularExpression ChatMessage::_regExpJoin(":.*!.*@.*.tmi.twitch.tv JOIN #.*\\r\\n");
+QRegularExpression ChatMessage::_regExpJoin(":(?<name>.*)!.*@.*.tmi.twitch.tv JOIN #.*\\r\\n");
 /*** PART ***/
-QRegularExpression ChatMessage::_regExpPart(":.*!.*@.*.tmi.twitch.tv PART #.*\\r\\n");
+QRegularExpression ChatMessage::_regExpPart(":(?<name>.*)!.*@.*.tmi.twitch.tv PART #.*\\r\\n");
 /*** MODE ***/
-QRegularExpression ChatMessage::_regExpMode(":jtv MODE #.* \\+o .*\\r\\n");
+QRegularExpression ChatMessage::_regExpMode(":jtv MODE #.* \\+o (?<name>.*)\\r\\n");
 /*** UNMODE ***/
-QRegularExpression ChatMessage::_regExpUnmode(":jtv MODE #.* -o .*\\r\\n");
+QRegularExpression ChatMessage::_regExpUnmode(":jtv MODE #.* -o (?<name>.*)\\r\\n");
+/*** BITS ***/
+QRegularExpression ChatMessage::_regExpBits("@badges=.*;bits=(?<bits>.*);color=(?<color>#\\w\\w\\w\\w\\w\\w);"
+                                            "display-name=(?<author>.*);emotes=.*;id=.*;"
+                                            "mod=(?<mod>\\d);room-id=.*;subscriber=(?<sub>\\d);"
+                                            ".*;turbo=.*;user-id=.*;user-type=.* "
+                                            ":(?<name>.*)!.*@.*.tmi.twitch.tv PRIVMSG #.* :(?<msg>.*)\r\n");
 /*** PRIVMSG ***/
-QRegularExpression ChatMessage::_regExpPrivmsg("@badges=.*;color=.*;display-name=.*;"
-                                               "emotes=.*;id=.*;mod=.*;"
-                                               "room-id=.*;subscriber=.*;tmi-sent-ts=.*;"
-                                               "turbo=.*;user-id=.*;user-type=.* "
-                                               ":.*!.*@.*.tmi.twitch.tv PRIVMSG #.* :.*\\r\\n");
+QRegularExpression ChatMessage::_regExpPrivmsg("@badges=.*;color=(?<color>#\\w\\w\\w\\w\\w\\w);display-name=(?<author>.*);"
+                                               "emotes=.*;id=.*;mod=(?<mod>\\d);"
+                                               "room-id=.*;subscriber=(?<sub>\\d);tmi-sent-ts=.*;"
+                                               "turbo=\\d;user-id=.*;user-type=.* "
+                                               ":(?<name>.*)!.*@.*.tmi.twitch.tv PRIVMSG #.* :(?<msg>.*)\\r\\n");
 /*** WHISPER ***/
-QRegularExpression ChatMessage::_regExpWhisper("@badges=.*;color=.*;display-name=.*;"
+QRegularExpression ChatMessage::_regExpWhisper("@badges=.*;color=(?<color>#\\w\\w\\w\\w\\w\\w);display-name=(?<author>.*);"
                                                "emotes=.*;message-id=.*;thread-id=.*;"
                                                "turbo=.*;user-id=.*;user-type=.* "
-                                               ":.*!.*@.*.tmi.twitch.tv WHISPER .* :.*\\r\\n");
-/*** BITS ***/
-QRegularExpression ChatMessage::_regExpBits("@badges=.*;bits=.*;color=.*;"
-                                            "display-name=.*;emotes=.*;id=.*;"
-                                            "mod=.*;room-id=.*;subscriber=.*;"
-                                            ".*;turbo=.*;user-id=.*;user-type=.* "
-                                            ":.*!.*@.*.tmi.twitch.tv PRIVMSG #.* :.*\r\n");
+                                               ":(?<name>.*)!.*@.*.tmi.twitch.tv WHISPER .* :(?<msg>.*)\\r\\n");
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -66,6 +64,7 @@ ChatMessage::ChatMessage()
     _timeStamp = "0:0:0";
     _message = "No message";
     _isModerator = false;
+    _isSubscriber = false;
     _type = Undefined;
 }
 
@@ -119,7 +118,7 @@ bool ChatMessage::IsBroadcaster() const
 {
     QString channelName;
     ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, channelName);
-    return (channelName.toLower() == _author.toLower());
+    return (channelName == _realName);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -134,6 +133,13 @@ MessageType ChatMessage::GetType() const
 const QString &ChatMessage::GetBits() const
 {
     return _bits;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ChatMessage::IsSubscriber() const
+{
+    return _isSubscriber;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -186,6 +192,13 @@ void ChatMessage::SetType(MessageType type)
 void ChatMessage::SetBits(const QString &bits)
 {
     _bits = bits;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::SetSubscriber(bool subFlag)
+{
+    _isSubscriber = subFlag;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -244,46 +257,30 @@ MessageType ChatMessage::ParseRawMessage(const QString &message)
         else if (_IsJoinMsg(message))
         {
             msgType = JOIN;
-            _GetAndSetAuthor(message);
         }
         else if (_IsPartMsg(message))
         {
             msgType = PART;
-            _GetAndSetAuthor(message);
         }
         else if (_IsModeMessage(message))
         {
             msgType = MODE;
-            _GetAndSetAuthorForMode(message, msgType);
         }
         else if (_IsUnmodeMessage(message))
         {
             msgType = UNMODE;
-            _GetAndSetAuthorForMode(message, msgType);
         }
         else if (_IsBits(message))
         {
             msgType = BITS;
-            _GetAndSetNameColor(message);
-            _GetAndSetAuthor(message);
-            _GetAndSetChatMessage(message);
-            _GetAndSetModeratorFlag(message);
-            _GetAndSetBits(message);
         }
         else if (_IsPrivMsg(message))
         {
             msgType = PRIVMSG;
-            _GetAndSetNameColor(message);
-            _GetAndSetAuthor(message);
-            _GetAndSetChatMessage(message);
-            _GetAndSetModeratorFlag(message);
         }
         else if (_IsWhisper(message))
         {
             msgType = WHISPER;
-            _GetAndSetNameColor(message);
-            _GetAndSetAuthor(message);
-            _GetAndSetChatMessage(message);
             //_GetAndSetModeratorFlag();
         }
     }
@@ -370,56 +367,180 @@ bool ChatMessage::_IsUserState(const QString &message)
 
 bool ChatMessage::_IsRoomState(const QString &message) const
 {
-    return _regExpRoomState.match(message).hasMatch();
+    bool result(false);
+
+    QRegularExpressionMatch match = _regExpRoomState.match(message);
+    if (match.hasMatch())
+    {
+        result = true;
+        //TODO: Save gotten info
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsPrivMsg(const QString &message) const
+bool ChatMessage::_IsJoinMsg(const QString &message)
 {
-    return _regExpPrivmsg.match(message).hasMatch();
+    bool result(false);
+
+    QRegularExpressionMatch match = _regExpJoin.match(message);
+    if (match.hasMatch())
+    {
+        result = true;
+
+        _realName = match.captured("name");
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsJoinMsg(const QString &message) const
+bool ChatMessage::_IsPartMsg(const QString &message)
 {
-    return _regExpJoin.match(message).hasMatch();
+    bool result(false);
+
+    QRegularExpressionMatch match = _regExpPart.match(message);
+    if (match.hasMatch())
+    {
+        result = true;
+
+        _realName = match.captured("name");
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsPartMsg(const QString &message) const
+bool ChatMessage::_IsModeMessage(const QString &message)
 {
-    return _regExpPart.match(message).hasMatch();
+    bool result(false);
+
+    QRegularExpressionMatch match = _regExpMode.match(message);
+    if (match.hasMatch())
+    {
+        result = true;
+
+        _realName = match.captured("name");
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsModeMessage(const QString &message) const
+bool ChatMessage::_IsUnmodeMessage(const QString &message)
 {
-    return _regExpMode.match(message).hasMatch();
+    bool result(false);
+
+    QRegularExpressionMatch match = _regExpUnmode.match(message);
+    if (match.hasMatch())
+    {
+        result = true;
+
+        _realName = match.captured("name");
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsUnmodeMessage(const QString &message) const
+bool ChatMessage::_IsBits(const QString &message)
 {
-    return _regExpUnmode.match(message).hasMatch();
+    bool result(false);
+
+    QRegularExpressionMatch match = _regExpBits.match(message);
+    if (match.hasMatch())
+    {
+        result = true;
+
+        // Login
+        _realName = match.captured("name");
+        // Display name
+        _author = match.captured("author");
+        // Name color
+        _color = "<font color=\"" + match.captured("color") + "\">";
+        // Moderator flag
+        _isModerator = (match.captured("mod") == "1") ? true : false;
+        // Sub flag
+        _isSubscriber = (match.captured("sub") == "1") ? true : false;
+        // Bits
+        _bits = match.captured("bits");
+        // Message itself
+        _message = match.captured("msg");
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsWhisper(const QString &message) const
+bool ChatMessage::_IsPrivMsg(const QString &message)
 {
-    return _regExpWhisper.match(message).hasMatch();
+    bool result(false);
+
+    QRegularExpressionMatch match = _regExpPrivmsg.match(message);
+    if (match.hasMatch())
+    {
+        result = true;
+
+        // Login
+        _realName = match.captured("name");
+        // Display name
+        _author = match.captured("author");
+        // Name color
+        _color = "<font color=\"" + match.captured("color") + "\">";
+        // Moderator flag
+        _isModerator = (match.captured("mod") == "1") ? true : false;
+        if (!_isModerator)
+        {
+            QString name;
+            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
+            // If author is a broadcaster set mod flag true
+            if (_realName == name)
+            {
+                _isModerator = true;
+            }
+        }
+        // Sub flag
+        _isSubscriber = (match.captured("sub") == "1") ? true : false;
+        // Message itself
+        _message = match.captured("msg");
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsBits(const QString &message) const
+bool ChatMessage::_IsWhisper(const QString &message)
 {
-    return _regExpBits.match(message).hasMatch();
+    bool result(false);
+
+    QRegularExpressionMatch match = _regExpWhisper.match(message);
+    if (match.hasMatch())
+    {
+        result = true;
+
+        // Login
+        _realName = match.captured("name");
+        // Display name
+        _author = match.captured("author");
+        // Name color
+        _color = "<font color=\"" + match.captured("color") + "\">";
+        // Moderator flag
+        // TODO: Add mod somehow!
+        // Sub flag
+        // TODO: Add sub somehow!
+        // Message itself
+        _message = match.captured("msg");
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -429,121 +550,6 @@ bool ChatMessage::_IsBits(const QString &message) const
 void ChatMessage::_SetTimeStamp()
 {
     _timeStamp = QTime::currentTime().toString("h:mm:ss");
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void ChatMessage::_GetAndSetNameColor(const QString &message)
-{
-    // Default color
-    QString color = "Black";
-
-    int colorTagPosition = message.indexOf("color=");
-    // 6 = length of "color="
-    if (message.at(colorTagPosition + 6) != ';')
-    {
-        color = (message.mid(colorTagPosition + 6, 7));
-    }
-     _color = "<font color=\"" + color + "\">";
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void ChatMessage::_GetAndSetAuthor(const QString &message)
-{
-    // Get real name
-    int startOfTheName = message.indexOf("!") + 1;
-    int nameLength = message.indexOf("@", startOfTheName) - startOfTheName;
-    _realName = message.mid(startOfTheName, nameLength);
-    // Get display name
-    // 13 = length of "display-name="
-    startOfTheName = message.indexOf("display-name=") + 13;
-    nameLength = message.indexOf("emote") - startOfTheName - 1;
-    // If display name was not specified, use real name
-    if (nameLength < 1)
-    {
-        _author = _realName;
-    }
-    else
-    {
-        _author = message.mid(startOfTheName, nameLength);
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void ChatMessage::_GetAndSetAuthorForMode(const QString &message, MessageType msgType)
-{
-    QString modeType;
-    if (msgType == MODE)
-    {
-        modeType = "+o";
-    }
-    else if (msgType == UNMODE)
-    {
-        modeType = "-o";
-    }
-    if (!modeType.isEmpty())
-    {
-        int startOfTheName = message.indexOf(modeType) + 3;
-        if (startOfTheName >= 3)
-        {
-            int nameLength = message.length() - startOfTheName - 2; // "-2" for "\r\n"
-            _author = message.mid(startOfTheName, nameLength);
-            _realName = _author;
-        }
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void ChatMessage::_GetAndSetChatMessage(const QString &message)
-{
-    QString name;
-    ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
-    QString keyWord = STR_PRIVMSG;
-    keyWord += " #";
-    int startOfMsg = message.indexOf(keyWord);
-    if (startOfMsg == -1)
-    {
-        keyWord = STR_WHISPER;
-        keyWord += " ";
-        startOfMsg = message.indexOf(keyWord);
-        ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, name);
-    }
-    startOfMsg += name.length() + keyWord.length() + 2; // 2 = length of " :"
-    _message = message.mid(startOfMsg, message.size() - startOfMsg - 2);
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void ChatMessage::_GetAndSetModeratorFlag(const QString &message)
-{
-    QString name;
-    ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
-    // If author is a broadcaster set mod flag true
-    if (_author.toLower() == name)
-    {
-        _isModerator = true;
-    }
-    // If author not broadcaster, check status in message
-    else
-    {
-        int index = message.indexOf("mod=");
-        _isModerator = message.mid(index + 4,1).toInt();
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void ChatMessage::_GetAndSetBits(const QString &message)
-{
-    QRegularExpression regExp("@badges=.*;bits=(?<bits>.*);color=.*\r\n");
-    QRegularExpressionMatch match = regExp.match(message);
-    if (match.hasMatch())
-    {
-        _bits = match.captured("bits");
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

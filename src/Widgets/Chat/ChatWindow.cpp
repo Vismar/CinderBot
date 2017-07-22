@@ -30,7 +30,10 @@ ChatWindow::~ChatWindow() {}
 
 void ChatWindow::AddEntryToChat(ChatMessage message, bool botMessage)
 {
-    _chat->AddEntry(message, botMessage);
+    if (message.GetType() != WHISPER)
+    {
+        _chat->AddEntry(message, botMessage);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

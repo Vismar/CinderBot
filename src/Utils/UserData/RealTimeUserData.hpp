@@ -8,6 +8,8 @@
 #include <QString>
 #include "Chat/ChatMessage.hpp"
 
+using namespace Chat;
+
 /*!
  * Singleton class that stores user list and other stuff fpr real time things, like statistics and etc.
  */
