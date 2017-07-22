@@ -12,6 +12,8 @@
 #include "AI/BotAI.hpp"
 #include "Chat/ChatAnswer.hpp"
 
+using namespace Chat;
+
 enum ConnectionState
 {
     NoConnection,

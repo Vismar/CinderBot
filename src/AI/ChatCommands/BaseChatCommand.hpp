@@ -10,6 +10,8 @@
 #include <QTime>
 #include <QDateTime>
 
+using namespace Chat;
+
 namespace Command
 {
 

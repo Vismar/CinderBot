@@ -95,7 +95,7 @@ void TwitchClient::ReadLine()
     while (_socket->canReadLine())
     {
         line = _socket->readLine();
-        qDebug() << "<< " << line;
+        qDebug() << "<-- " << line;
         ChatMessage message;
         // Parse message and get type of it
         MessageType msgType = message.ParseRawMessage(line);
@@ -154,7 +154,7 @@ void TwitchClient::ReadLine()
         case MODE:
             RealTimeUserData::Instance()->AddModeToList(message);
             ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, line);
-            if (message.GetRealName() == line.toLower())
+            if (message.GetRealName() == line)
             {
                 _msgLimit = MSG_LIMIT_MODE;
             }
@@ -162,7 +162,7 @@ void TwitchClient::ReadLine()
         case UNMODE:
             RealTimeUserData::Instance()->RemoveModeFromList(message);
             ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, line);
-            if (message.GetRealName() == line.toLower())
+            if (message.GetRealName() == line)
             {
                 _msgLimit = MSG_LIMIT_NON_MODE;
             }
@@ -215,9 +215,9 @@ void TwitchClient::HandleStateChange(QAbstractSocket::SocketState state)
 void TwitchClient::NewBotMessage(ChatAnswer message)
 {
     _SendChatMessage(message);
-    QStringList& answers = message.GetAnswers();
 
-    if (_msgCounter < _msgLimit)
+    // We should not display whispers in chat
+    if ((message.GetType() != Twitch_Whisper) && (_msgCounter < _msgLimit))
     {
         ChatMessage botMessage;
         QString loginName;
@@ -231,6 +231,7 @@ void TwitchClient::NewBotMessage(ChatAnswer message)
         // it is possible that last one would be checked first, so the last message will be displayed
         // in the first place, and the first message will become last
         int additionalDelay(0);
+        QStringList& answers = message.GetAnswers();
         for (auto iter = answers.begin(); iter != answers.end(); ++iter)
         {
             // Prepare chat message
@@ -327,7 +328,7 @@ void TwitchClient::_SendChatMessage(ChatAnswer &message)
                 msg.push_back(*iter);
                 msg.push_back("\r\n");
                 _SendIrcMessage(msg);
-                qDebug() << ">> " << msg;
+                qDebug() << "--> " << msg;
             }
         }
         switch (answerType)

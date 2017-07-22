@@ -88,14 +88,14 @@ void LoginWindow::_CheckReply(QNetworkReply* reply)
         {
             // Login param
             temp = _login->text();
-            ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_NAME, temp);
+            ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_NAME, temp.toLower());
             _CheckRoom();
         }
         else if ( _lastRequestType == RoomRequest)
         {
             // Channel param
             temp = _room->text();
-            ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_CHANNEL, temp);
+            ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_CHANNEL, temp.toLower());
             // Check if user already authorized
             QString loginOAuth;
             QString channelOAuth;

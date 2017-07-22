@@ -9,6 +9,8 @@
 #include <QWidget>
 #include <QVBoxLayout>
 
+using namespace Chat;
+
 namespace Ui
 {
 namespace Chat

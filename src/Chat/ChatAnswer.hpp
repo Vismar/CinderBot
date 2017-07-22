@@ -6,6 +6,12 @@
 #pragma once
 #include <QStringList>
 
+/*!
+ * \brief Contains all things for chat.
+ */
+namespace Chat
+{
+
 enum ChatAnswerType
 {
     Twitch_Whisper,
@@ -66,3 +72,5 @@ private:
     /*! List of answers */
     QStringList _answers;
 };
+
+}
