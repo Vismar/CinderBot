@@ -41,7 +41,7 @@ public:
      * \param(IN) parameter - parameter that user seek for
      * \param(IN) value - value that should be setted to specified parameter
      */
-    void SetStringParam(const QString &parameter, QString &value);
+    void SetStringParam(const QString &parameter, const QString &value);
 
 private:
     /*!

@@ -87,7 +87,6 @@ void TwitchClient::PingTwitch()
 
 void TwitchClient::ReadLine()
 {
-
     ChatMessage chatMessage;
 
     // If message was received, timer should be stoped
@@ -121,6 +120,27 @@ void TwitchClient::ReadLine()
             _JoinChannel();
             break;
         case USERSTATE:
+            // Check if display name was changed
+            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_DISPLAY_NAME, line);
+            if (line != message.GetAuthor())
+            {
+                ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_DISPLAY_NAME, message.GetAuthor());
+            }
+            // Check if name color was changed
+            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME_COLOR, line);
+            if (line != message.GetColor())
+            {
+                ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_NAME_COLOR, message.GetColor());
+            }
+            // Update mod status
+            if (message.IsModerator())
+            {
+                _msgLimit = MSG_LIMIT_MODE;
+            }
+            else
+            {
+                _msgLimit = MSG_LIMIT_NON_MODE;
+            }
             break;
         case ROOMSTATE:
             ConnectionStateChanged(Connected);
@@ -197,29 +217,31 @@ void TwitchClient::NewBotMessage(ChatAnswer message)
     _SendChatMessage(message);
     QStringList& answers = message.GetAnswers();
 
-    if ((_msgCounter + answers.size()) < _msgLimit)
+    if (_msgCounter < _msgLimit)
     {
         ChatMessage botMessage;
-        QString param;
-        // Try to get login name
-        if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
+        QString loginName;
+        QString loginAuthor;
+        QString loginNameColor;
+        ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, loginName);
+        ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_DISPLAY_NAME, loginAuthor);
+        ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME_COLOR, loginNameColor);
+
+        // Need to add additional delay, because if all timers will end in the same time,
+        // it is possible that last one would be checked first, so the last message will be displayed
+        // in the first place, and the first message will become last
+        int additionalDelay(0);
+        for (auto iter = answers.begin(); iter != answers.end(); ++iter)
         {
-            // Need to add additional delay, because if all timers will end in the same time,
-            // it is possible that last one would be checked first, so the last message will be displayed
-            // in the first place, and the first message will become last
-            int additionalDelay(0);
-            for (auto iter = answers.begin(); iter != answers.end(); ++iter)
-            {
-                // Prepare chat message
-                botMessage.SetAuthor(param);
-                botMessage.SetRealName(param);
-                botMessage.SetColor("Green");
-                botMessage.SetMessage(*iter);
-                botMessage.SetModFlag(_msgLimit == MSG_LIMIT_MODE);
-                // Create single shot timer to emit signal to display bot message with small delay
-                QTimer::singleShot(50+additionalDelay, this, [this, botMessage](){ emit NewMessage(botMessage, true); });
-                additionalDelay += 10;
-            }
+            // Prepare chat message
+            botMessage.SetAuthor(loginAuthor);
+            botMessage.SetRealName(loginName);
+            botMessage.SetColor(loginNameColor);
+            botMessage.SetMessage(*iter);
+            botMessage.SetModFlag(_msgLimit == MSG_LIMIT_MODE);
+            // Create single shot timer to emit signal to display bot message with small delay
+            QTimer::singleShot(50+additionalDelay, this, [this, botMessage](){ emit NewMessage(botMessage, true); });
+            additionalDelay += 10;
         }
     }
 }

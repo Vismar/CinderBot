@@ -9,6 +9,8 @@
 #include <QTime>
 #include <QRegularExpressionMatch>
 
+#include <QDebug>
+
 #define STR_PRIVMSG "PRIVMSG"
 #define STR_WHISPER "WHISPER"
 
@@ -21,8 +23,8 @@ QRegularExpression ChatMessage::_regExpPing("PING :tmi.twitch.tv\\r\\n");
 /*** PONG ***/
 QRegularExpression ChatMessage::_regExpPong("PONG :tmi.twitch.tv\\r\\n");
 /*** USERSTATE ***/
-QRegularExpression ChatMessage::_regExpUserstate("@badges=.*;color=.*;display-name=.*;"
-                                                 "emote-sets=.*;mod=.*;subscriber=.*;user-type=.* "
+QRegularExpression ChatMessage::_regExpUserstate("@badges=.*;color=(?<color>#\\w\\w\\w\\w\\w\\w);display-name=(?<name>.*);"
+                                                 "emote-sets=.*;mod=(?<mod>\\d);subscriber=.*;user-type=.* "
                                                  ":tmi.twitch.tv USERSTATE #.*\\r\\n");
 /*** ROOMSTATE ***/
 QRegularExpression ChatMessage::_regExpRoomState("@broadcaster-lang=.*;emote-only=.*;followers-only=.*;"
@@ -346,9 +348,22 @@ bool ChatMessage::_IsConnectedToRoom(const QString &message) const
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ChatMessage::_IsUserState(const QString &message) const
+bool ChatMessage::_IsUserState(const QString &message)
 {
-    return _regExpUserstate.match(message).hasMatch();
+    bool result(false);
+
+    // Try to match string with regular expression
+    QRegularExpressionMatch match = _regExpUserstate.match(message);
+    if (match.hasMatch())
+    {
+        result = true;
+        // Set params
+        _color = match.captured("color");
+        _author = match.captured("name");
+        _isModerator = (match.captured("mod") == "1") ? true : false;
+    }
+
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////

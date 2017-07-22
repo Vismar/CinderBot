@@ -169,11 +169,14 @@ private:
      */
     bool _IsConnectedToRoom(const QString &message) const;
     /*!
-     * Check message if it is a userstate message
-     * \param(IN) message - message to check
-     * \return true, if it is a userstate message
+     * Check message if it is a userstate message.
+     * \param(IN) message - message to check.
+     * \return true, if it is a userstate message.
+     *
+     * Checks if current message matches userstate regular expression,
+     * saves bot display name, moderation status and name color that was setted on twitch.
      */
-    bool _IsUserState(const QString &message) const;
+    bool _IsUserState(const QString &message);
     /*!
      * \brief Chechs if current message is a roomstate message.
      * \param message - message to check.
@@ -286,6 +289,7 @@ private:
     /*** Regular expressions ***/
     static QRegularExpression _regExpPing;
     static QRegularExpression _regExpPong;
+    /*! Regular expression to catch USERSTATE messages from twitch. */
     static QRegularExpression _regExpUserstate;
     static QRegularExpression _regExpRoomState;
     static QRegularExpression _regExpJoin;
