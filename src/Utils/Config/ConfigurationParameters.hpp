@@ -18,6 +18,8 @@
 /*============================================*/
 /* Login params */
 #define CFGP_LOGIN_NAME              "LoginName"
+#define CFGP_LOGIN_DISPLAY_NAME      "LoginDisplayName"
+#define CFGP_LOGIN_NAME_COLOR        "LoginNameColor"
 #define CFGP_LOGIN_OAUTH_KEY         "LoginOauthKey"
 #define CFGP_LOGIN_CHANNEL           "LoginChannel"
 #define CFGP_LOGIN_CHANNEL_OAUTH_KEY "LoginChannelOauthKey"

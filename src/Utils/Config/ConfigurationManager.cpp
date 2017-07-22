@@ -89,7 +89,7 @@ bool ConfigurationManager::GetStringParam(const QString &parameter, QString &val
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ConfigurationManager::SetStringParam(const QString &parameter, QString &value)
+void ConfigurationManager::SetStringParam(const QString &parameter, const QString &value)
 {
     // If manager contains requested parameter, update it
     if (_params.contains(parameter))
@@ -140,6 +140,8 @@ void ConfigurationManager::_CreateDefaultConfigFile()
                   "<Configuration>\n"
                   "\t<LoginData>\n"
                   "\t\t<LoginName></LoginName>\n"
+                  "\t\t<LoginDisplayName></LoginDisplayName>\n"
+                  "\t\t<LoginNameColor></LoginNameColor>\n"
                   "\t\t<LoginOauthKey></LoginOauthKey>\n"
                   "\t\t<LoginChannel></LoginChannel>\n"
                   "\t\t<LoginChannelOauthKey></LoginChannelOauthKey>\n"
@@ -295,6 +297,16 @@ void ConfigurationManager::_WriteLoginData()
     _xmlWriter.writeComment("Login name of your bot");
     GetStringParam(CFGP_LOGIN_NAME, value);
     _xmlWriter.writeTextElement(CFGP_LOGIN_NAME, value);
+    value.clear();
+    // LoginDisplayName
+    _xmlWriter.writeComment("Login display name of your bot");
+    GetStringParam(CFGP_LOGIN_DISPLAY_NAME, value);
+    _xmlWriter.writeTextElement(CFGP_LOGIN_DISPLAY_NAME, value);
+    value.clear();
+    // LoginNameColor
+    _xmlWriter.writeComment("Login name color of your bot");
+    GetStringParam(CFGP_LOGIN_NAME_COLOR, value);
+    _xmlWriter.writeTextElement(CFGP_LOGIN_NAME_COLOR, value);
     value.clear();
     // LoginOauthKey
     _xmlWriter.writeComment("Oauth key which required to login on twitch");
