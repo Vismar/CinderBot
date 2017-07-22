@@ -20,6 +20,7 @@
 #include "Utils/DatabaseManager.hpp"
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
+#include "Utils/Logger.hpp"
 #include <QApplication>
 #include <QMessageBox>
 #include <QtGlobal>
@@ -27,6 +28,8 @@
 
 int main(int argc, char *argv[])
 {
+    LOG(Utils::LogInfo, "CinderBot started.");
+
     // Set seed for random generation
     qsrand(QTime::currentTime().second());
     int returningCode(0);
@@ -38,6 +41,10 @@ int main(int argc, char *argv[])
     error = DatabaseManager::Instance().Initialize();
     if (error != "OK")
     {
+        // Log
+        LOG(Utils::LogCritical, error);
+
+        // Message box
         QMessageBox msgBox;
         msgBox.setText(error);
         msgBox.exec();
@@ -45,10 +52,16 @@ int main(int argc, char *argv[])
         returningCode = -1;
     }
 
+    // Log
+    LOG(Utils::LogInfo, "Database loaded.");
+
     // Try to initialize configuration manager
     error = ConfigurationManager::Instance().Initialize();
     if (error.isEmpty())
     {
+        // Log
+        LOG(Utils::LogInfo, "Configuration loaded.");
+
         // Initialize user data
         UserData::Instance().Initialize();
         // Initialize real time user data
@@ -57,17 +70,33 @@ int main(int argc, char *argv[])
         Ui::MainWindow mainWindow;
         mainWindow.show();
 
+        // Log
+        LOG(Utils::LogInfo, "App started.");
+
         returningCode = a.exec();
     }
     // If configuration manager do not initialized, just show an error message.
     else
     {
+        // Log
+        LOG(Utils::LogCritical, error);
+
+        // Message box
         QMessageBox msgBox;
         msgBox.setText(error);
         msgBox.exec();
         // Return -1 as an error
         returningCode = -1;
     }
+
+    // Log
+    LOG(Utils::LogWarning, "CinderBot closed.\n\n"
+                           "///////////////////////////////////////////////////////////////////////////\n"
+                           "////////////////////////////// END OF SESSION /////////////////////////////\n"
+                           "///////////////////////////////////////////////////////////////////////////");
+
+    // Flush all log messages
+    LOG_FLUSH();
 
     return returningCode;
 }

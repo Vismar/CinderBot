@@ -76,7 +76,8 @@ SOURCES += main.cpp\
     Widgets/Login/ConnectWidget.cpp \
     Widgets/Login/LoginWindow.cpp \
     Widgets/Common/EnhLineEdit.cpp \
-    Widgets/Common/EnhTextEdit.cpp
+    Widgets/Common/EnhTextEdit.cpp \
+    Utils/Logger.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -143,7 +144,8 @@ HEADERS  += MainWindow.hpp \
     Widgets/Login/ConnectWidget.hpp \
     Widgets/Login/LoginWindow.hpp \
     Widgets/Common/EnhLineEdit.hpp \
-    Widgets/Common/EnhTextEdit.hpp
+    Widgets/Common/EnhTextEdit.hpp \
+    Utils/Logger.hpp
 
 RESOURCES += \
     Resources.qrc
