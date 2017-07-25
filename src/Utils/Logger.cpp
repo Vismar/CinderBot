@@ -87,7 +87,9 @@ void Logger::Write(LogLevel logLevel, const QString &className, const QString &f
     {
         stream << className << "::";
     }
-    stream << funcName << "() ) - " << message;
+    QString tempFuncName = funcName;
+    tempFuncName.replace("__thiscall", "");
+    stream << tempFuncName << " )\n" << message;
     Logger::Write(logLevel, newMessage);
 }
 
