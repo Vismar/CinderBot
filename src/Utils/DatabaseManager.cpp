@@ -7,7 +7,9 @@
 #include <QStringList>
 #include <QFile>
 #include <QDir>
-#include <QDebug>
+#include "Utils/Logger.hpp"
+
+using namespace Utils;
 
 #define DB_FOLDER    "data"
 #define DB_FILE_NAME "CinderBotDatabase.sqlite"
@@ -46,10 +48,9 @@ QString DatabaseManager::Initialize()
     QDir dir(DB_FOLDER);
     if (!dir.exists())
     {
-        qDebug() << "WARNING: ./data Not exist. Trying to create...";
         if (!dir.mkpath("."))
         {
-            qDebug() << "ERROR: Folder cannot be created!";
+            LOG(LogError, this->metaObject()->className(), __func__, QString("Folder %1 cannot be crated.").arg(DB_FOLDER));
             result = "Cannot create a data folder!";
         }
     }
@@ -83,7 +84,11 @@ bool DatabaseManager::CreateIndex(const QString &tableName, const QString &index
     if (!query.exec(command))
     {
         result = false;
-        qDebug() << "Database error(CreateIndex): " << query.lastError();
+        LOG(LogError, "", Q_FUNC_INFO,
+            QString("Values: tableName='%1';"
+                    "indexName='%2';"
+                    "columns='%3';\n"
+                    "Error message: %4").arg(tableName).arg(indexName).arg(columns).arg(query.lastError().text()));
     }
 
     return result;
@@ -111,7 +116,10 @@ bool DatabaseManager::CreateTable(const QString &tableName, const QString &colum
             {
                 // If command failed, return error
                 result = false;
-                qDebug() << "Database error(CreateTable): " << query.lastError().text();
+                LOG(LogError, "", Q_FUNC_INFO,
+                    QString("Values: tableName='%1';"
+                            "columns='%2';\n"
+                            "Error message: %3").arg(tableName).arg(columns).arg(query.lastError().text()));
             }
         }
         // If table exist, check if all columns are added
@@ -151,7 +159,10 @@ bool DatabaseManager::CreateTable(const QString &tableName, const QString &colum
                         {
                             // If command failed, return error
                             result = false;
-                            qDebug() << "Database error(CreateTable): " << alterTableQuery.lastError().text();
+                            LOG(LogError, "", Q_FUNC_INFO,
+                                QString("Values: tableName='%1';"
+                                        "columns='%2';\n"
+                                        "Error message: %3").arg(tableName).arg(columns).arg(alterTableQuery.lastError().text()));
                         }
                     }
                 }
@@ -177,7 +188,11 @@ bool DatabaseManager::Insert(const QString &tableName, const QString &recordValu
     {
         // If command failed, return error
         result = false;
-        qDebug() << "Database error(Insert)" << tableName << ": " << query.lastError().text();
+        LOG(LogError, "", Q_FUNC_INFO,
+            QString("Values: tableName='%1';"
+                    "recordValues='%2';"
+                    "ignore='%3';\n"
+                    "Error message: %4").arg(tableName).arg(recordValues).arg(ignore).arg(query.lastError().text()));
     }
     else
     {
@@ -208,7 +223,11 @@ DB_QUERY_PTR DatabaseManager::Select(const QString &tableName, const QString &co
         return query;
     }
     // If command failed, return error
-    qDebug() << "Database error(Select)" << tableName << ": " << query->lastError().text();
+    LOG(LogError, "", Q_FUNC_INFO,
+        QString("Values: tableName='%1';"
+                "columnNames='%2';"
+                "conditions='%3';\n"
+                "Error message: %4").arg(tableName).arg(columnNames).arg(conditions).arg(query->lastError().text()));
 
     return nullptr;
 }
@@ -234,7 +253,11 @@ bool DatabaseManager::Update(const QString &tableName, const QString &columnValu
     {
         // If command failed, return error
         result = false;
-        qDebug() << "Database error(Update)" << tableName << ": " << query.lastError().text();
+        LOG(LogError, "", Q_FUNC_INFO,
+            QString("Values: tableName='%1';"
+                    "columnValues='%2';"
+                    "conditions='%3';\n"
+                    "Error message: %4").arg(tableName).arg(columnValues).arg(conditions).arg(query.lastError().text()));
     }
     else
     {
@@ -266,7 +289,10 @@ bool DatabaseManager::Delete(const QString &tableName, const QString &conditions
     {
         // If command failed, return error
         result = false;
-        qDebug() << "Database error(Delete)" << tableName << ": " << query.lastError().text();
+        LOG(LogError, "", Q_FUNC_INFO,
+            QString("Values: tableName='%1';"
+                    "conditions='%2';"
+                    "Error message: %3").arg(tableName).arg(conditions).arg(query.lastError().text()));
     }
     else
     {
