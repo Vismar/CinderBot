@@ -37,21 +37,21 @@ QRegularExpression ChatMessage::_regExpMode(":jtv MODE #.* \\+o (?<name>.*)\\r\\
 /*** UNMODE ***/
 QRegularExpression ChatMessage::_regExpUnmode(":jtv MODE #.* -o (?<name>.*)\\r\\n");
 /*** BITS ***/
-QRegularExpression ChatMessage::_regExpBits("@badges=.*;bits=(?<bits>.*);color=(?<color>#\\w\\w\\w\\w\\w\\w);"
-                                            "display-name=(?<author>.*);emotes=.*;id=.*;"
-                                            "mod=(?<mod>\\d);room-id=.*;subscriber=(?<sub>\\d);"
-                                            ".*;turbo=.*;user-id=.*;user-type=.* "
+QRegularExpression ChatMessage::_regExpBits("@badges=.*;bits=(?<bits>.*);color=(?<color>.*);"
+                                            "display-name=(?<author>.*);.*emotes=.*;id=.*;"
+                                            "mod=(?<mod>\\d);room-id=.*;.*subscriber=(?<sub>\\d);"
+                                            ".*;turbo=\\d;user-id=.*;user-type=.* "
                                             ":(?<name>.*)!.*@.*.tmi.twitch.tv PRIVMSG #.* :(?<msg>.*)\r\n");
 /*** PRIVMSG ***/
-QRegularExpression ChatMessage::_regExpPrivmsg("@badges=.*;color=(?<color>#\\w\\w\\w\\w\\w\\w);display-name=(?<author>.*);"
+QRegularExpression ChatMessage::_regExpPrivmsg("@badges=.*;color=(?<color>.*);display-name=(?<author>.*);.*"
                                                "emotes=.*;id=.*;mod=(?<mod>\\d);"
-                                               "room-id=.*;subscriber=(?<sub>\\d);tmi-sent-ts=.*;"
+                                               "room-id=.*;.*subscriber=(?<sub>\\d);.*"
                                                "turbo=\\d;user-id=.*;user-type=.* "
                                                ":(?<name>.*)!.*@.*.tmi.twitch.tv PRIVMSG #.* :(?<msg>.*)\\r\\n");
 /*** WHISPER ***/
-QRegularExpression ChatMessage::_regExpWhisper("@badges=.*;color=(?<color>#\\w\\w\\w\\w\\w\\w);display-name=(?<author>.*);"
+QRegularExpression ChatMessage::_regExpWhisper("@badges=.*;color=(?<color>.*);display-name=(?<author>.*);"
                                                "emotes=.*;message-id=.*;thread-id=.*;"
-                                               "turbo=.*;user-id=.*;user-type=.* "
+                                               "turbo=\\d;user-id=.*;user-type=.* "
                                                ":(?<name>.*)!.*@.*.tmi.twitch.tv WHISPER .* :(?<msg>.*)\\r\\n");
 
 ///////////////////////////////////////////////////////////////////////////
