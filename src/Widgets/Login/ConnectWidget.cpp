@@ -8,6 +8,7 @@
 #include "Utils/Config/ConfigurationParameters.hpp"
 
 using namespace Ui::Login;
+using namespace Utils::Configuration;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -53,14 +54,14 @@ void ConnectWidget::CheckAndRunAutoLogin()
     QString paramAuto;
     ConfigurationManager& cfgMng = ConfigurationManager::Instance();
 
-    cfgMng.GetStringParam(CFGP_LOGIN_NAME, paramLogin);
-    cfgMng.GetStringParam(CFGP_LOGIN_OAUTH_KEY, paramOAuth);
-    cfgMng.GetStringParam(CFGP_LOGIN_CHANNEL, paramChannel);
+    cfgMng.GetStringParam(LoginName, paramLogin);
+    cfgMng.GetStringParam(LoginOauthKey, paramOAuth);
+    cfgMng.GetStringParam(LoginChannel, paramChannel);
 
     // Wee ned to check that login, channel and oauth key exist in config file
     if (!paramLogin.isEmpty() && !paramChannel.isEmpty() && !paramOAuth.isEmpty())
     {
-        cfgMng.GetStringParam(CFGP_LOGIN_AUTO, paramAuto);
+        cfgMng.GetStringParam(LoginAuto, paramAuto);
         if (paramAuto == "true")
         {
             emit LoginSuccess();

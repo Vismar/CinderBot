@@ -4,11 +4,49 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "ConfigurationManager.hpp"
-#include "ConfigurationParameters.hpp"
+#include "Utils/Logger.hpp"
 #include <QFile>
 #include <QDir>
-#include <QDebug>
+#include <QVector>
+#include <QTextStream>
 
+using namespace Utils::Configuration;
+
+/*! Statis constant array of parameters that could be stored in config manager. */
+static const QVector<QString>
+CfgStrParam = { // Login params
+                "LoginName",
+                "LoginDisplayName",
+                "LoginNameColor",
+                "LoginOauthKey",
+                "LoginChannel",
+                "LoginChannelOauthKey",
+                "LoginAuto",
+                // Currency params
+                "Currency",
+                "CurrencyPerMsg",
+                "CurrencyOverTime",
+                "CurrencyTimer",
+                // Covenant params
+                "CovJoinPrice",
+                "CovCreatePrice",
+                "CovRenamePrice",
+                // Analytics params
+                "ViewerGraphUpdateTime",
+                "MessageGraphUpdateTime",
+                // Additional params
+                "IgnoreList"
+              };
+
+// Section names
+#define CFGS_CONFIG_ROOT "Configuration"
+#define CFGS_LOGIN       "LoginData"
+#define CFGS_CONFIG      "ConfigData"
+#define CFGS_IGNORE      "IgnoreList"
+#define CFGS_USER        "User"
+#define CFGS_COVENANT    "Covenant"
+
+// Folders and files
 #define CFG_FOLDER    "data/config"
 #define CFG_FILE_NAME "Сonfig.xml"
 
@@ -75,13 +113,13 @@ QString ConfigurationManager::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ConfigurationManager::GetStringParam(const QString &parameter, QString &value)
+bool ConfigurationManager::GetStringParam(CfgParam cfgParam, QString &value)
 {
     // If manager contains requested paramter, get it and return true
-    bool result = _params.contains(parameter);
+    bool result = _params.contains(CfgStrParam[cfgParam]);
     if (result)
     {
-        value = _params.value(parameter);
+        value = _params.value(CfgStrParam[cfgParam]);
     }
 
     return result;
@@ -89,14 +127,16 @@ bool ConfigurationManager::GetStringParam(const QString &parameter, QString &val
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ConfigurationManager::SetStringParam(const QString &parameter, const QString &value)
+void ConfigurationManager::SetStringParam(CfgParam cfgParam, const QString &value)
 {
     // If manager contains requested parameter, update it
-    if (_params.contains(parameter))
+    if (_params.contains(CfgStrParam[cfgParam]))
     {
-        _params.insert(parameter, value);
+        _params.insert(CfgStrParam[cfgParam], value);
     }
     _SaveConfiguration();
+
+    emit ParameterChanged(cfgParam);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -108,11 +148,10 @@ bool ConfigurationManager::_CreateFolders(QString &error)
     QDir dir(CFG_FOLDER);
     if (!dir.exists())
     {
-        qDebug() << "WARNING: ./data/config do not exist. Trying to create.";
         // Try to create folders
         if (!dir.mkpath("."))
         {
-            qDebug() << "ERROR: Folder cannot be created!";
+            LOG(Utils::LogCritical, "", Q_FUNC_INFO, QString("Folder %1 cannot be created.").arg(CFG_FOLDER));
             error = "Folder cannot be created! Please run app as administrator.";
         }
         else
@@ -131,7 +170,7 @@ void ConfigurationManager::_CreateDefaultConfigFile()
     QFile cfgFile(QString("./%1/%2").arg(CFG_FOLDER).arg(CFG_FILE_NAME));
     if (!cfgFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << "ERROR: Config file ccnot be created!";
+        LOG(Utils::LogCritical, "", Q_FUNC_INFO, "Config file cannot be created.");
     }
     else
     {
@@ -295,36 +334,36 @@ void ConfigurationManager::_WriteLoginData()
 
     // LoginName
     _xmlWriter.writeComment("Login name of your bot");
-    GetStringParam(CFGP_LOGIN_NAME, value);
-    _xmlWriter.writeTextElement(CFGP_LOGIN_NAME, value);
+    GetStringParam(LoginName, value);
+    _xmlWriter.writeTextElement(CfgStrParam[LoginName], value);
     value.clear();
     // LoginDisplayName
     _xmlWriter.writeComment("Login display name of your bot");
-    GetStringParam(CFGP_LOGIN_DISPLAY_NAME, value);
-    _xmlWriter.writeTextElement(CFGP_LOGIN_DISPLAY_NAME, value);
+    GetStringParam(LoginDisplayName, value);
+    _xmlWriter.writeTextElement(CfgStrParam[LoginDisplayName], value);
     value.clear();
     // LoginNameColor
     _xmlWriter.writeComment("Login name color of your bot");
-    GetStringParam(CFGP_LOGIN_NAME_COLOR, value);
-    _xmlWriter.writeTextElement(CFGP_LOGIN_NAME_COLOR, value);
+    GetStringParam(LoginNameColor, value);
+    _xmlWriter.writeTextElement(CfgStrParam[LoginNameColor], value);
     value.clear();
     // LoginOauthKey
     _xmlWriter.writeComment("Oauth key which required to login on twitch");
-    GetStringParam(CFGP_LOGIN_OAUTH_KEY, value);
-    _xmlWriter.writeTextElement(CFGP_LOGIN_OAUTH_KEY, value);
+    GetStringParam(LoginOauthKey, value);
+    _xmlWriter.writeTextElement(CfgStrParam[LoginOauthKey], value);
     value.clear();
     // LoginChannel
     _xmlWriter.writeComment("Channel to connect");
-    GetStringParam(CFGP_LOGIN_CHANNEL, value);
-    _xmlWriter.writeTextElement(CFGP_LOGIN_CHANNEL, value);
+    GetStringParam(LoginChannel, value);
+    _xmlWriter.writeTextElement(CfgStrParam[LoginChannel], value);
     // LoginChannelOauthKey
     _xmlWriter.writeComment("Channel oauth key which required to get stream info");
-    GetStringParam(CFGP_LOGIN_CHANNEL_OAUTH_KEY, value);
-    _xmlWriter.writeTextElement(CFGP_LOGIN_CHANNEL_OAUTH_KEY, value);
+    GetStringParam(LoginChannelOauthKey, value);
+    _xmlWriter.writeTextElement(CfgStrParam[LoginChannelOauthKey], value);
     // LoginAuto
     _xmlWriter.writeComment("Should bot try to connect automatically?");
-    GetStringParam(CFGP_LOGIN_AUTO, value);
-    _xmlWriter.writeTextElement(CFGP_LOGIN_AUTO, value);
+    GetStringParam(LoginAuto, value);
+    _xmlWriter.writeTextElement(CfgStrParam[LoginAuto], value);
 
     _xmlWriter.writeEndElement(); // Login section end
 }
@@ -358,31 +397,31 @@ void ConfigurationManager::_WriteConfigCurrencyData()
                             "Parameter: Currency\n\t\t"
                             "Description: Use any emoticon or definition which you like.\n\t\t"
                             "             Defines how your currency will be represented for viewers.");
-    GetStringParam(CFGP_CURRENCY, value);
-    _xmlWriter.writeTextElement(CFGP_CURRENCY, value);
+    GetStringParam(Currency, value);
+    _xmlWriter.writeTextElement(CfgStrParam[Currency], value);
     value.clear();
     // Currency per msg
     _xmlWriter.writeComment("Parameter: Currency per message\n\t\t"
                             "Description: Set value (integer) which will represent\n\t\t"
                             "             how many currency will be given to user per message.");
-    GetStringParam(CFGP_CURRENCY_PER_MSG, value);
-    _xmlWriter.writeTextElement(CFGP_CURRENCY_PER_MSG, value);
+    GetStringParam(CurrencyPerMsg, value);
+    _xmlWriter.writeTextElement(CfgStrParam[CurrencyPerMsg], value);
     value.clear();
     // Currency over time
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Currency per timer\n\t\t"
                             "Description: Set value (integer) which will represent\n\t\t"
                             "             how many currency will be given to user per specified time.");
-    GetStringParam(CFGP_CURRENCY_OVER_TIME, value);
-    _xmlWriter.writeTextElement(CFGP_CURRENCY_OVER_TIME, value);
+    GetStringParam(CurrencyOverTime, value);
+    _xmlWriter.writeTextElement(CfgStrParam[CurrencyOverTime], value);
     value.clear();
     // Currency timer
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Currency timer\n\t\t"
                             "Description: Timer, which specifies how often bot will give currency to users in chat.\n\t\t"
                             "             Should be in milliseconds, bigger than 0.");
-    GetStringParam(CFGP_CURRECY_TIMER, value);
-    _xmlWriter.writeTextElement(CFGP_CURRECY_TIMER, value);
+    GetStringParam(CurrencyTimer, value);
+    _xmlWriter.writeTextElement(CfgStrParam[CurrencyTimer], value);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -396,24 +435,24 @@ void ConfigurationManager::_WriteConfigCovenantData()
                             "Parameter: Covenant join price\n\t\t"
                             "Description: Price for joining any covenant.\n\t\t"
                             "             Any integer number, bigger than -1.");
-    GetStringParam(CFGP_COV_JOIN_PRICE, value);
-    _xmlWriter.writeTextElement(CFGP_COV_JOIN_PRICE, value);
+    GetStringParam(CovJoinPrice, value);
+    _xmlWriter.writeTextElement(CfgStrParam[CovJoinPrice], value);
     value.clear();
     // Covenant create price
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Covenant create price\n\t\t"
                             "Description: Price for creating covenant.\n\t\t"
                             "             Any integer number, bigger than -1.");
-    GetStringParam(CFGP_COV_CREATE_PRICE, value);
-    _xmlWriter.writeTextElement(CFGP_COV_CREATE_PRICE, value);
+    GetStringParam(CovCreatePrice, value);
+    _xmlWriter.writeTextElement(CfgStrParam[CovCreatePrice], value);
     value.clear();
     // Covenant rename price
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Covenant rename price\n\t\t"
                             "Description: Price for renaming covenant.\n\t\t"
                             "             Any integer number, bigger than -1.");
-    GetStringParam(CFGP_COV_RENAME_PRICE, value);
-    _xmlWriter.writeTextElement(CFGP_COV_RENAME_PRICE, value);
+    GetStringParam(CovRenamePrice, value);
+    _xmlWriter.writeTextElement(CfgStrParam[CovRenamePrice], value);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -427,16 +466,16 @@ void ConfigurationManager::_WriteConfigAnalyticsData()
                             "Parameter: Analytics viewer graph update time\n\t\t"
                             "Description: Timer, which specifies how often viewer graph should be updated.\n\t\t"
                             "             In milliseconds, bigger than 0.");
-    GetStringParam(CFGP_VGRAPH_UPD_TIME, value);
-    _xmlWriter.writeTextElement(CFGP_VGRAPH_UPD_TIME, value);
+    GetStringParam(ViewerGraphUpdateTime, value);
+    _xmlWriter.writeTextElement(CfgStrParam[ViewerGraphUpdateTime], value);
     value.clear();
     // Analytics message graph update time
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Analytics message graph update time\n\t\t"
                             "Description: Timer, which specifies how often message graph should be updated.\n\t\t"
                             "             In milliseconds, bigger than 0.");
-    GetStringParam(CFGP_MESSAGE_GRAPH_UPD_TIME, value);
-    _xmlWriter.writeTextElement(CFGP_MESSAGE_GRAPH_UPD_TIME, value);
+    GetStringParam(MessageGraphUpdateTime, value);
+    _xmlWriter.writeTextElement(CfgStrParam[MessageGraphUpdateTime], value);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -449,7 +488,7 @@ void ConfigurationManager::_WriteIgnoreList()
     _xmlWriter.writeStartElement(CFGS_IGNORE);
 
     // Get ignore list and split it to users
-    GetStringParam(CFGS_IGNORE, value);
+    GetStringParam(IgnoreList, value);
     QStringList users = value.split(',');
     for (int i = 0; i < users.count(); ++i)
     {

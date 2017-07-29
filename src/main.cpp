@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     LOG(Utils::LogInfo, "Database loaded.");
 
     // Try to initialize configuration manager
-    error = ConfigurationManager::Instance().Initialize();
+    error = Utils::Configuration::ConfigurationManager::Instance().Initialize();
     if (error.isEmpty())
     {
         // Log

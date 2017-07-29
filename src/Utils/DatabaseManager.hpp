@@ -21,14 +21,9 @@ class DatabaseManager : public QObject
 {
     Q_OBJECT
 public:
-    /*!
-     * Default constructor
-     */
     DatabaseManager();
-    /*!
-     * Desctructor
-     */
     ~DatabaseManager();
+
     /*!
      * Initialize and create instance of database manaager
      * \return reference to static database manager

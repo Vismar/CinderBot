@@ -10,6 +10,7 @@
 
 using namespace Ui::Analytics;
 using namespace QtCharts;
+using namespace Utils::Configuration;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -51,7 +52,7 @@ MessageGraphWidget::MessageGraphWidget(QWidget* parent) : QGroupBox(parent)
     connect(_timer, &QTimer::timeout,
             this, &MessageGraphWidget::UpdateGraph);
     // Start timer
-    ConfigurationManager::Instance().GetStringParam(CFGP_MESSAGE_GRAPH_UPD_TIME, _timeToUpdate);
+    ConfigurationManager::Instance().GetStringParam(MessageGraphUpdateTime, _timeToUpdate);
     _timer->start(_timeToUpdate.toInt());
 }
 
@@ -76,7 +77,7 @@ void MessageGraphWidget::UpdateGraph()
     {
         _valueAxis->setTickCount(7);
     }
-    ConfigurationManager::Instance().GetStringParam(CFGP_MESSAGE_GRAPH_UPD_TIME, _timeToUpdate);
+    ConfigurationManager::Instance().GetStringParam(MessageGraphUpdateTime, _timeToUpdate);
     _timer->start(_timeToUpdate.toInt());
     // Update average msg counter
     _UpdateAverageMsg();

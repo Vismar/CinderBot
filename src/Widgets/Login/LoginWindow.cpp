@@ -14,6 +14,7 @@
 
 using namespace Ui::Login;
 using namespace Ui::Common;
+using namespace Utils::Configuration;
 
 #define WINDOW_HEIGHT_NORMAL 125
 #define WINDOW_HEIGHT_ERROR  150
@@ -88,19 +89,19 @@ void LoginWindow::_CheckReply(QNetworkReply* reply)
         {
             // Login param
             temp = _login->text();
-            ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_NAME, temp.toLower());
+            ConfigurationManager::Instance().SetStringParam(LoginName, temp.toLower());
             _CheckRoom();
         }
         else if ( _lastRequestType == RoomRequest)
         {
             // Channel param
             temp = _room->text();
-            ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_CHANNEL, temp.toLower());
+            ConfigurationManager::Instance().SetStringParam(LoginChannel, temp.toLower());
             // Check if user already authorized
             QString loginOAuth;
             QString channelOAuth;
-            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_OAUTH_KEY, loginOAuth);
-            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL_OAUTH_KEY, channelOAuth);
+            ConfigurationManager::Instance().GetStringParam(LoginOauthKey, loginOAuth);
+            ConfigurationManager::Instance().GetStringParam(LoginChannelOauthKey, channelOAuth);
             if (!loginOAuth.isEmpty() && !channelOAuth.isEmpty())
             {
                 _CloseSuccess();
@@ -152,7 +153,7 @@ void LoginWindow::_CheckAndSaveToken(const QUrl &url)
             {
             case LoginToken:
                 // Set login oauth key in config
-                ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_OAUTH_KEY, token);
+                ConfigurationManager::Instance().SetStringParam(LoginOauthKey, token);
                 _currentToken = ChannelToken;
                 // Hide loading second authorization
                 _webView->hide();
@@ -161,7 +162,7 @@ void LoginWindow::_CheckAndSaveToken(const QUrl &url)
                 break;
             case ChannelToken:
                 // Set channel oauth key in config
-                ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_CHANNEL_OAUTH_KEY, token);
+                ConfigurationManager::Instance().SetStringParam(LoginChannelOauthKey, token);
                 _CloseSuccess();
                 break;
             }
@@ -222,7 +223,7 @@ void LoginWindow::_InitLoginSection()
     // Text field
     _login = new EnhLineEdit(this);
     _login->setPlaceholderText("Your bot account login");
-    ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, temp);
+    ConfigurationManager::Instance().GetStringParam(LoginName, temp);
     _login->setText(temp);
     _layout->addWidget(_login, 1, 1);
     connect(_login, &EnhLineEdit::textChanged,
@@ -241,7 +242,7 @@ void LoginWindow::_InitRoomSection()
     // Text field
     _room = new EnhLineEdit(this);
     _room->setPlaceholderText("Channel to which bot should connect");
-    ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, temp);
+    ConfigurationManager::Instance().GetStringParam(LoginChannel, temp);
     _room->setText(temp);
     _layout->addWidget(_room, 2, 1);
     connect(_room, &EnhLineEdit::textChanged,
@@ -254,7 +255,7 @@ void LoginWindow::_InitAutoLoginSection()
 {
     QString temp;
     _autoLogin = new QCheckBox(this);
-    ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_AUTO, temp);
+    ConfigurationManager::Instance().GetStringParam(LoginAuto, temp);
     if (temp == "true")
     {
         _autoLogin->setChecked(true);
@@ -402,7 +403,7 @@ void LoginWindow::_CloseSuccess()
 {
     //Save auto login param
     QString autoLogin = (_autoLogin->checkState() == Qt::Checked) ? "true" : "false";
-    ConfigurationManager::Instance().SetStringParam(CFGP_LOGIN_AUTO, autoLogin);
+    ConfigurationManager::Instance().SetStringParam(LoginAuto, autoLogin);
     // Notify about cussess athorization process
     emit LoginSuccess();
     // Close dialog window

@@ -10,6 +10,7 @@
 #include "Utils/DatabaseManager.hpp"
 
 using namespace Command::CovenantCmd;
+using namespace Utils::Configuration;
 
 #define MSG_JOINING_COV    0
 #define MSG_ALREADY_IN_COV 1
@@ -64,7 +65,7 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
         // Set default price value
         int priceToJoin(100);
         // Try to get param from config manager
-        if (configMng.GetStringParam(CFGP_COV_JOIN_PRICE,price))
+        if (configMng.GetStringParam(CovJoinPrice,price))
         {
             priceToJoin = price.toInt();
 

@@ -5,11 +5,11 @@
 **************************************************************************/
 #include "ChatMessage.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
-#include "Utils/Config/ConfigurationParameters.hpp"
 #include <QTime>
 #include <QRegularExpressionMatch>
 
 using namespace Chat;
+using namespace Utils::Configuration;
 
 ///////////////////////////////////////////////////////////////////////////
 /************************** Regular expressions **************************/
@@ -117,7 +117,7 @@ bool ChatMessage::IsModerator() const
 bool ChatMessage::IsBroadcaster() const
 {
     QString channelName;
-    ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, channelName);
+    ConfigurationManager::Instance().GetStringParam(LoginChannel, channelName);
     return (channelName == _realName);
 }
 
@@ -333,7 +333,7 @@ bool ChatMessage::_IsConnectedToRoom(const QString &message) const
 {
     bool result(false);
     QString param;
-    if (ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_NAME, param))
+    if (ConfigurationManager::Instance().GetStringParam(LoginName, param))
     {
         result = message.contains("JOIN") &&
                  !message.mid(1).contains(":") &&
@@ -499,7 +499,7 @@ bool ChatMessage::_IsPrivMsg(const QString &message)
         if (!_isModerator)
         {
             QString name;
-            ConfigurationManager::Instance().GetStringParam(CFGP_LOGIN_CHANNEL, name);
+            ConfigurationManager::Instance().GetStringParam(LoginChannel, name);
             // If author is a broadcaster set mod flag true
             if (_realName == name)
             {
