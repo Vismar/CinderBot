@@ -20,6 +20,7 @@ using namespace Command::UserDataCmd;
 using namespace Command::QuoteCmd;
 using namespace Command::CustomChatCmd;
 using namespace Command::CovenantCmd;
+using namespace Utils::Configuration;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -29,11 +30,11 @@ BotAI::BotAI(QObject *parent) : QObject(parent)
     ConfigurationManager &configMng = ConfigurationManager::Instance();
     QString param;
     // Fill ignore list
-    if (configMng.GetStringParam(CFGS_IGNORE, param))
+    if (configMng.GetStringParam(IgnoreList, param))
     {
         _ignoreList = param.split(',');
     }
-    if (configMng.GetStringParam(CFGP_LOGIN_NAME, param))
+    if (configMng.GetStringParam(LoginName, param))
     {
         // If botname not added to the list, add it
         if (!_ignoreList.contains(param))
@@ -57,7 +58,7 @@ BotAI::BotAI(QObject *parent) : QObject(parent)
     connect(&_currencyTimer, &QTimer::timeout,
             this, &BotAI::GiveCurrencyOnTimer);
     param = "60000"; // default value
-    configMng.GetStringParam(CFGP_CURRECY_TIMER, param);
+    configMng.GetStringParam(CurrencyTimer, param);
     int timeValue = param.toInt();
     if (timeValue > 0)
     {
@@ -134,7 +135,7 @@ void BotAI::GiveCurrencyOnTimer()
         {
             // Add currency to user
             QString tempString = "1"; // default value
-            ConfigurationManager::Instance().GetStringParam(CFGP_CURRENCY_OVER_TIME, tempString);
+            ConfigurationManager::Instance().GetStringParam(CurrencyOverTime, tempString);
             _AddCurrency(userList[i], tempString.toInt());
         }
     }
@@ -158,7 +159,7 @@ void BotAI::_UpdateUserData(const ChatMessage &message)
         _UpdateAuthor(message.GetRealName(), message.GetAuthor());
         _IncrementMessageCounter(message.GetRealName());
         // Add currency for message
-        ConfigurationManager::Instance().GetStringParam(CFGP_CURRENCY_PER_MSG, tempString);
+        ConfigurationManager::Instance().GetStringParam(CurrencyPerMsg, tempString);
         _AddCurrency(message.GetRealName(), tempString.toInt());
         // Update bits number
         if (!message.GetBits().isEmpty())

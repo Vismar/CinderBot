@@ -9,6 +9,7 @@
 #include "Utils/Config/ConfigurationParameters.hpp"
 
 using namespace Command::UserDataCmd;
+using namespace Utils::Configuration;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +33,7 @@ void CurrencyUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer 
     answer.AddAnswer(_answers.first());
     (*answer.GetAnswers().begin()).replace("MSG_CUR", UD_GET_PARAM(message.GetRealName(), UDP_Currency));
     QString curName = "NomNom ";
-    ConfigurationManager::Instance().GetStringParam(CFGP_CURRENCY, curName);
+    ConfigurationManager::Instance().GetStringParam(Currency, curName);
     (*answer.GetAnswers().begin()).replace("MSG_NAME_CUR", curName);
 }
 

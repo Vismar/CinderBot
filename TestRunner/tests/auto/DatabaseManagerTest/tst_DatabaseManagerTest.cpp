@@ -2,7 +2,7 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QFileInfo>
-#include "../../../../../CinderBot/src/Utils/DatabaseManager.hpp"
+#include "Utils/DatabaseManager.hpp"
 
 class DatabaseManagerTest : public QObject
 {
