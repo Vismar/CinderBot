@@ -21,7 +21,7 @@ void BaseTimerCommand::Start()
 {
     connect(&_timer, &QTimer::timeout,
             this, &BaseTimerCommand::_OnTimerEnds);
-    UpdateTimer();
+    _UpdateTimer();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ void BaseTimerCommand::Start()
 void BaseTimerCommand::_OnTimerEnds()
 {
     _TimerAction();
-    UpdateTimer();
+    _UpdateTimer();
 }
 
 ///////////////////////////////////////////////////////////////////////////
