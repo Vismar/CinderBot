@@ -77,7 +77,8 @@ SOURCES += main.cpp\
     Widgets/Login/LoginWindow.cpp \
     Widgets/Common/EnhLineEdit.cpp \
     Widgets/Common/EnhTextEdit.cpp \
-    Utils/Logger.cpp
+    Utils/Logger.cpp \
+    AI/TimerCommands/BaseTimerCommand.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -145,7 +146,8 @@ HEADERS  += MainWindow.hpp \
     Widgets/Login/LoginWindow.hpp \
     Widgets/Common/EnhLineEdit.hpp \
     Widgets/Common/EnhTextEdit.hpp \
-    Utils/Logger.hpp
+    Utils/Logger.hpp \
+    AI/TimerCommands/BaseTimerCommand.hpp
 
 RESOURCES += \
     Resources.qrc
