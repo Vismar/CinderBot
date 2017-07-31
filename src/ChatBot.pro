@@ -78,7 +78,8 @@ SOURCES += main.cpp\
     Widgets/Common/EnhLineEdit.cpp \
     Widgets/Common/EnhTextEdit.cpp \
     Utils/Logger.cpp \
-    AI/TimerCommands/BaseTimerCommand.cpp
+    AI/TimerCommands/BaseTimerCommand.cpp \
+    AI/TimerCommands/BaseTimerCommandList.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -147,7 +148,8 @@ HEADERS  += MainWindow.hpp \
     Widgets/Common/EnhLineEdit.hpp \
     Widgets/Common/EnhTextEdit.hpp \
     Utils/Logger.hpp \
-    AI/TimerCommands/BaseTimerCommand.hpp
+    AI/TimerCommands/BaseTimerCommand.hpp \
+    AI/TimerCommands/BaseTimerCommandList.hpp
 
 RESOURCES += \
     Resources.qrc

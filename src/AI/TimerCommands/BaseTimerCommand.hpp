@@ -7,6 +7,9 @@
 #include <QObject>
 #include <QTimer>
 
+/*!
+ * \brief Contains all timer command related.
+ */
 namespace TimerCommand
 {
 
