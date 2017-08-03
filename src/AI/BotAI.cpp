@@ -6,7 +6,6 @@
 #include "BotAI.hpp"
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
-#include "Utils/Config/ConfigurationParameters.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
 /*** Command lists ***/
 #include "AI/ChatCommands/CustomCommands/CustomCommandList.hpp"
@@ -14,12 +13,16 @@
 #include "AI/ChatCommands/UserDataCommands/UserDataCommandList.hpp"
 #include "AI/ChatCommands/CovenantCommands/CovenantCommandList.hpp"
 #include "AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp"
+/*** Timer command lists ***/
+#include "AI/TimerCommands/UserData/UserDataTimerCommandList.hpp"
 
 using namespace Command;
 using namespace Command::UserDataCmd;
 using namespace Command::QuoteCmd;
 using namespace Command::CustomChatCmd;
 using namespace Command::CovenantCmd;
+using namespace TimerCommand;
+using namespace TimerCommand::UserDataTimerCmd;
 using namespace Utils::Configuration;
 
 ///////////////////////////////////////////////////////////////////////////
@@ -41,33 +44,11 @@ BotAI::BotAI(QObject *parent) : QObject(parent)
         {
             _ignoreList += param;
         }
-    }
+    } 
 
-    /* Load commands */
-    // Predefined commands
-    _chatCommands.push_back(new UserDataCommandList());
-    _chatCommands.push_back(new CovenantCommandList());
-    _chatCommands.push_back(new QuoteCommandList());
-    // Custom commands for all users and covenants
-    _chatCommands.push_back(new CustomCommandList());
-    _chatCommands.last()->Initialize();
-    _chatCommands.push_back(new CustomCovCommandList());
-    _chatCommands.last()->Initialize();
-
-    // Connect and start currency timer
-    connect(&_currencyTimer, &QTimer::timeout,
-            this, &BotAI::GiveCurrencyOnTimer);
-    param = "60000"; // default value
-    configMng.GetStringParam(CurrencyTimer, param);
-    int timeValue = param.toInt();
-    if (timeValue > 0)
-    {
-        _currencyTimer.start(timeValue);
-    }
-    else
-    {
-        _currencyTimer.start(60000); //default value
-    }
+    // Load all kind of commands
+    LoadCommands();
+    LoadTimerCommands();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -126,19 +107,26 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BotAI::GiveCurrencyOnTimer()
+void BotAI::LoadCommands()
 {
-    QStringList userList = RealTimeUserData::Instance()->GetUserList();
-    for (int i = 0; i < userList.count(); ++i)
-    {
-        if (!_ignoreList.contains(userList[i]))
-        {
-            // Add currency to user
-            QString tempString = "1"; // default value
-            ConfigurationManager::Instance().GetStringParam(CurrencyOverTime, tempString);
-            _AddCurrency(userList[i], tempString.toInt());
-        }
-    }
+    // Predefined commands
+    _chatCommands.push_back(new UserDataCommandList());
+    _chatCommands.push_back(new CovenantCommandList());
+    _chatCommands.push_back(new QuoteCommandList());
+    // Custom commands for all users and covenants
+    _chatCommands.push_back(new CustomCommandList());
+    _chatCommands.last()->Initialize();
+    _chatCommands.push_back(new CustomCovCommandList());
+    _chatCommands.last()->Initialize();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void BotAI::LoadTimerCommands()
+{
+    // Predefined timer commands
+    _timerCommands.push_back(new UserDataTimerCommandList());
+    _timerCommands.last()->StartTimerCommands();
 }
 
 ///////////////////////////////////////////////////////////////////////////

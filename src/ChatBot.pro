@@ -79,7 +79,9 @@ SOURCES += main.cpp\
     Widgets/Common/EnhTextEdit.cpp \
     Utils/Logger.cpp \
     AI/TimerCommands/BaseTimerCommand.cpp \
-    AI/TimerCommands/BaseTimerCommandList.cpp
+    AI/TimerCommands/BaseTimerCommandList.cpp \
+    AI/TimerCommands/UserData/UserDataTimerCommandList.cpp \
+    AI/TimerCommands/UserData/CurrencyToOnlineTimerCommand.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -149,7 +151,9 @@ HEADERS  += MainWindow.hpp \
     Widgets/Common/EnhTextEdit.hpp \
     Utils/Logger.hpp \
     AI/TimerCommands/BaseTimerCommand.hpp \
-    AI/TimerCommands/BaseTimerCommandList.hpp
+    AI/TimerCommands/BaseTimerCommandList.hpp \
+    AI/TimerCommands/UserData/UserDataTimerCommandList.hpp \
+    AI/TimerCommands/UserData/CurrencyToOnlineTimerCommand.hpp
 
 RESOURCES += \
     Resources.qrc

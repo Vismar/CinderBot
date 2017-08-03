@@ -3,34 +3,20 @@
 ******** Copyright (C) 2017  Ilya Lobanov (exanimoteam@gmail.com) ********
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
-#include "BaseTimerCommand.hpp"
+#include "UserDataTimerCommandList.hpp"
+#include "CurrencyToOnlineTimerCommand.hpp"
 
-using namespace TimerCommand;
-
-///////////////////////////////////////////////////////////////////////////
-
-BaseTimerCommand::BaseTimerCommand() : QObject(0) { }
+using namespace TimerCommand::UserDataTimerCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 
-BaseTimerCommand::~BaseTimerCommand() { }
-
-///////////////////////////////////////////////////////////////////////////
-
-void BaseTimerCommand::Start()
+UserDataTimerCommandList::UserDataTimerCommandList()
 {
-    connect(&_timer, &QTimer::timeout,
-            this, &BaseTimerCommand::_OnTimerEnds);
-    _timer.setSingleShot(true);
-    _UpdateTimer();
+    _timerCommands.push_back(new CurrencyToOnlineTimerCommand());
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseTimerCommand::_OnTimerEnds()
-{
-    _TimerAction();
-    _UpdateTimer();
-}
+UserDataTimerCommandList::~UserDataTimerCommandList() { }
 
 ///////////////////////////////////////////////////////////////////////////
