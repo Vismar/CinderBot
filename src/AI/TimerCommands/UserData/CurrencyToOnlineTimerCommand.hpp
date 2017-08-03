@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "Ai/TimerCommands/BaseTimerCommand.hpp"
+#include "AI/TimerCommands/BaseTimerCommand.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 
 /*!
