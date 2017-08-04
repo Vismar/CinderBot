@@ -6,6 +6,9 @@
 #pragma once
 #include "AI/ChatCommands/BaseChatCommand.hpp"
 
+/*!
+ * \brief Contains all chat command things.
+ */
 namespace Command
 {
 namespace CustomChatCmd

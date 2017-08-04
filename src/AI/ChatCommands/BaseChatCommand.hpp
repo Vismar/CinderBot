@@ -12,6 +12,9 @@
 
 using namespace Chat;
 
+/*!
+ * \brief Contains all chat command things.
+ */
 namespace Command
 {
 

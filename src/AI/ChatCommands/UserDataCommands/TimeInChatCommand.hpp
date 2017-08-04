@@ -17,11 +17,15 @@ namespace Command
 namespace UserDataCmd
 {
 
-class CovenantUserDataCommand : public InbuiltChatCommand
+/*!
+ * \brief Small chat command to display how much time was spent in chat by user.
+ *
+ * Displays how much time was spent in chat by user in format "hh:mm".
+ */
+class TimeInChatCommand : public InbuiltChatCommand
 {
 public:
-    /*! Constructor */
-    CovenantUserDataCommand();
+    TimeInChatCommand();
 
 protected:
     ////////////////////////////////

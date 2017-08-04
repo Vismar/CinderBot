@@ -31,9 +31,12 @@ void CheckUserDataCommand::Initialize()
 {
     _name = "!check";
     _moderatorOnly = true;
-    _answers.push_back("USER_NAME: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Covenant - MSG_COV.");
-    _answers.push_back("USER_NAME: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Not in covenant.");
-    _answers.push_back("USER_NAME: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; Leader of covenant 'MSG_COV'.");
+    _answers.push_back("USER_NAME: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; "
+                       "Time spent in chat - MSG_TIME_IN_CHAT; Covenant - MSG_COV.");
+    _answers.push_back("USER_NAME: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; "
+                       "Time spent in chat - MSG_TIME_IN_CHAT; Not in covenant.");
+    _answers.push_back("USER_NAME: Messages - MSG_COUNT; MSG_NAME_CUR - MSG_CUR; "
+                       "Time spent in chat - MSG_TIME_IN_CHAT; Leader of covenant 'MSG_COV'.");
     _answers.push_back("Please provide a name, @!");
     _answers.push_back("User with such name is not exist, @!");
 }
@@ -79,14 +82,20 @@ void CheckUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &an
                 }
                 if (!answer.GetAnswers().isEmpty())
                 {
+                    QString realName = userQuery->value("Name").toString();
                     auto firstAnswer = answer.GetAnswers().begin();
                     QString curName = "NomNom ";
                     ConfigurationManager::Instance().GetStringParam(Currency, curName);
                     (*firstAnswer).replace("MSG_NAME_CUR", curName);
-                    (*firstAnswer).replace("MSG_COUNT", UD_GET_PARAM(userName.toLower() ,UDP_Messages));
-                    (*firstAnswer).replace("MSG_CUR", UD_GET_PARAM(userName.toLower() ,UDP_Currency));
-                    (*firstAnswer).replace("MSG_COV", UD_GET_PARAM(userName.toLower() ,UDP_Covenant));
+                    (*firstAnswer).replace("MSG_COUNT", UD_GET_PARAM(realName, UDP_Messages));
+                    (*firstAnswer).replace("MSG_CUR", UD_GET_PARAM(realName, UDP_Currency));
+                    (*firstAnswer).replace("MSG_COV", UD_GET_PARAM(realName, UDP_Covenant));
                     (*firstAnswer).replace("USER_NAME", userName);
+                    // Time in chat
+                    int minutes = UD_GET_PARAM(realName, UDP_TimeInChat).toInt();
+                    int hours = minutes / 60;
+                    minutes %= 60;
+                    (*answer.GetAnswers().begin()).replace("MSG_TIME_IN_CHAT", QString("%1h%2m").arg(hours).arg(minutes));
                 }
             }
             else

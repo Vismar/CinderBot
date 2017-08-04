@@ -6,6 +6,9 @@
 #pragma once
 #include "AI/ChatCommands/InbuiltChatCommand.hpp"
 
+/*!
+ * \brief Contains all chat command things.
+ */
 namespace Command
 {
 namespace CovenantCmd
