@@ -82,19 +82,20 @@ void CheckUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &an
                 }
                 if (!answer.GetAnswers().isEmpty())
                 {
+                    QString realName = userQuery->value("Name").toString();
                     auto firstAnswer = answer.GetAnswers().begin();
                     QString curName = "NomNom ";
                     ConfigurationManager::Instance().GetStringParam(Currency, curName);
                     (*firstAnswer).replace("MSG_NAME_CUR", curName);
-                    (*firstAnswer).replace("MSG_COUNT", UD_GET_PARAM(userName.toLower(), UDP_Messages));
-                    (*firstAnswer).replace("MSG_CUR", UD_GET_PARAM(userName.toLower(), UDP_Currency));
-                    (*firstAnswer).replace("MSG_COV", UD_GET_PARAM(userName.toLower(), UDP_Covenant));
+                    (*firstAnswer).replace("MSG_COUNT", UD_GET_PARAM(realName, UDP_Messages));
+                    (*firstAnswer).replace("MSG_CUR", UD_GET_PARAM(realName, UDP_Currency));
+                    (*firstAnswer).replace("MSG_COV", UD_GET_PARAM(realName, UDP_Covenant));
                     (*firstAnswer).replace("USER_NAME", userName);
                     // Time in chat
-                    QTime timeInChat(0, 0);
-                    int time = UD_GET_PARAM(userName.toLower(), UDP_TimeInChat).toInt();
-                    timeInChat = timeInChat.addSecs(time * 60);
-                    (*firstAnswer).replace("MSG_TIME_IN_CHAT", timeInChat.toString("hh:mm"));
+                    int minutes = UD_GET_PARAM(realName, UDP_TimeInChat).toInt();
+                    int hours = minutes / 60;
+                    minutes %= 60;
+                    (*answer.GetAnswers().begin()).replace("MSG_TIME_IN_CHAT", QString("%1h%2m").arg(hours).arg(minutes));
                 }
             }
             else

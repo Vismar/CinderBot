@@ -73,10 +73,10 @@ void FullUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
         (*firstAnswer).replace("MSG_CUR", UD_GET_PARAM(message.GetRealName() ,UDP_Currency));
         (*firstAnswer).replace("MSG_COV", UD_GET_PARAM(message.GetRealName() ,UDP_Covenant));
         // Time in chat
-        QTime timeInChat(0, 0);
-        int time = UD_GET_PARAM(message.GetRealName(), UDP_TimeInChat).toInt();
-        timeInChat = timeInChat.addSecs(time * 60);
-        (*firstAnswer).replace("MSG_TIME_IN_CHAT", timeInChat.toString("hh:mm"));
+        int minutes = UD_GET_PARAM(message.GetRealName(), UDP_TimeInChat).toInt();
+        int hours = minutes / 60;
+        minutes %= 60;
+        (*answer.GetAnswers().begin()).replace("MSG_TIME_IN_CHAT", QString("%1h%2m").arg(hours).arg(minutes));
     }
 }
 
