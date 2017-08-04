@@ -4,33 +4,31 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "AI/ChatCommands/CommandList.hpp"
+#include "AI/TimerCommands/BaseTimerCommand.hpp"
 
 /*!
- * \brief Contains all chat command things.
+ * \brief Contains all timer command related.
  */
-namespace Command
+namespace TimerCommand
 {
 /*!
- * Chat commands related to user data.
+ * \brief Contains all user data timer commands.
  */
-namespace UserDataCmd
+namespace UserDataTimerCmd
 {
 
 /*!
- * Class UserDataCommandList
- * Store all UD commands
+ * \brief Updates time that was spent by users in chat.
+ *
+ * Updates time that was spent by users in chat. Stores it in minutes.
  */
-class UserDataCommandList : public CommandList
+class TimeInChatTimerCommand : public BaseTimerCommand
 {
-public:
-    /*! Constructor */
-    UserDataCommandList();
-
 protected:
     ////////////////////////////////
-    /// CommandList override
-    void Initialize();
+    /// BaseTimerCommand override
+    void _UpdateTimer();
+    void _TimerAction();
 };
 
 }

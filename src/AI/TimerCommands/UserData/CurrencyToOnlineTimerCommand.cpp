@@ -24,10 +24,6 @@ CurrencyToOnlineTimerCommand::CurrencyToOnlineTimerCommand()
 
 ///////////////////////////////////////////////////////////////////////////
 
-CurrencyToOnlineTimerCommand::~CurrencyToOnlineTimerCommand() { }
-
-///////////////////////////////////////////////////////////////////////////
-
 void CurrencyToOnlineTimerCommand::OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam)
 {
     if (cfgParam == CurrencyTimer)

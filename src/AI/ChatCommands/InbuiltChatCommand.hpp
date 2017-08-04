@@ -7,6 +7,9 @@
 #include "AI/ChatCommands/BaseChatCommand.hpp"
 #include <QVector>
 
+/*!
+ * \brief Contains all chat command things.
+ */
 namespace Command
 {
 

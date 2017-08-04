@@ -24,7 +24,6 @@ class UserDataTimerCommandList : public BaseTimerCommandList
 {
 public:
     UserDataTimerCommandList();
-    ~UserDataTimerCommandList();
 };
 
 }

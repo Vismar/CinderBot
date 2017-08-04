@@ -5,6 +5,7 @@
 **************************************************************************/
 #include "UserDataTimerCommandList.hpp"
 #include "CurrencyToOnlineTimerCommand.hpp"
+#include "TimeInChatTimerCommand.hpp"
 
 using namespace TimerCommand::UserDataTimerCmd;
 
@@ -13,10 +14,7 @@ using namespace TimerCommand::UserDataTimerCmd;
 UserDataTimerCommandList::UserDataTimerCommandList()
 {
     _timerCommands.push_back(new CurrencyToOnlineTimerCommand());
+    _timerCommands.push_back(new TimeInChatTimerCommand());
 }
-
-///////////////////////////////////////////////////////////////////////////
-
-UserDataTimerCommandList::~UserDataTimerCommandList() { }
 
 ///////////////////////////////////////////////////////////////////////////

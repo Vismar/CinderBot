@@ -6,9 +6,14 @@
 #pragma once
 #include "AI/ChatCommands/InbuiltChatCommand.hpp"
 
-
+/*!
+ * \brief Contains all chat command things.
+ */
 namespace Command
 {
+/*!
+ * Chat commands related to user data.
+ */
 namespace UserDataCmd
 {
 

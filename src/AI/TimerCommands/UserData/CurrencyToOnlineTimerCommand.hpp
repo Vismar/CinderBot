@@ -28,7 +28,6 @@ class CurrencyToOnlineTimerCommand : public BaseTimerCommand
     Q_OBJECT
 public:
     CurrencyToOnlineTimerCommand();
-    ~CurrencyToOnlineTimerCommand();
 
 public slots:
     /*!

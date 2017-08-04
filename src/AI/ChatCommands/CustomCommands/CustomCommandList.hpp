@@ -7,6 +7,9 @@
 #include "AI/ChatCommands/CommandList.hpp"
 #include <QObject>
 
+/*!
+ * \brief Contains all chat command things.
+ */
 namespace Command
 {
 namespace CustomChatCmd

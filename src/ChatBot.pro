@@ -81,7 +81,9 @@ SOURCES += main.cpp\
     AI/TimerCommands/BaseTimerCommand.cpp \
     AI/TimerCommands/BaseTimerCommandList.cpp \
     AI/TimerCommands/UserData/UserDataTimerCommandList.cpp \
-    AI/TimerCommands/UserData/CurrencyToOnlineTimerCommand.cpp
+    AI/TimerCommands/UserData/CurrencyToOnlineTimerCommand.cpp \
+    AI/TimerCommands/UserData/TimeInChatTimerCommand.cpp \
+    AI/ChatCommands/UserDataCommands/TimeInChatCommand.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -153,7 +155,9 @@ HEADERS  += MainWindow.hpp \
     AI/TimerCommands/BaseTimerCommand.hpp \
     AI/TimerCommands/BaseTimerCommandList.hpp \
     AI/TimerCommands/UserData/UserDataTimerCommandList.hpp \
-    AI/TimerCommands/UserData/CurrencyToOnlineTimerCommand.hpp
+    AI/TimerCommands/UserData/CurrencyToOnlineTimerCommand.hpp \
+    AI/TimerCommands/UserData/TimeInChatTimerCommand.hpp \
+    AI/ChatCommands/UserDataCommands/TimeInChatCommand.hpp
 
 RESOURCES += \
     Resources.qrc
