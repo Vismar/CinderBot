@@ -4,8 +4,19 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CommandList.hpp"
+#include "Utils/Config/ConfigurationManager.hpp"
 
+using namespace Utils::Configuration;
 using namespace Command;
+
+///////////////////////////////////////////////////////////////////////////
+
+CommandList::CommandList()
+{
+    _isTurnedOn = true;
+    connect(&ConfigurationManager::Instance(), &ConfigurationManager::ParameterChanged,
+            this, &CommandList::OnCfgParamChanged);
+}
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -22,13 +33,17 @@ CommandList::~CommandList()
 bool CommandList::TryExecute(const ChatMessage &message, ChatAnswer &answer)
 {
     bool result(false);
-    // Check all commands
-    for (int i = 0; i < _commands.size(); ++i)
+    // If module turned on, try to execute commands
+    if (_isTurnedOn)
     {
-        if (_commands[i]->Execute(message, answer))
+        // Check all commands
+        for (int i = 0; i < _commands.size(); ++i)
         {
-            result = true;
-            break;
+            if (_commands[i]->Execute(message, answer))
+            {
+                result = true;
+                break;
+            }
         }
     }
 

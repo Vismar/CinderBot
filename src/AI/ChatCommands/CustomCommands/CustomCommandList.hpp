@@ -19,19 +19,17 @@ namespace CustomChatCmd
  * Class CustomCommandList
  * Read and store all custom commands from database
  */
-class CustomCommandList : public QObject, public CommandList
+class CustomCommandList : public CommandList
 {
     Q_OBJECT
 public:
-    /*! Constructor */
     CustomCommandList();
-    /*! Destructor */
-    virtual ~CustomCommandList();
 
 protected:
     ////////////////////////////////
     /// CommandList override
     void Initialize();
+    void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam);
 
     /*!
      * Initialize command list with proper commands from database

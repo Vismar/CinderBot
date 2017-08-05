@@ -44,7 +44,12 @@ enum CfgParam
     ViewerGraphUpdateTime,
     MessageGraphUpdateTime,
     // Additional params
-    IgnoreList
+    IgnoreList,
+    // Inbuilt command modules
+    UserDataCmdModule,
+    QuotesCmdModule,
+    CovenantCmdModule,
+    CustomCmdModule
 };
 
 }

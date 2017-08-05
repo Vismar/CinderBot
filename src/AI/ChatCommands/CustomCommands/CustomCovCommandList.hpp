@@ -26,6 +26,10 @@ public:
 
 protected:
     ////////////////////////////////
+    /// CommandList override
+    void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam);
+
+    ////////////////////////////////
     /// CustomCommandList overrides
     void _InitializeCommands();
 };

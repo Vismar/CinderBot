@@ -32,7 +32,7 @@ public:
 public slots:
     /*!
      * \brief Updates timer if cfgParam == CurrencyTimer.
-     * \param cfgParam - configuration paramter.
+     * \param cfgParam - configuration parameter.
      *
      * Get new value of CurrencyTimer and use it to restart timer.
      */

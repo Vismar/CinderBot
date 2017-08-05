@@ -4,10 +4,12 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CustomCovCommandList.hpp"
+#include "Utils/Config/ConfigurationManager.hpp"
 #include "AI/ChatCommands/CustomCommands/CustomCovChatCommand.hpp"
 #include "Utils/DatabaseManager.hpp"
 
 using namespace Command::CustomChatCmd;
+using namespace Utils::Configuration;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -15,6 +17,23 @@ CustomCovCommandList::CustomCovCommandList()
 {
     _commandTableName = "CustomCovCommands";
     _commandAnswersTableName = "CustomCovCommandAnswers";
+    OnCfgParamChanged(CovenantCmdModule);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomCovCommandList::OnCfgParamChanged(CfgParam cfgParam)
+{
+    QString value;
+    switch (cfgParam)
+    {
+    case CovenantCmdModule:
+        ConfigurationManager::Instance().GetStringParam(CovenantCmdModule, value);
+        _isTurnedOn = ("true" == value);
+        break;
+    default:
+        break;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

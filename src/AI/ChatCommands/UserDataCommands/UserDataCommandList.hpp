@@ -24,13 +24,13 @@ namespace UserDataCmd
 class UserDataCommandList : public CommandList
 {
 public:
-    /*! Constructor */
     UserDataCommandList();
 
 protected:
     ////////////////////////////////
     /// CommandList override
     void Initialize();
+    void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam);
 };
 
 }

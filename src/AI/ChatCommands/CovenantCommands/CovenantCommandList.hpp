@@ -28,6 +28,7 @@ protected:
     ////////////////////////////////
     /// CommandList override
     void Initialize();
+    void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam);
 };
 
 }
