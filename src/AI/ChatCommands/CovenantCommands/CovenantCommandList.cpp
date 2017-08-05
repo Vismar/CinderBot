@@ -13,8 +13,10 @@
 #include "AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp"
 #include "AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp"
 #include "Utils/DatabaseManager.hpp"
+#include "Utils/Config/ConfigurationManager.hpp"
 
 using namespace Command::CovenantCmd;
+using namespace Utils::Configuration;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -31,6 +33,7 @@ CovenantCommandList::CovenantCommandList()
     _commands.push_back(new DisbandCovenantCommand());
 
     Initialize();
+    OnCfgParamChanged(CovenantCmdModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -46,6 +49,22 @@ void CovenantCommandList::Initialize()
                                  "Level INTEGER NOT NULL,"
                                  "Exp INTEGER NOT NULL,"
                                  "MaxMembers INTEGER DEFAULT 10");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CovenantCommandList::OnCfgParamChanged(CfgParam cfgParam)
+{
+    QString value;
+    switch (cfgParam)
+    {
+    case CovenantCmdModule:
+        ConfigurationManager::Instance().GetStringParam(CovenantCmdModule, value);
+        _isTurnedOn = ("true" == value);
+        break;
+    default:
+        break;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

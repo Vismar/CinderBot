@@ -4,10 +4,12 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CustomCommandList.hpp"
+#include "Utils/Config/ConfigurationManager.hpp"
 #include "AI/ChatCommands/CustomCommands/CustomChatCommand.hpp"
 #include "Utils/DatabaseManager.hpp"
 
 using namespace Command::CustomChatCmd;
+using namespace Utils::Configuration;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -15,11 +17,8 @@ CustomCommandList::CustomCommandList()
 {
     _commandTableName = "CustomCommands";
     _commandAnswersTableName = "CustomCommandAnswers";
+    OnCfgParamChanged(CustomCmdModule);
 }
-
-///////////////////////////////////////////////////////////////////////////
-
-CustomCommandList::~CustomCommandList() { }
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -57,6 +56,22 @@ void CustomCommandList::Initialize()
             this, &CustomCommandList::_UpdateCommands);
 
     _InitializeCommands();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomCommandList::OnCfgParamChanged(CfgParam cfgParam)
+{
+    QString value;
+    switch (cfgParam)
+    {
+    case CustomCmdModule:
+        ConfigurationManager::Instance().GetStringParam(CustomCmdModule, value);
+        _isTurnedOn = ("true" == value);
+        break;
+    default:
+        break;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

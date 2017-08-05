@@ -21,15 +21,13 @@ namespace QuoteCmd
 class QuoteCommandList : public CommandList
 {
 public:
-    /*! Constructor */
     QuoteCommandList();
-    /*! Destructor */
-    ~QuoteCommandList();
 
 protected:
     ////////////////////////////////
     /// CommandList override
     void Initialize();
+    void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam);
 };
 
 }

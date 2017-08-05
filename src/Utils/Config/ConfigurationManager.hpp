@@ -157,6 +157,12 @@ private:
      * Writes list of users that should be ignored by bot to xml configuration file.
      */
     void _WriteIgnoreList();
+    /*!
+     * \brief Writes command modules section to xml file.
+     *
+     * Writes command modules data to xml configuration file.
+     */
+    void _WriteModulesData();
 
     /*! Hash table of parameters */
     QHash<QString, QString> _params;

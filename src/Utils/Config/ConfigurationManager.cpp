@@ -35,7 +35,12 @@ CfgStrParam = { // Login params
                 "ViewerGraphUpdateTime",
                 "MessageGraphUpdateTime",
                 // Additional params
-                "IgnoreList"
+                "IgnoreList",
+                // Inbuilt command modules
+                "UserDataCmdModule",
+                "QuotesCmdModule",
+                "CovenantCmdModule",
+                "CustomCmdModule"
               };
 
 // Section names
@@ -201,6 +206,10 @@ void ConfigurationManager::_CreateDefaultConfigFile()
                   "\t\t<CovRenamePrice>500</CovRenamePrice>\n"
                   "\t\t<ViewerGraphUpdateTime>10000</ViewerGraphUpdateTime>\n"
                   "\t\t<MessageGraphUpdateTime>60000</MessageGraphUpdateTime>\n"
+                  "\t\t<UserDataCmdModule>true</UserDataCmdModule>\n"
+                  "\t\t<QuotesCmdModule>true</QuotesCmdModule>\n"
+                  "\t\t<CovenantCmdModule>true</CovenantCmdModule>\n"
+                  "\t\t<CustomCmdModule>true</CustomCmdModule>\n"
                   "\t</ConfigData>\n"
                   "</Configuration>\n";
     }
@@ -382,6 +391,8 @@ void ConfigurationManager::_WriteConfigData()
     _WriteConfigCovenantData();
     // Analytics params
     _WriteConfigAnalyticsData();
+    // Command modules params
+    _WriteModulesData();
 
     _xmlWriter.writeEndElement(); // Config section end
 }
@@ -391,7 +402,6 @@ void ConfigurationManager::_WriteConfigData()
 void ConfigurationManager::_WriteConfigCurrencyData()
 {
     QString value;
-    /*** Currency parameters ***/
     // Currency
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Currency\n\t\t"
@@ -429,7 +439,6 @@ void ConfigurationManager::_WriteConfigCurrencyData()
 void ConfigurationManager::_WriteConfigCovenantData()
 {
     QString value;
-    /*** Covenant parameters ***/
     // Covenant join price
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Covenant join price\n\t\t"
@@ -460,7 +469,6 @@ void ConfigurationManager::_WriteConfigCovenantData()
 void ConfigurationManager::_WriteConfigAnalyticsData()
 {
     QString value;
-    /*** Analytics parameters ***/
     // Analytics viewer graph update time
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Analytics viewer graph update time\n\t\t"
@@ -497,6 +505,44 @@ void ConfigurationManager::_WriteIgnoreList()
     }
 
     _xmlWriter.writeEndElement(); // Ignore list section end
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::_WriteModulesData()
+{
+    QString value;
+    // User data command modules
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: User data command module\n\t\t"
+                            "Description: Value of this parameter turning on and off commands related to user data.\n\t\t"
+                            "             Should be setted to \"true\" or \"false\"");
+    GetStringParam(UserDataCmdModule, value);
+    _xmlWriter.writeTextElement(CfgStrParam[UserDataCmdModule], value);
+    value.clear();
+    // Quotes command modules
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Quotes command module\n\t\t"
+                            "Description: Value of this parameter turning on and off commands related to quotes.\n\t\t"
+                            "             Should be setted to \"true\" or \"false\"");
+    GetStringParam(QuotesCmdModule, value);
+    _xmlWriter.writeTextElement(CfgStrParam[QuotesCmdModule], value);
+    value.clear();
+    // Covenant command modules
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Covenant command module\n\t\t"
+                            "Description: Value of this parameter turning on and off commands related to covenants.\n\t\t"
+                            "             Should be setted to \"true\" or \"false\"");
+    GetStringParam(CovenantCmdModule, value);
+    _xmlWriter.writeTextElement(CfgStrParam[CovenantCmdModule], value);
+    value.clear();
+    // Custom command modules
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Custom command module\n\t\t"
+                            "Description: Value of this parameter turning on and off custom commands.\n\t\t"
+                            "             Should be setted to \"true\" or \"false\"");
+    GetStringParam(CustomCmdModule, value);
+    _xmlWriter.writeTextElement(CfgStrParam[CustomCmdModule], value);
 }
 
 ///////////////////////////////////////////////////////////////////////////
