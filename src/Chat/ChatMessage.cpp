@@ -492,6 +492,10 @@ bool ChatMessage::_IsPrivMsg(const QString &message)
         _realName = match.captured("name");
         // Display name
         _author = match.captured("author");
+        if (_author.isEmpty())
+        {
+            _author = _realName;
+        }
         // Name color
         _color = "<font color=\"" + match.captured("color") + "\">";
         // Moderator flag
