@@ -11,6 +11,9 @@
  */
 namespace Command
 {
+/*!
+ * \brief All covenant related commands.
+ */
 namespace CovenantCmd
 {
 
