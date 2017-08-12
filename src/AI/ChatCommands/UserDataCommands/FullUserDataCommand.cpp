@@ -67,7 +67,7 @@ void FullUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
     {
         auto firstAnswer = answer.GetAnswers().begin();
         QString curName = "NomNom ";
-        ConfigurationManager::Instance().GetStringParam(Currency, curName);
+        ConfigurationManager::Instance().GetStringParam(CfgParam::Currency, curName);
         (*firstAnswer).replace("MSG_NAME_CUR", curName);
         (*firstAnswer).replace("MSG_COUNT", UD_GET_PARAM(message.GetRealName() ,UDP_Messages));
         (*firstAnswer).replace("MSG_CUR", UD_GET_PARAM(message.GetRealName() ,UDP_Currency));

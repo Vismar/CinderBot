@@ -17,7 +17,7 @@ CustomCovCommandList::CustomCovCommandList()
 {
     _commandTableName = "CustomCovCommands";
     _commandAnswersTableName = "CustomCovCommandAnswers";
-    OnCfgParamChanged(CovenantCmdModule);
+    OnCfgParamChanged(CfgParam::CovenantCmdModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -27,8 +27,8 @@ void CustomCovCommandList::OnCfgParamChanged(CfgParam cfgParam)
     QString value;
     switch (cfgParam)
     {
-    case CovenantCmdModule:
-        ConfigurationManager::Instance().GetStringParam(CovenantCmdModule, value);
+    case CfgParam::CovenantCmdModule:
+        ConfigurationManager::Instance().GetStringParam(CfgParam::CovenantCmdModule, value);
         _isTurnedOn = ("true" == value);
         break;
     default:

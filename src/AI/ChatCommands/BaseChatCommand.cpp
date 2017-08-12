@@ -11,7 +11,7 @@ using namespace Command;
 
 ///////////////////////////////////////////////////////////////////////////
 
-BaseChatCommand::BaseChatCommand()
+BaseChatCommand::BaseChatCommand() : QObject(0)
 {
     _Clear();
 }
@@ -25,29 +25,33 @@ BaseChatCommand::~BaseChatCommand() { }
 bool BaseChatCommand::Execute(const ChatMessage &message, ChatAnswer &answer)
 {
     bool result(false);
-    QString messageInLowerCase = message.GetMessage().toLower();
-    // Check if command was used properly (no additional symbols after it)
-    if (messageInLowerCase.contains(_name+' ') ||
-        ((messageInLowerCase.size() == _name.size()) && (messageInLowerCase.contains(_name))))
+
+    if (_IsAnswerAllowed(message.GetType()))
     {
-        // If command should return random answer
-        if (_isRandom)
+        QString messageInLowerCase = message.GetMessage().toLower();
+        // Check if command was used properly (no additional symbols after it)
+        if (messageInLowerCase.contains(_name+' ') ||
+            ((messageInLowerCase.size() == _name.size()) && (messageInLowerCase.contains(_name))))
         {
-            _GetRandomAnswer(message, answer);
-            result = !answer.GetAnswers().isEmpty();
+            // If command should return random answer
+            if (_isRandom)
+            {
+                _GetRandomAnswer(message, answer);
+                result = !answer.GetAnswers().isEmpty();
+            }
+            // If answer will be specified by some conditions
+            else
+            {
+                _GetAnswer(message, answer);
+                result = !answer.GetAnswers().isEmpty();
+            }
         }
-        // If answer will be specified by some conditions
-        else
+        if (result)
         {
-            _GetAnswer(message, answer);
-            result = !answer.GetAnswers().isEmpty();
+            _ReplacePlaceHolders(message, answer.GetAnswers());
+            // Update last time used
+            _lastTimeUsed = QDateTime::currentDateTime();
         }
-    }
-    if (result)
-    {
-        _ReplacePlaceHolders(message, answer.GetAnswers());
-        // Update last time used
-        _lastTimeUsed = QDateTime::currentDateTime();
     }
 
     return result;
@@ -57,6 +61,8 @@ bool BaseChatCommand::Execute(const ChatMessage &message, ChatAnswer &answer)
 
 void BaseChatCommand::_Clear()
 {
+    _workInWhisper = true;
+    _workInChat = true;
     _isRandom = false;
     _name.clear();
     _cooldown.setHMS(0, 0, 0, 0);
@@ -103,6 +109,27 @@ void BaseChatCommand::_TakePriceFromUser(const QString &userName, int price)
     userCurrency -= price;
     QString newUserCurrencyValue = QString::number(userCurrency);
     UD_UPDATE(userName, UDP_Currency, newUserCurrencyValue);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool BaseChatCommand::_IsAnswerAllowed(MessageType msgType)
+{
+    bool allowed(false);
+    switch (msgType)
+    {
+    case BITS:
+    case PRIVMSG:
+        allowed = _workInChat;
+        break;
+    case WHISPER:
+        allowed = _workInWhisper;
+        break;
+    default:
+        break;
+    }
+
+    return allowed;
 }
 
 ///////////////////////////////////////////////////////////////////////////

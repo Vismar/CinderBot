@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "AI/ChatCommands/InbuiltChatCommand.hpp"
+#include "AI/ChatCommands/UserDataCommands/UserDataBaseCommand.hpp"
 
 /*!
  * \brief Contains all chat command things.
@@ -17,7 +17,7 @@ namespace Command
 namespace UserDataCmd
 {
 
-class CovenantUserDataCommand : public InbuiltChatCommand
+class CovenantUserDataCommand : public UserDataBaseCommand
 {
 public:
     /*! Constructor */

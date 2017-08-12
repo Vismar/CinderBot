@@ -10,6 +10,8 @@
 #include <QVector>
 #include <QTextStream>
 
+#include <QDebug>
+
 using namespace Utils::Configuration;
 
 /*! Statis constant array of parameters that could be stored in config manager. */
@@ -38,8 +40,14 @@ CfgStrParam = { // Login params
                 "IgnoreList",
                 // Inbuilt command modules
                 "UserDataCmdModule",
+                "UserDataCmdRcvWhisper",
+                "UserDataCmdRcvChat",
                 "QuotesCmdModule",
+                "QuotesCmdRcvWhisper",
+                "QuotesCmdRcvChat",
                 "CovenantCmdModule",
+                "CovenantCmdRcvWhisper",
+                "CovenantCmdRcvChat",
                 "CustomCmdModule"
               };
 
@@ -50,6 +58,7 @@ CfgStrParam = { // Login params
 #define CFGS_IGNORE      "IgnoreList"
 #define CFGS_USER        "User"
 #define CFGS_COVENANT    "Covenant"
+#define CFGS_CMD_MODULES "CmdModules"
 
 // Folders and files
 #define CFG_FOLDER    "data/config"
@@ -69,11 +78,8 @@ QString ConfigurationManager::Initialize()
 {
     QString error;
     // Check if folders are exist
-    if (_CreateFolders(error))
-    {
-        // Create default config file
-        _CreateDefaultConfigFile();
-    }
+    _CreateFolders(error);
+
     // If folders and config file were created, try to read it
     if (error.isEmpty())
     {
@@ -101,16 +107,17 @@ QString ConfigurationManager::Initialize()
                     }
                 }
             }
+            configFile.close();
             if (_xmlReader.hasError())
             {
                 error = _xmlReader.errorString();
             }
+            _AddParamsThatDoNotExist();
         }
         else
         {
-            error = "No config xml file!";
+            _AddParamsThatDoNotExist();
         }
-        configFile.close();
     }
 
     return error;
@@ -121,10 +128,10 @@ QString ConfigurationManager::Initialize()
 bool ConfigurationManager::GetStringParam(CfgParam cfgParam, QString &value)
 {
     // If manager contains requested paramter, get it and return true
-    bool result = _params.contains(CfgStrParam[cfgParam]);
+    bool result = _params.contains(CfgStrParam[static_cast<int>(cfgParam)]);
     if (result)
     {
-        value = _params.value(CfgStrParam[cfgParam]);
+        value = _params.value(CfgStrParam[static_cast<int>(cfgParam)]);
     }
 
     return result;
@@ -135,9 +142,9 @@ bool ConfigurationManager::GetStringParam(CfgParam cfgParam, QString &value)
 void ConfigurationManager::SetStringParam(CfgParam cfgParam, const QString &value)
 {
     // If manager contains requested parameter, update it
-    if (_params.contains(CfgStrParam[cfgParam]))
+    if (_params.contains(CfgStrParam[static_cast<int>(cfgParam)]))
     {
-        _params.insert(CfgStrParam[cfgParam], value);
+        _params.insert(CfgStrParam[static_cast<int>(cfgParam)], value);
     }
     _SaveConfiguration();
 
@@ -166,53 +173,6 @@ bool ConfigurationManager::_CreateFolders(QString &error)
     }
 
     return result;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void ConfigurationManager::_CreateDefaultConfigFile()
-{
-    QFile cfgFile(QString("./%1/%2").arg(CFG_FOLDER).arg(CFG_FILE_NAME));
-    if (!cfgFile.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        LOG(Utils::LogCritical, "", Q_FUNC_INFO, "Config file cannot be created.");
-    }
-    else
-    {
-        QTextStream stream(&cfgFile);
-        stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                  "<Configuration>\n"
-                  "\t<LoginData>\n"
-                  "\t\t<LoginName></LoginName>\n"
-                  "\t\t<LoginDisplayName></LoginDisplayName>\n"
-                  "\t\t<LoginNameColor></LoginNameColor>\n"
-                  "\t\t<LoginOauthKey></LoginOauthKey>\n"
-                  "\t\t<LoginChannel></LoginChannel>\n"
-                  "\t\t<LoginChannelOauthKey></LoginChannelOauthKey>\n"
-                  "\t\t<LoginAuto>false</LoginAuto>\n"
-                  "\t</LoginData>\n"
-                  "\t<ConfigData>\n"
-                  "\t\t<IgnoreList>\n"
-                  "\t\t\t<User>nightbot</User>\n"
-                  "\t\t\t<User>moobot</User>\n"
-                  "\t\t\t<User>system message</User>\n"
-                  "\t\t</IgnoreList>\n"
-                  "\t\t<Currency>Kappa</Currency>\n"
-                  "\t\t<CurrencyPerMsg>1</CurrencyPerMsg>\n"
-                  "\t\t<CurrencyOverTime>1</CurrencyOverTime>\n"
-                  "\t\t<CurrencyTimer>60000</CurrencyTimer>\n"
-                  "\t\t<CovJoinPrice>100</CovJoinPrice>\n"
-                  "\t\t<CovCreatePrice>2000</CovCreatePrice>\n"
-                  "\t\t<CovRenamePrice>500</CovRenamePrice>\n"
-                  "\t\t<ViewerGraphUpdateTime>10000</ViewerGraphUpdateTime>\n"
-                  "\t\t<MessageGraphUpdateTime>60000</MessageGraphUpdateTime>\n"
-                  "\t\t<UserDataCmdModule>true</UserDataCmdModule>\n"
-                  "\t\t<QuotesCmdModule>true</QuotesCmdModule>\n"
-                  "\t\t<CovenantCmdModule>true</CovenantCmdModule>\n"
-                  "\t\t<CustomCmdModule>true</CustomCmdModule>\n"
-                  "\t</ConfigData>\n"
-                  "</Configuration>\n";
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -259,6 +219,10 @@ void ConfigurationManager::_ReadConfigData()
             if (_xmlReader.name() == CFGS_IGNORE)
             {
                 _ReadIgnoreList();
+            }
+            else if (_xmlReader.name() == CFGS_CMD_MODULES)
+            {
+                _ReadCmdModules();
             }
             // If we found any other parameter, save it
             else
@@ -307,6 +271,162 @@ void ConfigurationManager::_ReadIgnoreList()
 
 ///////////////////////////////////////////////////////////////////////////
 
+void ConfigurationManager::_ReadCmdModules()
+{
+    while (!_xmlReader.atEnd())
+    {
+        _xmlReader.readNext();
+        if (_xmlReader.isEndElement())
+        {
+            // If we reach end of cmd modules section, break the loop
+            if (_xmlReader.name() == CFGS_CMD_MODULES)
+            {
+                break;
+            }
+        }
+        if (_xmlReader.isStartElement())
+        {
+            // Save all parameters
+            _params.insert(_xmlReader.name().toString(), _xmlReader.readElementText());
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::_AddParamsThatDoNotExist()
+{
+    bool paramAdded(false);
+    QString tempStr;
+    CfgParam param;
+    QString value;
+    for (int i = 0; i < static_cast<int>(CfgParam::EndOfParams); ++i)
+    {
+        value = "NO VALUE";
+        param = static_cast<CfgParam>(i);
+        if (!GetStringParam(param, tempStr))
+        {
+            switch (param)
+            {
+            // Login params
+            {
+            case CfgParam::LoginName:
+                value.clear();
+                break;
+            case CfgParam::LoginDisplayName:
+                value.clear();
+                break;
+            case CfgParam::LoginNameColor:
+                value = "#000000";
+                break;
+            case CfgParam::LoginOauthKey:
+                value.clear();
+                break;
+            case CfgParam::LoginChannel:
+                value.clear();
+                break;
+            case CfgParam::LoginChannelOauthKey:
+                value.clear();
+                break;
+            case CfgParam::LoginAuto:
+                value = "false";
+                break;
+            }
+            // Currency params
+            {
+            case CfgParam::Currency:
+                value = "Kappa";
+                break;
+            case CfgParam::CurrencyPerMsg:
+                value = "1";
+                break;
+            case CfgParam::CurrencyOverTime:
+                value = "1";
+                break;
+            case CfgParam::CurrencyTimer:
+                value = "60000";
+                break;
+            }
+            // Covenant params
+            {
+            case CfgParam::CovJoinPrice:
+                value = "100";
+                break;
+            case CfgParam::CovCreatePrice:
+                value = "2000";
+                break;
+            case CfgParam::CovRenamePrice:
+                value = "500";
+                break;
+            }
+            // Analytics params
+            {
+            case CfgParam::ViewerGraphUpdateTime:
+                value = "10000";
+                break;
+            case CfgParam::MessageGraphUpdateTime:
+                value = "60000";
+                break;
+            }
+            // Additional params
+            {
+            case CfgParam::IgnoreList:
+                value = "";
+                break;
+            }
+            // Inbuilt command modules
+            {
+            case CfgParam::UserDataCmdModule:
+                value = "true";
+                break;
+            case CfgParam::UserDataCmdRcvWhisper:
+                value = "true";
+                break;
+            case CfgParam::UserDataCmdRcvChat:
+                value = "true";
+                break;
+            case CfgParam::QuotesCmdModule:
+                value = "true";
+                break;
+            case CfgParam::QuotesCmdRcvWhisper:
+                value = "true";
+                break;
+            case CfgParam::QuotesCmdRcvChat:
+                value = "true";
+                break;
+            case CfgParam::CovenantCmdModule:
+                value = "true";
+                break;
+            case CfgParam::CovenantCmdRcvWhisper:
+                value = "true";
+                break;
+            case CfgParam::CovenantCmdRcvChat:
+                value = "true";
+                break;
+            case CfgParam::CustomCmdModule:
+                value = "true";
+                break;
+            }
+            default:
+                break;
+            }
+
+            if (value != "NO VALUE")
+            {
+                paramAdded = true;
+                _params.insert(CfgStrParam[i], value);
+            }
+        }
+    }
+
+    if (paramAdded)
+    {
+        _SaveConfiguration();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void ConfigurationManager::_SaveConfiguration()
 {
     QString error;
@@ -330,6 +450,8 @@ void ConfigurationManager::_SaveConfiguration()
             _xmlWriter.writeEndElement(); // Configuration section end
 
             _xmlWriter.writeEndDocument();
+
+            configFile.close();
         }
     }
 }
@@ -343,36 +465,36 @@ void ConfigurationManager::_WriteLoginData()
 
     // LoginName
     _xmlWriter.writeComment("Login name of your bot");
-    GetStringParam(LoginName, value);
-    _xmlWriter.writeTextElement(CfgStrParam[LoginName], value);
+    GetStringParam(CfgParam::LoginName, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginName)], value);
     value.clear();
     // LoginDisplayName
     _xmlWriter.writeComment("Login display name of your bot");
-    GetStringParam(LoginDisplayName, value);
-    _xmlWriter.writeTextElement(CfgStrParam[LoginDisplayName], value);
+    GetStringParam(CfgParam::LoginDisplayName, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginDisplayName)], value);
     value.clear();
     // LoginNameColor
     _xmlWriter.writeComment("Login name color of your bot");
-    GetStringParam(LoginNameColor, value);
-    _xmlWriter.writeTextElement(CfgStrParam[LoginNameColor], value);
+    GetStringParam(CfgParam::LoginNameColor, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginNameColor)], value);
     value.clear();
     // LoginOauthKey
     _xmlWriter.writeComment("Oauth key which required to login on twitch");
-    GetStringParam(LoginOauthKey, value);
-    _xmlWriter.writeTextElement(CfgStrParam[LoginOauthKey], value);
+    GetStringParam(CfgParam::LoginOauthKey, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginOauthKey)], value);
     value.clear();
     // LoginChannel
     _xmlWriter.writeComment("Channel to connect");
-    GetStringParam(LoginChannel, value);
-    _xmlWriter.writeTextElement(CfgStrParam[LoginChannel], value);
+    GetStringParam(CfgParam::LoginChannel, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginChannel)], value);
     // LoginChannelOauthKey
     _xmlWriter.writeComment("Channel oauth key which required to get stream info");
-    GetStringParam(LoginChannelOauthKey, value);
-    _xmlWriter.writeTextElement(CfgStrParam[LoginChannelOauthKey], value);
+    GetStringParam(CfgParam::LoginChannelOauthKey, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginChannelOauthKey)], value);
     // LoginAuto
     _xmlWriter.writeComment("Should bot try to connect automatically?");
-    GetStringParam(LoginAuto, value);
-    _xmlWriter.writeTextElement(CfgStrParam[LoginAuto], value);
+    GetStringParam(CfgParam::LoginAuto, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginAuto)], value);
 
     _xmlWriter.writeEndElement(); // Login section end
 }
@@ -407,31 +529,31 @@ void ConfigurationManager::_WriteConfigCurrencyData()
                             "Parameter: Currency\n\t\t"
                             "Description: Use any emoticon or definition which you like.\n\t\t"
                             "             Defines how your currency will be represented for viewers.");
-    GetStringParam(Currency, value);
-    _xmlWriter.writeTextElement(CfgStrParam[Currency], value);
+    GetStringParam(CfgParam::Currency, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::Currency)], value);
     value.clear();
     // Currency per msg
     _xmlWriter.writeComment("Parameter: Currency per message\n\t\t"
                             "Description: Set value (integer) which will represent\n\t\t"
                             "             how many currency will be given to user per message.");
-    GetStringParam(CurrencyPerMsg, value);
-    _xmlWriter.writeTextElement(CfgStrParam[CurrencyPerMsg], value);
+    GetStringParam(CfgParam::CurrencyPerMsg, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CurrencyPerMsg)], value);
     value.clear();
     // Currency over time
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Currency per timer\n\t\t"
                             "Description: Set value (integer) which will represent\n\t\t"
                             "             how many currency will be given to user per specified time.");
-    GetStringParam(CurrencyOverTime, value);
-    _xmlWriter.writeTextElement(CfgStrParam[CurrencyOverTime], value);
+    GetStringParam(CfgParam::CurrencyOverTime, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CurrencyOverTime)], value);
     value.clear();
     // Currency timer
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Currency timer\n\t\t"
                             "Description: Timer, which specifies how often bot will give currency to users in chat.\n\t\t"
                             "             Should be in milliseconds, bigger than 0.");
-    GetStringParam(CurrencyTimer, value);
-    _xmlWriter.writeTextElement(CfgStrParam[CurrencyTimer], value);
+    GetStringParam(CfgParam::CurrencyTimer, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CurrencyTimer)], value);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -444,24 +566,24 @@ void ConfigurationManager::_WriteConfigCovenantData()
                             "Parameter: Covenant join price\n\t\t"
                             "Description: Price for joining any covenant.\n\t\t"
                             "             Any integer number, bigger than -1.");
-    GetStringParam(CovJoinPrice, value);
-    _xmlWriter.writeTextElement(CfgStrParam[CovJoinPrice], value);
+    GetStringParam(CfgParam::CovJoinPrice, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovJoinPrice)], value);
     value.clear();
     // Covenant create price
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Covenant create price\n\t\t"
                             "Description: Price for creating covenant.\n\t\t"
                             "             Any integer number, bigger than -1.");
-    GetStringParam(CovCreatePrice, value);
-    _xmlWriter.writeTextElement(CfgStrParam[CovCreatePrice], value);
+    GetStringParam(CfgParam::CovCreatePrice, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovCreatePrice)], value);
     value.clear();
     // Covenant rename price
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Covenant rename price\n\t\t"
                             "Description: Price for renaming covenant.\n\t\t"
                             "             Any integer number, bigger than -1.");
-    GetStringParam(CovRenamePrice, value);
-    _xmlWriter.writeTextElement(CfgStrParam[CovRenamePrice], value);
+    GetStringParam(CfgParam::CovRenamePrice, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovRenamePrice)], value);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -474,16 +596,16 @@ void ConfigurationManager::_WriteConfigAnalyticsData()
                             "Parameter: Analytics viewer graph update time\n\t\t"
                             "Description: Timer, which specifies how often viewer graph should be updated.\n\t\t"
                             "             In milliseconds, bigger than 0.");
-    GetStringParam(ViewerGraphUpdateTime, value);
-    _xmlWriter.writeTextElement(CfgStrParam[ViewerGraphUpdateTime], value);
+    GetStringParam(CfgParam::ViewerGraphUpdateTime, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::ViewerGraphUpdateTime)], value);
     value.clear();
     // Analytics message graph update time
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Analytics message graph update time\n\t\t"
                             "Description: Timer, which specifies how often message graph should be updated.\n\t\t"
                             "             In milliseconds, bigger than 0.");
-    GetStringParam(MessageGraphUpdateTime, value);
-    _xmlWriter.writeTextElement(CfgStrParam[MessageGraphUpdateTime], value);
+    GetStringParam(CfgParam::MessageGraphUpdateTime, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::MessageGraphUpdateTime)], value);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -496,7 +618,7 @@ void ConfigurationManager::_WriteIgnoreList()
     _xmlWriter.writeStartElement(CFGS_IGNORE);
 
     // Get ignore list and split it to users
-    GetStringParam(IgnoreList, value);
+    GetStringParam(CfgParam::IgnoreList, value);
     QStringList users = value.split(',');
     for (int i = 0; i < users.count(); ++i)
     {
@@ -512,37 +634,114 @@ void ConfigurationManager::_WriteIgnoreList()
 void ConfigurationManager::_WriteModulesData()
 {
     QString value;
+    _xmlWriter.writeStartElement(CFGS_CMD_MODULES);
+
+    /****************************/
+    /*** User data cmd module ***/
+    /****************************/
+    _xmlWriter.writeComment("\n\t\t\t\tUserData CmdModule\n\t\t\t");
     // User data command modules
-    _xmlWriter.writeComment("\n\t\t"
-                            "Parameter: User data command module\n\t\t"
-                            "Description: Value of this parameter turning on and off commands related to user data.\n\t\t"
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Parameter: User data command module\n\t\t\t"
+                            "Description: Value of this parameter turning on and off commands related to user data.\n\t\t\t"
                             "             Should be setted to \"true\" or \"false\"");
-    GetStringParam(UserDataCmdModule, value);
-    _xmlWriter.writeTextElement(CfgStrParam[UserDataCmdModule], value);
+    GetStringParam(CfgParam::UserDataCmdModule, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::UserDataCmdModule)], value);
     value.clear();
+    // User data command receive whisper
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Parameter: User data command receive whisper\n\t\t\t"
+                            "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
+                            "             through whispers.\n\t\t\t"
+                            "             Should be setted to \"true\" or \"false\"");
+    GetStringParam(CfgParam::UserDataCmdRcvWhisper, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::UserDataCmdRcvWhisper)], value);
+    value.clear();
+    // User data command receive chat
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Parameter: User data command receive chat\n\t\t\t"
+                            "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
+                            "             through chat.\n\t\t\t"
+                            "             Should be setted to \"true\" or \"false\"");
+    GetStringParam(CfgParam::UserDataCmdRcvChat, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::UserDataCmdRcvChat)], value);
+    value.clear();
+
+    /****************************/
+    /***** Quote cmd module *****/
+    /****************************/
+    _xmlWriter.writeComment("\n\t\t\t\tQuote CmdModule\n\t\t\t");
     // Quotes command modules
-    _xmlWriter.writeComment("\n\t\t"
-                            "Parameter: Quotes command module\n\t\t"
-                            "Description: Value of this parameter turning on and off commands related to quotes.\n\t\t"
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Parameter: Quotes command module\n\t\t\t"
+                            "Description: Value of this parameter turning on and off commands related to quotes.\n\t\t\t"
                             "             Should be setted to \"true\" or \"false\"");
-    GetStringParam(QuotesCmdModule, value);
-    _xmlWriter.writeTextElement(CfgStrParam[QuotesCmdModule], value);
+    GetStringParam(CfgParam::QuotesCmdModule, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::QuotesCmdModule)], value);
     value.clear();
+    // Quotes command receive whisper
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Parameter: Quotes command receive whisper\n\t\t\t"
+                            "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
+                            "             through whispers.\n\t\t\t"
+                            "             Should be setted to \"true\" or \"false\"");
+    GetStringParam(CfgParam::QuotesCmdRcvWhisper, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::QuotesCmdRcvWhisper)], value);
+    value.clear();
+    // Quotes command receive chat
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Parameter: Quotes command receive chat\n\t\t\t"
+                            "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
+                            "             through chat.\n\t\t\t"
+                            "             Should be setted to \"true\" or \"false\"");
+    GetStringParam(CfgParam::QuotesCmdRcvChat, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::QuotesCmdRcvChat)], value);
+    value.clear();
+
+    /****************************/
+    /*** Covenants cmd module ***/
+    /****************************/
+    _xmlWriter.writeComment("\n\t\t\t\tCovenants CmdModule\n\t\t\t");
     // Covenant command modules
-    _xmlWriter.writeComment("\n\t\t"
-                            "Parameter: Covenant command module\n\t\t"
-                            "Description: Value of this parameter turning on and off commands related to covenants.\n\t\t"
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Parameter: Covenant command module\n\t\t\t"
+                            "Description: Value of this parameter turning on and off commands related to covenants.\n\t\t\t"
                             "             Should be setted to \"true\" or \"false\"");
-    GetStringParam(CovenantCmdModule, value);
-    _xmlWriter.writeTextElement(CfgStrParam[CovenantCmdModule], value);
+    GetStringParam(CfgParam::CovenantCmdModule, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovenantCmdModule)], value);
     value.clear();
-    // Custom command modules
-    _xmlWriter.writeComment("\n\t\t"
-                            "Parameter: Custom command module\n\t\t"
-                            "Description: Value of this parameter turning on and off custom commands.\n\t\t"
+    // Covenant command receive whisper
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Parameter: Covenant command receive whisper\n\t\t\t"
+                            "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
+                            "             through whispers.\n\t\t\t"
                             "             Should be setted to \"true\" or \"false\"");
-    GetStringParam(CustomCmdModule, value);
-    _xmlWriter.writeTextElement(CfgStrParam[CustomCmdModule], value);
+    GetStringParam(CfgParam::CovenantCmdRcvWhisper, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovenantCmdRcvWhisper)], value);
+    value.clear();
+    // Covenant command receive chat
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Parameter: Covenant command receive chat\n\t\t\t"
+                            "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
+                            "             through chat.\n\t\t\t"
+                            "             Should be setted to \"true\" or \"false\"");
+    GetStringParam(CfgParam::CovenantCmdRcvChat, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovenantCmdRcvChat)], value);
+    value.clear();
+
+    /****************************/
+    /**** Custom cmd module *****/
+    /****************************/
+    _xmlWriter.writeComment("\n\t\t\t\tCustom CmdModule\n\t\t\t");
+    // Custom command modules
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Parameter: Custom command module\n\t\t\t"
+                            "Description: Value of this parameter turning on and off custom commands.\n\t\t\t"
+                            "             Should be setted to \"true\" or \"false\"");
+    GetStringParam(CfgParam::CustomCmdModule, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CustomCmdModule)], value);
+
+    _xmlWriter.writeEndElement(); // Cmd modules section end
 }
 
 ///////////////////////////////////////////////////////////////////////////

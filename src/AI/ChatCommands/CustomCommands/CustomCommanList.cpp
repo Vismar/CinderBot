@@ -17,7 +17,7 @@ CustomCommandList::CustomCommandList()
 {
     _commandTableName = "CustomCommands";
     _commandAnswersTableName = "CustomCommandAnswers";
-    OnCfgParamChanged(CustomCmdModule);
+    OnCfgParamChanged(CfgParam::CustomCmdModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -65,8 +65,8 @@ void CustomCommandList::OnCfgParamChanged(CfgParam cfgParam)
     QString value;
     switch (cfgParam)
     {
-    case CustomCmdModule:
-        ConfigurationManager::Instance().GetStringParam(CustomCmdModule, value);
+    case CfgParam::CustomCmdModule:
+        ConfigurationManager::Instance().GetStringParam(CfgParam::CustomCmdModule, value);
         _isTurnedOn = ("true" == value);
         break;
     default:

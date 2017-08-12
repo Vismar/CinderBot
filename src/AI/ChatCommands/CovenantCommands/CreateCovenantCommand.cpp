@@ -63,7 +63,7 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
         {
             // Get amount currency which is needed to create covenant
             QString price;
-            if (!ConfigurationManager::Instance().GetStringParam(CovCreatePrice, price))
+            if (!ConfigurationManager::Instance().GetStringParam(CfgParam::CovCreatePrice, price))
             {
                 price = DEFAULT_PRICE_FOR_CREATE;
             }

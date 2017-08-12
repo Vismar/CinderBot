@@ -33,11 +33,11 @@ BotAI::BotAI(QObject *parent) : QObject(parent)
     ConfigurationManager &configMng = ConfigurationManager::Instance();
     QString param;
     // Fill ignore list
-    if (configMng.GetStringParam(IgnoreList, param))
+    if (configMng.GetStringParam(CfgParam::IgnoreList, param))
     {
         _ignoreList = param.split(',');
     }
-    if (configMng.GetStringParam(LoginName, param))
+    if (configMng.GetStringParam(CfgParam::LoginName, param))
     {
         // If botname not added to the list, add it
         if (!_ignoreList.contains(param))
@@ -147,7 +147,7 @@ void BotAI::_UpdateUserData(const ChatMessage &message)
         _UpdateAuthor(message.GetRealName(), message.GetAuthor());
         _IncrementMessageCounter(message.GetRealName());
         // Add currency for message
-        ConfigurationManager::Instance().GetStringParam(CurrencyPerMsg, tempString);
+        ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerMsg, tempString);
         _AddCurrency(message.GetRealName(), tempString.toInt());
         // Update bits number
         if (!message.GetBits().isEmpty())

@@ -65,7 +65,7 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
         // Set default price value
         int priceToJoin(100);
         // Try to get param from config manager
-        if (configMng.GetStringParam(CovJoinPrice,price))
+        if (configMng.GetStringParam(CfgParam::CovJoinPrice,price))
         {
             priceToJoin = price.toInt();
 

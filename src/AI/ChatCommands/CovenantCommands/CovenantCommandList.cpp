@@ -35,7 +35,7 @@ CovenantCommandList::CovenantCommandList()
     _commands.push_back(new DisbandCovenantCommand());
 
     Initialize();
-    OnCfgParamChanged(CovenantCmdModule);
+    OnCfgParamChanged(CfgParam::CovenantCmdModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -60,8 +60,8 @@ void CovenantCommandList::OnCfgParamChanged(CfgParam cfgParam)
     QString value;
     switch (cfgParam)
     {
-    case CovenantCmdModule:
-        ConfigurationManager::Instance().GetStringParam(CovenantCmdModule, value);
+    case CfgParam::CovenantCmdModule:
+        ConfigurationManager::Instance().GetStringParam(CfgParam::CovenantCmdModule, value);
         _isTurnedOn = ("true" == value);
         break;
     default:

@@ -4,7 +4,8 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "AI/ChatCommands/UserDataCommands/UserDataBaseCommand.hpp"
+#include "AI/ChatCommands/InbuiltChatCommand.hpp"
+#include "Utils/Config/ConfigurationParameters.hpp"
 
 /*!
  * \brief Contains all chat command things.
@@ -18,21 +19,22 @@ namespace UserDataCmd
 {
 
 /*!
- * \brief Small chat command to display how much time was spent in chat by user.
+ * \brief Base class for all user data commands.
  *
- * Displays how much time was spent in chat by user in format "hh:mm".
+ * Contains connnection to configuration manager to update chat and whisper flags.
  */
-class TimeInChatCommand : public UserDataBaseCommand
+class UserDataBaseCommand : public InbuiltChatCommand
 {
 public:
-    TimeInChatCommand();
+    UserDataBaseCommand();
+    virtual ~UserDataBaseCommand();
 
-protected:
-    ////////////////////////////////
-    /// BaseChatCommand overrides
-    void Initialize();
-    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer);
-    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
+private slots:
+    /*!
+     * \brief _UpdateChatAndWhisperFlags
+     * \param cfgParam
+     */
+    void _UpdateChatAndWhisperFlags(Utils::Configuration::CfgParam cfgParam);
 };
 
 }

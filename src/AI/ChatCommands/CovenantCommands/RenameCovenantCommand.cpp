@@ -59,7 +59,7 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                 {
                     // Get amount currency which is needed to rename covenant
                     QString price;
-                    if (!ConfigurationManager::Instance().GetStringParam(CovRenamePrice, price))
+                    if (!ConfigurationManager::Instance().GetStringParam(CfgParam::CovRenamePrice, price))
                     {
                         price = DEFAULT_PRICE_FOR_RENAME;
                     }

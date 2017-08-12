@@ -21,9 +21,7 @@ namespace Command
 class InbuiltChatCommand : public BaseChatCommand
 {
 public:
-    /*! Constructor */
     InbuiltChatCommand();
-    /*! Destructor */
     virtual ~InbuiltChatCommand();
 
 protected:

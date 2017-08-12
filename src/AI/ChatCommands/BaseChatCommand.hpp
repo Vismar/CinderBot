@@ -9,6 +9,7 @@
 #include <QStringList>
 #include <QTime>
 #include <QDateTime>
+#include <QObject>
 
 using namespace Chat;
 
@@ -23,13 +24,13 @@ namespace Command
  * Provide basic functionality to check existence of executing command in message
  * and executing it by one of two methods. Also, handles replacing placeholders which can be used by any command.
  */
-class BaseChatCommand
+class BaseChatCommand : public QObject
 {
+    Q_OBJECT
 public:
-    /*! Constructor */
     BaseChatCommand();
-    /*! Destructor */
     virtual ~BaseChatCommand();
+
     /*!
      * Initialize command by your own way. Should be implemented in inherited class
      */
@@ -87,6 +88,7 @@ protected:
     void _TakePriceFromUser(const QString &userName, int price);
 
     /* Flag checkers */
+    bool _IsAnswerAllowed(MessageType msgType);
     /*!
      * Check if user can execute command if covenant restriction was specified
      * \param userName - real name of user
@@ -112,6 +114,8 @@ protected:
     bool _CheckModerationFlag(bool userIsModerator);
 
     /* Variables */
+    bool _workInWhisper;
+    bool _workInChat;
     /*! Flag which represents should command return random answer or not */
     bool _isRandom;
     /*! Command name */

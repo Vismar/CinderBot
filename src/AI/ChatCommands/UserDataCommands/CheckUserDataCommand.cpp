@@ -85,7 +85,7 @@ void CheckUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &an
                     QString realName = userQuery->value("Name").toString();
                     auto firstAnswer = answer.GetAnswers().begin();
                     QString curName = "NomNom ";
-                    ConfigurationManager::Instance().GetStringParam(Currency, curName);
+                    ConfigurationManager::Instance().GetStringParam(CfgParam::Currency, curName);
                     (*firstAnswer).replace("MSG_NAME_CUR", curName);
                     (*firstAnswer).replace("MSG_COUNT", UD_GET_PARAM(realName, UDP_Messages));
                     (*firstAnswer).replace("MSG_CUR", UD_GET_PARAM(realName, UDP_Currency));

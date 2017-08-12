@@ -54,14 +54,14 @@ void ConnectWidget::CheckAndRunAutoLogin()
     QString paramAuto;
     ConfigurationManager& cfgMng = ConfigurationManager::Instance();
 
-    cfgMng.GetStringParam(LoginName, paramLogin);
-    cfgMng.GetStringParam(LoginOauthKey, paramOAuth);
-    cfgMng.GetStringParam(LoginChannel, paramChannel);
+    cfgMng.GetStringParam(CfgParam::LoginName, paramLogin);
+    cfgMng.GetStringParam(CfgParam::LoginOauthKey, paramOAuth);
+    cfgMng.GetStringParam(CfgParam::LoginChannel, paramChannel);
 
     // Wee ned to check that login, channel and oauth key exist in config file
     if (!paramLogin.isEmpty() && !paramChannel.isEmpty() && !paramOAuth.isEmpty())
     {
-        cfgMng.GetStringParam(LoginAuto, paramAuto);
+        cfgMng.GetStringParam(CfgParam::LoginAuto, paramAuto);
         if (paramAuto == "true")
         {
             emit LoginSuccess();

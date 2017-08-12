@@ -51,7 +51,7 @@ ViewerGraphWidget::ViewerGraphWidget(QWidget* parent) : QGroupBox(parent)
     connect(_timer, &QTimer::timeout,
             this, &ViewerGraphWidget::UpdateGraph);
     // Start timer
-    ConfigurationManager::Instance().GetStringParam(ViewerGraphUpdateTime, _timeToUpdate);
+    ConfigurationManager::Instance().GetStringParam(CfgParam::ViewerGraphUpdateTime, _timeToUpdate);
     _timer->start(_timeToUpdate.toInt());
 }
 
@@ -76,7 +76,7 @@ void ViewerGraphWidget::UpdateGraph()
     {
         _valueAxis->setTickCount(7);
     }
-    ConfigurationManager::Instance().GetStringParam(ViewerGraphUpdateTime, _timeToUpdate);
+    ConfigurationManager::Instance().GetStringParam(CfgParam::ViewerGraphUpdateTime, _timeToUpdate);
     _timer->start(_timeToUpdate.toInt());
 }
 

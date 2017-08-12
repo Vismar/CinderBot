@@ -20,7 +20,7 @@ namespace Configuration
 /*!
  * \brief All configuration parameters.
  */
-enum CfgParam
+enum class CfgParam
 {
     UndefinedCfgParam = -1,
     // Login params
@@ -47,9 +47,16 @@ enum CfgParam
     IgnoreList,
     // Inbuilt command modules
     UserDataCmdModule,
+    UserDataCmdRcvWhisper,
+    UserDataCmdRcvChat,
     QuotesCmdModule,
+    QuotesCmdRcvWhisper,
+    QuotesCmdRcvChat,
     CovenantCmdModule,
-    CustomCmdModule
+    CovenantCmdRcvWhisper,
+    CovenantCmdRcvChat,
+    CustomCmdModule,
+    EndOfParams
 };
 
 }

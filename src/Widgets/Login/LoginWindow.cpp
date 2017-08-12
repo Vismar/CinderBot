@@ -89,19 +89,19 @@ void LoginWindow::_CheckReply(QNetworkReply* reply)
         {
             // Login param
             temp = _login->text();
-            ConfigurationManager::Instance().SetStringParam(LoginName, temp.toLower());
+            ConfigurationManager::Instance().SetStringParam(CfgParam::LoginName, temp.toLower());
             _CheckRoom();
         }
         else if ( _lastRequestType == RoomRequest)
         {
             // Channel param
             temp = _room->text();
-            ConfigurationManager::Instance().SetStringParam(LoginChannel, temp.toLower());
+            ConfigurationManager::Instance().SetStringParam(CfgParam::LoginChannel, temp.toLower());
             // Check if user already authorized
             QString loginOAuth;
             QString channelOAuth;
-            ConfigurationManager::Instance().GetStringParam(LoginOauthKey, loginOAuth);
-            ConfigurationManager::Instance().GetStringParam(LoginChannelOauthKey, channelOAuth);
+            ConfigurationManager::Instance().GetStringParam(CfgParam::LoginOauthKey, loginOAuth);
+            ConfigurationManager::Instance().GetStringParam(CfgParam::LoginChannelOauthKey, channelOAuth);
             if (!loginOAuth.isEmpty() && !channelOAuth.isEmpty())
             {
                 _CloseSuccess();
@@ -153,7 +153,7 @@ void LoginWindow::_CheckAndSaveToken(const QUrl &url)
             {
             case LoginToken:
                 // Set login oauth key in config
-                ConfigurationManager::Instance().SetStringParam(LoginOauthKey, token);
+                ConfigurationManager::Instance().SetStringParam(CfgParam::LoginOauthKey, token);
                 _currentToken = ChannelToken;
                 // Hide loading second authorization
                 _webView->hide();
@@ -162,7 +162,7 @@ void LoginWindow::_CheckAndSaveToken(const QUrl &url)
                 break;
             case ChannelToken:
                 // Set channel oauth key in config
-                ConfigurationManager::Instance().SetStringParam(LoginChannelOauthKey, token);
+                ConfigurationManager::Instance().SetStringParam(CfgParam::LoginChannelOauthKey, token);
                 _CloseSuccess();
                 break;
             }
@@ -223,7 +223,7 @@ void LoginWindow::_InitLoginSection()
     // Text field
     _login = new EnhLineEdit(this);
     _login->setPlaceholderText("Your bot account login");
-    ConfigurationManager::Instance().GetStringParam(LoginName, temp);
+    ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, temp);
     _login->setText(temp);
     _layout->addWidget(_login, 1, 1);
     connect(_login, &EnhLineEdit::textChanged,
@@ -242,7 +242,7 @@ void LoginWindow::_InitRoomSection()
     // Text field
     _room = new EnhLineEdit(this);
     _room->setPlaceholderText("Channel to which bot should connect");
-    ConfigurationManager::Instance().GetStringParam(LoginChannel, temp);
+    ConfigurationManager::Instance().GetStringParam(CfgParam::LoginChannel, temp);
     _room->setText(temp);
     _layout->addWidget(_room, 2, 1);
     connect(_room, &EnhLineEdit::textChanged,
@@ -255,7 +255,7 @@ void LoginWindow::_InitAutoLoginSection()
 {
     QString temp;
     _autoLogin = new QCheckBox(this);
-    ConfigurationManager::Instance().GetStringParam(LoginAuto, temp);
+    ConfigurationManager::Instance().GetStringParam(CfgParam::LoginAuto, temp);
     if (temp == "true")
     {
         _autoLogin->setChecked(true);
@@ -403,7 +403,7 @@ void LoginWindow::_CloseSuccess()
 {
     //Save auto login param
     QString autoLogin = (_autoLogin->checkState() == Qt::Checked) ? "true" : "false";
-    ConfigurationManager::Instance().SetStringParam(LoginAuto, autoLogin);
+    ConfigurationManager::Instance().SetStringParam(CfgParam::LoginAuto, autoLogin);
     // Notify about cussess athorization process
     emit LoginSuccess();
     // Close dialog window
