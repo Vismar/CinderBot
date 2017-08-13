@@ -5,12 +5,13 @@
 **************************************************************************/
 #include "CheckUserDataCommand.hpp"
 #include "Utils/UserData/UserData.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 
 using namespace Command::UserDataCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 #define MSG_NOT_LEADER 0
 #define MSG_NO_COV     1

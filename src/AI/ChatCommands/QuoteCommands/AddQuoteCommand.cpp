@@ -4,9 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "AddQuoteCommand.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::QuoteCmd;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -17,6 +17,17 @@
 
 #define DB_QUERY_PTR    std::shared_ptr<QSqlQuery>
 
+/*!
+ * \brief Contains all utility classes.
+ */
+namespace Utils
+{
+/*!
+ * \brief Contains all database related classes.
+ */
+namespace Database
+{
+
 class DatabaseManager : public QObject
 {
     Q_OBJECT
@@ -103,3 +114,6 @@ private:
     /*! Database which is used to store all data */
     QSqlDatabase _database;
 };
+
+}
+}

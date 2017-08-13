@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "AI/ChatCommands/InbuiltChatCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/CovenantBaseCommand.hpp"
 #include <QRegularExpression>
 
 /*!
@@ -23,7 +23,7 @@ namespace CovenantCmd
  *
  * Command to display members of specified covenant or covenant in which user is if no covenant was specified.
  */
-class MembersCovenantCommand : public InbuiltChatCommand
+class MembersCovenantCommand : public CovenantBaseCommand
 {
 public:
     MembersCovenantCommand();

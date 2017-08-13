@@ -13,11 +13,12 @@
 #include "AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp"
 #include "AI/ChatCommands/CovenantCommands/MembersCovenantCommand.hpp"
 #include "AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -4,7 +4,9 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "UserData.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
+
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

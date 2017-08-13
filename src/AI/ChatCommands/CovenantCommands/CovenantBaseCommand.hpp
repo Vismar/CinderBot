@@ -4,7 +4,8 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "AI/ChatCommands/CovenantCommands/CovenantBaseCommand.hpp"
+#include "AI/ChatCommands/InbuiltChatCommand.hpp"
+#include "Utils/Config/ConfigurationParameters.hpp"
 
 /*!
  * \brief Contains all chat command things.
@@ -17,21 +18,18 @@ namespace Command
 namespace CovenantCmd
 {
 
-/*!
- * class JoinCovenantCommand
- * Handle joining users to covenants
- */
-class JoinCovenantCommand : public CovenantBaseCommand
+class CovenantBaseCommand : public InbuiltChatCommand
 {
 public:
-    JoinCovenantCommand();
+    CovenantBaseCommand();
+    virtual ~CovenantBaseCommand();
 
-protected:
-    ////////////////////////////////
-    /// BaseChatCommand overrides
-    void Initialize();
-    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer);
-    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
+private slots:
+    /*!
+     * \brief _UpdateChatAndWhisperFlags
+     * \param cfgParam
+     */
+    void _UpdateChatAndWhisperFlags(Utils::Configuration::CfgParam cfgParam);
 };
 
 }

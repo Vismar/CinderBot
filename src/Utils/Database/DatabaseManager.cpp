@@ -10,6 +10,7 @@
 #include "Utils/Logger.hpp"
 
 using namespace Utils;
+using namespace Utils::Database;
 
 #define DB_FOLDER    "data"
 #define DB_FILE_NAME "CinderBotDatabase.sqlite"
@@ -80,6 +81,7 @@ bool DatabaseManager::CreateIndex(const QString &tableName, const QString &index
     {
         command = QString("CREATE INDEX IF NOT EXISTS %2 ON %1 (%3);").arg(tableName).arg(indexName).arg(columns);
     }
+
     // If command failed. return error
     if (!query.exec(command))
     {

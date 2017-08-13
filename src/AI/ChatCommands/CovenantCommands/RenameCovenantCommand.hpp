@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "AI/ChatCommands/InbuiltChatCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/CovenantBaseCommand.hpp"
 
 /*!
  * \brief Contains all chat command things.
@@ -21,12 +21,9 @@ namespace CovenantCmd
  * class RenameCovenantCommand
  * Handle renaming covenants by users
  */
-class RenameCovenantCommand : public InbuiltChatCommand
+class RenameCovenantCommand : public CovenantBaseCommand
 {
 public:
-    /*!
-     * Deafult Constructor
-     */
     RenameCovenantCommand();
 
 protected:

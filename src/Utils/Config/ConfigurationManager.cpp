@@ -14,7 +14,7 @@
 
 using namespace Utils::Configuration;
 
-/*! Statis constant array of parameters that could be stored in config manager. */
+/*! Static constant array of parameters that could be stored in config manager. */
 static const QVector<QString>
 CfgStrParam = { // Login params
                 "LoginName",
@@ -43,8 +43,6 @@ CfgStrParam = { // Login params
                 "UserDataCmdRcvWhisper",
                 "UserDataCmdRcvChat",
                 "QuotesCmdModule",
-                "QuotesCmdRcvWhisper",
-                "QuotesCmdRcvChat",
                 "CovenantCmdModule",
                 "CovenantCmdRcvWhisper",
                 "CovenantCmdRcvChat",
@@ -388,12 +386,6 @@ void ConfigurationManager::_AddParamsThatDoNotExist()
             case CfgParam::QuotesCmdModule:
                 value = "true";
                 break;
-            case CfgParam::QuotesCmdRcvWhisper:
-                value = "true";
-                break;
-            case CfgParam::QuotesCmdRcvChat:
-                value = "true";
-                break;
             case CfgParam::CovenantCmdModule:
                 value = "true";
                 break;
@@ -678,24 +670,6 @@ void ConfigurationManager::_WriteModulesData()
                             "             Should be setted to \"true\" or \"false\"");
     GetStringParam(CfgParam::QuotesCmdModule, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::QuotesCmdModule)], value);
-    value.clear();
-    // Quotes command receive whisper
-    _xmlWriter.writeComment("\n\t\t\t"
-                            "Parameter: Quotes command receive whisper\n\t\t\t"
-                            "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
-                            "             through whispers.\n\t\t\t"
-                            "             Should be setted to \"true\" or \"false\"");
-    GetStringParam(CfgParam::QuotesCmdRcvWhisper, value);
-    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::QuotesCmdRcvWhisper)], value);
-    value.clear();
-    // Quotes command receive chat
-    _xmlWriter.writeComment("\n\t\t\t"
-                            "Parameter: Quotes command receive chat\n\t\t\t"
-                            "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
-                            "             through chat.\n\t\t\t"
-                            "             Should be setted to \"true\" or \"false\"");
-    GetStringParam(CfgParam::QuotesCmdRcvChat, value);
-    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::QuotesCmdRcvChat)], value);
     value.clear();
 
     /****************************/

@@ -4,10 +4,11 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CreateCustomCommandWindow.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 #include <QMessageBox>
 
 using namespace Ui::CustomCommand;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

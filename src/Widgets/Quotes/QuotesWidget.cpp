@@ -5,9 +5,10 @@
 **************************************************************************/
 #include "QuotesWidget.hpp"
 #include "SingleQuoteWidget.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Ui::Quote;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

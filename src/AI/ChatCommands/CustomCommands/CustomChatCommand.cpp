@@ -4,9 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CustomChatCommand.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CustomChatCmd;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -35,6 +36,8 @@ void CustomChatCommand::Initialize()
             _moderatorOnly = query->value("ModeratorOnly").toBool();
             _price = query->value("Price").toInt();
             _covenant = query->value("Covenant").toString();
+            _workInWhisper = ("true" == query->value("WorkInWhisper").toString());
+            _workInChat = ("true" == query->value("WorkInChat").toString());
         }
     }
 }

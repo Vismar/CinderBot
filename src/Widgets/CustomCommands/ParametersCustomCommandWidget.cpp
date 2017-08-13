@@ -4,11 +4,12 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "ParametersCustomCommandWidget.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 #include <QStringList>
 
 using namespace Ui::CustomCommand;
 using namespace Ui::Common;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

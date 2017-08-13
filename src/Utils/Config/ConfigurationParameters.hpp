@@ -50,8 +50,6 @@ enum class CfgParam
     UserDataCmdRcvWhisper,
     UserDataCmdRcvChat,
     QuotesCmdModule,
-    QuotesCmdRcvWhisper,
-    QuotesCmdRcvChat,
     CovenantCmdModule,
     CovenantCmdRcvWhisper,
     CovenantCmdRcvChat,

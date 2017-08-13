@@ -4,9 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "QuoteWindow.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Ui::Quote;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

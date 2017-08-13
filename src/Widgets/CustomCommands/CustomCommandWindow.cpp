@@ -4,11 +4,12 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CustomCommandWindow.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 #include "Widgets/CustomCommands/CreateCustomCommandWindow.hpp"
 #include "Widgets/CustomCommands/EditCustomCommandWindow.hpp"
 
 using namespace Ui::CustomCommand;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -4,11 +4,12 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "MembersCovenantCommand.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 #include <QRegularExpressionMatch>
 #include <QStringList>
 
 using namespace Command::CovenantCmd;
+using namespace Utils::Database;
 
 #define MSG_MEMBERS    0
 #define MSG_NOT_IN_COV 1

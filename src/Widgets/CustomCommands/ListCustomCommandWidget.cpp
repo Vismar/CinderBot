@@ -5,9 +5,10 @@
 **************************************************************************/
 #include "ListCustomCommandWidget.hpp"
 #include "Widgets/CustomCommands/EntryCustomCommandWidget.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Ui::CustomCommand;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

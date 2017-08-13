@@ -5,7 +5,7 @@
 **************************************************************************/
 #include "BaseChatCommand.hpp"
 #include "Utils/UserData/UserData.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command;
 

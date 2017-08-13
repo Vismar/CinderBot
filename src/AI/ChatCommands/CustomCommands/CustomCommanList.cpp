@@ -6,10 +6,11 @@
 #include "CustomCommandList.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "AI/ChatCommands/CustomCommands/CustomChatCommand.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CustomChatCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -34,19 +35,6 @@ void CustomCommandList::_UpdateCommands(const QString &tableName)
 
 void CustomCommandList::Initialize()
 {
-    DB_CREATE_TABLE(_commandTableName, "Id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                       "Name TEXT NOT NULL,"
-                                       "Cooldown TEXT NOT NULL,"
-                                       "ModeratorOnly INTEGER NOT NULL,"
-                                       "Price INTEGER NOT NULL,"
-                                       "Covenant TEXT NOT NULL");
-
-    DB_CREATE_TABLE(_commandAnswersTableName, "Id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                              "Name TEXT NOT NULL,"
-                                              "Answer TEXT NOT NULL");
-
-    DB_CREATE_INDEX(_commandAnswersTableName, "Answer_Index", "Answer");
-
     // Connect events from database manager to know, when we need to update commands
     connect(&DatabaseManager::Instance(), &DatabaseManager::OnInsertEvent,
             this, &CustomCommandList::_UpdateCommands);
