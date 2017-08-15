@@ -17,7 +17,6 @@ namespace CustomChatCmd
 class CustomCovChatCommand : public CustomChatCommand
 {
 public:
-    /*! Constructor */
     CustomCovChatCommand();
 };
 

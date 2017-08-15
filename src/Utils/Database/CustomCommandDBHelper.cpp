@@ -8,6 +8,9 @@
 
 using namespace Utils::Database;
 
+#define CUSTOM_COMMAND     "CustomCommand"
+#define CUSTOM_COV_COMMAND "CustomCovCommand"
+
 /*! Static constant array of parameters that could be stored in config manager. */
 static const QStringList CustomCmdStrParam =
 {
@@ -21,8 +24,22 @@ static const QStringList CustomCmdStrParam =
     "WorkInChat"
 };
 
-#define CUSTOM_COMMAND     "CustomCommand"
-#define CUSTOM_COV_COMMAND "CustomCovCommand"
+void SetParamsFromQuery(DB_QUERY_PTR query, CmdParams &cmdParams)
+{
+    if ((query != nullptr) && query->first())
+    {
+        cmdParams.Cooldown = QTime::fromString(query->value("Cooldown").toString(), "h:m:s");
+        cmdParams.ModeratorOnly = query->value("ModeratorOnly").toBool();
+        cmdParams.Price = query->value("Price").toInt();
+        if (cmdParams.Price < 0)
+        {
+            cmdParams.Price = 0;
+        }
+        cmdParams.Covenant = query->value("Covenant").toString();
+        cmdParams.WorkInWhisper = ("true" == query->value("WorkInWhisper").toString());
+        cmdParams.WorkInChat = ("true" == query->value("WorkInChat").toString());
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -45,6 +62,167 @@ QString CustomCommandDBHelper::InititalizeTables()
     }
 
     return error;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool CustomCommandDBHelper::CommandExist(const QString &cmdName)
+{
+    bool found(false);
+
+    // Check if command exist in user command list
+    QString tableName = _GetTableName(TableType::Commands, CmdType::CovenantCmd);
+    DB_QUERY_PTR customCmdQuery = DB_SELECT(tableName, "Id", QString("Name='%1'").arg(cmdName));
+    if ((customCmdQuery != nullptr) && (customCmdQuery->first()))
+    {
+        found = true;
+    }
+
+    // Check if command exist in cov command list
+    tableName = _GetTableName(TableType::Commands, CmdType::StreamerCmd);
+    DB_QUERY_PTR customCovCmdQuery = DB_SELECT(tableName, "Id", QString("Name='%1'").arg(cmdName));
+    if ((customCmdQuery != nullptr) && (customCovCmdQuery->first()))
+    {
+        found = true;
+    }
+
+    return found;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool CustomCommandDBHelper::CreateCommand(CmdType cmdType, const QString &cmdName, const CmdParams &cmdParams)
+{
+    bool created(false);
+
+    if (!CommandExist(cmdName))
+    {
+        QString values = "NULL, 'name', 'cooldown', mod, price, 'cov', 'workInW', 'workInC'";
+        values.replace("name", cmdName);
+        values.replace("cooldown", cmdParams.Cooldown.toString("h:m:s"));
+        values.replace("mod", (cmdParams.ModeratorOnly ? "1" : "0"));
+        values.replace("price", QString::number(cmdParams.Price));
+        values.replace("cov", cmdParams.Covenant);
+        values.replace("workInW", (cmdParams.WorkInWhisper ? "true" : "false"));
+        values.replace("workInW", (cmdParams.WorkInChat ? "true" : "false"));
+
+        QString tableName = _GetTableName(TableType::Commands, cmdType);
+        if (DB_INSERT(tableName, values))
+        {
+            DB_QUERY_PTR query = DB_SELECT(tableName, "Id", QString("Name='%1'").arg(cmdName));
+            if ((query != nullptr) && (query->first()))
+            {
+                created = true;
+                emit CustomCmdAdded(cmdType, cmdName, query->value("Id").toInt());
+            }
+        }
+    }
+
+    return created;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool CustomCommandDBHelper::DeleteCommand(CmdType cmdType, const QString &cmdName)
+{
+    bool deleted(false);
+
+    if (CommandExist(cmdName))
+    {
+        QString tableNameAnswers = _GetTableName(TableType::Answers, cmdType);
+        QString tableNameCommands = _GetTableName(TableType::Commands, cmdType);
+
+        DB_QUERY_PTR query = DB_SELECT(tableNameCommands, "Id", QString("Name='%1'").arg(cmdName));
+        if ((query != nullptr) && (query->first()))
+        {
+            if (DB_DELETE(tableNameAnswers, QString("Name='%1'").arg(cmdName)) &&
+                DB_DELETE(tableNameCommands, QString("Name='%1'").arg(cmdName)))
+            {
+                deleted = true;
+                emit CustomCmdDeleted(cmdType, cmdName, query->value("Id").toInt());
+            }
+        }
+    }
+
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+QVector<int> CustomCommandDBHelper::GetCommandIds(CmdType cmdType, const QString &covenant)
+{
+    QVector<int> commandIds;
+    QString tableName = _GetTableName(TableType::Commands, cmdType);
+    DB_QUERY_PTR query;
+    if (covenant.isEmpty())
+    {
+        query = DB_SELECT(tableName, "Id");
+    }
+    else
+    {
+        query = DB_SELECT(tableName, "Id", QString("Covenant='%1'").arg(covenant));
+    }
+    if (query != nullptr)
+    {
+        while (query->next())
+        {
+            commandIds.append(query->value("Id").toInt());
+        }
+    }
+
+    return commandIds;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+QStringList CustomCommandDBHelper::GetCommandNames(CmdType cmdType, const QString &covenant)
+{
+    QStringList commandNames;
+    QString tableName = _GetTableName(TableType::Commands, cmdType);
+    DB_QUERY_PTR query;
+    if (covenant.isEmpty())
+    {
+        query = DB_SELECT(tableName, "Name");
+    }
+    else
+    {
+        query = DB_SELECT(tableName, "Name", QString("Covenant='%1'").arg(covenant));
+    }
+    if (query != nullptr)
+    {
+        while (query->next())
+        {
+            commandNames.append(query->value("Name").toString());
+        }
+    }
+
+    return commandNames;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+CmdParams CustomCommandDBHelper::GetAllParams(CmdType cmdType, int id)
+{
+    CmdParams cmdParams;
+    QString tableName = _GetTableName(TableType::Commands, cmdType);
+
+    DB_QUERY_PTR query = DB_SELECT(tableName, "*", QString("Id=%1").arg(id));
+    SetParamsFromQuery(query, cmdParams);
+
+    return cmdParams;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+CmdParams CustomCommandDBHelper::GetAllParams(CmdType cmdType, const QString &cmdName)
+{
+    CmdParams cmdParams;
+    QString tableName = _GetTableName(TableType::Commands, cmdType);
+
+    DB_QUERY_PTR query = DB_SELECT(tableName, "*", QString("Name='%1'").arg(cmdName));
+    SetParamsFromQuery(query, cmdParams);
+
+    return cmdParams;
 }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -5,6 +5,7 @@
 **************************************************************************/
 #pragma once
 #include "AI/ChatCommands/BaseChatCommand.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 /*!
  * \brief Contains all chat command things.
@@ -17,9 +18,7 @@ namespace CustomChatCmd
 class CustomChatCommand : public BaseChatCommand
 {
 public:
-    /*! Constructor */
     CustomChatCommand();
-    /*! Destructor */
     virtual ~CustomChatCommand();
 
     ////////////////////////////////
@@ -33,6 +32,9 @@ public:
      */
     void InitializeByName(const QString &commandName);
 
+public slots:
+    void OnParameterChanged(const QString &cmdName, Utils::Database::CustomCmdParameter cmdParam, const QString &value);
+
 protected:
     ////////////////////////////////
     /// BaseChatCommand overrides
@@ -43,6 +45,8 @@ protected:
     QString _commandTableName;
     /*! Name of table from which answers should be grabbed */
     QString _commandAnswersTableName;
+    /*! Type of a command */
+    Utils::Database::CmdType _cmdType;
 };
 
 }

@@ -55,6 +55,8 @@ void CustomCovCommandList::_InitializeCommands()
         {
             CustomChatCommand* chatCommand = new CustomCovChatCommand();
             chatCommand->InitializeByName(query->value("Name").toString());
+            connect (&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCovCmdParameterChanged,
+                     chatCommand, &CustomChatCommand::OnParameterChanged);
             _commands.push_back(chatCommand);
         }
     }

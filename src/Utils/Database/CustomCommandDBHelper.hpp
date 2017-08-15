@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QStringList>
 #include <QVector>
+#include <QTime>
 
 /*!
  * \brief Contains all utility classes.
@@ -37,6 +38,16 @@ enum class CustomCmdParameter
     WorkInChat
 };
 
+struct CmdParams
+{
+    QTime Cooldown = QTime(0, 0, 0);
+    bool ModeratorOnly = false;
+    int Price = 0;
+    QString Covenant = "Viewer";
+    bool WorkInWhisper = false;
+    bool WorkInChat = true;
+};
+
 class CustomCommandDBHelper : public QObject
 {
     Q_OBJECT
@@ -45,8 +56,20 @@ public:
 
     QString InititalizeTables();
 
+    /*** Commands ***/
+    bool CommandExist(const QString &cmdName);
+    bool CreateCommand(CmdType cmdType, const QString &cmdName, const CmdParams &cmdParams);
+    bool DeleteCommand(CmdType cmdType, const QString &cmdName);
+    QVector<int> GetCommandIds(CmdType cmdType, const QString &covenant = "");
+    QStringList GetCommandNames(CmdType cmdType, const QString &covenant = "");
+
+    /*** Command parameters ***/
+    CmdParams GetAllParams(CmdType cmdType, int id);
+    CmdParams GetAllParams(CmdType cmdType, const QString &cmdName);
     QString GetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam);
     void SetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam, const QString &value);
+
+    /*** Command answers ***/
     QVector<int> GetAnswers(CmdType cmdType, const QString &cmdName);
     QString GetRandomAnswer(CmdType cmdType, const QString &cmdName);
     QString GetAnswer(CmdType cmdType, int id);
@@ -55,15 +78,21 @@ public:
     void DeleteAnswer(CmdType cmdType, int id);
 
 signals:
-    void CustomCmdParameterChanged(QString cmdName, CustomCmdParameter cmdParam, QString value);
-    void CustomCmdAnswerAdded(QString cmdName);
-    void CustomCmdAnswerEdit(QString cmdName, int id);
-    void CustomCmdAnswerDeleted(QString cmdName, int id);
+    /*** Commands ***/
+    void CustomCmdAdded(CmdType cmdType, const QString &cmdName, int id);
+    void CustomCmdDeleted(CmdType cmdType, const QString &cmdName, int id);
 
-    void CustomCovCmdParameterChanged(QString cmdName, CustomCmdParameter cmdParam, QString value);
-    void CustomCovCmdAnswerAdded(QString cmdName);
-    void CustomCovCmdAnswerEdit(QString cmdName, int id);
-    void CustomCovCmdAnswerDeleted(QString cmdName, int id);
+    /*** Commands created by user ***/
+    void CustomCmdParameterChanged(const QString &cmdName, CustomCmdParameter cmdParam, const QString &value);
+    void CustomCmdAnswerAdded(const QString &cmdName);
+    void CustomCmdAnswerEdit(const QString &cmdName, int id);
+    void CustomCmdAnswerDeleted(const QString &cmdName, int id);
+
+    /*** Commands created by covenants ***/
+    void CustomCovCmdParameterChanged(const QString &cmdName, CustomCmdParameter cmdParam, const QString &value);
+    void CustomCovCmdAnswerAdded(const QString &cmdName);
+    void CustomCovCmdAnswerEdit(const QString &cmdName, int id);
+    void CustomCovCmdAnswerDeleted(const QString &cmdName, int id);
 
 private:
     enum class TableType

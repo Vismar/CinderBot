@@ -81,6 +81,8 @@ void CustomCommandList::_InitializeCommands()
         {
             CustomChatCommand* chatCommand = new CustomChatCommand();
             chatCommand->InitializeByName(query->value("Name").toString());
+            connect (&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCmdParameterChanged,
+                     chatCommand, &CustomChatCommand::OnParameterChanged);
             _commands.push_back(chatCommand);
         }
     }

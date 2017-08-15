@@ -4,7 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CustomChatCommand.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CustomChatCmd;
 using namespace Utils::Database;
@@ -15,6 +14,7 @@ CustomChatCommand::CustomChatCommand()
 {
     _commandTableName = "CustomCommands";
     _commandAnswersTableName = "CustomCommandAnswers";
+    _cmdType = CmdType::StreamerCmd;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -26,20 +26,14 @@ CustomChatCommand::~CustomChatCommand() {}
 void CustomChatCommand::Initialize()
 {
     // Get data about command
-    DB_QUERY_PTR query = DB_SELECT(_commandTableName, "*", QString("Name='%1'").arg(_name));
-    if (query != NULL)
-    {
-        if (query->first())
-        {
-            // Set data to variables
-            _cooldown = QTime::fromString(query->value("Cooldown").toString(), "h:m:s");
-            _moderatorOnly = query->value("ModeratorOnly").toBool();
-            _price = query->value("Price").toInt();
-            _covenant = query->value("Covenant").toString();
-            _workInWhisper = ("true" == query->value("WorkInWhisper").toString());
-            _workInChat = ("true" == query->value("WorkInChat").toString());
-        }
-    }
+    CmdParams cmdParams = CustomCommandDBHelper::Instance().GetAllParams(_cmdType, _name);
+    // Set data to variables
+    _cooldown = cmdParams.Cooldown;
+    _moderatorOnly = cmdParams.ModeratorOnly;
+    _price = cmdParams.Price;
+    _covenant = cmdParams.Covenant;
+    _workInWhisper = cmdParams.WorkInWhisper;
+    _workInChat = cmdParams.WorkInChat;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -50,6 +44,45 @@ void CustomChatCommand::InitializeByName(const QString &commandName)
     _name = commandName;
     _isRandom = true;
     Initialize();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomChatCommand::OnParameterChanged(const QString &cmdName, CustomCmdParameter cmdParam, const QString &value)
+{
+    if (cmdName == _name)
+    {
+        switch (cmdParam)
+        {
+        case CustomCmdParameter::WorkInWhisper:
+            _workInWhisper = ("true" == value);
+            break;
+        case CustomCmdParameter::WorkInChat:
+            _workInChat = ("true" == value);
+            break;
+        case CustomCmdParameter::Cooldown:
+            _cooldown = QTime::fromString(value, "h:m:s");
+            break;
+        case CustomCmdParameter::ModeratorOnly:
+            _moderatorOnly = ("1" == value);
+            break;
+        case CustomCmdParameter::Price:
+            {
+                int price = value.toInt();
+                if (price < 0)
+                {
+                    price = 0;
+                }
+                _price = price;
+            }
+            break;
+        case CustomCmdParameter::Covenant:
+            _covenant = value;
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -73,43 +106,34 @@ void CustomChatCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer 
         _TakeDefaultPriceFromUser(message.GetRealName());
 
         // Get random answer
-        DB_QUERY_PTR query = DB_SELECT(_commandAnswersTableName, "*",
-                                       QString("Answer IN (SELECT Answer FROM %1 "
-                                       "WHERE Name='%2' "
-                                       "ORDER BY RANDOM() LIMIT 1)").arg(_commandAnswersTableName).arg(_name));
-        if (query != NULL)
+        QString longAnswer = CustomCommandDBHelper::Instance().GetRandomAnswer(_cmdType, _name);
+
+        // If answer is less than 500 symbols, then everything ok
+        if (longAnswer.length() <= 500)
         {
-            if (query->first())
+            answer.AddAnswer(longAnswer);
+        }
+        // If answer is longer than 500 symbols, so it should be sliced
+        else
+        {
+            // Slice an answer to separate messages
+            // until every part of an answer will not be less than 500 symbols
+            while (longAnswer.length() > 0)
             {
-                QString longAnswer = query->value("Answer").toString();
-                // If answer is less than 500 symbols, then everything ok
-                if (longAnswer.length() <= 500)
+                QString part = longAnswer.left(500);
+                // Try to find last space in this part
+                int lastSpace = part.lastIndexOf(' ');
+                // If in this part no space were found, just use 500 symbols there
+                if (lastSpace != -1)
                 {
-                    answer.AddAnswer(longAnswer);
+                    answer.AddAnswer(longAnswer.left(lastSpace+1));
+                    longAnswer.remove(0, lastSpace+1);
                 }
-                // If answer is longer than 500 symbols, so it should be sliced
+                // If last space were found, cut the message until this index
                 else
                 {
-                    // Slice an answer to separate messages
-                    // until every part of an answer will not be less than 500 symbols
-                    while (longAnswer.length() > 0)
-                    {
-                        QString part = longAnswer.left(500);
-                        // Try to find last space in this part
-                        int lastSpace = part.lastIndexOf(' ');
-                        // If in this part no space were found, just use 500 symbols there
-                        if (lastSpace != -1)
-                        {
-                            answer.AddAnswer(longAnswer.left(lastSpace+1));
-                            longAnswer.remove(0, lastSpace+1);
-                        }
-                        // If last space were found, cut the message until this index
-                        else
-                        {
-                            answer.AddAnswer(part);
-                            longAnswer.remove(0, 500);
-                        }
-                    }
+                    answer.AddAnswer(part);
+                    longAnswer.remove(0, 500);
                 }
             }
         }
