@@ -5,7 +5,6 @@
 **************************************************************************/
 #pragma once
 #include <QDialog>
-#include <QVBoxLayout>
 #include <QPushButton>
 #include "ParametersCustomCommandWidget.hpp"
 
@@ -23,7 +22,8 @@ namespace CustomCommand
 /*!
  * \brief Window to create custom command.
  *
- * Simple widget which contains all needed params to create custom command. After creating opens EditCustomCommandWindow.
+ * Simple widget which contains all needed params to create custom command. 
+ * After creating a command opens the EditCustomCommandWindow.
  */
 class CreateCustomCommandWindow : public QDialog
 {
@@ -43,14 +43,14 @@ signals:
 
 private slots:
     /*!
-     * \brief Check if command name field have text.
+     * \brief Checks if command name field have text.
      * \param text - new text in command name field.
      *
      * Check if command field have a text to handle.
      */
-    void _CheckCommandNameField(const QString &text);
+    void _CheckCommandNameField(const QString &text) const;
     /*!
-     * \brief Handle "Create" button.
+     * \brief Handles "Create" button.
      *
      * Sets params and tries to create customm command in database.
      */

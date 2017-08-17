@@ -17,6 +17,11 @@ namespace Ui
 namespace CustomCommand
 {
 
+/*!
+ * \brief Widget that contains answer text and capable of saving/editing/deleting it.
+ *
+ * Handles "Save" button to update answer data, also handles "Delete" button to delete answer.
+ */
 class EditSaveAnswerCustomCommandWidget : public Common::EditSaveWidget
 {
 public:
@@ -24,10 +29,21 @@ public:
     virtual ~EditSaveAnswerCustomCommandWidget();
 
 protected:
-    ////////////////////////////////
-    /// EditSaveWidget override
-    void _SaveEntry();
-    void _DeleteEntry();
+    /*////////////////////////////*/
+    /* EditSaveWidget override    */
+    /*////////////////////////////*/
+    /*!
+     * \brief Saves new answer for current command.
+     * 
+     * Gets text from _text field and saves it as new answer for current command.
+     */
+    void _SaveEntry() override;
+    /*!
+     * \brief Deleted current answer from current command.
+     * 
+     * Get _id and uses it to delete answer from current command.
+     */
+    void _DeleteEntry() override;
 };
 
 }

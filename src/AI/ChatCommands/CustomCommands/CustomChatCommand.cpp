@@ -25,7 +25,6 @@ CustomChatCommand::~CustomChatCommand() {}
 
 void CustomChatCommand::Initialize()
 {
-    // Get data about command
     CmdParams cmdParams = CustomCommandDBHelper::Instance().GetAllParams(_cmdType, _name);
     // Set data to variables
     _cooldown = cmdParams.Cooldown;

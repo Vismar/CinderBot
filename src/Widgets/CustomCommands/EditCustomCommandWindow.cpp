@@ -74,7 +74,7 @@ EditCustomCommandWindow::~EditCustomCommandWindow() { }
 void EditCustomCommandWindow::LoadCommandData(const QString &cmdName)
 {
     CmdParams cmdParams = CustomCommandDBHelper::Instance().GetAllParams(CmdType::StreamerCmd, cmdName);
-
+    // Set all params to widget
     _parameters->SetCommandName(cmdName);
     _parameters->SetCooldown(cmdParams.Cooldown);
     _parameters->SetModOnly(cmdParams.ModeratorOnly);
@@ -91,7 +91,7 @@ void EditCustomCommandWindow::LoadCommandData(const QString &cmdName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditCustomCommandWindow::_CheckAnswerField()
+void EditCustomCommandWindow::_CheckAnswerField() const
 {
     if (_newAnswer->toPlainText().length() > 0)
     {
@@ -105,7 +105,7 @@ void EditCustomCommandWindow::_CheckAnswerField()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditCustomCommandWindow::_OnAddButton()
+void EditCustomCommandWindow::_OnAddButton() const
 {
     CustomCommandDBHelper::Instance().AddAnswer(CmdType::StreamerCmd, _parameters->GetCommandName(), _newAnswer->toPlainText());
     _newAnswer->clear();
@@ -116,6 +116,7 @@ void EditCustomCommandWindow::_OnAddButton()
 void EditCustomCommandWindow::_OnSaveButton()
 {
     CmdParams cmdParams;
+    // Get all params from widget
     cmdParams.Cooldown = _parameters->GetCooldown();
     cmdParams.ModeratorOnly = _parameters->GetModOnly();
     cmdParams.Price = _parameters->GetPrice();
@@ -127,13 +128,15 @@ void EditCustomCommandWindow::_OnSaveButton()
     cmdParams.WorkInWhisper = _parameters->GetWorkInWhisper();
     cmdParams.WorkInChat = _parameters->GetWorkInChat();
 
+    // Update params for specific command
     CustomCommandDBHelper::Instance().SetAllParams(CmdType::StreamerCmd, _parameters->GetCommandName(), cmdParams);
+    // Close window
     close();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditCustomCommandWindow::_LoadAnswers()
+void EditCustomCommandWindow::_LoadAnswers() const
 {
     QVector<int> answerIds = CustomCommandDBHelper::Instance().GetAnswers(CmdType::StreamerCmd, _parameters->GetCommandName());
 
@@ -147,7 +150,7 @@ void EditCustomCommandWindow::_LoadAnswers()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditCustomCommandWindow::_AddAnswer(const QString &cmdName)
+void EditCustomCommandWindow::_AddAnswer(const QString &cmdName) const
 {
     // If answer was added to opened command, then update all answers in from list
     if (cmdName == _parameters->GetCommandName())
@@ -158,7 +161,7 @@ void EditCustomCommandWindow::_AddAnswer(const QString &cmdName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditCustomCommandWindow::_DeleteAnswer(const QString &cmdName, int id)
+void EditCustomCommandWindow::_DeleteAnswer(const QString &cmdName, int id) const
 {
     // If answer was deleted from opened command, then delete answer with specified id from list
     if (cmdName == _parameters->GetCommandName())

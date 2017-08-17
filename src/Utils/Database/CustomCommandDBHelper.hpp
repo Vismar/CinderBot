@@ -19,6 +19,7 @@ namespace Utils
  */
 namespace Database
 {
+// TODO: Add comments for everything here
 
 enum class CmdType
 {
@@ -47,6 +48,7 @@ struct CmdParams
     bool WorkInWhisper = false;
     bool WorkInChat = true;
 
+    // TODO: Move implementation to .cpp file
     QString ToParamString() const
     {
         QString params = "Cooldown=':cooldown', "
@@ -65,6 +67,7 @@ struct CmdParams
         return params;
     }
 
+    // TODO: Move implementation to .cpp file
     QString ToAddString() const
     {
         QString params = "':cooldown', "

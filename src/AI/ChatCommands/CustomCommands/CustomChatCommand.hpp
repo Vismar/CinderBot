@@ -14,7 +14,7 @@ namespace Command
 {
 namespace CustomChatCmd
 {
-
+// TODO: Update command in this file
 class CustomChatCommand : public BaseChatCommand
 {
 public:

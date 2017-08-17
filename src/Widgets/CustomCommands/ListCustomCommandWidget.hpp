@@ -17,7 +17,11 @@ namespace Ui
 namespace CustomCommand
 {
 
-// TODO: Add comments for class
+/*!
+ * \brief Widget that contains and displays all commands.
+ * 
+ * Inherited PageListWidget to display all custom commands created by user.
+ */
 class ListCustomCommandWidget : public Common::PageListWidget
 {
 public:
@@ -25,10 +29,23 @@ public:
     virtual ~ListCustomCommandWidget();
 
 protected:
-    ////////////////////////////////
-    /// PageListWidget override
-    void _CreateAndAddWidget();
-    void _UpdateEntry(QWidget *entry, int id);
+    /*////////////////////////////*/
+    /* PageListWidget override    */
+    /*////////////////////////////*/
+    /*!
+     * \brief Creates entry widget.
+     * 
+     * Creates EntryCustomCommandWidget as entry widget and call _AddWidget() to initialize it.
+     */
+    void _CreateAndAddWidget() override;
+    /*!
+     * \brief Updates command in specified entry by id.
+     * \param entry - pointer to entry widget which should be updated.
+     * \param id - id of command which should be used to update entry.
+     * 
+     * Gets command by id from CustomCommandDBHelper and sets it to specified entry widget.
+     */
+    void _UpdateEntry(QWidget *entry, int id) override;
 };
 
 }

@@ -42,7 +42,7 @@ CreateCustomCommandWindow::~CreateCustomCommandWindow() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CreateCustomCommandWindow::_CheckCommandNameField(const QString &text)
+void CreateCustomCommandWindow::_CheckCommandNameField(const QString &text) const
 {
     if (text.isEmpty())
     {
@@ -58,8 +58,8 @@ void CreateCustomCommandWindow::_CheckCommandNameField(const QString &text)
 
 void CreateCustomCommandWindow::_OnCreateButton()
 {
-    // Set parameters
     CmdParams cmdParams;
+    // Set parameters
     cmdParams.Cooldown = _parameters->GetCooldown();
     cmdParams.ModeratorOnly = _parameters->GetModOnly();
     cmdParams.Price = _parameters->GetPrice();

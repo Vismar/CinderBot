@@ -14,7 +14,7 @@ namespace Command
 {
 namespace CustomChatCmd
 {
-
+// TODO: Update comments in this file
 /*!
  * Class CustomCommandList
  * Read and store all custom commands from database

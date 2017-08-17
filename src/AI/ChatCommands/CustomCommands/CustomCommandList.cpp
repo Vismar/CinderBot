@@ -66,6 +66,7 @@ void CustomCommandList::OnCfgParamChanged(CfgParam cfgParam)
 
 void CustomCommandList::_InitializeCommands()
 {
+    // TODO: Use CustomCommandDBHelper
     // Clear all commands that was already created
     for (int i = 0; i < _commands.size(); ++i)
     {
@@ -75,7 +76,7 @@ void CustomCommandList::_InitializeCommands()
 
     // Create new commands
     DB_QUERY_PTR query = DB_SELECT(_commandTableName, "Name");
-    if (query != NULL)
+    if (query != nullptr)
     {
         while (query->next())
         {

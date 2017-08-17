@@ -44,7 +44,7 @@ CustomCommandWindow::~CustomCommandWindow() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomCommandWindow::_CreateCommand()
+void CustomCommandWindow::_CreateCommand() const
 {
     CreateCustomCommandWindow *createWindow = new CreateCustomCommandWindow();
     createWindow->setAttribute(Qt::WA_DeleteOnClose);
@@ -55,7 +55,7 @@ void CustomCommandWindow::_CreateCommand()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomCommandWindow::_AddCommand(CmdType cmdType, const QString &cmdName, int commandId)
+void CustomCommandWindow::_AddCommand(CmdType cmdType, const QString &cmdName, int commandId) const
 {
     Q_UNUSED(cmdName);
     if (cmdType == CmdType::StreamerCmd)
@@ -66,7 +66,7 @@ void CustomCommandWindow::_AddCommand(CmdType cmdType, const QString &cmdName, i
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomCommandWindow::_DeleteCommand(CmdType cmdType, const QString & cmdName, int commandId)
+void CustomCommandWindow::_DeleteCommand(CmdType cmdType, const QString & cmdName, int commandId) const
 {
     Q_UNUSED(cmdName);
     if (cmdType == CmdType::StreamerCmd)
@@ -77,7 +77,7 @@ void CustomCommandWindow::_DeleteCommand(CmdType cmdType, const QString & cmdNam
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomCommandWindow::_EditNewCommand(const QString &cmdName)
+void CustomCommandWindow::_EditNewCommand(const QString &cmdName) const
 {
     EditCustomCommandWindow *editWindow = new EditCustomCommandWindow();
     editWindow->setAttribute(Qt::WA_DeleteOnClose);
@@ -87,7 +87,7 @@ void CustomCommandWindow::_EditNewCommand(const QString &cmdName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomCommandWindow::_LoadCommands()
+void CustomCommandWindow::_LoadCommands() const
 {
     QVector<int> commandIds = CustomCommandDBHelper::Instance().GetCommandIds(CmdType::StreamerCmd);
 

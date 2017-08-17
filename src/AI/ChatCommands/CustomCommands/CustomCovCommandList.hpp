@@ -13,7 +13,7 @@ namespace Command
 {
 namespace CustomChatCmd
 {
-
+// TODO: Update comments in this file
 /*!
  * Class CustomCovCommandList
  * Read and store all custom commands for covenants from database

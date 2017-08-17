@@ -27,7 +27,7 @@ ParametersCustomCommandWidget::~ParametersCustomCommandWidget() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetCommandNameChangeable(bool state)
+void ParametersCustomCommandWidget::SetCommandNameChangeable(bool state) const
 {
     _commandName->SetEditable(state);
 }
@@ -41,7 +41,7 @@ QString ParametersCustomCommandWidget::GetCommandName() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetCommandName(const QString& cmdName)
+void ParametersCustomCommandWidget::SetCommandName(const QString& cmdName) const
 {
     _commandName->setText(cmdName);
 }
@@ -55,7 +55,7 @@ QTime ParametersCustomCommandWidget::GetCooldown() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetCooldown(const QTime& cooldown)
+void ParametersCustomCommandWidget::SetCooldown(const QTime& cooldown) const
 {
     _cooldown->setTime(cooldown);
 }
@@ -69,7 +69,7 @@ bool ParametersCustomCommandWidget::GetModOnly() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetModOnly(bool modOnly)
+void ParametersCustomCommandWidget::SetModOnly(bool modOnly) const
 {
     if (modOnly)
     {
@@ -90,7 +90,7 @@ int ParametersCustomCommandWidget::GetPrice() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetPrice(int price)
+void ParametersCustomCommandWidget::SetPrice(int price) const
 {
     _price->setValue(price);
 }
@@ -104,7 +104,7 @@ QString ParametersCustomCommandWidget::GetCovenant() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetCovenant(const QString& covenant)
+void ParametersCustomCommandWidget::SetCovenant(const QString& covenant) const
 {
     return _covenant->setCurrentText(covenant);
 }
@@ -118,7 +118,7 @@ bool ParametersCustomCommandWidget::GetWorkInWhisper() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetWorkInWhisper(bool workInWhisper)
+void ParametersCustomCommandWidget::SetWorkInWhisper(bool workInWhisper) const
 {
     if (workInWhisper)
     {
@@ -139,7 +139,7 @@ bool ParametersCustomCommandWidget::GetWorkInChat() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetWorkInChat(bool workInChat)
+void ParametersCustomCommandWidget::SetWorkInChat(bool workInChat) const
 {
     if (workInChat)
     {

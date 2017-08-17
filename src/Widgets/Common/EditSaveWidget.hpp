@@ -20,7 +20,7 @@ namespace Ui
  */
 namespace Common
 {
-
+// TODO: Update comments in this file
 /*!
  * class EditSaveWidget
  * Simple class which have text field and two buttons: edit/save and delete.

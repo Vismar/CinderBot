@@ -289,9 +289,6 @@
     <ClCompile Include="AI\ChatCommands\CustomCommands\CustomChatCommand.cpp">
       <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
     </ClCompile>
-    <ClCompile Include="AI\ChatCommands\CustomCommands\CustomCommanList.cpp">
-      <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
-    </ClCompile>
     <ClCompile Include="AI\ChatCommands\CustomCommands\CustomCovChatCommand.cpp">
       <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
     </ClCompile>
@@ -463,6 +460,12 @@
     </ClCompile>
     <ClCompile Include="Build\Release\moc_ParametersCustomCommandWidget.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CustomCommands\CustomCommandList.cpp">
+      <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_CustomCommandList.cpp">
+      <Filter>Generated Files\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

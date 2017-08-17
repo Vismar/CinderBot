@@ -19,35 +19,40 @@ namespace Ui
 namespace CustomCommand
 {
 
+/*!
+ * \brief Widget to display command name and to edit/delete it.
+ * 
+ * Simple widget that contains "Command name" text field and two buttons: "Edit" and "Delete".
+ * "Edit" button opens EditCustomCommandWindow. "Delete" button deletes current command.
+ */
 class EntryCustomCommandWidget : public QFrame
 {
     Q_OBJECT
 public:
-    /*!
-     * Constructor
-     * \param parent - parent widget
-     */
     explicit EntryCustomCommandWidget(QWidget* parent = 0);
-    /*!
-     * Destructor
-     */
     virtual ~EntryCustomCommandWidget();
 
     /*!
-     * Set text field for quote
-     * \param text - text which will be used in text field
+     * \brief Sets command name to text field.
+     * \param cmdName - text which will be used in text field to represent command name.
+     * 
+     * Sets specified command name in text field to display it.
      */
-    void SetCmdName(const QString &cmdName);
+    void SetCmdName(const QString &cmdName) const;
 
 private slots:
     /*!
-     * Handle edit button
+     * \brief Handle "Edit" button.
+     * 
+     * Shows EditCustomCommandWindow in which user can edit selected command.
      */
-    void _HandleEditButton();
+    void _HandleEditButton() const;
     /*!
-     * Handle delete button
+     * \brief Handle "Delete" button.
+     * 
+     * Deletes selected command.
      */
-    void _HandleDeleteButton();
+    void _HandleDeleteButton() const;
 
 private:
     /*! Widget layout */

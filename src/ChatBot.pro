@@ -47,7 +47,6 @@ SOURCES += main.cpp\
     AI/ChatCommands/CustomCommands/CustomCovChatCommand.cpp \
     AI/ChatCommands/CustomCommands/CustomChatCommand.cpp \
     AI/ChatCommands/CustomCommands/CustomCovCommandList.cpp \
-    AI/ChatCommands/CustomCommands/CustomCommanList.cpp \
     AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.cpp \
     AI/ChatCommands/CovenantCommands/InfoCovenantCommand.cpp \
     AI/ChatCommands/UserDataCommands/MessagesUserDataCommand.cpp \
@@ -87,7 +86,8 @@ SOURCES += main.cpp\
     AI/ChatCommands/UserDataCommands/UserDataBaseCommand.cpp \
     AI/ChatCommands/CovenantCommands/CovenantBaseCommand.cpp \
     Utils/Database/DatabaseManager.cpp \
-    Utils/Database/CustomCommandDBHelper.cpp
+    Utils/Database/CustomCommandDBHelper.cpp \
+    AI/ChatCommands/CustomCommands/CustomCommandList.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \

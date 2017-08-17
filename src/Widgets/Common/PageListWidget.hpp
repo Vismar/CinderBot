@@ -47,7 +47,7 @@ public:
      */
     void SelectPage(int page);
     /*!
-     * Get current page number.
+     * \brief Get current page number.
      * \return current page number
      *
      * Returns page number which is currently selected.

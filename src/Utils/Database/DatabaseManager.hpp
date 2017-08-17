@@ -4,7 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QObject>
 #include <QtSql>
 #include <memory>
 
@@ -28,6 +27,7 @@ namespace Utils
 namespace Database
 {
 
+// TODO: Update comments in this file
 class DatabaseManager : public QObject
 {
     Q_OBJECT

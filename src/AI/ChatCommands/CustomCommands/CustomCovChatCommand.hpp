@@ -13,7 +13,7 @@ namespace Command
 {
 namespace CustomChatCmd
 {
-
+// TODO: Update comments in this file
 class CustomCovChatCommand : public CustomChatCommand
 {
 public:
