@@ -46,6 +46,42 @@ struct CmdParams
     QString Covenant = "Viewer";
     bool WorkInWhisper = false;
     bool WorkInChat = true;
+
+    QString ToParamString() const
+    {
+        QString params = "Cooldown=':cooldown', "
+                         "ModeratorOnly=:mod, "
+                         "Price=:price, "
+                         "Covenant=':cov', "
+                         "WorkInWhisper=':whisper', "
+                         "WorkInChat=':chat'";
+        params.replace(":cooldown", Cooldown.toString("h:m:s"));
+        params.replace(":mod", (ModeratorOnly ? "1" : "0"));
+        params.replace(":price", QString::number(Price));
+        params.replace(":cov", Covenant);
+        params.replace(":whisper", (WorkInWhisper ? "true" : "false"));
+        params.replace(":chat", (WorkInChat ? "true" : "false"));
+
+        return params;
+    }
+
+    QString ToAddString() const
+    {
+        QString params = "':cooldown', "
+                         ":mod, "
+                         ":price, "
+                         "':cov', "
+                         "':whisper', "
+                         "':chat'";
+        params.replace(":cooldown", Cooldown.toString("h:m:s"));
+        params.replace(":mod", (ModeratorOnly ? "1" : "0"));
+        params.replace(":price", QString::number(Price));
+        params.replace(":cov", Covenant);
+        params.replace(":whisper", (WorkInWhisper ? "true" : "false"));
+        params.replace(":chat", (WorkInChat ? "true" : "false"));
+
+        return params;
+    }
 };
 
 class CustomCommandDBHelper : public QObject
@@ -66,7 +102,10 @@ public:
     /*** Command parameters ***/
     CmdParams GetAllParams(CmdType cmdType, int id);
     CmdParams GetAllParams(CmdType cmdType, const QString &cmdName);
+    void SetAllParams(CmdType cmdType, const QString &cmdName, const CmdParams &cmdParams);
+    //void SetAllParams(CmdType cmdType, int id, const CmdParams &cmdParams);
     QString GetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam);
+    QString GetParameter(CmdType cndType, int id, CustomCmdParameter cmdParam);
     void SetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam, const QString &value);
 
     /*** Command answers ***/
@@ -85,13 +124,13 @@ signals:
     /*** Commands created by user ***/
     void CustomCmdParameterChanged(const QString &cmdName, CustomCmdParameter cmdParam, const QString &value);
     void CustomCmdAnswerAdded(const QString &cmdName);
-    void CustomCmdAnswerEdit(const QString &cmdName, int id);
+    void CustomCmdAnswerEdited(const QString &cmdName, int id);
     void CustomCmdAnswerDeleted(const QString &cmdName, int id);
 
     /*** Commands created by covenants ***/
     void CustomCovCmdParameterChanged(const QString &cmdName, CustomCmdParameter cmdParam, const QString &value);
     void CustomCovCmdAnswerAdded(const QString &cmdName);
-    void CustomCovCmdAnswerEdit(const QString &cmdName, int id);
+    void CustomCovCmdAnswerEdited(const QString &cmdName, int id);
     void CustomCovCmdAnswerDeleted(const QString &cmdName, int id);
 
 private:

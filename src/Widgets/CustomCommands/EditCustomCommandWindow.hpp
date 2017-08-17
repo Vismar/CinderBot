@@ -12,11 +12,18 @@
 #include "ParametersCustomCommandWidget.hpp"
 #include "AnswersCustomCommandWidget.hpp"
 
+/*!
+* \brief All Ui widgets and windows.
+*/
 namespace Ui
 {
+ /*!
+  * \brief All wigets related to custom commands.
+  */
 namespace CustomCommand
 {
 
+// TODO: Add comments for class and functions
 class EditCustomCommandWindow : public QDialog
 {
     Q_OBJECT
@@ -51,9 +58,20 @@ private slots:
     void _OnSaveButton();
     /*!
      * Update whole list of answers
-     * \param tableName - table which was changed
      */
-    void _UpdateAnswers(const QString &tableName);
+    void _LoadAnswers();
+    /*!
+     * \brief
+     *
+     *
+     */
+    void _AddAnswer(const QString &cmdName);
+    /*!
+     * \brief
+     *
+     *
+     */
+    void _DeleteAnswer(const QString &cmdName, int id);
 
 private:
     /*! Main list of window */

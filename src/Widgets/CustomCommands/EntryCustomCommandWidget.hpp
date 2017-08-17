@@ -8,8 +8,14 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 
+/*!
+* \brief All Ui widgets and windows.
+*/
 namespace Ui
 {
+/*!
+ * \brief All wigets related to custom commands.
+ */
 namespace CustomCommand
 {
 

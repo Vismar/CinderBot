@@ -5,7 +5,7 @@
 **************************************************************************/
 #include "EntryCustomCommandWidget.hpp"
 #include "Widgets/CustomCommands/EditCustomCommandWindow.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Ui::CustomCommand;
 using namespace Utils::Database;
@@ -69,8 +69,7 @@ void EntryCustomCommandWidget::_HandleEditButton()
 
 void EntryCustomCommandWidget::_HandleDeleteButton()
 {
-    DB_DELETE("CustomCommandAnswers", QString("Name='%1'").arg(_cmdName->text()));
-    DB_DELETE("CustomCommands", QString("Name='%1'").arg(_cmdName->text()));
+    CustomCommandDBHelper::Instance().DeleteCommand(CmdType::StreamerCmd, _cmdName->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////

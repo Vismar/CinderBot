@@ -6,21 +6,22 @@
 #pragma once
 #include "Widgets/Common/PageListWidget.hpp"
 
+/*!
+* \brief All Ui widgets and windows.
+*/
 namespace Ui
 {
+/*!
+ * \brief All wigets related to custom commands.
+ */
 namespace CustomCommand
 {
 
+// TODO: Add comments for class
 class ListCustomCommandWidget : public Common::PageListWidget
 {
 public:
-    /*!
-     * Constructor
-     */
     explicit ListCustomCommandWidget(QWidget *parent = 0);
-    /*!
-     * Destructor
-     */
     virtual ~ListCustomCommandWidget();
 
 protected:

@@ -16,11 +16,17 @@
 #include <QTime>
 #include "Widgets/Common/EnhLineEdit.hpp"
 
+/*!
+* \brief All Ui widgets and windows.
+*/
 namespace Ui
 {
+/*!
+ * \brief All wigets related to custom commands.
+ */
 namespace CustomCommand
 {
-
+//TODO: Update comments in this file
 /*!
  * class ParametersCustomCommandWidget
  * Widget which handles storing and changing parameters for custom commands.
@@ -93,6 +99,10 @@ public:
      * \param covenant - new covenant
      */
     void SetCovenant(const QString& covenant);
+    bool GetWorkInWhisper() const;
+    void SetWorkInWhisper(bool workInWhisper);
+    bool GetWorkInChat() const;
+    void SetWorkInChat(bool workInChat);
 
 signals:
     void OnCommandNameFieldChanged(const QString &text);
@@ -125,29 +135,53 @@ private:
      * Inititalize covenant widgets
      */
     void _InitializeCovenant();
+    void _InitializeWorkInWhisper();
+    void _InitializeWorkInChat();
 
     /*! Main layout of whole widhet */
     QGridLayout *_mainLayout;
+    
+    /*** Command name ***/
     /*! Label for command name */
     QLabel *_commandNameLabel;
     /*! Command name, editable text widget */
     Common::EnhLineEdit *_commandName;
+    
+    /*** Cooldown ***/
     /*! Label for cooldown */
     QLabel *_cooldownLabel;
     /*! Cooldown editable time */
     QTimeEdit *_cooldown;
+    
+    /*** Moderator only flag ***/
     /*! Label for moderator only */
     QLabel *_modOnlyLabel;
     /*! Moderator only check box */
     QCheckBox *_moderatorOnly;
+    
+    /*** Price ***/
     /*! Label for price */
     QLabel *_priceLabel;
     /*! covenant spin widget */
     QSpinBox *_price;
+    
+    /*** Covenant ***/
     /*! Label for covenant */
     QLabel *_covenantLabel;
     /*! Covenant combox box widget */
     QComboBox *_covenant;
+    
+    /*** Work in whisper flag ***/
+    /*! Label for Work in whisper */
+    QLabel *_wokrInWhisperLabel;
+    /*! Work in whisper check box */
+    QCheckBox *_workInWhisper;
+    
+    /*** Work in chat flag ***/
+    /*! Label for Work in chat */
+    QLabel *_wokrInChatLabel;
+    /*! Work in chat check box */
+    QCheckBox *_workInChat;
 };
 
 }

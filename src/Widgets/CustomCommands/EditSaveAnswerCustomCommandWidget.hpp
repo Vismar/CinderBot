@@ -6,23 +6,21 @@
 #pragma once
 #include "Widgets/Common/EditSaveWidget.hpp"
 
+/*!
+* \brief All Ui widgets and windows.
+*/
 namespace Ui
 {
+/*!
+ * \brief All wigets related to custom commands.
+ */
 namespace CustomCommand
 {
 
 class EditSaveAnswerCustomCommandWidget : public Common::EditSaveWidget
 {
-    Q_OBJECT
 public:
-    /*!
-     * Constructor
-     * \param parent - parent widget
-     */
     explicit EditSaveAnswerCustomCommandWidget(QWidget* parent = 0);
-    /*!
-     * Destructor
-     */
     virtual ~EditSaveAnswerCustomCommandWidget();
 
 protected:

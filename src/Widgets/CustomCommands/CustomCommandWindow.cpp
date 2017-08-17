@@ -4,7 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CustomCommandWindow.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
 #include "Widgets/CustomCommands/CreateCustomCommandWindow.hpp"
 #include "Widgets/CustomCommands/EditCustomCommandWindow.hpp"
 
@@ -30,16 +29,13 @@ CustomCommandWindow::CustomCommandWindow(QWidget *parent) : QWidget(parent, Qt::
     connect(_createButton, &QPushButton::clicked,
             this, &CustomCommandWindow::_CreateCommand);
 
+    // Connect events from CustomCommandDBHelper to know, when we need to update commands
+    connect(&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCmdAdded,
+            this, &CustomCommandWindow::_AddCommand);
+    connect(&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCmdDeleted,
+        this, &CustomCommandWindow::_DeleteCommand);
 
-    // Connect events from database manager to know, when we need to update commands
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnInsertEvent,
-            this, &CustomCommandWindow::_UpdateCommands);
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnUpdateEvent,
-            this, &CustomCommandWindow::_UpdateCommands);
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnDeleteEvent,
-            this, &CustomCommandWindow::_UpdateCommands);
-
-    _UpdateCommands("CustomCommands");
+    _LoadCommands();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -59,20 +55,23 @@ void CustomCommandWindow::_CreateCommand()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomCommandWindow::_UpdateCommands(const QString &tableName)
+void CustomCommandWindow::_AddCommand(CmdType cmdType, const QString &cmdName, int commandId)
 {
-    if (tableName == "CustomCommands")
+    Q_UNUSED(cmdName);
+    if (cmdType == CmdType::StreamerCmd)
     {
-        DB_QUERY_PTR query = DB_SELECT("CustomCommands", "Id");
-        if (query != nullptr)
-        {
-            QVector<int> cmdIds;
-            while (query->next())
-            {
-                cmdIds.append(query->value("Id").toInt());
-            }
-            _commandList->UpdateIds(cmdIds);
-        }
+        _commandList->AddId(commandId);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomCommandWindow::_DeleteCommand(CmdType cmdType, const QString & cmdName, int commandId)
+{
+    Q_UNUSED(cmdName);
+    if (cmdType == CmdType::StreamerCmd)
+    {
+        _commandList->DeleteId(commandId);
     }
 }
 
@@ -84,6 +83,15 @@ void CustomCommandWindow::_EditNewCommand(const QString &cmdName)
     editWindow->setAttribute(Qt::WA_DeleteOnClose);
     editWindow->LoadCommandData(cmdName);
     editWindow->exec();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomCommandWindow::_LoadCommands()
+{
+    QVector<int> commandIds = CustomCommandDBHelper::Instance().GetCommandIds(CmdType::StreamerCmd);
+
+    _commandList->UpdateIds(commandIds);
 }
 
 ///////////////////////////////////////////////////////////////////////////

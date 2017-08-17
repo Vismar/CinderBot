@@ -1,0 +1,747 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files\Icons">
+      <UniqueIdentifier>{dfeea48d-cd35-4ead-b444-87fc83a946d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{1ef59d55-faeb-459c-95c2-8d47007e0877}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\AI">
+      <UniqueIdentifier>{3c2c6d3a-a2aa-428c-9b5b-4a55b7ded75a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\AI\ChatCommands">
+      <UniqueIdentifier>{2e037917-6121-4c68-857b-b67e87512629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\AI\ChatCommands\CovenantCommands">
+      <UniqueIdentifier>{d92dc176-c740-468f-ad29-e9dc3ecaac79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\AI\ChatCommands\CustomCommands">
+      <UniqueIdentifier>{8ecf49a5-5314-451f-bded-3e1c700d96e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\AI\ChatCommands\QuoteCommands">
+      <UniqueIdentifier>{d876a764-57b6-4fd8-ab2e-dceef5008f74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\AI\ChatCommands\UserDataCommands">
+      <UniqueIdentifier>{b58dcafa-2166-41a3-bee7-8cf720283c20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\AI\TimerCommands">
+      <UniqueIdentifier>{bad2010e-0963-4e8a-901b-ac4a2b14a437}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\AI\TimerCommands\UserData">
+      <UniqueIdentifier>{f81ef9a8-f9a4-4be1-8dfc-fd050271e678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Chat">
+      <UniqueIdentifier>{d4a317d1-50de-441e-818e-edb36a84bfbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Utils">
+      <UniqueIdentifier>{65385102-ed49-42dc-82f8-6eecd3bdcc58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Utils\Config">
+      <UniqueIdentifier>{8df931ef-b60f-4070-867a-1a5d9b71891f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Utils\Database">
+      <UniqueIdentifier>{19e9730b-89ff-4496-885b-48b922e1cad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Utils\UserData">
+      <UniqueIdentifier>{f39612ad-391c-4447-b28a-dead2259d7c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Widgets">
+      <UniqueIdentifier>{1ddc1b58-cbdc-4a9b-a977-6198dad51f76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Widgets\Chat">
+      <UniqueIdentifier>{3349a1e6-a7ba-42fa-bf69-c4eea12826b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Widgets\Common">
+      <UniqueIdentifier>{d5fbc7b3-af32-445a-888d-8b349a054f24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Widgets\CustomCommands">
+      <UniqueIdentifier>{f1194a8c-dc21-4639-9ce9-a44ede40e445}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Widgets\Login">
+      <UniqueIdentifier>{e95d5909-b199-4005-9a58-1faf0876255b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Widgets\Quotes">
+      <UniqueIdentifier>{7fb806f2-c3be-4498-b5a4-85080add64b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Widgets\Statistics">
+      <UniqueIdentifier>{0172ff63-f9f2-4724-961f-9691c78cb5ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\MocFiles">
+      <UniqueIdentifier>{a1cc69de-84b0-41f6-ac7d-637b3869a0ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{93356c48-640c-40d8-8afc-0ff8a8041d37}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{a3d7c6e6-a504-4097-9f44-f9157282bdfa}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\qrc_Resources.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Database\DatabaseManager.cpp">
+      <Filter>Sources\Utils\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Database\CustomCommandDBHelper.cpp">
+      <Filter>Sources\Utils\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Config\ConfigurationManager.cpp">
+      <Filter>Sources\Utils\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\BotAI.cpp">
+      <Filter>Sources\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Chat\ChatAnswer.cpp">
+      <Filter>Sources\Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Chat\ChatMessage.cpp">
+      <Filter>Sources\Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Chat\TwitchClient.cpp">
+      <Filter>Sources\Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Logger.cpp">
+      <Filter>Sources\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\UserData\RealTimeUserData.cpp">
+      <Filter>Sources\Utils\UserData</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\UserData\UserData.cpp">
+      <Filter>Sources\Utils\UserData</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Sources\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Quotes\CreateQuoteWidget.cpp">
+      <Filter>Sources\Widgets\Quotes</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Quotes\QuotesWidget.cpp">
+      <Filter>Sources\Widgets\Quotes</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Quotes\QuoteWindow.cpp">
+      <Filter>Sources\Widgets\Quotes</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Quotes\SingleQuoteWidget.cpp">
+      <Filter>Sources\Widgets\Quotes</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\CustomCommands\AnswersCustomCommandWidget.cpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\CustomCommands\CreateCustomCommandWindow.cpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\CustomCommands\CustomCommandWindow.cpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\CustomCommands\EditCustomCommandWindow.cpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\CustomCommands\EditSaveAnswerCustomCommandWidget.cpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\CustomCommands\EntryCustomCommandWidget.cpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\CustomCommands\ListCustomCommandWidget.cpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\CustomCommands\ParametersCustomCommandWidget.cpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Login\ConnectWidget.cpp">
+      <Filter>Sources\Widgets\Login</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Login\LoginWindow.cpp">
+      <Filter>Sources\Widgets\Login</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Statistics\MessageGraphWidget.cpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Statistics\MessageStatisticsWidget.cpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Statistics\StatisticsWidget.cpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Statistics\StatisticsWindow.cpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Statistics\ViewerCounterWidget.cpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Statistics\ViewerGraphWidget.cpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Statistics\ViewerStatisticsWidget.cpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Common\EditSaveWidget.cpp">
+      <Filter>Sources\Widgets\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Common\EnhLineEdit.cpp">
+      <Filter>Sources\Widgets\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Common\EnhTextEdit.cpp">
+      <Filter>Sources\Widgets\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Common\PageListWidget.cpp">
+      <Filter>Sources\Widgets\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Chat\ChatWidget.cpp">
+      <Filter>Sources\Widgets\Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Chat\ChatWindow.cpp">
+      <Filter>Sources\Widgets\Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Chat\ChatMessageWidget.cpp">
+      <Filter>Sources\Widgets\Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\TimerCommands\BaseTimerCommand.cpp">
+      <Filter>Sources\AI\TimerCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\TimerCommands\BaseTimerCommandList.cpp">
+      <Filter>Sources\AI\TimerCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\TimerCommands\UserData\CurrencyToOnlineTimerCommand.cpp">
+      <Filter>Sources\AI\TimerCommands\UserData</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\TimerCommands\UserData\TimeInChatTimerCommand.cpp">
+      <Filter>Sources\AI\TimerCommands\UserData</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\TimerCommands\UserData\UserDataTimerCommandList.cpp">
+      <Filter>Sources\AI\TimerCommands\UserData</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\BaseChatCommand.cpp">
+      <Filter>Sources\AI\ChatCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CommandList.cpp">
+      <Filter>Sources\AI\ChatCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\InbuiltChatCommand.cpp">
+      <Filter>Sources\AI\ChatCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\QuoteCommands\AddQuoteCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\QuoteCommands\BaseQuoteCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\QuoteCommands\DeleteQuoteCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\QuoteCommands\EditQuoteCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\QuoteCommands\MainQuoteCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\QuoteCommands\QuoteCommandList.cpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\UserDataCommands\CovenantUserDataCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\UserDataCommands\CheckUserDataCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\UserDataCommands\CurrencyUserDataCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\UserDataCommands\FullUserDataCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\UserDataCommands\MessagesUserDataCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\UserDataCommands\TimeInChatCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\UserDataCommands\UserDataBaseCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\UserDataCommands\UserDataCommandList.cpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CustomCommands\CustomChatCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CustomCommands\CustomCommanList.cpp">
+      <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CustomCommands\CustomCovChatCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CustomCommands\CustomCovCommandList.cpp">
+      <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\CovenantBaseCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\CovenantCommandList.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\CreateCovenantCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\DescriptionCovenantCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\DisbandCovenantCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\InfoCovenantCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\JoinCovenantCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\LeaveCovenantCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\ListCovenantCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\MembersCovenantCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\RenameCovenantCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Build\Release\moc_BaseChatCommand.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_BaseTimerCommand.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_BaseTimerCommandList.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_BotAI.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_ChatMessageWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_ChatWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_ChatWindow.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_CommandList.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_ConfigurationManager.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_ConnectWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_CreateCustomCommandWindow.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_CreateQuoteWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_CurrencyToOnlineTimerCommand.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_CustomCommandDBHelper.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_CustomCommandList.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_DatabaseManager.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_EditCustomCommandWindow.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_EditSaveWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_EnhLineEdit.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_EnhTextEdit.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_EntryCustomCommandWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_LoginWindow.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_MainWindow.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_MessageGraphWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_MessageStatisticsWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_PageListWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_QuoteWindow.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_RealTimeUserData.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_SingleQuoteWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_StatisticsWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_StatisticsWindow.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_TwitchClient.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_ViewerCounterWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_ViewerGraphWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_ViewerStatisticsWidget.cpp">
+      <Filter>Generated Files\MocFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_PageListWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_CustomCommandWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_CustomCommandWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_EditCustomCommandWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_CustomCommandDBHelper.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_EntryCustomCommandWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_CreateCustomCommandWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_ParametersCustomCommandWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_ParametersCustomCommandWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AI\TimerCommands\UserData\UserDataTimerCommandList.hpp">
+      <Filter>Sources\AI\TimerCommands\UserData</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\UserDataCommands\UserDataCommandList.hpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\UserDataCommands\UserDataBaseCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\UserData\UserData.hpp">
+      <Filter>Sources\Utils\UserData</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\TimerCommands\UserData\TimeInChatTimerCommand.hpp">
+      <Filter>Sources\AI\TimerCommands\UserData</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\UserDataCommands\TimeInChatCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\RenameCovenantCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\Quotes\QuotesWidget.hpp">
+      <Filter>Sources\Widgets\Quotes</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\QuoteCommands\QuoteCommandList.hpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\UserDataCommands\MessagesUserDataCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\MembersCovenantCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\QuoteCommands\MainQuoteCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Logger.hpp">
+      <Filter>Sources\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\ListCovenantCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\LeaveCovenantCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\JoinCovenantCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\InfoCovenantCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\InbuiltChatCommand.hpp">
+      <Filter>Sources\AI\ChatCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\UserDataCommands\FullUserDataCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\DisbandCovenantCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\DescriptionCovenantCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\CovenantCommandList.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\CovenantBaseCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\CreateCovenantCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CustomCommands\CustomChatCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CustomCommands\CustomCovChatCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CustomCommands\CustomCovCommandList.hpp">
+      <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\UserDataCommands\CheckUserDataCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\UserDataCommands\CovenantUserDataCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\UserDataCommands\CurrencyUserDataCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\QuoteCommands\AddQuoteCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\QuoteCommands\BaseQuoteCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\QuoteCommands\DeleteQuoteCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\QuoteCommands\EditQuoteCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\QuoteCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Chat\ChatAnswer.hpp">
+      <Filter>Sources\Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="Chat\ChatMessage.hpp">
+      <Filter>Sources\Chat</Filter>
+    </ClInclude>
+    <CustomBuild Include="Widgets\CustomCommands\CreateCustomCommandWindow.hpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\CustomCommands\CustomCommandWindow.hpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\CustomCommands\EditCustomCommandWindow.hpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\CustomCommands\EditSaveAnswerCustomCommandWidget.hpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\CustomCommands\EntryCustomCommandWidget.hpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Login\ConnectWidget.hpp">
+      <Filter>Sources\Widgets\Login</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Quotes\CreateQuoteWidget.hpp">
+      <Filter>Sources\Widgets\Quotes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MainWindow.hpp">
+      <Filter>Sources\Widgets</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Utils\Database\DatabaseManager.hpp">
+      <Filter>Sources\Utils\Database</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Widgets\Statistics\ViewerStatisticsWidget.hpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Statistics\ViewerGraphWidget.hpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Statistics\ViewerCounterWidget.hpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Statistics\StatisticsWindow.hpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Statistics\StatisticsWidget.hpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Statistics\MessageGraphWidget.hpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Statistics\MessageStatisticsWidget.hpp">
+      <Filter>Sources\Widgets\Statistics</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Chat\TwitchClient.hpp">
+      <Filter>Sources\Chat</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Quotes\SingleQuoteWidget.hpp">
+      <Filter>Sources\Widgets\Quotes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Utils\UserData\RealTimeUserData.hpp">
+      <Filter>Sources\Utils\UserData</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Quotes\QuoteWindow.hpp">
+      <Filter>Sources\Widgets\Quotes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Common\PageListWidget.hpp">
+      <Filter>Sources\Widgets\Common</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\CustomCommands\ParametersCustomCommandWidget.hpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Login\LoginWindow.hpp">
+      <Filter>Sources\Widgets\Login</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AI\ChatCommands\CustomCommands\CustomCommandList.hpp">
+      <Filter>Sources\AI\ChatCommands\CustomCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AI\ChatCommands\BaseChatCommand.hpp">
+      <Filter>Sources\AI\ChatCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AI\ChatCommands\CommandList.hpp">
+      <Filter>Sources\AI\ChatCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AI\TimerCommands\BaseTimerCommand.hpp">
+      <Filter>Sources\AI\TimerCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AI\TimerCommands\BaseTimerCommandList.hpp">
+      <Filter>Sources\AI\TimerCommands</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AI\TimerCommands\UserData\CurrencyToOnlineTimerCommand.hpp">
+      <Filter>Sources\AI\TimerCommands\UserData</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AI\BotAI.hpp">
+      <Filter>Sources\AI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Chat\ChatMessageWidget.hpp">
+      <Filter>Sources\Widgets\Chat</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Chat\ChatWidget.hpp">
+      <Filter>Sources\Widgets\Chat</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Chat\ChatWindow.hpp">
+      <Filter>Sources\Widgets\Chat</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Common\EditSaveWidget.hpp">
+      <Filter>Sources\Widgets\Common</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Common\EnhLineEdit.hpp">
+      <Filter>Sources\Widgets\Common</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Widgets\Common\EnhTextEdit.hpp">
+      <Filter>Sources\Widgets\Common</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Utils\Config\ConfigurationManager.hpp">
+      <Filter>Sources\Utils\Config</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Utils\Database\CustomCommandDBHelper.hpp">
+      <Filter>Sources\Utils\Database</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Resources.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <None Include="Resources\Icons\broadcasterIcon.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </None>
+    <None Include="Resources\Icons\ChatIcon.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </None>
+    <None Include="Resources\Icons\ConnectionStateConnecting.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </None>
+    <None Include="Resources\Icons\ConnectionStateEstablished.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </None>
+    <None Include="Resources\Icons\ConnectionStateNotConnected.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </None>
+    <None Include="Resources\Icons\CustomCommandsIcon.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </None>
+    <None Include="Resources\Icons\IconEmber.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </None>
+    <None Include="Resources\Icons\modIcon.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\QuotesIcon.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </None>
+    <None Include="Resources\Icons\StatisticsIcon.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Widgets\CustomCommands\AnswersCustomCommandWidget.hpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\CustomCommands\ListCustomCommandWidget.hpp">
+      <Filter>Sources\Widgets\CustomCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Config\ConfigurationParameters.hpp">
+      <Filter>Sources\Utils\Config</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="G:\Bot\CinderBot\src\ChatBot_resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

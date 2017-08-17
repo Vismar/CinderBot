@@ -95,25 +95,23 @@ bool CustomCommandDBHelper::CreateCommand(CmdType cmdType, const QString &cmdNam
 {
     bool created(false);
 
-    if (!CommandExist(cmdName))
+    QString guardedCmdName = cmdName;
+    guardedCmdName.replace("'", "");
+
+    if (!CommandExist(guardedCmdName))
     {
-        QString values = "NULL, 'name', 'cooldown', mod, price, 'cov', 'workInW', 'workInC'";
-        values.replace("name", cmdName);
-        values.replace("cooldown", cmdParams.Cooldown.toString("h:m:s"));
-        values.replace("mod", (cmdParams.ModeratorOnly ? "1" : "0"));
-        values.replace("price", QString::number(cmdParams.Price));
-        values.replace("cov", cmdParams.Covenant);
-        values.replace("workInW", (cmdParams.WorkInWhisper ? "true" : "false"));
-        values.replace("workInW", (cmdParams.WorkInChat ? "true" : "false"));
+        QString values = "NULL, 'name', PARAMS";
+        values.replace("name", guardedCmdName);
+        values.replace("PARAMS", cmdParams.ToAddString());
 
         QString tableName = _GetTableName(TableType::Commands, cmdType);
         if (DB_INSERT(tableName, values))
         {
-            DB_QUERY_PTR query = DB_SELECT(tableName, "Id", QString("Name='%1'").arg(cmdName));
+            DB_QUERY_PTR query = DB_SELECT(tableName, "Id", QString("Name='%1'").arg(guardedCmdName));
             if ((query != nullptr) && (query->first()))
             {
                 created = true;
-                emit CustomCmdAdded(cmdType, cmdName, query->value("Id").toInt());
+                emit CustomCmdAdded(cmdType, guardedCmdName, query->value("Id").toInt());
             }
         }
     }
@@ -144,7 +142,7 @@ bool CustomCommandDBHelper::DeleteCommand(CmdType cmdType, const QString &cmdNam
         }
     }
 
-    return true;
+    return deleted;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -153,14 +151,16 @@ QVector<int> CustomCommandDBHelper::GetCommandIds(CmdType cmdType, const QString
 {
     QVector<int> commandIds;
     QString tableName = _GetTableName(TableType::Commands, cmdType);
+    QString guardedCovenant = covenant;
+    guardedCovenant.replace("'", "''");
     DB_QUERY_PTR query;
-    if (covenant.isEmpty())
+    if (guardedCovenant.isEmpty())
     {
         query = DB_SELECT(tableName, "Id");
     }
     else
     {
-        query = DB_SELECT(tableName, "Id", QString("Covenant='%1'").arg(covenant));
+        query = DB_SELECT(tableName, "Id", QString("Covenant='%1'").arg(guardedCovenant));
     }
     if (query != nullptr)
     {
@@ -179,14 +179,16 @@ QStringList CustomCommandDBHelper::GetCommandNames(CmdType cmdType, const QStrin
 {
     QStringList commandNames;
     QString tableName = _GetTableName(TableType::Commands, cmdType);
+    QString guardedCovenant = covenant;
+    guardedCovenant.replace("'", "''");
     DB_QUERY_PTR query;
-    if (covenant.isEmpty())
+    if (guardedCovenant.isEmpty())
     {
         query = DB_SELECT(tableName, "Name");
     }
     else
     {
-        query = DB_SELECT(tableName, "Name", QString("Covenant='%1'").arg(covenant));
+        query = DB_SELECT(tableName, "Name", QString("Covenant='%1'").arg(guardedCovenant));
     }
     if (query != nullptr)
     {
@@ -227,6 +229,75 @@ CmdParams CustomCommandDBHelper::GetAllParams(CmdType cmdType, const QString &cm
 
 ///////////////////////////////////////////////////////////////////////////
 
+void CustomCommandDBHelper::SetAllParams(CmdType cmdType, const QString &cmdName, const CmdParams &cmdParams)
+{
+    QString tableName = _GetTableName(TableType::Commands, cmdType);
+
+    if (DB_UPDATE(tableName, cmdParams.ToParamString(), QString("Name='%1'").arg(cmdName)))
+    {
+        switch (cmdType)
+        {
+        case CmdType::StreamerCmd:
+            emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::Cooldown, cmdParams.Cooldown.toString("h:m:s"));
+            emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::ModeratorOnly, (cmdParams.ModeratorOnly ? "1" : "0"));
+            emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::Price, QString::number(cmdParams.Price));
+            emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::Covenant, cmdParams.Covenant);
+            emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::WorkInWhisper, (cmdParams.WorkInWhisper ? "true" : "false"));
+            emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::WorkInChat, (cmdParams.WorkInChat ? "true" : "false"));
+            break;
+        case CmdType::CovenantCmd:
+            emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::Cooldown, cmdParams.Cooldown.toString("h:m:s"));
+            emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::ModeratorOnly, (cmdParams.ModeratorOnly ? "1" : "0"));
+            emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::Price, QString::number(cmdParams.Price));
+            emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::Covenant, cmdParams.Covenant);
+            emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::WorkInWhisper, (cmdParams.WorkInWhisper ? "true" : "false"));
+            emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::WorkInChat, (cmdParams.WorkInChat ? "true" : "false"));
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+/*
+void CustomCommandDBHelper::SetAllParams(CmdType cmdType, int id, const CmdParams &cmdParams)
+{
+    QString tableName = _GetTableName(TableType::Commands, cmdType);
+
+    if (DB_UPDATE(tableName, cmdParams.ToParamString(), QString("Id=%1").arg(id)))
+    {
+        DB_QUERY_PTR query = DB_SELECT(tableName, "Name", QString("Id=%1").arg(id));
+        if ((query != nullptr) && (query->first))
+        {
+            QString cmdName = query->value("Name").toString;
+            switch (cmdType)
+            {
+            case CmdType::StreamerCmd:
+                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::Cooldown, cmdParams.Cooldown.toString("h:m:s"));
+                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::ModeratorOnly, (cmdParams.ModeratorOnly ? "1" : "0"));
+                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::Price, QString::number(cmdParams.Price));
+                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::Covenant, cmdParams.Covenant);
+                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::WorkInWhisper, (cmdParams.WorkInWhisper ? "true" : "false"));
+                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::WorkInChat, (cmdParams.WorkInChat ? "true" : "false"));
+                break;
+            case CmdType::CovenantCmd:
+                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::Cooldown, cmdParams.Cooldown.toString("h:m:s"));
+                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::ModeratorOnly, (cmdParams.ModeratorOnly ? "1" : "0"));
+                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::Price, QString::number(cmdParams.Price));
+                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::Covenant, cmdParams.Covenant);
+                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::WorkInWhisper, (cmdParams.WorkInWhisper ? "true" : "false"));
+                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::WorkInChat, (cmdParams.WorkInChat ? "true" : "false"));
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+*/
+///////////////////////////////////////////////////////////////////////////
+
 QString CustomCommandDBHelper::GetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam)
 {
     QString result;
@@ -234,6 +305,23 @@ QString CustomCommandDBHelper::GetParameter(CmdType cmdType, const QString &cmdN
     QString parameter = CustomCmdStrParam[static_cast<int>(cmdParam)];
 
     DB_QUERY_PTR query = DB_SELECT(tableName, parameter, QString("Name='%1'").arg(cmdName));
+    if ((query != nullptr) && (query->first()))
+    {
+        result = query->value(parameter).toString().replace("''", "'");
+    }
+
+    return result;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+QString CustomCommandDBHelper::GetParameter(CmdType cmdType, int id, CustomCmdParameter cmdParam)
+{
+    QString result;
+    QString tableName = _GetTableName(TableType::Commands, cmdType);
+    QString parameter = CustomCmdStrParam[static_cast<int>(cmdParam)];
+
+    DB_QUERY_PTR query = DB_SELECT(tableName, parameter, QString("Id=%1").arg(id));
     if ((query != nullptr) && (query->first()))
     {
         result = query->value(parameter).toString().replace("''", "'");
@@ -263,18 +351,19 @@ void CustomCommandDBHelper::SetParameter(CmdType cmdType, const QString &cmdName
         break;
     }
 
-    DB_UPDATE(tableName, paramValue, QString("Name='%1'").arg(cmdName));
-
-    switch (cmdType)
+    if (DB_UPDATE(tableName, paramValue, QString("Name='%1'").arg(cmdName)))
     {
-    case CmdType::StreamerCmd:
-        emit CustomCmdParameterChanged(cmdName, cmdParam, value);
-        break;
-    case CmdType::CovenantCmd:
-        emit CustomCovCmdParameterChanged(cmdName, cmdParam, value);
-        break;
-    default:
-        break;
+        switch (cmdType)
+        {
+        case CmdType::StreamerCmd:
+            emit CustomCmdParameterChanged(cmdName, cmdParam, value);
+            break;
+        case CmdType::CovenantCmd:
+            emit CustomCovCmdParameterChanged(cmdName, cmdParam, value);
+            break;
+        default:
+            break;
+        }
     }
 }
 
@@ -340,18 +429,19 @@ void CustomCommandDBHelper::AddAnswer(CmdType cmdType, const QString &cmdName, c
     QString guardedAnswer = answer;
     guardedAnswer.replace("'", "''");
 
-    DB_INSERT(tableName, QString("NULL, Name='%1', Answer='%2'").arg(cmdName).arg(guardedAnswer));
-
-    switch (cmdType)
+    if (DB_INSERT(tableName, QString("NULL, '%1', '%2'").arg(cmdName).arg(guardedAnswer)))
     {
-    case CmdType::StreamerCmd:
-        emit CustomCmdAnswerAdded(cmdName);
-        break;
-    case CmdType::CovenantCmd:
-        emit CustomCovCmdAnswerAdded(cmdName);
-        break;
-    default:
-        break;
+        switch (cmdType)
+        {
+        case CmdType::StreamerCmd:
+            emit CustomCmdAnswerAdded(cmdName);
+            break;
+        case CmdType::CovenantCmd:
+            emit CustomCovCmdAnswerAdded(cmdName);
+            break;
+        default:
+            break;
+        }
     }
 }
 
@@ -364,24 +454,25 @@ void CustomCommandDBHelper::EditAnswer(CmdType cmdType, int id, const QString &a
     QString guardedAnswer = answer;
     guardedAnswer.replace("'", "''");
 
-    DB_UPDATE(tableName, QString("Answer='%1'").arg(guardedAnswer), QString("Id=%1").arg(id));
-
-    DB_QUERY_PTR query = DB_SELECT(tableName, "Name", QString("Id=%1").arg(id));
-    if ((query != nullptr) && (query->first()))
+    if (DB_UPDATE(tableName, QString("Answer='%1'").arg(guardedAnswer), QString("Id=%1").arg(id)))
     {
-        cmdName = query->value("Name").toString();
-        if (!cmdName.isEmpty())
+        DB_QUERY_PTR query = DB_SELECT(tableName, "Name", QString("Id=%1").arg(id));
+        if ((query != nullptr) && (query->first()))
         {
-            switch (cmdType)
+            cmdName = query->value("Name").toString();
+            if (!cmdName.isEmpty())
             {
-            case CmdType::StreamerCmd:
-                emit CustomCmdAnswerEdit(cmdName, id);
-                break;
-            case CmdType::CovenantCmd:
-                emit CustomCovCmdAnswerEdit(cmdName, id);
-                break;
-            default:
-                break;
+                switch (cmdType)
+                {
+                case CmdType::StreamerCmd:
+                    emit CustomCmdAnswerEdited(cmdName, id);
+                    break;
+                case CmdType::CovenantCmd:
+                    emit CustomCovCmdAnswerEdited(cmdName, id);
+                    break;
+                default:
+                    break;
+                }
             }
         }
     }
@@ -394,24 +485,25 @@ void CustomCommandDBHelper::DeleteAnswer(CmdType cmdType, int id)
     QString tableName  = _GetTableName(TableType::Answers, cmdType);
     QString cmdName;
 
-    DB_DELETE(tableName, QString("Id=%1").arg(id));
-
     DB_QUERY_PTR query = DB_SELECT(tableName, "Name", QString("Id=%1").arg(id));
     if ((query != nullptr) && (query->first()))
     {
-        cmdName = query->value("Name").toString();
-        if (!cmdName.isEmpty())
+        if (DB_DELETE(tableName, QString("Id=%1").arg(id)))
         {
-            switch (cmdType)
+            cmdName = query->value("Name").toString();
+            if (!cmdName.isEmpty())
             {
-            case CmdType::StreamerCmd:
-                emit CustomCmdAnswerDeleted(cmdName, id);
-                break;
-            case CmdType::CovenantCmd:
-                emit CustomCovCmdAnswerDeleted(cmdName, id);
-                break;
-            default:
-                break;
+                switch (cmdType)
+                {
+                case CmdType::StreamerCmd:
+                    emit CustomCmdAnswerDeleted(cmdName, id);
+                    break;
+                case CmdType::CovenantCmd:
+                    emit CustomCovCmdAnswerDeleted(cmdName, id);
+                    break;
+                default:
+                    break;
+                }
             }
         }
     }
@@ -466,8 +558,6 @@ QString CustomCommandDBHelper::_GetTableName(TableType tableType, CmdType cmdTyp
 
 QString CustomCommandDBHelper::_InititalizeCustomCommandTables(const QString &mainTableName, const QString &indexPrefix)
 {
-    qDebug() << mainTableName;
-
     QString error = "OK";
 
     // Main table

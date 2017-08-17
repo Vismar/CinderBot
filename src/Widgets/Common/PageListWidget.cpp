@@ -58,6 +58,30 @@ void PageListWidget::UpdateIds(const QVector<int> &newIds)
 
 ///////////////////////////////////////////////////////////////////////////
 
+void PageListWidget::AddId(int id)
+{
+    _ids.append(id);
+    _UpdateSlider();
+    _UpdatePageNumber();
+    _UpdateContent();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void PageListWidget::DeleteId(int id)
+{
+    int index = _ids.indexOf(id);
+    if (index != -1)
+    {
+        _ids.remove(index);
+        _UpdateSlider();
+        _UpdatePageNumber();
+        _UpdateContent();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void PageListWidget::_AddWidget(QWidget *widget)
 {
     _contentLayout->addWidget(widget);

@@ -62,6 +62,18 @@ public slots:
      * Replaces old id arra by new one and updates the whole data in widget.
      */
     void UpdateIds(const QVector<int> &newIds);
+    /*!
+     * \brief Slot to add new id to array.
+     *
+     * Adds new id to array and updates widget.
+     */
+    void AddId(int id);
+    /*!
+     * \brief Slot to delete new id from array.
+     *
+     * Deletes id from array and updates widget.
+     */
+    void DeleteId(int id);
 
 protected:
     /*!
