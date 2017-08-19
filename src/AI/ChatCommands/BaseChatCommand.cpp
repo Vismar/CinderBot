@@ -59,6 +59,13 @@ bool BaseChatCommand::Execute(const ChatMessage &message, ChatAnswer &answer)
 
 ///////////////////////////////////////////////////////////////////////////
 
+const QString& BaseChatCommand::GetCommandName() const
+{
+    return _name;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void BaseChatCommand::_Clear()
 {
     _workInWhisper = true;
@@ -89,7 +96,7 @@ void BaseChatCommand::_AddAuthorName(QStringList &answer, const QString &author)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseChatCommand::_TakeDefaultPriceFromUser(const QString &userName)
+void BaseChatCommand::_TakeDefaultPriceFromUser(const QString &userName) const
 {
     // Get user currency value
     int userCurrency = UD_GET_PARAM(userName, UDP_Currency).toInt();

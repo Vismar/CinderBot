@@ -4,8 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QFrame>
-#include <QLabel>
 #include <QPushButton>
 #include <QHBoxLayout>
 #include "Widgets/Common/EnhTextEdit.hpp"

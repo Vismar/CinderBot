@@ -12,8 +12,6 @@ using namespace Utils::Database;
 
 CustomChatCommand::CustomChatCommand()
 {
-    _commandTableName = "CustomCommands";
-    _commandAnswersTableName = "CustomCommandAnswers";
     _cmdType = CmdType::StreamerCmd;
 }
 
@@ -39,6 +37,7 @@ void CustomChatCommand::Initialize()
 
 void CustomChatCommand::InitializeByName(const QString &commandName)
 {
+    _ConnectEvents();
     _Clear();
     _name = commandName;
     _isRandom = true;
@@ -82,6 +81,14 @@ void CustomChatCommand::OnParameterChanged(const QString &cmdName, CustomCmdPara
             break;
         }
     }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomChatCommand::_ConnectEvents()
+{
+    connect(&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCmdParameterChanged,
+            this, &CustomChatCommand::OnParameterChanged);
 }
 
 ///////////////////////////////////////////////////////////////////////////

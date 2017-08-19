@@ -11,27 +11,31 @@
  */
 namespace Command
 {
+/*!
+ * \brief Contains all custom chat commands.
+ */
 namespace CustomChatCmd
 {
-// TODO: Update comments in this file
+
 /*!
- * Class CustomCovCommandList
- * Read and store all custom commands for covenants from database
+ * \brief Reads and stores all custom commands for covenants.
+ * 
+ * Inherits the CustomCommandList and changes _commandType and _cmdModule to initialize command from covenant commands table.
  */
 class CustomCovCommandList : public CustomCommandList
 {
 public:
-    /*! Constructor */
     CustomCovCommandList();
 
 protected:
-    ////////////////////////////////
-    /// CommandList override
-    void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam);
-
-    ////////////////////////////////
-    /// CustomCommandList overrides
-    void _InitializeCommands();
+    /*////////////////////////////*/
+    /* CustomCommandList override */
+    /*////////////////////////////*/
+    /*!
+     * \brief Returns created custom cov command.
+     * \return Pointer to created command.
+     */
+    Command::CustomChatCmd::CustomChatCommand *_CreateCommand() const override;
 };
 
 }

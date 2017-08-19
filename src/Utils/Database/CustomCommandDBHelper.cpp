@@ -95,7 +95,7 @@ bool CustomCommandDBHelper::CreateCommand(CmdType cmdType, const QString &cmdNam
 {
     bool created(false);
 
-    QString guardedCmdName = cmdName;
+    QString guardedCmdName = cmdName.toLower();
     guardedCmdName.replace("'", "");
 
     if (!CommandExist(guardedCmdName))
@@ -259,43 +259,6 @@ void CustomCommandDBHelper::SetAllParams(CmdType cmdType, const QString &cmdName
     }
 }
 
-///////////////////////////////////////////////////////////////////////////
-/*
-void CustomCommandDBHelper::SetAllParams(CmdType cmdType, int id, const CmdParams &cmdParams)
-{
-    QString tableName = _GetTableName(TableType::Commands, cmdType);
-
-    if (DB_UPDATE(tableName, cmdParams.ToParamString(), QString("Id=%1").arg(id)))
-    {
-        DB_QUERY_PTR query = DB_SELECT(tableName, "Name", QString("Id=%1").arg(id));
-        if ((query != nullptr) && (query->first))
-        {
-            QString cmdName = query->value("Name").toString;
-            switch (cmdType)
-            {
-            case CmdType::StreamerCmd:
-                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::Cooldown, cmdParams.Cooldown.toString("h:m:s"));
-                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::ModeratorOnly, (cmdParams.ModeratorOnly ? "1" : "0"));
-                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::Price, QString::number(cmdParams.Price));
-                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::Covenant, cmdParams.Covenant);
-                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::WorkInWhisper, (cmdParams.WorkInWhisper ? "true" : "false"));
-                emit CustomCmdParameterChanged(cmdName, CustomCmdParameter::WorkInChat, (cmdParams.WorkInChat ? "true" : "false"));
-                break;
-            case CmdType::CovenantCmd:
-                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::Cooldown, cmdParams.Cooldown.toString("h:m:s"));
-                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::ModeratorOnly, (cmdParams.ModeratorOnly ? "1" : "0"));
-                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::Price, QString::number(cmdParams.Price));
-                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::Covenant, cmdParams.Covenant);
-                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::WorkInWhisper, (cmdParams.WorkInWhisper ? "true" : "false"));
-                emit CustomCovCmdParameterChanged(cmdName, CustomCmdParameter::WorkInChat, (cmdParams.WorkInChat ? "true" : "false"));
-                break;
-            default:
-                break;
-            }
-        }
-    }
-}
-*/
 ///////////////////////////////////////////////////////////////////////////
 
 QString CustomCommandDBHelper::GetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam)

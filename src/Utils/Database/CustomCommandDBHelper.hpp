@@ -106,7 +106,6 @@ public:
     CmdParams GetAllParams(CmdType cmdType, int id);
     CmdParams GetAllParams(CmdType cmdType, const QString &cmdName);
     void SetAllParams(CmdType cmdType, const QString &cmdName, const CmdParams &cmdParams);
-    //void SetAllParams(CmdType cmdType, int id, const CmdParams &cmdParams);
     QString GetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam);
     QString GetParameter(CmdType cndType, int id, CustomCmdParameter cmdParam);
     void SetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam, const QString &value);

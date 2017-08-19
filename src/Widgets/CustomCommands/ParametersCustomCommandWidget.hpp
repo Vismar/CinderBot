@@ -146,7 +146,7 @@ signals:
     /*!
      * \brief Signal to notify if _commandName was changed.
      * 
-     * Notifies listeners about changes in _commandName.
+     * Notifies listeners about changes in _commandName and make everything there lowercase.
      */
     void OnCommandNameFieldChanged(const QString &text);
 

@@ -155,6 +155,12 @@ void ParametersCustomCommandWidget::SetWorkInChat(bool workInChat) const
 
 void ParametersCustomCommandWidget::_OnCmdNameChanged(const QString &text)
 {
+    // Set everything to lowercase
+    {
+        const QSignalBlocker blocker(_commandName);
+        _commandName->setText(text.toLower());
+    }    
+
     emit OnCommandNameFieldChanged(text);
 }
 

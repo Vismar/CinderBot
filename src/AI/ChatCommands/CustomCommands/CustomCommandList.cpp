@@ -5,8 +5,6 @@
 **************************************************************************/
 #include "CustomCommandList.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
-#include "AI/ChatCommands/CustomCommands/CustomChatCommand.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CustomChatCmd;
 using namespace Utils::Configuration;
@@ -15,33 +13,20 @@ using namespace Utils::Database;
 ///////////////////////////////////////////////////////////////////////////
 
 CustomCommandList::CustomCommandList()
+: _commandType(CmdType::StreamerCmd)
+, _cmdModule(CfgParam::CustomCmdModule)
 {
-    _commandTableName = "CustomCommands";
-    _commandAnswersTableName = "CustomCommandAnswers";
-    OnCfgParamChanged(CfgParam::CustomCmdModule);
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void CustomCommandList::_UpdateCommands(const QString &tableName)
-{
-    if (tableName == _commandTableName)
-    {
-        _InitializeCommands();
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void CustomCommandList::Initialize()
 {
-    // Connect events from database manager to know, when we need to update commands
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnInsertEvent,
-            this, &CustomCommandList::_UpdateCommands);
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnUpdateEvent,
-            this, &CustomCommandList::_UpdateCommands);
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnDeleteEvent,
-            this, &CustomCommandList::_UpdateCommands);
+    // Connect events from CustomCommandDBHelper yo know, when we need to add or remove commands
+    connect(&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCmdAdded,
+            this, &CustomCommandList::_AddCommand);
+    connect(&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCmdDeleted,
+        this, &CustomCommandList::_DeleteCommand);
 
     _InitializeCommands();
 }
@@ -51,22 +36,27 @@ void CustomCommandList::Initialize()
 void CustomCommandList::OnCfgParamChanged(CfgParam cfgParam)
 {
     QString value;
-    switch (cfgParam)
+    if (cfgParam == _cmdModule)
     {
-    case CfgParam::CustomCmdModule:
-        ConfigurationManager::Instance().GetStringParam(CfgParam::CustomCmdModule, value);
+        ConfigurationManager::Instance().GetStringParam(_cmdModule, value);
         _isTurnedOn = ("true" == value);
-        break;
-    default:
-        break;
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
+CustomChatCommand* CustomCommandList::_CreateCommand() const
+{
+    return new CustomChatCommand();
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+
 void CustomCommandList::_InitializeCommands()
 {
-    // TODO: Use CustomCommandDBHelper
+    // Update value before intializing
+    OnCfgParamChanged(_cmdModule);
     // Clear all commands that was already created
     for (int i = 0; i < _commands.size(); ++i)
     {
@@ -74,19 +64,59 @@ void CustomCommandList::_InitializeCommands()
     }
     _commands.clear();
 
-    // Create new commands
-    DB_QUERY_PTR query = DB_SELECT(_commandTableName, "Name");
-    if (query != nullptr)
+    // Get all command names and initialize list
+    QStringList cmdNames = CustomCommandDBHelper::Instance().GetCommandNames(_commandType);
+    for (int i = 0; i < cmdNames.size(); ++i)
     {
-        while (query->next())
+        _AddCommandToList(cmdNames[i]);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomCommandList::_AddCommand(CmdType cmdType, const QString& cmdName, int id)
+{
+    Q_UNUSED(id);
+    if (cmdType == _commandType)
+    {
+        _AddCommandToList(cmdName);
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomCommandList::_DeleteCommand(CmdType cmdType, const QString& cmdName, int id)
+{
+    Q_UNUSED(id);
+    if (cmdType == _commandType)
+    {
+        for (int i = 0; i < _commands.size(); ++i)
         {
-            CustomChatCommand* chatCommand = new CustomChatCommand();
-            chatCommand->InitializeByName(query->value("Name").toString());
-            connect (&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCmdParameterChanged,
-                     chatCommand, &CustomChatCommand::OnParameterChanged);
-            _commands.push_back(chatCommand);
+            if (_commands[i]->GetCommandName() == cmdName)
+            {
+                delete _commands[i];
+                _commands.removeAt(i);
+
+                break;
+            }
         }
     }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomCommandList::_AddCommandToList(const QString& cmdName)
+{
+    // Create command
+    CustomChatCommand* chatCommand = _CreateCommand();
+    // Initialize it
+    chatCommand->InitializeByName(cmdName);
+    // Connect events
+    connect(&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCovCmdParameterChanged,
+        chatCommand, &CustomChatCommand::OnParameterChanged);
+    // Add command to command list
+    _commands.push_back(chatCommand);
 }
 
 ///////////////////////////////////////////////////////////////////////////
