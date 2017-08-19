@@ -4,9 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "EditSaveAnswerCustomCommandWidget.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Ui::CustomCommand;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -20,24 +21,14 @@ EditSaveAnswerCustomCommandWidget::~EditSaveAnswerCustomCommandWidget() { }
 
 void EditSaveAnswerCustomCommandWidget::_SaveEntry()
 {
-    std::shared_ptr<QSqlQuery> query = DB_SELECT("CustomCommandAnswers", "Answer", QString("Id = %1").arg(_id));
-    if (query != NULL)
-    {
-        query->first();
-        // Save new text if it was changed
-        if (query->value("Answer").toString() != _text->toPlainText())
-        {
-            DB_UPDATE("CustomCommandAnswers", QString("Answer='%1'").arg(_text->toPlainText()),
-                                              QString("Id=%1").arg(_id));
-        }
-    }
+    CustomCommandDBHelper::Instance().EditAnswer(CmdType::StreamerCmd, _id, _text->toPlainText());
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void EditSaveAnswerCustomCommandWidget::_DeleteEntry()
 {
-    DB_DELETE("CustomCommandAnswers", QString("Id=%1").arg(_id));
+    CustomCommandDBHelper::Instance().DeleteAnswer(CmdType::StreamerCmd, _id);
 }
 
 ///////////////////////////////////////////////////////////////////////////

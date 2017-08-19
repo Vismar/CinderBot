@@ -17,7 +17,8 @@
 **************************************************************************/
 #include "MainWindow.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
 #include "Utils/Logger.hpp"
@@ -38,7 +39,20 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     // Try to initialize database manager
-    error = DatabaseManager::Instance().Initialize();
+    error = Utils::Database::DatabaseManager::Instance().Initialize();
+    if (error != "OK")
+    {
+        // Log
+        LOG(Utils::LogCritical, error);
+
+        // Message box
+        QMessageBox msgBox;
+        msgBox.setText(error);
+        msgBox.exec();
+        // Return -1 as an error
+        returningCode = -1;
+    }
+    error = Utils::Database::CustomCommandDBHelper::Instance().InititalizeTables();
     if (error != "OK")
     {
         // Log

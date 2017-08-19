@@ -4,9 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "InfoCovenantCommand.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CovenantCmd;
+using namespace Utils::Database;
 
 #define MSG_BASE_INFO    0
 #define MSG_DESCRIPTION  1

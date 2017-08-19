@@ -11,14 +11,31 @@
  */
 namespace Command
 {
+/*!
+ * \brief Contains all custom chat commands.
+ */
 namespace CustomChatCmd
 {
 
+/*!
+ * \brief Small class for custom covenant commands.
+ * 
+ * This class almost the same as CustomChatCommand. 
+ * Only differences - different _cmdType and connection with different ype of events from CustomCommandDBHelper.
+ */
 class CustomCovChatCommand : public CustomChatCommand
 {
 public:
-    /*! Constructor */
     CustomCovChatCommand();
+
+protected:
+    /*////////////////////////////*/
+    /* CustomChatCommand overrides*/
+    /*////////////////////////////*/
+    /*!
+     * \brief Connects events for custom cov commands.
+     */
+    void _ConnectEvents() override;
 };
 
 }

@@ -4,11 +4,12 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "SingleQuoteWidget.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 #include <QAbstractTextDocumentLayout>
 
 using namespace Ui::Quote;
 using namespace Ui::Common;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

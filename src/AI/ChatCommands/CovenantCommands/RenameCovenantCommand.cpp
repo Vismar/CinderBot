@@ -7,10 +7,11 @@
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 #define MSG_NOT_LEADER  0
 #define MSG_RENAMED     1
@@ -59,7 +60,7 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                 {
                     // Get amount currency which is needed to rename covenant
                     QString price;
-                    if (!ConfigurationManager::Instance().GetStringParam(CovRenamePrice, price))
+                    if (!ConfigurationManager::Instance().GetStringParam(CfgParam::CovRenamePrice, price))
                     {
                         price = DEFAULT_PRICE_FOR_RENAME;
                     }

@@ -5,43 +5,54 @@
 **************************************************************************/
 #pragma once
 #include <QDialog>
-#include <QVBoxLayout>
 #include <QPushButton>
 #include "ParametersCustomCommandWidget.hpp"
 
+/*!
+* \brief All Ui widgets and windows.
+*/
 namespace Ui
 {
+/*!
+ * \brief All wigets related to custom commands.
+ */
 namespace CustomCommand
 {
 
+/*!
+ * \brief Window to create custom command.
+ *
+ * Simple widget which contains all needed params to create custom command. 
+ * After creating a command opens the EditCustomCommandWindow.
+ */
 class CreateCustomCommandWindow : public QDialog
 {
     Q_OBJECT
 public:
-    /*!
-     * Constructor
-     */
     explicit CreateCustomCommandWindow(QWidget *parent = 0);
-    /*!
-     * Destructor
-     */
     ~CreateCustomCommandWindow();
 
 signals:
     /*!
-     * Signaling about new command that was created
-     * \param cmdName - name of new command
+     * \brief Signaling about new command that was created.
+     * \param cmdName - name of new command.
+     *
+     * Notifies that new command was created and sends the name of created command.
      */
     void NewCommand(const QString &cmdName);
 
 private slots:
     /*!
-     * Check if command name field have text
-     * \param text - new text in command name field
+     * \brief Checks if command name field have text.
+     * \param text - new text in command name field.
+     *
+     * Check if command field have a text to handle.
      */
-    void _CheckCommandNameField(const QString &text);
+    void _CheckCommandNameField(const QString &text) const;
     /*!
-     * Handle "Create" button
+     * \brief Handles "Create" button.
+     *
+     * Sets params and tries to create customm command in database.
      */
     void _OnCreateButton();
 

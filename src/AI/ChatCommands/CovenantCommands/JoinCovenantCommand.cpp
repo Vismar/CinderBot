@@ -7,10 +7,11 @@
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 #define MSG_JOINING_COV    0
 #define MSG_ALREADY_IN_COV 1
@@ -65,7 +66,7 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
         // Set default price value
         int priceToJoin(100);
         // Try to get param from config manager
-        if (configMng.GetStringParam(CovJoinPrice,price))
+        if (configMng.GetStringParam(CfgParam::CovJoinPrice,price))
         {
             priceToJoin = price.toInt();
 

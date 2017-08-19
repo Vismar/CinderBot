@@ -9,10 +9,11 @@
 #include "AI/ChatCommands/QuoteCommands/AddQuoteCommand.hpp"
 #include "AI/ChatCommands/QuoteCommands/DeleteQuoteCommand.hpp"
 #include "AI/ChatCommands/QuoteCommands/EditQuoteCommand.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::QuoteCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +25,7 @@ QuoteCommandList::QuoteCommandList()
     _commands.push_back(new EditQuoteCommand());
 
     Initialize();
-    OnCfgParamChanged(QuotesCmdModule);
+    OnCfgParamChanged(CfgParam::QuotesCmdModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -50,8 +51,8 @@ void QuoteCommandList::OnCfgParamChanged(CfgParam cfgParam)
     QString value;
     switch (cfgParam)
     {
-    case QuotesCmdModule:
-        ConfigurationManager::Instance().GetStringParam(QuotesCmdModule, value);
+    case CfgParam::QuotesCmdModule:
+        ConfigurationManager::Instance().GetStringParam(CfgParam::QuotesCmdModule, value);
         _isTurnedOn = ("true" == value);
         break;
     default:

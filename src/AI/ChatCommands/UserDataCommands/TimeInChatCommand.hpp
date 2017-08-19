@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "AI/ChatCommands/InbuiltChatCommand.hpp"
+#include "AI/ChatCommands/UserDataCommands/UserDataBaseCommand.hpp"
 
 /*!
  * \brief Contains all chat command things.
@@ -22,7 +22,7 @@ namespace UserDataCmd
  *
  * Displays how much time was spent in chat by user in format "hh:mm".
  */
-class TimeInChatCommand : public InbuiltChatCommand
+class TimeInChatCommand : public UserDataBaseCommand
 {
 public:
     TimeInChatCommand();

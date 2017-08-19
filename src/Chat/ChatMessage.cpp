@@ -117,7 +117,7 @@ bool ChatMessage::IsModerator() const
 bool ChatMessage::IsBroadcaster() const
 {
     QString channelName;
-    ConfigurationManager::Instance().GetStringParam(LoginChannel, channelName);
+    ConfigurationManager::Instance().GetStringParam(CfgParam::LoginChannel, channelName);
     return (channelName == _realName);
 }
 
@@ -333,7 +333,7 @@ bool ChatMessage::_IsConnectedToRoom(const QString &message) const
 {
     bool result(false);
     QString param;
-    if (ConfigurationManager::Instance().GetStringParam(LoginName, param))
+    if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, param))
     {
         result = message.contains("JOIN") &&
                  !message.mid(1).contains(":") &&
@@ -503,7 +503,7 @@ bool ChatMessage::_IsPrivMsg(const QString &message)
         if (!_isModerator)
         {
             QString name;
-            ConfigurationManager::Instance().GetStringParam(LoginChannel, name);
+            ConfigurationManager::Instance().GetStringParam(CfgParam::LoginChannel, name);
             // If author is a broadcaster set mod flag true
             if (_realName == name)
             {

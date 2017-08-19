@@ -5,9 +5,10 @@
 **************************************************************************/
 #include "ListCustomCommandWidget.hpp"
 #include "Widgets/CustomCommands/EntryCustomCommandWidget.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Ui::CustomCommand;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -32,14 +33,8 @@ void ListCustomCommandWidget::_UpdateEntry(QWidget *entry, int id)
     EntryCustomCommandWidget *entryWidget = static_cast<EntryCustomCommandWidget*>(entry);
     if (entryWidget != nullptr)
     {
-        DB_QUERY_PTR query = DB_SELECT("CustomCommands", "Name", QString("Id=%1").arg(id));
-        if (query != nullptr)
-        {
-            if (query->first())
-            {
-                entryWidget->SetCmdName(query->value("Name").toString());
-            }
-        }
+        QString cmdName = CustomCommandDBHelper::Instance().GetParameter(CmdType::StreamerCmd, id, CustomCmdParameter::Name);
+        entryWidget->SetCmdName(cmdName);
     }
 }
 

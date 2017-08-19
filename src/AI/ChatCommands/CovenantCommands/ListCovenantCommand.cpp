@@ -4,9 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "ListCovenantCommand.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CovenantCmd;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 

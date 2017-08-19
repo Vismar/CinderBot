@@ -4,9 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "EditCustomCommandWindow.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Ui::CustomCommand;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +16,7 @@ EditCustomCommandWindow::EditCustomCommandWindow(QWidget *parent) : QDialog(pare
     // Initialize dialog window
     this->setWindowFlags(Qt::WindowCloseButtonHint);
     this->setFixedWidth(820);
-    this->setMinimumHeight(331);
+    this->setMinimumHeight(361);
     this->setWindowTitle("Edit custom command");
     // Initialize widgets
     _mainLayout = new QHBoxLayout(this);
@@ -57,13 +58,11 @@ EditCustomCommandWindow::EditCustomCommandWindow(QWidget *parent) : QDialog(pare
     connect(_saveButton, &QPushButton::clicked,
             this, &EditCustomCommandWindow::_OnSaveButton);
 
-    // Connect events from database manager to know, when we need to update answers
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnInsertEvent,
-            this, &EditCustomCommandWindow::_UpdateAnswers);
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnUpdateEvent,
-            this, &EditCustomCommandWindow::_UpdateAnswers);
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnDeleteEvent,
-            this, &EditCustomCommandWindow::_UpdateAnswers);
+    // Connect events from CustomCommandDBHelper to know, when we need to update answers
+    connect(&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCmdAnswerAdded,
+            this, &EditCustomCommandWindow::_AddAnswer);
+    connect(&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCmdAnswerDeleted,
+        this, &EditCustomCommandWindow::_DeleteAnswer);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -74,34 +73,25 @@ EditCustomCommandWindow::~EditCustomCommandWindow() { }
 
 void EditCustomCommandWindow::LoadCommandData(const QString &cmdName)
 {
-    DB_QUERY_PTR paramQuery = DB_SELECT("CustomCommands", "*", QString("Name='%1'").arg(cmdName));
-    DB_QUERY_PTR answersQuery = DB_SELECT("CustomCommandAnswers", "Id", QString("Name='%1'").arg(cmdName));
+    CmdParams cmdParams = CustomCommandDBHelper::Instance().GetAllParams(CmdType::StreamerCmd, cmdName);
+    // Set all params to widget
+    _parameters->SetCommandName(cmdName);
+    _parameters->SetCooldown(cmdParams.Cooldown);
+    _parameters->SetModOnly(cmdParams.ModeratorOnly);
+    _parameters->SetPrice(cmdParams.Price);
+    _parameters->SetCovenant(cmdParams.Covenant);
+    _parameters->SetWorkInWhisper(cmdParams.WorkInWhisper);
+    _parameters->SetWorkInChat(cmdParams.WorkInChat);
 
-    if ((paramQuery != nullptr) && (answersQuery != nullptr))
-    {
-        if (paramQuery->first())
-        {
-            _parameters->SetCommandName(paramQuery->value("Name").toString());
-            _parameters->SetCooldown(QTime::fromString(paramQuery->value("Cooldown").toString(), "h:m:s"));
-            _parameters->SetModOnly(paramQuery->value("ModeratorOnly").toBool());
-            _parameters->SetPrice(paramQuery->value("Price").toInt());
-            _parameters->SetCovenant(paramQuery->value("Covenant").toString());
+    QVector<int> answerIds = CustomCommandDBHelper::Instance().GetAnswers(CmdType::StreamerCmd, cmdName);
+    _answers->UpdateIds(answerIds);
 
-            QVector<int> answerIds;
-            while (answersQuery->next())
-            {
-                answerIds.append(answersQuery->value("Id").toInt());
-            }
-            _answers->UpdateIds(answerIds);
-
-            this->setWindowTitle(QString("[%1] Edit custom command").arg(_parameters->GetCommandName()));
-        }
-    }
+    this->setWindowTitle(QString("[%1] Edit custom command").arg(cmdName));
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditCustomCommandWindow::_CheckAnswerField()
+void EditCustomCommandWindow::_CheckAnswerField() const
 {
     if (_newAnswer->toPlainText().length() > 0)
     {
@@ -115,10 +105,9 @@ void EditCustomCommandWindow::_CheckAnswerField()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditCustomCommandWindow::_OnAddButton()
+void EditCustomCommandWindow::_OnAddButton() const
 {
-    DB_INSERT("CustomCommandAnswers",
-              QString("NULL, '%1', '%2'").arg(_parameters->GetCommandName()).arg(_newAnswer->toPlainText()));
+    CustomCommandDBHelper::Instance().AddAnswer(CmdType::StreamerCmd, _parameters->GetCommandName(), _newAnswer->toPlainText());
     _newAnswer->clear();
 }
 
@@ -126,40 +115,58 @@ void EditCustomCommandWindow::_OnAddButton()
 
 void EditCustomCommandWindow::_OnSaveButton()
 {
-    QString values = "Cooldown=':cooldown', ModeratorOnly=:mod, Price=:price, Covenant=':cov'";
-    values.replace(":cooldown", _parameters->GetCooldown().toString("h:m:s"));
-    values.replace(":mod", QString::number((int)_parameters->GetModOnly()));
-    values.replace(":price", QString::number(_parameters->GetPrice()));
-    QString covenant = _parameters->GetCovenant();
-    if (covenant == "None")
+    CmdParams cmdParams;
+    // Get all params from widget
+    cmdParams.Cooldown = _parameters->GetCooldown();
+    cmdParams.ModeratorOnly = _parameters->GetModOnly();
+    cmdParams.Price = _parameters->GetPrice();
+    cmdParams.Covenant = _parameters->GetCovenant();
+    if (cmdParams.Covenant == "None")
     {
-        covenant = "Viewer";
+        cmdParams.Covenant = "Viewer";
     }
-    values.replace(":cov", covenant);
-    DB_UPDATE("CustomCommands", values, QString("Name='%1'").arg(_parameters->GetCommandName()));
+    cmdParams.WorkInWhisper = _parameters->GetWorkInWhisper();
+    cmdParams.WorkInChat = _parameters->GetWorkInChat();
+
+    // Update params for specific command
+    CustomCommandDBHelper::Instance().SetAllParams(CmdType::StreamerCmd, _parameters->GetCommandName(), cmdParams);
+    // Close window
     close();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditCustomCommandWindow::_UpdateAnswers(const QString &tableName)
+void EditCustomCommandWindow::_LoadAnswers() const
 {
-    if (tableName == "CustomCommandAnswers")
+    QVector<int> answerIds = CustomCommandDBHelper::Instance().GetAnswers(CmdType::StreamerCmd, _parameters->GetCommandName());
+
+    // Save page
+    int page = _answers->GetCurrentPage();
+    // Update ids
+    _answers->UpdateIds(answerIds);
+    // Select page which was recently selected
+    _answers->SelectPage(page);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void EditCustomCommandWindow::_AddAnswer(const QString &cmdName) const
+{
+    // If answer was added to opened command, then update all answers in from list
+    if (cmdName == _parameters->GetCommandName())
     {
-        int page = _answers->GetCurrentPage();
-        DB_QUERY_PTR answersQuery = DB_SELECT("CustomCommandAnswers",
-                                              "Id",
-                                              QString("Name='%1'").arg(_parameters->GetCommandName()));
-        if (answersQuery != nullptr)
-        {
-            QVector<int> answerIds;
-            while (answersQuery->next())
-            {
-                answerIds.append(answersQuery->value("Id").toInt());
-            }
-            _answers->UpdateIds(answerIds);
-        }
-        _answers->SelectPage(page);
+        _LoadAnswers();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void EditCustomCommandWindow::_DeleteAnswer(const QString &cmdName, int id) const
+{
+    // If answer was deleted from opened command, then delete answer with specified id from list
+    if (cmdName == _parameters->GetCommandName())
+    {
+        _answers->DeleteId(id);
     }
 }
 

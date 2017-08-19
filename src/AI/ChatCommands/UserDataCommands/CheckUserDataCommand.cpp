@@ -5,12 +5,13 @@
 **************************************************************************/
 #include "CheckUserDataCommand.hpp"
 #include "Utils/UserData/UserData.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 
 using namespace Command::UserDataCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 #define MSG_NOT_LEADER 0
 #define MSG_NO_COV     1
@@ -85,7 +86,7 @@ void CheckUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &an
                     QString realName = userQuery->value("Name").toString();
                     auto firstAnswer = answer.GetAnswers().begin();
                     QString curName = "NomNom ";
-                    ConfigurationManager::Instance().GetStringParam(Currency, curName);
+                    ConfigurationManager::Instance().GetStringParam(CfgParam::Currency, curName);
                     (*firstAnswer).replace("MSG_NAME_CUR", curName);
                     (*firstAnswer).replace("MSG_COUNT", UD_GET_PARAM(realName, UDP_Messages));
                     (*firstAnswer).replace("MSG_CUR", UD_GET_PARAM(realName, UDP_Currency));

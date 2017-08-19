@@ -6,13 +6,21 @@
 #include "CustomCovChatCommand.hpp"
 
 using namespace Command::CustomChatCmd;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
 CustomCovChatCommand::CustomCovChatCommand()
 {
-    _commandTableName = "CustomCovCommands";
-    _commandAnswersTableName = "CustomCovCommandAnswers";
+    _cmdType = CmdType::CovenantCmd;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void CustomCovChatCommand::_ConnectEvents()
+{
+    connect(&CustomCommandDBHelper::Instance(), &CustomCommandDBHelper::CustomCovCmdParameterChanged,
+            this, &CustomChatCommand::OnParameterChanged);
 }
 
 ///////////////////////////////////////////////////////////////////////////

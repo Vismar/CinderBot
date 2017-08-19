@@ -123,16 +123,16 @@ void TwitchClient::ReadLine()
             break;
         case USERSTATE:
             // Check if display name was changed
-            ConfigurationManager::Instance().GetStringParam(LoginDisplayName, line);
+            ConfigurationManager::Instance().GetStringParam(CfgParam::LoginDisplayName, line);
             if (line != message.GetAuthor())
             {
-                ConfigurationManager::Instance().SetStringParam(LoginDisplayName, message.GetAuthor());
+                ConfigurationManager::Instance().SetStringParam(CfgParam::LoginDisplayName, message.GetAuthor());
             }
             // Check if name color was changed
-            ConfigurationManager::Instance().GetStringParam(LoginNameColor, line);
+            ConfigurationManager::Instance().GetStringParam(CfgParam::LoginNameColor, line);
             if (line != message.GetColor())
             {
-                ConfigurationManager::Instance().SetStringParam(LoginNameColor, message.GetColor());
+                ConfigurationManager::Instance().SetStringParam(CfgParam::LoginNameColor, message.GetColor());
             }
             // Update mod status
             if (message.IsModerator())
@@ -155,7 +155,7 @@ void TwitchClient::ReadLine()
             break;
         case MODE:
             RealTimeUserData::Instance()->AddModeToList(message);
-            ConfigurationManager::Instance().GetStringParam(LoginName, line);
+            ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, line);
             if (message.GetRealName() == line)
             {
                 _msgLimit = MSG_LIMIT_MODE;
@@ -163,7 +163,7 @@ void TwitchClient::ReadLine()
             break;
         case UNMODE:
             RealTimeUserData::Instance()->RemoveModeFromList(message);
-            ConfigurationManager::Instance().GetStringParam(LoginName, line);
+            ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, line);
             if (message.GetRealName() == line)
             {
                 _msgLimit = MSG_LIMIT_NON_MODE;
@@ -225,9 +225,9 @@ void TwitchClient::NewBotMessage(ChatAnswer message)
         QString loginName;
         QString loginAuthor;
         QString loginNameColor;
-        ConfigurationManager::Instance().GetStringParam(LoginName, loginName);
-        ConfigurationManager::Instance().GetStringParam(LoginDisplayName, loginAuthor);
-        ConfigurationManager::Instance().GetStringParam(LoginNameColor, loginNameColor);
+        ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, loginName);
+        ConfigurationManager::Instance().GetStringParam(CfgParam::LoginDisplayName, loginAuthor);
+        ConfigurationManager::Instance().GetStringParam(CfgParam::LoginNameColor, loginNameColor);
 
         // Need to add additional delay, because if all timers will end in the same time,
         // it is possible that last one would be checked first, so the last message will be displayed
@@ -264,14 +264,14 @@ void TwitchClient::_Login()
     QString param;
     QString line;
     // Try to get oauthkey
-    if (ConfigurationManager::Instance().GetStringParam(LoginOauthKey, param))
+    if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginOauthKey, param))
     {
         param = "oauth:" + param;
         // Send oauth key
         line = "PASS " + param + "\r\n";
         _SendIrcMessage(line);
         // Try to get login name
-        if (ConfigurationManager::Instance().GetStringParam(LoginName, param))
+        if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, param))
         {
             // Send login name
             line = "NICK " + param + "\r\n";
@@ -292,7 +292,7 @@ void TwitchClient::_JoinChannel()
 {
     QString param;
     // Try to get channel name
-    if (ConfigurationManager::Instance().GetStringParam(LoginChannel, param))
+    if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginChannel, param))
     {
         param.push_front("JOIN #");
         param.push_back("\r\n");
@@ -317,7 +317,7 @@ void TwitchClient::_SendChatMessage(ChatAnswer &message)
         QString param;
         // Try to get channel name
         ChatAnswerType answerType = message.GetType();
-        if (ConfigurationManager::Instance().GetStringParam(LoginChannel, param))
+        if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginChannel, param))
         {
             for (auto iter = answers.begin(); iter != answers.end(); ++iter)
             {

@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "AI/ChatCommands/InbuiltChatCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/CovenantBaseCommand.hpp"
 
 /*!
  * \brief Contains all chat command things.
@@ -21,12 +21,9 @@ namespace CovenantCmd
  * class DescriptionCovenantCommand
  * Handle creating and editing covenant description by users
  */
-class DescriptionCovenantCommand : public InbuiltChatCommand
+class DescriptionCovenantCommand : public CovenantBaseCommand
 {
 public:
-    /*!
-     * Deafult Constructor
-     */
     DescriptionCovenantCommand();
 
 protected:

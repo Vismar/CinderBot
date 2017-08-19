@@ -89,12 +89,7 @@ private:
      * Checks if needed folders exist and create them if they are not.
      */
     bool _CreateFolders(QString &error);
-    /*!
-     * \brief Creates config file that doesn't exist.
-     *
-     * Creates config file filled by default values if such file was not found.
-     */
-    void _CreateDefaultConfigFile();
+
     /*** Read XML data ***/
     /*!
      * \brief Reads login data section from xml file.
@@ -114,6 +109,19 @@ private:
      * Reads whole ignore list from xml configuration file.
      */
     void _ReadIgnoreList();
+    /*!
+     * \brief Reads cmd modules section from xml file.
+     *
+     * Read whole cmd modules section from xml configuration file.
+     */
+    void _ReadCmdModules();
+    /*!
+     * \brief Adds all params that do not exist but should.
+     *
+     * Check all params that should exist and add them if they are not exist in table.
+     */
+    void _AddParamsThatDoNotExist();
+
     /*** Write XML data ***/
     /*!
      * \brief Saves all configuration parameters to xml file.

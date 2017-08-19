@@ -32,7 +32,6 @@ SOURCES += main.cpp\
     Widgets/Statistics/ViewerGraphWidget.cpp \
     Widgets/Statistics/MessageStatisticsWidget.cpp \
     Widgets/Statistics/MessageGraphWidget.cpp \
-    Utils/DatabaseManager.cpp \
     Widgets/Quotes/QuotesWidget.cpp \
     Widgets/Quotes/SingleQuoteWidget.cpp \
     Widgets/Quotes/CreateQuoteWidget.cpp \
@@ -48,7 +47,6 @@ SOURCES += main.cpp\
     AI/ChatCommands/CustomCommands/CustomCovChatCommand.cpp \
     AI/ChatCommands/CustomCommands/CustomChatCommand.cpp \
     AI/ChatCommands/CustomCommands/CustomCovCommandList.cpp \
-    AI/ChatCommands/CustomCommands/CustomCommanList.cpp \
     AI/ChatCommands/CovenantCommands/DescriptionCovenantCommand.cpp \
     AI/ChatCommands/CovenantCommands/InfoCovenantCommand.cpp \
     AI/ChatCommands/UserDataCommands/MessagesUserDataCommand.cpp \
@@ -84,7 +82,12 @@ SOURCES += main.cpp\
     AI/TimerCommands/UserData/CurrencyToOnlineTimerCommand.cpp \
     AI/TimerCommands/UserData/TimeInChatTimerCommand.cpp \
     AI/ChatCommands/UserDataCommands/TimeInChatCommand.cpp \
-    AI/ChatCommands/CovenantCommands/MembersCovenantCommand.cpp
+    AI/ChatCommands/CovenantCommands/MembersCovenantCommand.cpp \
+    AI/ChatCommands/UserDataCommands/UserDataBaseCommand.cpp \
+    AI/ChatCommands/CovenantCommands/CovenantBaseCommand.cpp \
+    Utils/Database/DatabaseManager.cpp \
+    Utils/Database/CustomCommandDBHelper.cpp \
+    AI/ChatCommands/CustomCommands/CustomCommandList.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -107,7 +110,6 @@ HEADERS  += MainWindow.hpp \
     Widgets/Statistics/ViewerGraphWidget.hpp \
     Widgets/Statistics/MessageStatisticsWidget.hpp \
     Widgets/Statistics/MessageGraphWidget.hpp \
-    Utils/DatabaseManager.hpp \
     Widgets/Quotes/QuotesWidget.hpp \
     Widgets/Quotes/SingleQuoteWidget.hpp \
     Widgets/Quotes/CreateQuoteWidget.hpp \
@@ -159,7 +161,11 @@ HEADERS  += MainWindow.hpp \
     AI/TimerCommands/UserData/CurrencyToOnlineTimerCommand.hpp \
     AI/TimerCommands/UserData/TimeInChatTimerCommand.hpp \
     AI/ChatCommands/UserDataCommands/TimeInChatCommand.hpp \
-    AI/ChatCommands/CovenantCommands/MembersCovenantCommand.hpp
+    AI/ChatCommands/CovenantCommands/MembersCovenantCommand.hpp \
+    AI/ChatCommands/UserDataCommands/UserDataBaseCommand.hpp \
+    AI/ChatCommands/CovenantCommands/CovenantBaseCommand.hpp \
+    Utils/Database/DatabaseManager.hpp \
+    Utils/Database/CustomCommandDBHelper.hpp
 
 RESOURCES += \
     Resources.qrc

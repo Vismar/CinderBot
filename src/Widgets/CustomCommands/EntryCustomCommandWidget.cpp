@@ -5,9 +5,10 @@
 **************************************************************************/
 #include "EntryCustomCommandWidget.hpp"
 #include "Widgets/CustomCommands/EditCustomCommandWindow.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Ui::CustomCommand;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -27,7 +28,7 @@ EntryCustomCommandWidget::EntryCustomCommandWidget(QWidget* parent) : QFrame(par
     connect(_editButton, &QPushButton::clicked,
             this, &EntryCustomCommandWidget::_HandleEditButton);
 
-    // Quote delete button
+    // Delete button
     _deleteButton = new QPushButton(this);
     _deleteButton->setText("Delete");
     _deleteButton->setFixedHeight(22);
@@ -48,15 +49,14 @@ EntryCustomCommandWidget::~EntryCustomCommandWidget() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EntryCustomCommandWidget::SetCmdName(const QString &cmdName)
+void EntryCustomCommandWidget::SetCmdName(const QString &cmdName) const
 {
     _cmdName->setText(cmdName);
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 
-void EntryCustomCommandWidget::_HandleEditButton()
+void EntryCustomCommandWidget::_HandleEditButton() const
 {
     EditCustomCommandWindow *dialog = new EditCustomCommandWindow();
     dialog->LoadCommandData(_cmdName->text());
@@ -66,10 +66,9 @@ void EntryCustomCommandWidget::_HandleEditButton()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EntryCustomCommandWidget::_HandleDeleteButton()
+void EntryCustomCommandWidget::_HandleDeleteButton() const
 {
-    DB_DELETE("CustomCommandAnswers", QString("Name='%1'").arg(_cmdName->text()));
-    DB_DELETE("CustomCommands", QString("Name='%1'").arg(_cmdName->text()));
+    CustomCommandDBHelper::Instance().DeleteCommand(CmdType::StreamerCmd, _cmdName->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////

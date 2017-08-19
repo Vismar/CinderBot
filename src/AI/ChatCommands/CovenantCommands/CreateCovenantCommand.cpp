@@ -7,10 +7,11 @@
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 #define MSG_NO_CURRENCY      0
 #define MSG_USER_IS_LEADER   1
@@ -63,7 +64,7 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
         {
             // Get amount currency which is needed to create covenant
             QString price;
-            if (!ConfigurationManager::Instance().GetStringParam(CovCreatePrice, price))
+            if (!ConfigurationManager::Instance().GetStringParam(CfgParam::CovCreatePrice, price))
             {
                 price = DEFAULT_PRICE_FOR_CREATE;
             }

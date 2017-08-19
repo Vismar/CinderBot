@@ -20,7 +20,7 @@ using namespace Utils::Configuration;
 UserDataCommandList::UserDataCommandList()
 {
     Initialize();
-    OnCfgParamChanged(UserDataCmdModule);
+    OnCfgParamChanged(CfgParam::UserDataCmdModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -42,8 +42,8 @@ void UserDataCommandList::OnCfgParamChanged(CfgParam cfgParam)
     QString value;
     switch (cfgParam)
     {
-    case UserDataCmdModule:
-        ConfigurationManager::Instance().GetStringParam(UserDataCmdModule, value);
+    case CfgParam::UserDataCmdModule:
+        ConfigurationManager::Instance().GetStringParam(CfgParam::UserDataCmdModule, value);
         _isTurnedOn = ("true" == value);
         break;
     default:

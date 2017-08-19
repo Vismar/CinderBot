@@ -26,7 +26,7 @@ CurrencyToOnlineTimerCommand::CurrencyToOnlineTimerCommand()
 
 void CurrencyToOnlineTimerCommand::OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam)
 {
-    if (cfgParam == CurrencyTimer)
+    if (cfgParam == CfgParam::CurrencyTimer)
     {
         _UpdateTimer();
     }
@@ -37,7 +37,7 @@ void CurrencyToOnlineTimerCommand::OnCfgParamChanged(Utils::Configuration::CfgPa
 void CurrencyToOnlineTimerCommand::_UpdateTimer()
 {
     QString param;
-    ConfigurationManager::Instance().GetStringParam(CurrencyTimer, param);
+    ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyTimer, param);
     int timerValue = param.toInt();
     if (timerValue <= 0)
     {
@@ -52,13 +52,13 @@ void CurrencyToOnlineTimerCommand::_TimerAction()
 {
     // Set value of currency to give
     QString currencyToGive = DEFAULT_CURRENCY_VALUE;
-    ConfigurationManager::Instance().GetStringParam(CurrencyOverTime, currencyToGive);
+    ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyOverTime, currencyToGive);
 
     const QStringList &userList = RealTimeUserData::Instance()->GetUserList();
     for (int i = 0; i < userList.count(); ++i)
     {
         QString ignoreList;
-        ConfigurationManager::Instance().GetStringParam(IgnoreList, ignoreList);
+        ConfigurationManager::Instance().GetStringParam(CfgParam::IgnoreList, ignoreList);
         if (!ignoreList.contains(userList[i]))
         {
             // Get currency new value

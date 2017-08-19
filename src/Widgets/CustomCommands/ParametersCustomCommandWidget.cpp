@@ -4,18 +4,19 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "ParametersCustomCommandWidget.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 #include <QStringList>
 
 using namespace Ui::CustomCommand;
 using namespace Ui::Common;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
 ParametersCustomCommandWidget::ParametersCustomCommandWidget(QWidget *parent) : QFrame(parent)
 {
     // For borders
-    this->setFixedSize(300, 140);
+    this->setFixedSize(300, 170);
     this->setFrameShape(QFrame::Box);
     _Initialize();
 }
@@ -26,7 +27,7 @@ ParametersCustomCommandWidget::~ParametersCustomCommandWidget() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetCommandNameChangeable(bool state)
+void ParametersCustomCommandWidget::SetCommandNameChangeable(bool state) const
 {
     _commandName->SetEditable(state);
 }
@@ -40,7 +41,7 @@ QString ParametersCustomCommandWidget::GetCommandName() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetCommandName(const QString& cmdName)
+void ParametersCustomCommandWidget::SetCommandName(const QString& cmdName) const
 {
     _commandName->setText(cmdName);
 }
@@ -54,7 +55,7 @@ QTime ParametersCustomCommandWidget::GetCooldown() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetCooldown(const QTime& cooldown)
+void ParametersCustomCommandWidget::SetCooldown(const QTime& cooldown) const
 {
     _cooldown->setTime(cooldown);
 }
@@ -68,7 +69,7 @@ bool ParametersCustomCommandWidget::GetModOnly() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetModOnly(bool modOnly)
+void ParametersCustomCommandWidget::SetModOnly(bool modOnly) const
 {
     if (modOnly)
     {
@@ -89,7 +90,7 @@ int ParametersCustomCommandWidget::GetPrice() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetPrice(int price)
+void ParametersCustomCommandWidget::SetPrice(int price) const
 {
     _price->setValue(price);
 }
@@ -103,15 +104,63 @@ QString ParametersCustomCommandWidget::GetCovenant() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-void ParametersCustomCommandWidget::SetCovenant(const QString& covenant)
+void ParametersCustomCommandWidget::SetCovenant(const QString& covenant) const
 {
     return _covenant->setCurrentText(covenant);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
+bool ParametersCustomCommandWidget::GetWorkInWhisper() const
+{
+    return (_workInWhisper->checkState() == Qt::Checked);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ParametersCustomCommandWidget::SetWorkInWhisper(bool workInWhisper) const
+{
+    if (workInWhisper)
+    {
+        _workInWhisper->setCheckState(Qt::Checked);
+    }
+    else
+    {
+        _workInWhisper->setCheckState(Qt::Unchecked);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool ParametersCustomCommandWidget::GetWorkInChat() const
+{
+    return (_workInChat->checkState() == Qt::Checked);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ParametersCustomCommandWidget::SetWorkInChat(bool workInChat) const
+{
+    if (workInChat)
+    {
+        _workInChat->setCheckState(Qt::Checked);
+    }
+    else
+    {
+        _workInChat->setCheckState(Qt::Unchecked);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void ParametersCustomCommandWidget::_OnCmdNameChanged(const QString &text)
 {
+    // Set everything to lowercase
+    {
+        const QSignalBlocker blocker(_commandName);
+        _commandName->setText(text.toLower());
+    }    
+
     emit OnCommandNameFieldChanged(text);
 }
 
@@ -127,6 +176,8 @@ void ParametersCustomCommandWidget::_Initialize()
     _InitializeModOnly();
     _InitializePrice();
     _InitializeCovenant();
+    _InitializeWorkInWhisper();
+    _InitializeWorkInChat();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -151,6 +202,7 @@ void ParametersCustomCommandWidget::_InitializeCooldown()
 {
     _cooldownLabel = new QLabel();
     _cooldownLabel->setText("Cooldown(h:m:s)");
+    _cooldownLabel->setToolTip("How often command can be executed?");
     _mainLayout->addWidget(_cooldownLabel, 1, 0, Qt::AlignRight);
     _cooldown = new QTimeEdit();
     _cooldown->setDisplayFormat("h:m:s");
@@ -164,6 +216,7 @@ void ParametersCustomCommandWidget::_InitializeModOnly()
 {
     _modOnlyLabel = new QLabel();
     _modOnlyLabel->setText("Moderator only");
+    _modOnlyLabel->setToolTip("Is this command for moderators only?");
     _mainLayout->addWidget(_modOnlyLabel, 2, 0, Qt::AlignRight);
     _moderatorOnly = new QCheckBox();
     _mainLayout->addWidget(_moderatorOnly, 2, 1, Qt::AlignLeft);
@@ -175,6 +228,7 @@ void ParametersCustomCommandWidget::_InitializePrice()
 {
     _priceLabel = new QLabel();
     _priceLabel->setText("Price");
+    _priceLabel->setToolTip("How much currency user need to have to execute this command?");
     _mainLayout->addWidget(_priceLabel, 3, 0, Qt::AlignRight);
     _price = new QSpinBox();
     _price->setMaximum(99999);
@@ -188,6 +242,8 @@ void ParametersCustomCommandWidget::_InitializeCovenant()
 {
     _covenantLabel = new QLabel();
     _covenantLabel->setText("Covenant");
+    _covenantLabel->setToolTip("Which covenant should be able to execute this command? "
+                               "If \"None\" is selected then anyone will be able to use it.");
     _mainLayout->addWidget(_covenantLabel, 4, 0, Qt::AlignRight);
     QStringList covList;
     covList.append("None");
@@ -204,6 +260,30 @@ void ParametersCustomCommandWidget::_InitializeCovenant()
     _covenant->setEditable(false);
     _covenant->addItems(covList);
     _mainLayout->addWidget(_covenant);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ParametersCustomCommandWidget::_InitializeWorkInWhisper()
+{
+    _wokrInWhisperLabel = new QLabel();
+    _wokrInWhisperLabel->setText("Work in /w");
+    _wokrInWhisperLabel->setToolTip("Is this command can be executed by whisper message?");
+    _mainLayout->addWidget(_wokrInWhisperLabel, 5, 0, Qt::AlignRight);
+    _workInWhisper = new QCheckBox();
+    _mainLayout->addWidget(_workInWhisper, 5, 1, Qt::AlignLeft);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ParametersCustomCommandWidget::_InitializeWorkInChat()
+{
+    _wokrInChatLabel = new QLabel();
+    _wokrInChatLabel->setText("Work in /chat");
+    _wokrInChatLabel->setToolTip("Is this command can be executed by chat message?");
+    _mainLayout->addWidget(_wokrInChatLabel, 6, 0, Qt::AlignRight);
+    _workInChat = new QCheckBox();
+    _mainLayout->addWidget(_workInChat, 6, 1, Qt::AlignLeft);
 }
 
 ///////////////////////////////////////////////////////////////////////////

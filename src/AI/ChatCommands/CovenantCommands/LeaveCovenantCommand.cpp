@@ -7,9 +7,10 @@
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CovenantCmd;
+using namespace Utils::Database;
 
 #define MSG_LEFT_COV            0
 #define MSG_USER_LEADER         1

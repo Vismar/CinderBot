@@ -13,11 +13,12 @@
 #include "AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp"
 #include "AI/ChatCommands/CovenantCommands/MembersCovenantCommand.hpp"
 #include "AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -35,7 +36,7 @@ CovenantCommandList::CovenantCommandList()
     _commands.push_back(new DisbandCovenantCommand());
 
     Initialize();
-    OnCfgParamChanged(CovenantCmdModule);
+    OnCfgParamChanged(CfgParam::CovenantCmdModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -60,8 +61,8 @@ void CovenantCommandList::OnCfgParamChanged(CfgParam cfgParam)
     QString value;
     switch (cfgParam)
     {
-    case CovenantCmdModule:
-        ConfigurationManager::Instance().GetStringParam(CovenantCmdModule, value);
+    case CfgParam::CovenantCmdModule:
+        ConfigurationManager::Instance().GetStringParam(CfgParam::CovenantCmdModule, value);
         _isTurnedOn = ("true" == value);
         break;
     default:

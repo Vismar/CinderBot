@@ -5,9 +5,10 @@
 **************************************************************************/
 #include "AnswersCustomCommandWidget.hpp"
 #include "Widgets/CustomCommands/EditSaveAnswerCustomCommandWidget.hpp"
-#include "Utils/DatabaseManager.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Ui::CustomCommand;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -32,15 +33,10 @@ void AnswersCustomCommandWidget::_UpdateEntry(QWidget *entry, int id)
     EditSaveAnswerCustomCommandWidget *entryWidget = static_cast<EditSaveAnswerCustomCommandWidget*>(entry);
     if (entryWidget != nullptr)
     {
-        DB_QUERY_PTR query = DB_SELECT("CustomCommandAnswers", "Answer", QString("Id=%1").arg(id));
-        if (query != nullptr)
-        {
-            if (query->first())
-            {
-                entryWidget->SetId(id);
-                entryWidget->SetText(query->value("Answer").toString());
-            }
-        }
+        QString answer = CustomCommandDBHelper::Instance().GetAnswer(CmdType::StreamerCmd, id);
+
+        entryWidget->SetId(id);
+        entryWidget->SetText(answer);
     }
 }
 

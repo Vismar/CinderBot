@@ -28,7 +28,7 @@ void TimeInChatTimerCommand::_TimerAction()
     for (int i = 0; i < userList.count(); ++i)
     {
         QString ignoreList;
-        ConfigurationManager::Instance().GetStringParam(IgnoreList, ignoreList);
+        ConfigurationManager::Instance().GetStringParam(CfgParam::IgnoreList, ignoreList);
         if (!ignoreList.contains(userList[i]))
         {
             // Get time in chat

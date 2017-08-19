@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include "AI/ChatCommands/InbuiltChatCommand.hpp"
+#include "AI/ChatCommands/UserDataCommands/UserDataBaseCommand.hpp"
 
 /*!
  * \brief Contains all chat command things.
@@ -17,10 +17,14 @@ namespace Command
 namespace UserDataCmd
 {
 
-class FullUserDataCommand : public InbuiltChatCommand
+/*!
+ * \brief Full user data about user.
+ *
+ * "!me" command which display full info about user who used this command.
+ */
+class FullUserDataCommand : public UserDataBaseCommand
 {
 public:
-    /*! Constructor */
     FullUserDataCommand();
 
 protected:
