@@ -5,12 +5,11 @@
 **************************************************************************/
 #include "DatabaseManager.hpp"
 #include <QStringList>
-#include <QFile>
 #include <QDir>
 #include "Utils/Logger.hpp"
 
 using namespace Utils;
-using namespace Utils::Database;
+using namespace Database;
 
 #define DB_FOLDER    "data"
 #define DB_FILE_NAME "CinderBotDatabase.sqlite"
@@ -66,7 +65,7 @@ QString DatabaseManager::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool DatabaseManager::CreateIndex(const QString &tableName, const QString &indexName, const QString &columns)
+bool DatabaseManager::CreateIndex(const QString &tableName, const QString &indexName, const QString &columns) const
 {
     bool result = true;
 
@@ -98,7 +97,7 @@ bool DatabaseManager::CreateIndex(const QString &tableName, const QString &index
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool DatabaseManager::CreateTable(const QString &tableName, const QString &columns)
+bool DatabaseManager::CreateTable(const QString &tableName, const QString &columns) const
 {
     bool result = true;
 
@@ -207,7 +206,7 @@ bool DatabaseManager::Insert(const QString &tableName, const QString &recordValu
 
 ///////////////////////////////////////////////////////////////////////////
 
-DB_QUERY_PTR DatabaseManager::Select(const QString &tableName, const QString &columnNames, const QString &conditions)
+DB_QUERY_PTR DatabaseManager::Select(const QString &tableName, const QString &columnNames, const QString &conditions) const
 {
     DB_QUERY_PTR query = std::make_shared<QSqlQuery>();
     QString command;

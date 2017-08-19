@@ -60,7 +60,7 @@ void EditSaveWidget::SetId(int id)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void EditSaveWidget::SetText(const QString &text)
+void EditSaveWidget::SetText(const QString &text) const
 {
     _text->setText(text);
 }

@@ -18,10 +18,11 @@ namespace Ui
  */
 namespace Common
 {
-// TODO: Update comments in this file
+
 /*!
- * class EditSaveWidget
- * Simple class which have text field and two buttons: edit/save and delete.
+ * \brief Simple class which have text field and two buttons: edit/save and delete.
+ * 
+ * Creates specifally for places where we need to dusplay simeple text field and 2 buttons.
  * If edit was clicked, then button will be switched to "save" state.
  */
 class EditSaveWidget : public QFrame
@@ -32,23 +33,29 @@ public:
     virtual ~EditSaveWidget();
 
     /*!
-     * Set number field for quote
-     * \param number - number that should be setted
+     * \brief Sets id for entry.
+     * \param id - id of an entry.
+     * 
+     * Simple and internal thing.
      */
     void SetId(int id);
     /*!
-     * Set text field for quote
-     * \param text - text which will be used in text field
+     * \brief Sets text field.
+     * \param text - text which will be used in text field.
      */
-    void SetText(const QString &text);
+    void SetText(const QString &text) const;
 
 protected:
     /*!
-     * Save current entry
+     * \brief Save current entry.
+     * 
+     * Called to when "Save" button was pressed. Should be implemented by inherited classes.
      */
     virtual void _SaveEntry() = 0;
     /*!
-     * Delete current entry
+     * \brief Delete current entry
+     * 
+     * Called to when "Delete" button was pressed. Should be implemented by inherited classes.
      */
     virtual void _DeleteEntry() = 0;
 
@@ -59,16 +66,20 @@ protected:
 
 private slots:
     /*!
-     * Adjust minimum possible size of chat message
-     * \param(IN) size - New size of the document in message. In pixels.
+     * \brief Adjust minimum possible size of text field.
+     * \param size - New size of the document in message. In pixels.
      */
     void _AdjustMinimumSize(const QSizeF &size);
     /*!
-     * Handle edit/save button
+     * \brief Handles edit/save button.
+     * 
+     * Switches states and handles presses of "Edit" and "Save" buttons.
      */
     void _HandleEditSaveButton();
     /*!
-     * Handle delete button
+     * \brief Handles delete button.
+     * 
+     * Deletes entry by calling _DeleteNetry().
      */
     void _HandleDeleteButton();
 

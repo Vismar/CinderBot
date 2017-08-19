@@ -27,7 +27,12 @@ namespace Utils
 namespace Database
 {
 
-// TODO: Update comments in this file
+/*!
+ * \brief Manager that holds all work with database and provide functionality to work directly with it.
+ * 
+ * Manager inititalizes database, creates everything that are needed for correct work. 
+ * Provide functionality to create tables and indexes; insert, update, delete and select to/from tables.
+ */
 class DatabaseManager : public QObject
 {
     Q_OBJECT
@@ -36,77 +41,80 @@ public:
     ~DatabaseManager();
 
     /*!
-     * Initialize and create instance of database manaager
+     * \brief Initializes and creates instance of database manaager
      * \return reference to static database manager
      */
     static DatabaseManager &Instance();
 
     /*!
-     * Try to open and initialize database
-     * \return error code if something goes wrong, or OK, if everything is fine
+     * \brief Tries to open and initialize database.
+     * \return Error code if something goes wrong, or OK, if everything is fine.
+     * 
+     * Checks directory and tries to create. After that tries to open/create database. 
+     * If any error has appeared at any step, will return error. Otherwise - "OK"
      */
     QString Initialize();
 
     /*!
-     * Create index on specified table (and columns if specified)
-     * \param tableName - name of table
-     * \param indexName - name of index
-     * \param columns - columns which should be indexed
-     * \return true if index successfully created
+     * \brieef Creates index on specified table (and columns if specified).
+     * \param tableName - name of table.
+     * \param indexName - name of index.
+     * \param columns - columns which should be indexed.
+     * \return True if index successfully created.
      */
-    bool CreateIndex(const QString &tableName, const QString &indexName, const QString &columns = "");
+    bool CreateIndex(const QString &tableName, const QString &indexName, const QString &columns = "") const;
     /*!
-     * Try to create table if it not exist
-     * \param(IN) tableName - name of a table which should be created
-     * \param(IN) columns - columns with all parameters that should be created for specified table
-     * \return true if command was successful
+     * \brief Tries to create table if it not exist.
+     * \param tableName - name of a table which should be created.
+     * \param columns - columns with all parameters that should be created for specified table.
+     * \return True if command was successful.
      */
-    bool CreateTable(const QString &tableName, const QString &columns);
+    bool CreateTable(const QString &tableName, const QString &columns) const;
     /*!
-     * Insert new record to the database
-     * \param(IN) tableName - name of a table in which new record should be added
-     * \param(IN) recordValues - values for a new record
-     * \return true if command was successful
+     * \brief Inserts new record to the database.
+     * \param tableName - name of a table in which new record should be added.
+     * \param recordValues - values for a new record.
+     * \return True if command was successful.
      */
     bool Insert(const QString &tableName, const QString &recordValues, bool ignore = false);
     /*!
-     * \brief Select
-     * \param(IN) tableName - name of a table in which new record should be added
-     * \param(IN) columnNames - name of columns which you want to be returned
-     * \param(IN) conditions - conditions for selection from the table
-     * \return shared pointer to a query if command was successful, will return NULL of command failed
+     * \brief Selects specified records from database.
+     * \param tableName - name of a table in which new record should be added.
+     * \param columnNames - name of columns which you want to be returned.
+     * \param conditions - conditions for selection from the table.
+     * \return Shared pointer to a query if command was successful, will return NULL of command failed.
      */
-    std::shared_ptr<QSqlQuery> Select(const QString &tableName, const QString &columnNames, const QString &conditions = "");
+    std::shared_ptr<QSqlQuery> Select(const QString &tableName, const QString &columnNames, const QString &conditions = "") const;
     /*!
-     * \brief Update
-    * \param(IN) tableName - name of a table in which new record should be added
-     * \param(IN) columnValues - values which will be assigned to specififed record
-     * \param(IN) conditions - conditions for selection from the table
-     * \return true if command was successful
+     * \brief Updates existing record.
+     * \param tableName - name of a table in which new record should be added.
+     * \param columnValues - values which will be assigned to specififed record.
+     * \param conditions - conditions for selection from the table.
+     * \return True if command was successful.
      */
     bool Update(const QString &tableName, const QString &columnValues, const QString &conditions = "");
     /*!
-     * \brief Delete
-     * \param(IN) tableName - name of a table in which record should be deelted
-     * \param(IN) conditions - conditions for selection from the table
-     * \return true if command was successful
+     * \brief Deletes existing record from database.
+     * \param tableName - name of a table in which record should be deelted.
+     * \param conditions - conditions for selection from the table.
+     * \return True if command was successful.
      */
     bool Delete(const QString &tableName, const QString &conditions = "");
 
 signals:
     /*!
-     * Event for any succesfull insert command
-     * \param tableName - name of table for which operation was executed
+     * \brief Event for any succesfull insert command.
+     * \param tableName - name of table for which operation was executed.
      */
     void OnInsertEvent(const QString &tableName);
     /*!
-     * Event for any succesfull update command
-     * \param tableName - name of table for which operation was executed
+     * \brief Event for any succesfull update command.
+     * \param tableName - name of table for which operation was executed.
      */
     void OnUpdateEvent(const QString &tableName);
     /*!
-     * Event for any succesfull delete command
-     * \param tableName - name of table for which operation was executed
+     * \brief Event for any succesfull delete command.
+     * \param tableName - name of table for which operation was executed.
      */
     void OnDeleteEvent(const QString &tableName);
 

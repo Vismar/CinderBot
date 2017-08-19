@@ -11,6 +11,10 @@ using namespace Utils::Database;
 #define CUSTOM_COMMAND     "CustomCommand"
 #define CUSTOM_COV_COMMAND "CustomCovCommand"
 
+///////////////////////////////////////////////////////////////////////////
+//                            Additional things                          //
+///////////////////////////////////////////////////////////////////////////
+
 /*! Static constant array of parameters that could be stored in config manager. */
 static const QStringList CustomCmdStrParam =
 {
@@ -24,6 +28,11 @@ static const QStringList CustomCmdStrParam =
     "WorkInChat"
 };
 
+///////////////////////////////////////////////////////////////////////////
+
+/*! 
+ * \brief Utility function to fill CmdParams from query
+ */
 void SetParamsFromQuery(DB_QUERY_PTR query, CmdParams &cmdParams)
 {
     if ((query != nullptr) && query->first())
@@ -42,6 +51,52 @@ void SetParamsFromQuery(DB_QUERY_PTR query, CmdParams &cmdParams)
 }
 
 ///////////////////////////////////////////////////////////////////////////
+//                               CmdParams                                //
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+QString CmdParams::ToParamString() const
+{
+    QString params = "Cooldown=':cooldown', "
+                     "ModeratorOnly=:mod, "
+                     "Price=:price, "
+                     "Covenant=':cov', "
+                     "WorkInWhisper=':whisper', "
+                     "WorkInChat=':chat'";
+    params.replace(":cooldown", Cooldown.toString("h:m:s"));
+    params.replace(":mod", (ModeratorOnly ? "1" : "0"));
+    params.replace(":price", QString::number(Price));
+    params.replace(":cov", Covenant);
+    params.replace(":whisper", (WorkInWhisper ? "true" : "false"));
+    params.replace(":chat", (WorkInChat ? "true" : "false"));
+
+    return params;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+QString CmdParams::ToAddString() const
+{
+    QString params = "':cooldown', "
+                     ":mod, "
+                     ":price, "
+                     "':cov', "
+                     "':whisper', "
+                     "':chat'";
+    params.replace(":cooldown", Cooldown.toString("h:m:s"));
+    params.replace(":mod", (ModeratorOnly ? "1" : "0"));
+    params.replace(":price", QString::number(Price));
+    params.replace(":cov", Covenant);
+    params.replace(":whisper", (WorkInWhisper ? "true" : "false"));
+    params.replace(":chat", (WorkInChat ? "true" : "false"));
+
+    return params;
+}
+
+///////////////////////////////////////////////////////////////////////////
+//                        CustomCommandDBHelper                          //
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 CustomCommandDBHelper &CustomCommandDBHelper::Instance()
 {
@@ -53,9 +108,10 @@ CustomCommandDBHelper &CustomCommandDBHelper::Instance()
 
 QString CustomCommandDBHelper::InititalizeTables()
 {
-    QString error;
-    error = _InititalizeCustomCommandTables(CUSTOM_COMMAND, "");
+    // Intitialize tables for custom commands
+    QString error = _InititalizeCustomCommandTables(CUSTOM_COMMAND, "");
 
+    // If everything is okay, initialize tables for custom covenant commands
     if (error == "OK")
     {
         error = _InititalizeCustomCommandTables(CUSTOM_COV_COMMAND, "Covenant_");
@@ -95,18 +151,23 @@ bool CustomCommandDBHelper::CreateCommand(CmdType cmdType, const QString &cmdNam
 {
     bool created(false);
 
+    // Guard " ' " by " '' "
     QString guardedCmdName = cmdName.toLower();
     guardedCmdName.replace("'", "");
 
+    // If command not exist, try to create it
     if (!CommandExist(guardedCmdName))
     {
+        // Get params
         QString values = "NULL, 'name', PARAMS";
         values.replace("name", guardedCmdName);
         values.replace("PARAMS", cmdParams.ToAddString());
 
+        // Get table name
         QString tableName = _GetTableName(TableType::Commands, cmdType);
         if (DB_INSERT(tableName, values))
         {
+            // Check if command was created and get id of it
             DB_QUERY_PTR query = DB_SELECT(tableName, "Id", QString("Name='%1'").arg(guardedCmdName));
             if ((query != nullptr) && (query->first()))
             {
@@ -125,14 +186,18 @@ bool CustomCommandDBHelper::DeleteCommand(CmdType cmdType, const QString &cmdNam
 {
     bool deleted(false);
 
+    // Check if command exist
     if (CommandExist(cmdName))
     {
+        // Get table names
         QString tableNameAnswers = _GetTableName(TableType::Answers, cmdType);
         QString tableNameCommands = _GetTableName(TableType::Commands, cmdType);
 
+        // Get id of command to sent it via signal
         DB_QUERY_PTR query = DB_SELECT(tableNameCommands, "Id", QString("Name='%1'").arg(cmdName));
         if ((query != nullptr) && (query->first()))
         {
+            // Delete command from command table and all answers from answers table
             if (DB_DELETE(tableNameAnswers, QString("Name='%1'").arg(cmdName)) &&
                 DB_DELETE(tableNameCommands, QString("Name='%1'").arg(cmdName)))
             {
