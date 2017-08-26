@@ -6,7 +6,7 @@
 #include "AdminCovCmdDeleteCommand.hpp"
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
-#include "utils/Database/CustomCommandDBHelper.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
