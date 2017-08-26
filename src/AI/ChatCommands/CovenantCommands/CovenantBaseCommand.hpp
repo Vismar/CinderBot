@@ -18,6 +18,12 @@ namespace Command
 namespace CovenantCmd
 {
 
+/*!
+ * \brief Base class for all covenant commands.
+ * 
+ * Base class for all covenant commands that handles changes of configuration parameters to
+ * update work in whisper and work in chat flags.
+ */
 class CovenantBaseCommand : public InbuiltChatCommand
 {
 public:
@@ -26,8 +32,8 @@ public:
 
 private slots:
     /*!
-     * \brief _UpdateChatAndWhisperFlags
-     * \param cfgParam
+     * \brief Updates work in whisper and work in chat flags when they are changed.
+     * \param cfgParam - Configuration parameter that was changed.
      */
     void _UpdateChatAndWhisperFlags(Utils::Configuration::CfgParam cfgParam);
 };

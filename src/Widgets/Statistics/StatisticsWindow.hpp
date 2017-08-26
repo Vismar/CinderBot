@@ -4,7 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QVBoxLayout>
 #include "StatisticsWidget.hpp"
 
 namespace Ui

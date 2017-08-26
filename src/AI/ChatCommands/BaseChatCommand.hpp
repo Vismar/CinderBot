@@ -33,7 +33,7 @@ public:
     /*!
      * \brief Initializes command by your own way. 
      * 
-     * Should be implemented by inherited class to initialize in proper way.
+     * Should be implemented by inherited class to initialize in a proper way.
      */
     virtual void Initialize() = 0;
 

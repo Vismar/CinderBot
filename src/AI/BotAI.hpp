@@ -5,9 +5,6 @@
 **************************************************************************/
 #pragma once
 #include <QObject>
-#include <QVector>
-#include <QStringList>
-#include <QTimer>
 #include "Chat/ChatMessage.hpp"
 #include "Chat/ChatAnswer.hpp"
 #include "AI/ChatCommands/CommandList.hpp"

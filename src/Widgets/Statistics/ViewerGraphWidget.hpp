@@ -5,7 +5,6 @@
 **************************************************************************/
 #pragma once
 #include <QGroupBox>
-#include <QtCharts/QChart>
 #include <QtCharts/QChartView>
 #include <QDateTimeAxis>
 #include <QValueAxis>

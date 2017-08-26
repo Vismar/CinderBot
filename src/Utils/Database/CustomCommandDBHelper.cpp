@@ -6,6 +6,8 @@
 #include "CustomCommandDBHelper.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 
+#include <QDebug>
+
 using namespace Utils::Database;
 
 #define CUSTOM_COMMAND     "CustomCommand"
@@ -51,7 +53,7 @@ void SetParamsFromQuery(DB_QUERY_PTR query, CmdParams &cmdParams)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-//                               CmdParams                                //
+//                               CmdParams                               //
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
@@ -94,6 +96,16 @@ QString CmdParams::ToAddString() const
 }
 
 ///////////////////////////////////////////////////////////////////////////
+
+void CmdParams::GuardParams()
+{
+    if (Price < 0)
+    {
+        Price = 0;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
 //                        CustomCommandDBHelper                          //
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
@@ -122,22 +134,38 @@ QString CustomCommandDBHelper::InititalizeTables()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool CustomCommandDBHelper::CommandExist(const QString &cmdName)
+bool CustomCommandDBHelper::CommandExist(const QString &cmdName, const QString &covenant)
 {
     bool found(false);
 
     // Check if command exist in user command list
-    QString tableName = _GetTableName(TableType::Commands, CmdType::CovenantCmd);
-    DB_QUERY_PTR customCmdQuery = DB_SELECT(tableName, "Id", QString("Name='%1'").arg(cmdName));
+    QString tableName = _GetTableName(TableType::Commands, CmdType::StreamerCmd);
+    DB_QUERY_PTR customCmdQuery;
+    if (covenant.isEmpty())
+    {
+        customCmdQuery = DB_SELECT(tableName, "Id", QString("Name='%1'").arg(cmdName));
+    }
+    else
+    {
+        customCmdQuery = DB_SELECT(tableName, "Id", QString("Name='%1' AND Covenant='%2'").arg(cmdName).arg(covenant));
+    }
     if ((customCmdQuery != nullptr) && (customCmdQuery->first()))
     {
         found = true;
     }
 
     // Check if command exist in cov command list
-    tableName = _GetTableName(TableType::Commands, CmdType::StreamerCmd);
-    DB_QUERY_PTR customCovCmdQuery = DB_SELECT(tableName, "Id", QString("Name='%1'").arg(cmdName));
-    if ((customCmdQuery != nullptr) && (customCovCmdQuery->first()))
+    tableName = _GetTableName(TableType::Commands, CmdType::CovenantCmd);
+    DB_QUERY_PTR customCovCmdQuery;
+    if (covenant.isEmpty())
+    {
+        customCovCmdQuery = DB_SELECT(tableName, "Id", QString("Name='%1'").arg(cmdName));
+    }
+    else
+    {
+        customCovCmdQuery = DB_SELECT(tableName, "Id", QString("Name='%1' AND Covenant='%2'").arg(cmdName).arg(covenant));
+    }
+    if ((customCovCmdQuery != nullptr) && (customCovCmdQuery->first()))
     {
         found = true;
     }
@@ -147,9 +175,10 @@ bool CustomCommandDBHelper::CommandExist(const QString &cmdName)
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool CustomCommandDBHelper::CreateCommand(CmdType cmdType, const QString &cmdName, const CmdParams &cmdParams)
+bool CustomCommandDBHelper::CreateCommand(CmdType cmdType, const QString &cmdName, CmdParams &cmdParams)
 {
     bool created(false);
+    cmdParams.GuardParams();
 
     // Guard " ' " by " '' "
     QString guardedCmdName = cmdName.toLower();
@@ -268,6 +297,31 @@ QStringList CustomCommandDBHelper::GetCommandNames(CmdType cmdType, const QStrin
 
 ///////////////////////////////////////////////////////////////////////////
 
+int CustomCommandDBHelper::GetNumberOfCommands(CmdType cmdType, const QString& covenant)
+{
+    int numberOfCommands(0);
+    QString tableName = _GetTableName(TableType::Commands, cmdType);
+    QString guardedCovenant = covenant;
+    guardedCovenant.replace("'", "''");
+    DB_QUERY_PTR query;
+    if (guardedCovenant.isEmpty())
+    {
+        query = DB_SELECT(tableName, "COUNT(*)");
+    }
+    else
+    {
+        query = DB_SELECT(tableName, "COUNT(*)", QString("Covenant='%1'").arg(covenant));
+    }
+    if ((query != nullptr) && (query->first()))
+    {
+        numberOfCommands = query->value(0).toInt();
+    }
+
+    return numberOfCommands;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 CmdParams CustomCommandDBHelper::GetAllParams(CmdType cmdType, int id)
 {
     CmdParams cmdParams;
@@ -294,9 +348,10 @@ CmdParams CustomCommandDBHelper::GetAllParams(CmdType cmdType, const QString &cm
 
 ///////////////////////////////////////////////////////////////////////////
 
-void CustomCommandDBHelper::SetAllParams(CmdType cmdType, const QString &cmdName, const CmdParams &cmdParams)
+void CustomCommandDBHelper::SetAllParams(CmdType cmdType, const QString &cmdName, CmdParams &cmdParams)
 {
     QString tableName = _GetTableName(TableType::Commands, cmdType);
+    cmdParams.GuardParams();
 
     if (DB_UPDATE(tableName, cmdParams.ToParamString(), QString("Name='%1'").arg(cmdName)))
     {
@@ -453,22 +508,26 @@ QString CustomCommandDBHelper::GetAnswer(CmdType cmdType, int id)
 
 void CustomCommandDBHelper::AddAnswer(CmdType cmdType, const QString &cmdName, const QString &answer)
 {
-    QString tableName  = _GetTableName(TableType::Answers, cmdType);
-    QString guardedAnswer = answer;
-    guardedAnswer.replace("'", "''");
-
-    if (DB_INSERT(tableName, QString("NULL, '%1', '%2'").arg(cmdName).arg(guardedAnswer)))
+    // Answer should have at least 1 character to be added
+    if (!answer.isEmpty())
     {
-        switch (cmdType)
+        QString tableName = _GetTableName(TableType::Answers, cmdType);
+        QString guardedAnswer = answer;
+        guardedAnswer.replace("'", "''");
+
+        if (DB_INSERT(tableName, QString("NULL, '%1', '%2'").arg(cmdName).arg(guardedAnswer)))
         {
-        case CmdType::StreamerCmd:
-            emit CustomCmdAnswerAdded(cmdName);
-            break;
-        case CmdType::CovenantCmd:
-            emit CustomCovCmdAnswerAdded(cmdName);
-            break;
-        default:
-            break;
+            switch (cmdType)
+            {
+            case CmdType::StreamerCmd:
+                emit CustomCmdAnswerAdded(cmdName);
+                break;
+            case CmdType::CovenantCmd:
+                emit CustomCovCmdAnswerAdded(cmdName);
+                break;
+            default:
+                break;
+            }
         }
     }
 }

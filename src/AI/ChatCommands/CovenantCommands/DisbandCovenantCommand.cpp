@@ -6,6 +6,7 @@
 #include "DisbandCovenantCommand.hpp"
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
@@ -40,7 +41,7 @@ void DisbandCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &
     {
         // Check if user is leader of its covenant
         DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
-        if (query->exec())
+        if (query != nullptr)
         {
             query->first();
             // If user is leader, than proceed disband of covenant
@@ -50,7 +51,7 @@ void DisbandCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &
                 if (DB_DELETE("Covenants", QString("Name = '%1'").arg(covenant)))
                 {
                     DB_QUERY_PTR query = DB_SELECT("UserData", "Name", QString("Covenant = '%1'").arg(covenant));
-                    if (query != NULL)
+                    if (query != nullptr)
                     {
                         while (query->next())
                         {
@@ -58,6 +59,13 @@ void DisbandCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &
                         }
                     }
                     answer.AddAnswer(_answers.at(MSG_DISBANDING));
+
+                    // Also we need to delete all command that were created for this covenant
+                    QStringList commands = CustomCommandDBHelper::Instance().GetCommandNames(CmdType::CovenantCmd, covenant);
+                    for (int i = 0; i < commands.size(); ++i)
+                    {
+                        CustomCommandDBHelper::Instance().DeleteCommand(CmdType::CovenantCmd, commands.at(i));
+                    }
                 }
             }
             // If user not leader, say it

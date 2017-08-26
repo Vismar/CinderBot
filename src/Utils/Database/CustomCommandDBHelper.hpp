@@ -19,7 +19,6 @@ namespace Utils
  */
 namespace Database
 {
-// TODO: Add comments for everything here
 
 /*!
  * \brief Small enumeration to separate command types.
@@ -27,7 +26,7 @@ namespace Database
 enum class CmdType
 {
     StreamerCmd, /*! Type that should be used for commands that was created by user (aka streamer). */
-    CovenantCmd /*! Type that should be used for commands that was created for covenants by viewers/chatters. */
+    CovenantCmd  /*! Type that should be used for commands that was created for covenants by viewers/chatters. */
 };
 
 /*!
@@ -58,6 +57,11 @@ struct CmdParams
      * \brief Gets all params as a string which contains only values of params.
      */
     QString ToAddString() const;
+
+    /*!
+     * \brief Check if values of CmdParams are guarded (for exmaple, if price value is < 0 then it should be setted to 0).
+     */
+    void GuardParams();
 
     /*! Cooldown */
     QTime Cooldown = QTime(0, 0, 0);
@@ -99,7 +103,7 @@ public:
      * \param cmdName - Command name which should be checked.
      * \return True if command exist. Otherwise - false.
      */
-    bool CommandExist(const QString &cmdName);
+    bool CommandExist(const QString &cmdName, const QString &covenant = "");
     /*!
      * \brief Tries to create custom command.
      * \param cmdType - Type of a new custom command.
@@ -107,7 +111,7 @@ public:
      * \param cmdParams - Parameters of a new custom command.
      * \return True if command was created. Otherwise - false.
      */
-    bool CreateCommand(CmdType cmdType, const QString &cmdName, const CmdParams &cmdParams);
+    bool CreateCommand(CmdType cmdType, const QString &cmdName, CmdParams &cmdParams);
     /*!
      * \brief Tries to delete custom command.
      * \param cmdType - Type of custom command.
@@ -135,6 +139,14 @@ public:
      * If covenant was specified, will return commands only with such value.
      */
     QStringList GetCommandNames(CmdType cmdType, const QString &covenant = "");
+    /*!
+     * \brief Grabs number of custom commands.
+     * \param cmdType - Type of required commands.
+     * \param covenant - Covenant name that should be searched in all commands.
+     * 
+     * Returns number of commands that does exist in database.
+     */
+    int GetNumberOfCommands(CmdType cmdType, const QString &covenant = "");
 
     /*** Command parameters ***/
     /*!
@@ -161,7 +173,7 @@ public:
      * \param cmdName - Name of command that should be updated.
      * \param cmdParams - CmdParams filled by new params.
      */
-    void SetAllParams(CmdType cmdType, const QString &cmdName, const CmdParams &cmdParams);
+    void SetAllParams(CmdType cmdType, const QString &cmdName, CmdParams &cmdParams);
     /*!
      * \brief Gets specified parameter.
      * \param cmdType - Type of command that should be returned.

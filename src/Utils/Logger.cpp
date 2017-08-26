@@ -5,7 +5,6 @@
 **************************************************************************/
 #include "Logger.hpp"
 #include <QTextStream>
-#include <QFile>
 #include <QDir>
 #include <QDateTime>
 
@@ -106,7 +105,7 @@ void Logger::Flush()
 QString Logger::_GetTimestamp()
 {
     QDateTime dateTime = QDateTime::currentDateTime();
-    QString timeStamp = QString("Date: %1\nTime: %2\n").arg(dateTime.toString("dd.MM.yyyy")).arg("hh:mm:ss");
+    QString timeStamp = QString("Date: %1\nTime: %2\n").arg(dateTime.toString("dd.MM.yyyy")).arg(dateTime.toString("hh:mm:ss"));
     return timeStamp;
 }
 
