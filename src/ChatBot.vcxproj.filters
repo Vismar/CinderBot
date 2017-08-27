@@ -98,6 +98,11 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\qrc_Resources.cpp">
@@ -476,6 +481,96 @@
     <ClCompile Include="Build\Debug\moc_DatabaseManager.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\AdminCovCmdCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_BaseTimerCommand.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_BotAI.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_BaseTimerCommandList.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_ChatMessageWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_ChatWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_CommandList.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_ChatWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_ConfigurationManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_ConnectWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_CreateQuoteWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_EnhTextEdit.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_LoginWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_CurrencyToOnlineTimerCommand.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_EnhLineEdit.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_RealTimeUserData.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_MainWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_MessageStatisticsWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_MessageGraphWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_QuoteWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_SingleQuoteWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_StatisticsWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_StatisticsWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_TwitchClient.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_ViewerStatisticsWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_ViewerCounterWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_ViewerGraphWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\AdminCovCmdEditCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\AdminCovCmdDeleteCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ChatCommands\CovenantCommands\AdminCovCmdAnswerCommand.cpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\TimerCommands\UserData\UserDataTimerCommandList.hpp">
@@ -613,6 +708,18 @@
     <CustomBuild Include="Utils\Database\DatabaseManager.hpp">
       <Filter>Sources\Utils\Database</Filter>
     </CustomBuild>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\AdminCovCmdCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\AdminCovCmdEditCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\AdminCovCmdDeleteCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ChatCommands\CovenantCommands\AdminCovCmdAnswerCommand.hpp">
+      <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Widgets\Statistics\ViewerStatisticsWidget.hpp">

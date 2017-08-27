@@ -13,6 +13,10 @@
 #include "AI/ChatCommands/CovenantCommands/InfoCovenantCommand.hpp"
 #include "AI/ChatCommands/CovenantCommands/MembersCovenantCommand.hpp"
 #include "AI/ChatCommands/CovenantCommands/DisbandCovenantCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/AdminCovCmdCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/AdminCovCmdEditCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/AdminCovCmdDeleteCommand.hpp"
+#include "AI/ChatCommands/CovenantCommands/AdminCovCmdAnswerCommand.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 
@@ -34,6 +38,10 @@ CovenantCommandList::CovenantCommandList()
     _commands.push_back(new InfoCovenantCommand());
     _commands.push_back(new MembersCovenantCommand());
     _commands.push_back(new DisbandCovenantCommand());
+    _commands.push_back(new AdminCovCmdCommand());
+    _commands.push_back(new AdminCovCmdEditCommand());
+    _commands.push_back(new AdminCovCmdDeleteCommand());
+    _commands.push_back(new AdminCovCmdAnswerCommand());
 
     Initialize();
     OnCfgParamChanged(CfgParam::CovenantCmdModule);

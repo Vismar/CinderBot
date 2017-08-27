@@ -4,8 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QGroupBox>
-#include <QHBoxLayout>
 #include "ViewerCounterWidget.hpp"
 #include "ViewerGraphWidget.hpp"
 

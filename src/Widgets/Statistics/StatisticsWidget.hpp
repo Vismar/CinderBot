@@ -4,9 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QWidget>
-#include <QScrollArea>
-#include <QVBoxLayout>
 #include "ViewerStatisticsWidget.hpp"
 #include "MessageStatisticsWidget.hpp"
 

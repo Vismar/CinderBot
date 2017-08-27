@@ -5,6 +5,7 @@
 **************************************************************************/
 #include "InfoCovenantCommand.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
@@ -26,7 +27,7 @@ void InfoCovenantCommand::Initialize()
 {
     _name = "!cov_info";
     _answers.push_back("Covenant: COV_NAME; Leader: COV_LEADER; "
-                       "Members: COV_MEMBERS; Commands: COV_CMD_NUM; "
+                       "Members: COV_MEMBERS; Commands: COV_CMD_NUM/COV_CMD_SLOTS; "
                        "Level: COV_LEVEL; Experience: COV_EXP/COV_NEED_EXP;");
     _answers.push_back("Description: ");
     _answers.push_back("Please provide name of the covenant, @.");
@@ -55,7 +56,7 @@ void InfoCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
                 // Number of members
                 DB_QUERY_PTR memberQuery = DB_SELECT("UserData", "COUNT(*)",
                                                                  QString("Covenant = '%1'").arg(covenant));
-                if (memberQuery != NULL)
+                if (memberQuery != nullptr)
                 {
                     if (memberQuery->first())
                     {
@@ -63,8 +64,11 @@ void InfoCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
                                                      QString("/%1").arg(query->value("MaxMembers").toString())));
                     }
                 }
-                // Number of available commands
-                temp.replace("COV_CMD_NUM", query->value("CmdSlots").toString());
+                // Number of created commands
+                int covCmdNum = CustomCommandDBHelper::Instance().GetNumberOfCommands(CmdType::CovenantCmd, covenant);
+                temp.replace("COV_CMD_NUM", QString::number(covCmdNum));
+                // Number of available command slots
+                temp.replace("COV_CMD_SLOTS", query->value("CmdSlots").toString());
                 // Covenant level
                 temp.replace("COV_LEVEL", query->value("Level").toString());
                 // Covenant current exp
