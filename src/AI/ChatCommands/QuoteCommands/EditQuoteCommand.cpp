@@ -34,12 +34,12 @@ void EditQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer
     {
         QString val;
         // Try to found number after command
-        if (_GetNumberAfterCommand(_name, message.GetMessage(), val))
+        if (_GetNumberAfterCommand(message.GetMessage(), val))
         {
             // Check borders
             int number = val.toInt();
             std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
-            if (numberQuery != NULL)
+            if (numberQuery != nullptr)
             {
                 numberQuery->first();
                 int maxValue = numberQuery->value(0).toInt() + 1;

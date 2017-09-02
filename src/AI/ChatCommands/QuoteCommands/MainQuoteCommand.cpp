@@ -36,7 +36,7 @@ void MainQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer
         int maxValue = numberQuery->value(0).toInt();
 
         // Try to found number after command
-        if (_GetNumberAfterCommand(_name, message.GetMessage(), val))
+        if (_GetNumberAfterCommand(message.GetMessage(), val))
         {
             // Check borders
             int number = val.toInt();

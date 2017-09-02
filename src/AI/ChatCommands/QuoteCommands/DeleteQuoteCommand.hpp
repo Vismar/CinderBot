@@ -11,6 +11,9 @@
  */
 namespace Command
 {
+/*!
+ * \brief All quote related commands.
+ */
 namespace QuoteCmd
 {
 

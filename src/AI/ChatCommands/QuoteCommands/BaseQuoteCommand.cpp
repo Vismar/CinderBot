@@ -4,48 +4,31 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "BaseQuoteCommand.hpp"
+#include <QRegularExpressionMatch>
 
 using namespace Command::QuoteCmd;
 
 ///////////////////////////////////////////////////////////////////////////
 
-BaseQuoteCommand::BaseQuoteCommand() {}
+BaseQuoteCommand::BaseQuoteCommand()
+{
+    _regExpNumber.setPattern(" (?<number>[0-9]+)");
+}
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BaseQuoteCommand::_GetNumberAfterCommand(const QString &command, const QString &message, QString &value)
+bool BaseQuoteCommand::_GetNumberAfterCommand(const QString &message, QString &value) const
 {
-    bool isDigit(false);
-    // Get start of a command
-    int id = message.indexOf(command);
-    if (id != -1)
+    bool found(false);
+    QRegularExpressionMatch numberMatch = _regExpNumber.match(message);
+
+    if (numberMatch.hasMatch())
     {
-        // Check size
-        if ((id + command.size()) < message.size())
-        {
-            isDigit = true;
-            // Get string that should contain number
-            int startPosOfSearch = id + command.size() + 1;
-            int indexOfSpace = message.indexOf(" ", startPosOfSearch);
-            if (indexOfSpace != -1)
-            {
-                value = message.mid(startPosOfSearch, indexOfSpace - startPosOfSearch);
-            }
-            else
-            {
-                value = message.right(message.size() - startPosOfSearch);
-            }
-            for (int i = 0; i < value.size(); ++i)
-            {
-                if (!value.at(i).isDigit())
-                {
-                    isDigit = false;
-                }
-            }
-        }
+        value = numberMatch.captured("number");
+        found = true;
     }
 
-    return isDigit;
+    return found;
 }
 
 ///////////////////////////////////////////////////////////////////////////
