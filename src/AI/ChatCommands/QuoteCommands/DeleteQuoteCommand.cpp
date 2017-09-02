@@ -34,7 +34,7 @@ void DeleteQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answ
     {
         QString val;
         // Try to found number after command
-        if (_GetNumberAfterCommand(_name, message.GetMessage(), val))
+        if (_GetNumberAfterCommand(message.GetMessage(), val))
         {
             // Check borders
             int number = val.toInt();
