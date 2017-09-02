@@ -104,12 +104,6 @@ void TwitchClient::ReadLine()
         switch(msgType)
         {
         case INFO:
-            if (message.GetMessage() == SYSTEM_MESSAGE_CR)
-            {
-                ChatAnswer hiMsg;
-                hiMsg.AddAnswer("Poooound Всем приветище! Poooound");
-                _SendChatMessage(hiMsg);
-            }
             emit NewMessage(message, true);
             break;
         case PING:

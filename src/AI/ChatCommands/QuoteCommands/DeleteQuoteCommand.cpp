@@ -23,7 +23,7 @@ void DeleteQuoteCommand::Initialize()
 {
     _name = "!quote_delete";
     _moderatorOnly = true;
-    _answers.push_back("Quote #QUOTE_NUMBER was removed!");
+    _answers.push_back("Quote #QUOTE_NUMBER was deleted!");
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ void DeleteQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answ
             // Check borders
             int number = val.toInt();
             std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
-            if (numberQuery != NULL)
+            if (numberQuery != nullptr)
             {
                 numberQuery->first();
                 int maxValue = numberQuery->value(0).toInt() + 1;
@@ -72,7 +72,7 @@ void DeleteQuoteCommand::_RefreshQuoteNumbers(int quoteNumber)
     std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes",
                                                  "Id, Number",
                                                  QString("Number > %1 ORDER BY Number ASC ").arg(quoteNumber));
-    if (query != NULL)
+    if (query != nullptr)
     {
         while (query->next())
         {
