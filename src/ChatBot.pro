@@ -91,7 +91,8 @@ SOURCES += main.cpp\
     AI/ChatCommands/CovenantCommands/AdminCovCmdCommand.cpp \
     AI/ChatCommands/CovenantCommands/AdminCovCmdEditCommand.cpp \
     AI/ChatCommands/CovenantCommands/AdminCovCmdAnswerCommand.cpp \
-    AI/ChatCommands/CovenantCommands/AdminCovCmdDeleteCommand.cpp
+    AI/ChatCommands/CovenantCommands/AdminCovCmdDeleteCommand.cpp \
+    Utils/Database/QuoteDBHelper.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -173,7 +174,8 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/CovenantCommands/AdminCovCmdCommand.hpp \
     AI/ChatCommands/CovenantCommands/AdminCovCmdEditCommand.hpp \
     AI/ChatCommands/CovenantCommands/AdminCovCmdAnswerCommand.hpp \
-    AI/ChatCommands/CovenantCommands/AdminCovCmdDeleteCommand.hpp
+    AI/ChatCommands/CovenantCommands/AdminCovCmdDeleteCommand.hpp \
+    Utils/Database/QuoteDBHelper.hpp
 
 RESOURCES += \
     Resources.qrc

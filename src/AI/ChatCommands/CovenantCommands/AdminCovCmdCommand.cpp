@@ -33,7 +33,7 @@ void AdminCovCmdCommand::Initialize()
     _regExpName.setPattern("name=(?<name>.+);");
     // Add answers
     _answers.push_back("Command 'CMD_NAME': Cooldown - COOLDOWN; Price - PRICE; Answers - ANSWERS.");
-    _answers.push_back("Commands of your covenant 'COV_NAME': COMMAND_LIST. To see info about specific command add this param: name=COMMAND_NAME; . Where COMMAND_NAME is a name of certain command.");
+    _answers.push_back("Commands of your covenant 'COV_NAME': COMMAND_LIST. To see info about specific command add this param: name=COMMAND_NAME; . Do not forget ';'. Where COMMAND_NAME is a name of certain command. Answers contains ids of answers.");
     _answers.push_back("Your covenant 'COV_NAME' do not have any commands yet, @.");
     _answers.push_back("You are not leader of your covenant, @.");
     _answers.push_back("You are not in covenant yet, @.");

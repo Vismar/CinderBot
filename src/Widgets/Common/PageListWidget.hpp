@@ -59,7 +59,7 @@ public slots:
      * \brief Slot to update whole widget when array of ids was changed.
      * \param newIds - reference to array of new ids.
      *
-     * Replaces old id arra by new one and updates the whole data in widget.
+     * Replaces old id array by new one and updates the whole data in widget.
      */
     void UpdateIds(const QVector<int> &newIds);
     /*!

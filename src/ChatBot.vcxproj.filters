@@ -571,6 +571,15 @@
     <ClCompile Include="AI\ChatCommands\CovenantCommands\AdminCovCmdAnswerCommand.cpp">
       <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\Database\QuoteDBHelper.cpp">
+      <Filter>Sources\Utils\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_QuoteDBHelper.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_QuoteDBHelper.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\TimerCommands\UserData\UserDataTimerCommandList.hpp">
@@ -807,6 +816,9 @@
       <Filter>Sources\Utils\Config</Filter>
     </CustomBuild>
     <CustomBuild Include="Utils\Database\CustomCommandDBHelper.hpp">
+      <Filter>Sources\Utils\Database</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Utils\Database\QuoteDBHelper.hpp">
       <Filter>Sources\Utils\Database</Filter>
     </CustomBuild>
   </ItemGroup>

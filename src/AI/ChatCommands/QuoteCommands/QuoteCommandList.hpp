@@ -29,8 +29,8 @@ public:
 protected:
     ////////////////////////////////
     /// CommandList override
-    void Initialize();
-    void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam);
+    void Initialize() override;
+    void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam) override;
 };
 
 }

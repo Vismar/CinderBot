@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "AddQuoteCommand.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/QuoteDBHelper.hpp"
 
 using namespace Command::QuoteCmd;
 using namespace Utils::Database;
@@ -38,18 +38,10 @@ void AddQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
         // If message not empty add quote to the list
         if (!msg.isEmpty())
         {
-            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
-            if (numberQuery != NULL)
-            {
-                numberQuery->first();
-                int newMaxValue = numberQuery->value(0).toInt() + 1;
+            int quoteNumber = QuoteDBHelper::Instance().AddQuote(msg);
 
-                if (DB_INSERT("Quotes", QString("NULL, '%1', %2").arg(msg).arg(newMaxValue)))
-                {
-                    answer.AddAnswer(_answers.at(0));
-                    (*answer.GetAnswers().begin()).replace("QUOTE_NUMBER", QString::number(newMaxValue));
-                }
-            }
+            answer.AddAnswer(_answers.at(0));
+            (*answer.GetAnswers().begin()).replace("QUOTE_NUMBER", QString::number(quoteNumber));
         }
     }
 }

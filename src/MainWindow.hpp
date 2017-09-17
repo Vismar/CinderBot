@@ -4,9 +4,6 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QPushButton>
-#include <QGridLayout>
-#include <QPointer>
 #include "Widgets/Chat/ChatWindow.hpp"
 #include "Widgets/CustomCommands/CustomCommandWindow.hpp"
 #include "Widgets/Quotes/QuoteWindow.hpp"

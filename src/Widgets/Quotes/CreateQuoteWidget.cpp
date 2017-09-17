@@ -4,9 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CreateQuoteWidget.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/QuoteDBHelper.hpp"
 #include <QAbstractTextDocumentLayout>
 #include <QApplication>
+#include <QMessageBox>
 
 using namespace Ui::Quote;
 using namespace Ui::Common;
@@ -67,17 +68,17 @@ void CreateQuoteWidget::_AddQuote()
     // If user typed something here, then we can add new quote
     if (!_quoteText->toPlainText().isEmpty())
     {
-        //  Get last quote number
-        std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
-        if (numberQuery != NULL)
+        // Add quote
+        if (QuoteDBHelper::Instance().AddQuote(_quoteText->toPlainText()) > 0)
         {
-            numberQuery->first();
-            int newMaxValue = numberQuery->value(0).toInt() + 1;
-            // If quote was added, clear text field
-            if (DB_INSERT("Quotes", QString("NULL, '%1', %2").arg(_quoteText->toPlainText()).arg(newMaxValue)))
-            {
-                _quoteText->clear();
-            }
+            _quoteText->clear();
+        }
+        else
+        {
+            // Show error in message box
+            QMessageBox msgBox;
+            msgBox.setText("There is something goes wrong. Quote was not added. Please, provide feedback about such problem to the developer.");
+            msgBox.exec();
         }
     }
 }

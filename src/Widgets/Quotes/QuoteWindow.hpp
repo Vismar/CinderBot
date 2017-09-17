@@ -4,35 +4,46 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QVBoxLayout>
 #include "CreateQuoteWidget.hpp"
 #include "QuotesWidget.hpp"
 
+/*!
+ * \brief All Ui widgets and windows.
+ */
 namespace Ui
 {
+/*!
+ * \brief All quote related widgets.
+ */
 namespace Quote
 {
 
+/*!
+ * \brief Window that stores and displays list of quotes, also allows to create, edit and delete quotes.
+ */
 class QuoteWindow : public QWidget
 {
     Q_OBJECT
 public:
-    /*!
-     * Constructor
-     * \param parent - parent widget
-     */
-    explicit QuoteWindow(QWidget* parent = 0);
-    /*!
-     * Destructor
-     */
+    explicit QuoteWindow(QWidget* parent = nullptr);
     ~QuoteWindow();
 
 public slots:
     /*!
-     * Update quotes data in paage list widget
-     * \param tableName - name of table
+     * \brief Adds new quote to list.
+     * \param id - Id of quote that should be added.
      */
-    void UpdateQuotes(const QString &tableName);
+    void AddQuote(int id);
+    /*!
+     * \brief Deletes quotes from list.
+     * \param id - Id of quote that should be deleted from list.
+     */
+    void DeleteQuote(int id);
+    /*!
+     * \brief Updates all quotes in list.
+     * \param quoteNumber - unused param.
+     */
+    void UpdateQuotes(int quoteNumber);
 
 private:
     /*! Widget layout */

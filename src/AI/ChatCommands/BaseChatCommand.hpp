@@ -31,7 +31,7 @@ public:
     virtual ~BaseChatCommand();
 
     /*!
-     * \brief Initializes command by your own way. 
+     * \brief Initializes command by its own way. 
      * 
      * Should be implemented by inherited class to initialize in a proper way.
      */

@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "EditQuoteCommand.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/QuoteDBHelper.hpp"
 
 using namespace Command::QuoteCmd;
 using namespace Utils::Database;
@@ -38,23 +38,12 @@ void EditQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer
         {
             // Check borders
             int number = val.toInt();
-            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
-            if (numberQuery != nullptr)
+            const QString &refMsg = message.GetMessage();
+            QString msg = refMsg.right(refMsg.size() - refMsg.indexOf(_name) - _name.size() - val.size() - 2);
+            if (QuoteDBHelper::Instance().EditQuote(number, msg))
             {
-                numberQuery->first();
-                int maxValue = numberQuery->value(0).toInt() + 1;
-                if ((number > 0) && (number <= maxValue))
-                {
-                    // Remove part with number from message
-                    const QString &refMsg = message.GetMessage();
-                    QString msg = refMsg.right(refMsg.size()-refMsg.indexOf(_name)-_name.size()-val.size()-2);
-                    // Update quote
-                    if(DB_UPDATE("Quotes", QString("Quote = '%1'").arg(msg), QString("Number = %1").arg(number)))
-                    {
-                        answer.AddAnswer(_answers.at(0));
-                        (*answer.GetAnswers().begin()).replace("QUOTE_NUMBER", QString::number(number));
-                    }
-                }
+                answer.AddAnswer(_answers.at(0));
+                (*answer.GetAnswers().begin()).replace("QUOTE_NUMBER", QString::number(number));
             }
         }
     }

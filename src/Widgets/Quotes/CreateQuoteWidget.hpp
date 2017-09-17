@@ -4,38 +4,39 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QFrame>
 #include <QPushButton>
 #include <QHBoxLayout>
 #include "Widgets/Common/EnhTextEdit.hpp"
 
+/*!
+ * \brief All Ui widgets and windows.
+ */
 namespace Ui
 {
+/*!
+ * \brief All quote related widgets.
+ */
 namespace Quote
 {
 
+/*!
+ * \brief Simple widget that provides functional;ity to add quotes to database.
+ */
 class CreateQuoteWidget : public QFrame
 {
     Q_OBJECT
 public:
-    /*!
-     * Constructor
-     * \param parent - parent widget
-     */
-    explicit CreateQuoteWidget(QWidget* parent = 0);
-    /*!
-      * Desctructor
-      */
+    explicit CreateQuoteWidget(QWidget* parent = nullptr);
     ~CreateQuoteWidget();
 
 private slots:
     /*!
-     * Adjust minimum possible size of chat message
-     * \param(IN) size - New size of the document in message. In pixels.
+     * \brief Adjust minimum possible size of chat message.
+     * \param size - New size of the document in message. In pixels.
      */
     void _AdjustMinimumSize(const QSizeF &size);
     /*!
-     * Add quote that was typed in text field
+     * \brief Add quote that was typed in text field.
      */
     void _AddQuote();
 

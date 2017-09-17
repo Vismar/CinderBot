@@ -24,25 +24,12 @@ QuoteCommandList::QuoteCommandList()
     _commands.push_back(new DeleteQuoteCommand());
     _commands.push_back(new EditQuoteCommand());
 
-    Initialize();
     OnCfgParamChanged(CfgParam::QuotesCmdModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void QuoteCommandList::Initialize()
-{
-    // Initialize data table in database
-    DB_CREATE_TABLE("Quotes", "Id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                              "Quote TEXT NOT NULL,"
-                              "Number INTEGER NOT NULL UNIQUE");
-
-    std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "id", "number = 0");
-    if (!numberQuery->next())
-    {
-        DB_INSERT("Quotes", "NULL, 'Technical quote with 0 number for purpose of max number', 0", true);
-    }
-}
+void QuoteCommandList::Initialize() { }
 
 ///////////////////////////////////////////////////////////////////////////
 
