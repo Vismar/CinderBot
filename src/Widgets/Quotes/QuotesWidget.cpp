@@ -5,7 +5,7 @@
 **************************************************************************/
 #include "QuotesWidget.hpp"
 #include "SingleQuoteWidget.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/QuoteDBHelper.hpp"
 
 using namespace Ui::Quote;
 using namespace Utils::Database;
@@ -33,15 +33,9 @@ void QuotesWidget::_UpdateEntry(QWidget *entry, int id)
     SingleQuoteWidget *entryWidget = static_cast<SingleQuoteWidget*>(entry);
     if (entryWidget != nullptr)
     {
-        DB_QUERY_PTR query = DB_SELECT("Quotes", "Quote, Number", QString("Id=%1").arg(id));
-        if (query != nullptr)
-        {
-            if (query->first())
-            {
-                entryWidget->SetQuoteText(query->value("Quote").toString());
-                entryWidget->SetQuoteNumber(query->value("Number").toString());
-            }
-        }
+        QuoteData quoteData = QuoteDBHelper::Instance().GetQuoteData(id);
+        entryWidget->SetQuoteText(quoteData.Quote);
+        entryWidget->SetQuoteNumber(QString::number(quoteData.QuoteNumber));
     }
 }
 

@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "SingleQuoteWidget.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/QuoteDBHelper.hpp"
 #include <QAbstractTextDocumentLayout>
 
 using namespace Ui::Quote;
@@ -62,14 +62,14 @@ SingleQuoteWidget::~SingleQuoteWidget() {}
 
 ///////////////////////////////////////////////////////////////////////////
 
-void SingleQuoteWidget::SetQuoteNumber(const QString &number)
+void SingleQuoteWidget::SetQuoteNumber(const QString &number) const
 {
     _quoteNumber->setText(number);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void SingleQuoteWidget::SetQuoteText(const QString &text)
+void SingleQuoteWidget::SetQuoteText(const QString &text) const
 {
     _quoteText->setText(text);
 }
@@ -89,7 +89,7 @@ void SingleQuoteWidget::_AdjustMinimumSize(const QSizeF &size)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void SingleQuoteWidget::_HandleEditSaveButton()
+void SingleQuoteWidget::_HandleEditSaveButton() const
 {
     // If button in "edit" state, turn edit on and change button state to "save"
     if (_quoteEditSave->text() == "Edit")
@@ -106,28 +106,22 @@ void SingleQuoteWidget::_HandleEditSaveButton()
         _quoteText->SetEditable(false);
         _quoteEditSave->setText("Edit");
         _quoteEditSave->setStyleSheet("");
-        std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes",
-                                                     "Quote",
-                                                     QString("Number = %1").arg(_quoteNumber->text()));
-        if (query != NULL)
+
+        QString currentQuote = QuoteDBHelper::Instance().GetQuote(_quoteNumber->text().toInt());
+
+        // Save new quote text if it was changed
+        if (!currentQuote.isEmpty() && (currentQuote != _quoteText->toPlainText()))
         {
-            query->first();
-            // Save new quote text if it was changed
-            if (query->value(0).toString() != _quoteText->toPlainText())
-            {
-                DB_UPDATE("Quotes",
-                          QString("Quote = '%1'").arg(_quoteText->toPlainText()),
-                          QString("Number = %1").arg(_quoteNumber->text()));
-            }
+            QuoteDBHelper::Instance().EditQuote(_quoteNumber->text().toInt(), _quoteText->toPlainText());
         }
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void SingleQuoteWidget::_HandleDeleteButton()
+void SingleQuoteWidget::_HandleDeleteButton() const
 {
-    DB_DELETE("Quotes", QString("Number = %1").arg(_quoteNumber->text()));
+    QuoteDBHelper::Instance().DeleteQuote(_quoteNumber->text().toInt());
 }
 
 ///////////////////////////////////////////////////////////////////////////

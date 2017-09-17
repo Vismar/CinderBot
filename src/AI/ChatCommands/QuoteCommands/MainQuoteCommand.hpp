@@ -18,21 +18,37 @@ namespace QuoteCmd
 {
 
 /*!
- * Class MainQuoteCommand
- * Main quote command
+ * \brief Chat command that provide functionality to acquire a quote.
+ * 
+ * Will return or specified quote by number, or random one.
  */
 class MainQuoteCommand : public BaseQuoteCommand
 {
 public:
-    /*! Constructor */
     MainQuoteCommand();
 
 protected:
-    ////////////////////////////////
-    /// BaseChatCommand overrides
-    void Initialize();
-    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer);
-    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
+    /*///////////////////////////////*/
+    /*   BaseChatCommand overrides   */
+    /*///////////////////////////////*/
+    /*!
+     * \brief Initializes command.
+     *
+     * Sets name, moderator flag and adds predefined answers.
+     */
+    void Initialize() override;
+    /*!
+     * \brief Gets specified answer.
+     * \param message - chat message.
+     * \param answer - reference to variable which will store answer.
+     *
+     * Returns quote by specified number or random one.
+     */
+    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer) override;
+    /*!
+     * \brief Empty function.
+     */
+    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer) override;
 };
 
 }

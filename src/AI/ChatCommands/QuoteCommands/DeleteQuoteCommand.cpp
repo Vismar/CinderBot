@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "DeleteQuoteCommand.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/QuoteDBHelper.hpp"
 
 using namespace Command::QuoteCmd;
 using namespace Utils::Database;
@@ -38,20 +38,10 @@ void DeleteQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answ
         {
             // Check borders
             int number = val.toInt();
-            std::shared_ptr<QSqlQuery> numberQuery = DB_SELECT("Quotes", "MAX(Number)");
-            if (numberQuery != nullptr)
+            if (QuoteDBHelper::Instance().DeleteQuote(number))
             {
-                numberQuery->first();
-                int maxValue = numberQuery->value(0).toInt() + 1;
-                if ((number > 0) && (number <= maxValue))
-                {
-                    if(DB_DELETE("Quotes", QString("Number = %1").arg(number)))
-                    {
-                        _RefreshQuoteNumbers(number);
-                        answer.AddAnswer(_answers.at(0));
-                        (*answer.GetAnswers().begin()).replace("QUOTE_NUMBER", QString::number(number));
-                    }
-                }
+                answer.AddAnswer(_answers.at(0));
+                (*answer.GetAnswers().begin()).replace("QUOTE_NUMBER", QString::number(number));
             }
         }
     }
@@ -63,24 +53,6 @@ void DeleteQuoteCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer
 {
     Q_UNUSED(message);
     Q_UNUSED(answer);
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void DeleteQuoteCommand::_RefreshQuoteNumbers(int quoteNumber)
-{
-    std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes",
-                                                 "Id, Number",
-                                                 QString("Number > %1 ORDER BY Number ASC ").arg(quoteNumber));
-    if (query != nullptr)
-    {
-        while (query->next())
-        {
-            int newNumber = query->value("Number").toInt() - 1;
-            int id = query->value("id").toInt();
-            DB_UPDATE("Quotes", QString("Number = %1").arg(newNumber), QString("Id = %1").arg(id));
-        }
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

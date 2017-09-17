@@ -18,28 +18,35 @@ namespace QuoteCmd
 {
 
 /*!
- * Class DeleteQuoteCommand
- * Delete quote command
+ * \brief Chat command that provide functionality to delete quote.
  */
 class DeleteQuoteCommand : public BaseQuoteCommand
 {
 public:
-    /*! Constructor */
     DeleteQuoteCommand();
 
 protected:
-    ////////////////////////////////
-    /// BaseChatCommand overrides
-    void Initialize();
-    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer);
-    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
-
-private:
+    /*///////////////////////////////*/
+    /*   BaseChatCommand overrides   */
+    /*///////////////////////////////*/
     /*!
-     * Update quote numbers
-     * \param(IN) quoteNumber - number of deleted quote
+     * \brief Initializes command.
+     *
+     * Sets name, moderator flag and adds predefined answers.
      */
-    void _RefreshQuoteNumbers(int quoteNumber);
+    void Initialize() override;
+    /*!
+     * \brief Gets specified answer.
+     * \param message - chat message.
+     * \param answer - reference to variable which will store answer.
+     *
+     * Check if user is moderator and helps to delete quote.
+     */
+    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer) override;
+    /*!
+     * \brief Empty function.
+     */
+    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer) override;
 };
 
 }

@@ -4,56 +4,57 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QFrame>
 #include <QLabel>
 #include <QPushButton>
 #include <QHBoxLayout>
 #include "Widgets/Common/EnhTextEdit.hpp"
 
+/*!
+ * \brief All Ui widgets and windows.
+ */
 namespace Ui
 {
+/*!
+ * \brief All quote related widgets.
+ */
 namespace Quote
 {
 
+/*!
+ * \brief This class provides functionality to edit/save and delete stored quote.
+ */
 class SingleQuoteWidget : public QFrame
 {
     Q_OBJECT
 public:
-    /*!
-     * Constructor
-     * \param parent - parent widget
-     */
-    explicit SingleQuoteWidget(QWidget* parent = 0);
-    /*!
-     * Destructor
-     */
+    explicit SingleQuoteWidget(QWidget* parent = nullptr);
     ~SingleQuoteWidget();
 
     /*!
-     * Set number field for quote
-     * \param number - number that should be setted
+     * \brief Sets number field for quote.
+     * \param number - number that should be setted.
      */
-    void SetQuoteNumber(const QString &number);
+    void SetQuoteNumber(const QString &number) const;
     /*!
-     * Set text field for quote
-     * \param text - text which will be used in text field
+     * \brief Sets text field for quote.
+     * \param text - text which will be used in text field.
      */
-    void SetQuoteText(const QString &text);
+    void SetQuoteText(const QString &text) const;
 
 private slots:
     /*!
-     * Adjust minimum possible size of chat message
-     * \param(IN) size - New size of the document in message. In pixels.
+     * \brief Adjust minimum possible size of chat message.
+     * \param size - New size of the document in message. In pixels.
      */
     void _AdjustMinimumSize(const QSizeF &size);
     /*!
-     * Handle edit/save button
+     * \brief Handles edit/save button.
      */
-    void _HandleEditSaveButton();
+    void _HandleEditSaveButton() const;
     /*!
-     * Handle delete button
+     * \brief Handles delete button.
      */
-    void _HandleDeleteButton();
+    void _HandleDeleteButton() const;
 
 private:
     /*! Widget layout */

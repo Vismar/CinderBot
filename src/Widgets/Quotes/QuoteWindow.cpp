@@ -5,6 +5,7 @@
 **************************************************************************/
 #include "QuoteWindow.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/QuoteDBHelper.hpp"
 
 using namespace Ui::Quote;
 using namespace Utils::Database;
@@ -31,14 +32,15 @@ QuoteWindow::QuoteWindow(QWidget* parent) : QWidget(parent, Qt::Window)
     _quotesWidget = new QuotesWidget(this);
     _layout->addWidget(_quotesWidget);
 
-    // Connect events from database manager to know, when we need to update quote widgets
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnInsertEvent,
+    // Connect events from QuoteDBHelper to know, when we need to update quote widgets
+    connect(&QuoteDBHelper::Instance(), &QuoteDBHelper::QuoteAdded,
+            this, &QuoteWindow::AddQuote);
+    connect(&QuoteDBHelper::Instance(), &QuoteDBHelper::QuoteDeleted,
+            this, &QuoteWindow::DeleteQuote);
+    connect(&QuoteDBHelper::Instance(), &QuoteDBHelper::QuoteUpdated,
             this, &QuoteWindow::UpdateQuotes);
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnUpdateEvent,
-            this, &QuoteWindow::UpdateQuotes);
-    connect(&DatabaseManager::Instance(), &DatabaseManager::OnDeleteEvent,
-            this, &QuoteWindow::UpdateQuotes);
-    UpdateQuotes("Quotes");
+
+    UpdateQuotes(0);
     this->resize(this->minimumSize());
 }
 
@@ -48,22 +50,25 @@ QuoteWindow::~QuoteWindow() { }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void QuoteWindow::UpdateQuotes(const QString &tableName)
+void QuoteWindow::AddQuote(int id)
 {
-    // If table name is that, then we can handle it
-    if (tableName == "Quotes")
-    {
-        std::shared_ptr<QSqlQuery> query = DB_SELECT("Quotes","Id", "Number>0");
-        if (query != nullptr)
-        {
-            QVector<int> ids;
-            while (query->next())
-            {
-                ids.push_back(query->value("Id").toInt());
-            }
-            _quotesWidget->UpdateIds(ids);
-        }
-    }
+    _quotesWidget->AddId(id);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void QuoteWindow::DeleteQuote(int id)
+{
+    _quotesWidget->DeleteId(id);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void QuoteWindow::UpdateQuotes(int quoteNumber)
+{
+    Q_UNUSED(quoteNumber);
+
+    _quotesWidget->UpdateIds(QuoteDBHelper::Instance().GetQuoteIds());
 }
 
 ///////////////////////////////////////////////////////////////////////////

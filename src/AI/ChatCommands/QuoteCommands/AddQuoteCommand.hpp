@@ -18,21 +18,35 @@ namespace QuoteCmd
 {
 
 /*!
- * Class AddQuoteCommand
- * Add quote command
+ * \brief Chat command that provide functionality to add quote.
  */
 class AddQuoteCommand : public BaseQuoteCommand
 {
 public:
-    /*! Constructor */
     AddQuoteCommand();
 
 protected:
-    ////////////////////////////////
-    /// BaseChatCommand overrides
-    void Initialize();
-    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer);
-    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
+    /*///////////////////////////////*/
+    /*   BaseChatCommand overrides   */
+    /*///////////////////////////////*/
+    /*!
+     * \brief Initializes command.
+     * 
+     * Sets name, moderator flag and adds predefined answers.
+     */
+    void Initialize() override;
+    /*!
+     * \brief Gets specified answer.
+     * \param message - chat message.
+     * \param answer - reference to variable which will store answer.
+     *
+     * Check if user is moderator and helps to add quote.
+     */
+    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer) override;
+    /*!
+     * \brief Empty function.
+     */
+    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer) override;
 };
 
 }

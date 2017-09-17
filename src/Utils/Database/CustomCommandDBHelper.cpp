@@ -6,8 +6,6 @@
 #include "CustomCommandDBHelper.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 
-#include <QDebug>
-
 using namespace Utils::Database;
 
 #define CUSTOM_COMMAND     "CustomCommand"
@@ -476,10 +474,9 @@ QString CustomCommandDBHelper::GetRandomAnswer(CmdType cmdType, const QString &c
     QString tableName = _GetTableName(TableType::Answers, cmdType);
     QString answer;
 
-    DB_QUERY_PTR query = DB_SELECT(tableName, "*",
-                                   QString("Answer IN (SELECT Answer FROM %1 "
-                                           "WHERE Name='%2' "
-                                           "ORDER BY RANDOM() LIMIT 1)").arg(tableName).arg(cmdName));
+    DB_QUERY_PTR query = DB_SELECT(tableName, "*", QString("Answer IN (SELECT Answer FROM %1 "
+                                                           "WHERE Name='%2' "
+                                                           "ORDER BY RANDOM() LIMIT 1)").arg(tableName).arg(cmdName));
     if ((query != nullptr) && (query->first()))
     {
         answer = query->value("Answer").toString();
@@ -657,7 +654,7 @@ QString CustomCommandDBHelper::_InititalizeCustomCommandTables(const QString &ma
                                               "WorkInWhisper TEXT DEFAULT 'false',"
                                               "WorkInChat    TEXT DEFAULT 'true'"))
     {
-        error = "Database error. Check you log file.";
+        error = QString("Table '%1' was not created.").arg(mainTableName + "s");
     }
 
     // Additional table
@@ -665,17 +662,17 @@ QString CustomCommandDBHelper::_InititalizeCustomCommandTables(const QString &ma
                                                     "Name TEXT NOT NULL,"
                                                     "Answer TEXT NOT NULL"))
     {
-        error = "Database error. Check you log file.";
+        error = QString("Table '%1' was not created.").arg(mainTableName + "Answers");
     }
 
     if (!DB_CREATE_INDEX((mainTableName+"Answers"), (indexPrefix + "Answer_Index"), "Answer"))
     {
-        error = "Database error. Check you log file.";
+        error = QString("Index '%1' was not created for table '%2'.").arg(mainTableName + "Answers").arg(indexPrefix + "Answer_Index");
     }
 
     if (!DB_CREATE_INDEX((mainTableName+"Answers"), (indexPrefix + "Name_Index"), "Name"))
     {
-        error = "Database error. Check you log file.";
+        error = QString("Index '%1' was not created for table '%2'.").arg(mainTableName + "Answers").arg(indexPrefix + "Name_Index");
     }
 
     return error;
