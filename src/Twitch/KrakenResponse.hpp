@@ -34,7 +34,6 @@ typedef QVector<QPair<QString, QVariant> > KRParams;
 class KrakenResponse
 {
 public:
-    KrakenResponse();
     /*!
      * \brief Parses response and stores params.
      * \param response - text of response to parse.
