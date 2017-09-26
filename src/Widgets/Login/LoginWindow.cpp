@@ -9,7 +9,6 @@
 #include <QNetworkRequest>
 #include <QWebEngineProfile>
 #include <QWebEngineCookieStore>
-#include <QRegularExpression>
 #include <QRegularExpressionMatch>
 
 using namespace Ui::Login;
