@@ -7,7 +7,6 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QString>
-#include <QTimer>
 #include "ChatMessage.hpp"
 #include "AI/BotAI.hpp"
 #include "Chat/ChatAnswer.hpp"
@@ -29,7 +28,7 @@ class TwitchClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit TwitchClient(QObject *parent = 0);
+    explicit TwitchClient(QObject *parent = nullptr);
     ~TwitchClient();
 
 signals:

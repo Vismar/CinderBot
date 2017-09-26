@@ -4,10 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #pragma once
-#include <QWidget>
 #include <QHBoxLayout>
-#include <QPushButton>
-#include <QLabel>
 #include <QPointer>
 #include "Widgets/Login/LoginWindow.hpp"
 #include "Chat/TwitchClient.hpp"

@@ -22,6 +22,7 @@
 #include "Utils/Database/QuoteDBHelper.hpp"
 #include "Utils/UserData/UserData.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
+#include "Twitch/KrakenClient.hpp"
 #include "Utils/Logger.hpp"
 #include <QApplication>
 #include <QMessageBox>
@@ -107,6 +108,19 @@ int main(int argc, char *argv[])
 
         // Log
         LOG(Utils::LogInfo, "App started.");
+
+        // Inititalize kraken client
+        error = Twitch::KrakenClient::Instance().Initialize();
+        if (error != "OK")
+        {
+            // Log
+            LOG(Utils::LogWarning, error);
+
+            // Message box
+            QMessageBox msgBox;
+            msgBox.setText(error);
+            msgBox.exec();
+        }
 
         returningCode = a.exec();
     }

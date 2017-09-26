@@ -103,6 +103,9 @@
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
       <ParseFiles>true</ParseFiles>
     </Filter>
+    <Filter Include="Sources\Twitch">
+      <UniqueIdentifier>{794931c8-dd25-40c4-9239-9b760e8286f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\qrc_Resources.cpp">
@@ -580,6 +583,18 @@
     <ClCompile Include="Build\Release\moc_QuoteDBHelper.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Build\Debug\moc_KrakenClient.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_KrakenClient.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Twitch\KrakenClient.cpp">
+      <Filter>Sources\Twitch</Filter>
+    </ClCompile>
+    <ClCompile Include="Twitch\KrakenResponse.cpp">
+      <Filter>Sources\Twitch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\TimerCommands\UserData\UserDataTimerCommandList.hpp">
@@ -729,6 +744,9 @@
     <ClInclude Include="AI\ChatCommands\CovenantCommands\AdminCovCmdAnswerCommand.hpp">
       <Filter>Sources\AI\ChatCommands\CovenantCommands</Filter>
     </ClInclude>
+    <ClInclude Include="Twitch\KrakenResponse.hpp">
+      <Filter>Sources\Twitch</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Widgets\Statistics\ViewerStatisticsWidget.hpp">
@@ -820,6 +838,9 @@
     </CustomBuild>
     <CustomBuild Include="Utils\Database\QuoteDBHelper.hpp">
       <Filter>Sources\Utils\Database</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Twitch\KrakenClient.hpp">
+      <Filter>Sources\Twitch</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

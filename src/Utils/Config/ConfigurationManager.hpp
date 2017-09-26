@@ -32,7 +32,7 @@ class ConfigurationManager : public QObject
 {
     Q_OBJECT
 public:
-    ConfigurationManager() : QObject(0) {}
+    ConfigurationManager() : QObject(nullptr) {}
     ConfigurationManager(ConfigurationManager const&) =delete;
     void operator=(ConfigurationManager const&) =delete;
 
