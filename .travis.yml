@@ -10,7 +10,7 @@ install:
   - sudo apt-get -y install qt59[QTPACKAGE]
 
 script:
-  - source /opt/qt57/bin/qt57-env.sh
-  - /opt/qt57/bin/qmake -project
-  - /opt/qt57/bin/qmake ./src/ChatBot.pro
+  - source /opt/qt59/bin/qt59-env.sh
+  - /opt/qt59/bin/qmake -project
+  - /opt/qt59/bin/qmake ./src/ChatBot.pro
   - make
