@@ -23,7 +23,13 @@ enum KrakenParameter
     ClientID,
     BotUserID,
     KnownBotStatus,
-    ChannelUserID
+    ChannelUserID,
+    ChannelTitle,
+    ChannelGame,
+    ChannelPartnerStatus,
+    ChannelViews,
+    ChannelFollowers,
+    ChannelBroadcasterType
 };
 
 // Forward declaration
@@ -99,6 +105,12 @@ private:
      * If channel user id is not gained, tries to get it.
      */
     void _InitializeChannelUserID();
+    /*!
+     * \brief Tries to get channel info.
+     *
+     * If channel info not gained, tries to get it.
+     */
+    void _UpdateChannelInfo();
 
     /*!
      * \brief Sets specified value to certain parameter.
@@ -133,6 +145,11 @@ private:
      * \param response - json object of response.
      */
     void _HandleKnownBotStatus(const KrakenResponse &response);
+    /*!
+     * \brief Handles channel info message from Kraken API.
+     * \param response - json object of response.
+     */
+    void _HandleChannelInfo(const KrakenResponse &response);
 
     /*! Network manager which sends and receives messages to/from Kraken API. */
     QNetworkAccessManager *_networkManager;

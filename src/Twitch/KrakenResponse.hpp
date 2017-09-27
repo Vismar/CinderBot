@@ -22,7 +22,8 @@ enum class KrakenResponseType
     Undefined,
     Error,
     UserInfo,
-    BotStatus
+    BotStatus,
+    ChannelInfo
 };
 
 /*! Simple typedef to short name. */
@@ -80,6 +81,12 @@ private:
      * \return True if specified object contains bot status fields.
      */
     bool _ValidateBotStatus(const QJsonObject &jsonObject);
+    /*!
+     * \brief Check if specified object contains channel info fields.
+     * \param jsonObject - object that should be checked.
+     * \return True if specified object contains channel info fields.
+     */
+    bool _ValidateChannelInfo(const QJsonObject &jsonObject);
 
     /*! Array of parameters that was found in response. */
     KRParams _params;
@@ -90,6 +97,8 @@ private:
     static QVector<QString> _jsonFieldsUserInfo;
     /*! Static array of fields that should exist in bot status response. */
     static QVector<QString> _jsonFieldsBotStatus;
+    /*! Static array of fields that should exist in channel info response. */
+    static QVector<QString> _jsonFieldsChannelInfo;
 };
 
 }

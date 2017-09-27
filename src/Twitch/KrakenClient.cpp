@@ -102,6 +102,9 @@ void KrakenClient::_ReadResponse(QNetworkReply *reply)
     case KrakenResponseType::BotStatus:
         _HandleKnownBotStatus(krakenResponse);
         break;
+    case KrakenResponseType::ChannelInfo:
+        _HandleChannelInfo(krakenResponse);
+        break;
     default:
         // Log error
         LOG(LogWarning, QString("Indefined response from Kraken API.\nMessage: %1").arg(response));
@@ -124,6 +127,7 @@ void KrakenClient::_InitializeParameters()
         _InitializeBotUserID();
         _InitializeKnownBotStatus();
         _InitializeChannelUserID();
+        _UpdateChannelInfo();
     }
 }
 
@@ -177,11 +181,28 @@ void KrakenClient::_InitializeChannelUserID()
 
 ///////////////////////////////////////////////////////////////////////////
 
+void KrakenClient::_UpdateChannelInfo()
+{
+    if (_krakenParameters.contains(ChannelUserID))
+    {
+        if (QDateTime::currentDateTime().toSecsSinceEpoch() % 30 == 0)
+        {
+            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/channels/%1?api_version=5&client_id=%2").arg(_krakenParameters[ChannelUserID].toString()).arg(_krakenParameters[ClientID].toString()));
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void KrakenClient::_SetParameter(KrakenParameter param, const QVariant& value)
 {
+    QVariant oldValue = _krakenParameters[param];
     _krakenParameters.insert(param, value);
 
-    emit ParameterChanged(param, value);
+    if (oldValue != value)
+    {
+        emit ParameterChanged(param, value);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -248,5 +269,17 @@ void KrakenClient::_HandleKnownBotStatus(const KrakenResponse &response)
     // Simply add known bot status to params
     _SetParameter(KrakenParameter::KnownBotStatus, response.GetParam("is_known_bot").toBool());
 }
+
+///////////////////////////////////////////////////////////////////////////
+
+void KrakenClient::_HandleChannelInfo(const KrakenResponse& response)
+{{
+    _SetParameter(KrakenParameter::ChannelTitle, response.GetParam("status").toString());
+    _SetParameter(KrakenParameter::ChannelGame, response.GetParam("game").toString());
+    _SetParameter(KrakenParameter::ChannelPartnerStatus, response.GetParam("partner").toBool());
+    _SetParameter(KrakenParameter::ChannelViews, response.GetParam("views").toUInt());
+    _SetParameter(KrakenParameter::ChannelFollowers, response.GetParam("followers").toUInt());
+    _SetParameter(KrakenParameter::ChannelBroadcasterType, response.GetParam("broadcaster_type").toString());
+}}
 
 ///////////////////////////////////////////////////////////////////////////
