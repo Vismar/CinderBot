@@ -49,7 +49,7 @@ QString KrakenClient::Initialize()
     // Add ClientID default value
     _SetParameter(KrakenParameter::ClientID, "we0qz5ot41crhkeo1w6mv9t769x1q5");
     
-    _InitializeParameters();
+    //_InitializeParameters();
     _requestTimer->start(1000); // 1 sec
 
     // If network in unaccessible, return error
@@ -123,6 +123,7 @@ void KrakenClient::_InitializeParameters()
     {
         _InitializeBotUserID();
         _InitializeKnownBotStatus();
+        _InitializeChannelUserID();
     }
 }
 
@@ -154,6 +155,22 @@ void KrakenClient::_InitializeKnownBotStatus()
         if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, botUserName))
         {
             _AddRequestToQueue(QString("https://api.twitch.tv/kraken/users/%1/chat?api_version=5&client_id=%2").arg(_krakenParameters[BotUserID].toString()).arg(botUserName));
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void KrakenClient::_InitializeChannelUserID()
+{
+    // ChannelUserID param
+    if (!_krakenParameters.contains(ChannelUserID))
+    {
+        // Only if we have channel user name, try to get channel user id
+        QString userName;
+        if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginChannel, userName))
+        {
+            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/users/%1?client_id=%2").arg(userName).arg(_krakenParameters[ClientID].toString()));
         }
     }
 }
@@ -209,11 +226,18 @@ void KrakenClient::_HandleUserInforesponse(const KrakenResponse &response)
         {
             _SetParameter(KrakenParameter::BotUserID, response.GetParam("_id").toUInt());
         }
-    }
-    // If it is another user
-    else
-    {
-        
+        else if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginChannel, value))
+        {
+            if (value == response.GetParam("name").toString())
+            {
+                _SetParameter(KrakenParameter::ChannelUserID, response.GetParam("_id").toUInt());
+            }
+            // If it is another user
+            else
+            {
+
+            }
+        }        
     }
 }
 

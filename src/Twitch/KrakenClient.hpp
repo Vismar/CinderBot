@@ -22,7 +22,8 @@ enum KrakenParameter
 {
     ClientID,
     BotUserID,
-    KnownBotStatus
+    KnownBotStatus,
+    ChannelUserID
 };
 
 // Forward declaration
@@ -92,6 +93,13 @@ private:
      * To get known bot status bot need to know bot user id.
      */
     void _InitializeKnownBotStatus();
+    /*!
+     * \brief Tries to get channel user id.
+     * 
+     * If channel user id is not gained, tries to get it.
+     */
+    void _InitializeChannelUserID();
+
     /*!
      * \brief Sets specified value to certain parameter.
      * \param param - parameter that should be updated.
