@@ -20,10 +20,13 @@ static QVariant EMPTY_VARIANT("");
 QVector<QString> KrakenResponse::_jsonFieldsError = {"error", "status", "message"};
 
 /* User info */
-QVector<QString> KrakenResponse::_jsonFieldsUserInfo = { "display_name", "_id", "name", "type", "bio", "created_at", "updated_at", "logo"};
+QVector<QString> KrakenResponse::_jsonFieldsUserInfo = {"display_name", "_id", "name", "type", "bio", "created_at", "updated_at", "logo"};
 
 /* Bot status */
-QVector<QString> KrakenResponse::_jsonFieldsBotStatus = { "_id", "login", "display_name", "color", "is_verified_bot", "is_known_bot"};
+QVector<QString> KrakenResponse::_jsonFieldsBotStatus = {"_id", "login", "display_name", "color", "is_verified_bot", "is_known_bot"};
+
+/* Channel info */
+QVector<QString> KrakenResponse::_jsonFieldsChannelInfo = {"mature", "status", "game", "partner", "views", "followers", "broadcaster_type"};
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -53,6 +56,10 @@ KrakenResponseType KrakenResponse::ParseResponse(const QString &response)
         else if (_ValidateBotStatus(jsonObject))
         {
             responseType = KrakenResponseType::BotStatus;
+        }
+        else if (_ValidateChannelInfo(jsonObject))
+        {
+            responseType = KrakenResponseType::ChannelInfo;
         }
     }
 
@@ -129,6 +136,13 @@ bool KrakenResponse::_ValidateUserInfo(const QJsonObject &jsonObject)
 bool KrakenResponse::_ValidateBotStatus(const QJsonObject &jsonObject)
 {
     return _ValidateParams(_jsonFieldsBotStatus, jsonObject);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool KrakenResponse::_ValidateChannelInfo(const QJsonObject &jsonObject)
+{
+    return _ValidateParams(_jsonFieldsChannelInfo, jsonObject);
 }
 
 ///////////////////////////////////////////////////////////////////////////
