@@ -7,6 +7,7 @@
 #include "Twitch/KrakenResponse.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Logger.hpp"
+#include <QDateTime>
 
 using namespace Twitch;
 using namespace Utils::Configuration;
