@@ -8,6 +8,7 @@
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Configuration;
@@ -92,6 +93,22 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                                         UD_UPDATE(queryUpdate->value("Name").toString(), UDP_Covenant, newCovenantName);
                                     }
                                 }
+
+                                // Update existing commands for covenant
+                                QStringList cmdNames = CustomCommandDBHelper::Instance().GetCommandNames(CmdType::CovenantCmd, covenant);
+                                for (int i = 0; i < cmdNames.size(); ++i)
+                                {
+                                    CustomCommandDBHelper::Instance().SetParameter(CmdType::CovenantCmd, cmdNames.at(i), CustomCmdParameter::Covenant, newCovenantName);
+                                }
+                                cmdNames.clear();
+
+                                // Update commands created by broadcaster for covenant
+                                cmdNames = CustomCommandDBHelper::Instance().GetCommandNames(CmdType::StreamerCmd, covenant);
+                                for (int i = 0; i < cmdNames.size(); ++i)
+                                {
+                                    CustomCommandDBHelper::Instance().SetParameter(CmdType::StreamerCmd, cmdNames.at(i), CustomCmdParameter::Covenant, newCovenantName);
+                                }
+
                                 // Take price to rename covenant
                                 _TakeDefaultPriceFromUser(message.GetRealName());
                                 answer.AddAnswer(_answers.at(MSG_RENAMED));
