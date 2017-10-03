@@ -5,8 +5,8 @@
 **************************************************************************/
 #include "KrakenResponse.hpp"
 #include <QJsonDocument>
-
-#include <QDebug>
+#include <QVariant>
+#include <QJsonArray>
 
 using namespace Twitch;
 
@@ -27,6 +27,9 @@ QVector<QString> KrakenResponse::_jsonFieldsBotStatus = {"_id", "login", "displa
 
 /* Channel info */
 QVector<QString> KrakenResponse::_jsonFieldsChannelInfo = {"mature", "status", "game", "partner", "views", "followers", "broadcaster_type"};
+
+/* Stream info */
+QVector<QString> KrakenResponse::_jsonFieldsStreamInfo = {"_total", "streams"};
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -60,6 +63,10 @@ KrakenResponseType KrakenResponse::ParseResponse(const QString &response)
         else if (_ValidateChannelInfo(jsonObject))
         {
             responseType = KrakenResponseType::ChannelInfo;
+        }
+        else if (_ValidateStreamInfo(jsonObject))
+        {
+            responseType = KrakenResponseType::StreamInfo;
         }
     }
 
@@ -110,7 +117,14 @@ bool KrakenResponse::_ValidateParams(const QVector<QString> &paramsToValidate, c
     {
         for (int i = 0; i < paramsToValidate.size(); ++i)
         {
-            _params.push_back(QPair<QString, QVariant>(paramsToValidate[i], jsonObject.value(paramsToValidate[i]).toVariant()));
+            if (jsonObject.value(paramsToValidate[i]).isArray())
+            {
+                _params.push_back(QPair<QString, QVariant>(paramsToValidate[i], jsonObject.value(paramsToValidate[i]).toArray()));
+            }
+            else
+            {
+                _params.push_back(QPair<QString, QVariant>(paramsToValidate[i], jsonObject.value(paramsToValidate[i]).toVariant()));
+            }            
         }
     }
 
@@ -143,6 +157,13 @@ bool KrakenResponse::_ValidateBotStatus(const QJsonObject &jsonObject)
 bool KrakenResponse::_ValidateChannelInfo(const QJsonObject &jsonObject)
 {
     return _ValidateParams(_jsonFieldsChannelInfo, jsonObject);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool KrakenResponse::_ValidateStreamInfo(const QJsonObject &jsonObject)
+{
+    return _ValidateParams(_jsonFieldsStreamInfo, jsonObject);
 }
 
 ///////////////////////////////////////////////////////////////////////////
