@@ -7,6 +7,7 @@
 #include "Twitch/KrakenResponse.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Logger.hpp"
+#include <QJsonArray>
 
 using namespace Twitch;
 using namespace Utils::Configuration;
@@ -105,6 +106,9 @@ void KrakenClient::_ReadResponse(QNetworkReply *reply)
     case KrakenResponseType::ChannelInfo:
         _HandleChannelInfo(krakenResponse);
         break;
+    case KrakenResponseType::StreamInfo:
+        _HandleStreamInfo(krakenResponse);
+        break;
     default:
         // Log error
         LOG(LogWarning, QString("Indefined response from Kraken API.\nMessage: %1").arg(response));
@@ -128,6 +132,7 @@ void KrakenClient::_InitializeParameters()
         _InitializeKnownBotStatus();
         _InitializeChannelUserID();
         _UpdateChannelInfo();
+        _UpdateStreamInfo();
     }
 }
 
@@ -188,6 +193,19 @@ void KrakenClient::_UpdateChannelInfo()
         if (QDateTime::currentDateTime().toSecsSinceEpoch() % 30 == 0)
         {
             _AddRequestToQueue(QString("https://api.twitch.tv/kraken/channels/%1?api_version=5&client_id=%2").arg(_krakenParameters[ChannelUserID].toString()).arg(_krakenParameters[ClientID].toString()));
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void KrakenClient::_UpdateStreamInfo()
+{
+    if (_krakenParameters.contains(ChannelUserID))
+    {
+        if (QDateTime::currentDateTime().toSecsSinceEpoch() % 30 == 0)
+        {
+            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/streams?channel=%1&api_version=5&client_id=%2").arg(_krakenParameters[ChannelUserID].toString()).arg(_krakenParameters[ClientID].toString()));
         }
     }
 }
@@ -273,13 +291,33 @@ void KrakenClient::_HandleKnownBotStatus(const KrakenResponse &response)
 ///////////////////////////////////////////////////////////////////////////
 
 void KrakenClient::_HandleChannelInfo(const KrakenResponse& response)
-{{
+{
     _SetParameter(KrakenParameter::ChannelTitle, response.GetParam("status").toString());
     _SetParameter(KrakenParameter::ChannelGame, response.GetParam("game").toString());
     _SetParameter(KrakenParameter::ChannelPartnerStatus, response.GetParam("partner").toBool());
     _SetParameter(KrakenParameter::ChannelViews, response.GetParam("views").toUInt());
     _SetParameter(KrakenParameter::ChannelFollowers, response.GetParam("followers").toUInt());
     _SetParameter(KrakenParameter::ChannelBroadcasterType, response.GetParam("broadcaster_type").toString());
-}}
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void KrakenClient::_HandleStreamInfo(const KrakenResponse& response)
+{
+    if (response.GetParam("_total").toInt() > 0)
+    {
+        _SetParameter(KrakenParameter::StreamOn, true);
+
+        QJsonObject values = response.GetParam("streams").toJsonArray().at(0).toObject();
+        _SetParameter(KrakenParameter::StreamType, values.value("broadcast_platform").toVariant().toString());
+        _SetParameter(KrakenParameter::StreamViewers, values.value("viewers").toVariant().toUInt());
+        _SetParameter(KrakenParameter::StreamResolution, values.value("video_height").toVariant().toUInt());
+        _SetParameter(KrakenParameter::StreamFPS, values.value("average_fps").toVariant().toDouble());
+    }
+    else
+    {
+        _SetParameter(KrakenParameter::StreamOn, false);
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////

@@ -29,7 +29,12 @@ enum KrakenParameter
     ChannelPartnerStatus,
     ChannelViews,
     ChannelFollowers,
-    ChannelBroadcasterType
+    ChannelBroadcasterType,
+    StreamOn,
+    StreamType,
+    StreamViewers,
+    StreamResolution,
+    StreamFPS
 };
 
 // Forward declaration
@@ -111,6 +116,13 @@ private:
      * If channel info not gained, tries to get it.
      */
     void _UpdateChannelInfo();
+    /*!
+     * \brief Tries to get stream info.
+     *
+     * Tries to get stream info to know when stream is up and how many viewers currently watching the stream..
+     */
+    void _UpdateStreamInfo();
+
 
     /*!
      * \brief Sets specified value to certain parameter.
@@ -150,6 +162,11 @@ private:
      * \param response - json object of response.
      */
     void _HandleChannelInfo(const KrakenResponse &response);
+    /*!
+     * \brief Handles stream info message from Kraken API.
+     * \param response - json object of response.
+     */
+    void _HandleStreamInfo(const KrakenResponse &response);
 
     /*! Network manager which sends and receives messages to/from Kraken API. */
     QNetworkAccessManager *_networkManager;
