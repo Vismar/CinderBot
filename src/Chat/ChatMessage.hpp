@@ -119,32 +119,37 @@ public:
      * Check if user which sent this message is a subscriber.
      */
     bool IsSubscriber() const;
+    /*!
+     * \brief Get user id.
+     * \return Id of user.
+     */
+    int GetUserID() const;
 
     /*** Manual set functions ***/
     /*!
      * \brief Sets author name.
-     * \param(IN) author - Author name.
+     * \param author - Author name.
      *
      * Sets manually display name to this message.
      */
     void SetAuthor(const QString &author);
     /*!
      * \brief Sets real user name.
-     * \param(IN) realName - Real user name.
+     * \param realName - Real user name.
      *
      * Sets manually login name to this message.
      */
     void SetRealName(const QString &realName);
     /*!
      * \brief Sets author's name color.
-     * \param(IN) color - custom name color.
+     * \param color - custom name color.
      *
      * Sets manually name color to this message.
      */
     void SetColor(const QString &color);
     /*!
      * \brief Sets message data.
-     * \param(IN) message - message itself.
+     * \param message - message itself.
      *
      * Set manually message data.
      */
@@ -171,16 +176,21 @@ public:
      */
     void SetBits(const QString &bits);
     /*!
-     * \brief SetSubscriber
-     * \param subFlag
+     * \brief Sets subscriber status.
+     * \param subFlag - status of subscription.
      *
      * Sets manually subscriber status to this message.
      */
     void SetSubscriber(bool subFlag);
+    /*!
+     * \brief Sets user id..
+     * \param userID - id of user.
+     */
+    void SetUserID(int userID);
 
     /*!
      * \brief Parse raw message data.
-     * \param(IN) message - raw message data.
+     * \param message - raw message data.
      * \return message type.
      *
      * Parse raw message data that was getted from twitch.tv and store needed params.
@@ -191,7 +201,7 @@ private:
     /*** Check functions ***/
     /*!
      * \brief Checks message if it is a network message.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return true, if it is a network message.
      *
      * Checks if raw message is network message.
@@ -199,7 +209,7 @@ private:
     bool _IsNetworkMsg(const QString &message) const;
     /*!
      * \brief Checks message if it is a ping command.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return true, if it is a ping command.
      *
      * Checks if raw message is ping command from twitch.tv.
@@ -207,7 +217,7 @@ private:
     bool _IsPingCommand(const QString &message) const;
     /*!
      * \brief Checks message if it is a pong command.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return true, if it is a pong command.
      *
      * Checks if raw message is pong command from twitch.tv.
@@ -216,7 +226,7 @@ private:
 
     /*!
      * \brief Checks message if it is an IRC command.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return IRC code.
      *
      * Cheks if raw message is irc command from twitch.tv.
@@ -224,7 +234,7 @@ private:
     int  _IsIrcComand(const QString &message) const;
     /*!
      * \brief Check message if it about connection to room.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return true, if it about connection to room.
      *
      * Checks if raw message is connected to room event.
@@ -232,7 +242,7 @@ private:
     bool _IsConnectedToRoom(const QString &message) const;
     /*!
      * \brief Check message if it is a userstate message.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return true, if it is a userstate message.
      *
      * Checks if current message matches userstate regular expression,
@@ -249,7 +259,7 @@ private:
     bool _IsRoomState(const QString &message) const;
     /*!
      * \brief Check message if it is a join message.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return true, if it is a join message.
      *
      * Checks if raw message is join message from twitch.tvt that notify about new user in chat.
@@ -257,7 +267,7 @@ private:
     bool _IsJoinMsg(const QString &message);
     /*!
      * \brief Check message if it is a part message.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return true, if it is a part message.
      *
      * Checks if raw message is part message from twitch.tvt that notify about user that leaves chat.
@@ -266,7 +276,7 @@ private:
     bool _IsPartMsg(const QString &message);
     /*!
      * \brief Check if message means that someone was setted as moderator in the chat.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return true, if it is a mode message.
      *
      * Checks if raw message mode message from twitch.tvt that notify about user that now have moderator role.
@@ -274,7 +284,7 @@ private:
     bool _IsModeMessage(const QString &message);
     /*!
      * \brief Check if message means that someone was downgraded from moderator in the chat.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return true, if it is a unmode message.
      *
      * Checks if raw message unmode message from twitch.tvt that notify about user that now do not have moderator role.
@@ -290,7 +300,7 @@ private:
     bool _IsBits(const QString &message);
     /*!
      * \brief Check message if it is a channel message.
-     * \param(IN) message - message to check.
+     * \param message - message to check.
      * \return true, if it is a channel message.
      *
      * Checks if raw message is a chat message that do not contains bits.
@@ -332,6 +342,8 @@ private:
     MessageType _type;
     /*! Bits */
     QString _bits;
+    /*! UserID */
+    int _userID;
 
     /*** Regular expressions ***/
     /*! Regular expression to catch PING messages from twitch. */

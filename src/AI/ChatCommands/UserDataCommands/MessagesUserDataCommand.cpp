@@ -4,9 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "MessagesUserDataCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Command::UserDataCmd;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +29,8 @@ void MessagesUserDataCommand::Initialize()
 void MessagesUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     answer.AddAnswer(_answers.first());
-    (*answer.GetAnswers().begin()).replace("MSG_COUNT", UD_GET_PARAM(message.GetRealName(), UDP_Messages));
+    QString msg = QString::number(UserDataDBHelper::GetUserParameter(UserDataParameter::Messages, message.GetUserID()).toInt());
+    (*answer.GetAnswers().begin()).replace("MSG_COUNT", msg);
 }
 
 ///////////////////////////////////////////////////////////////////////////

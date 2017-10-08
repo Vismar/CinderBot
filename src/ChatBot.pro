@@ -17,7 +17,6 @@ SOURCES += main.cpp\
     Chat/ChatMessage.cpp \
     Chat/TwitchClient.cpp \
     Utils/Config/ConfigurationManager.cpp \
-    Utils/UserData/UserData.cpp \
     AI/ChatCommands/CommandList.cpp \
     AI/ChatCommands/QuoteCommands/BaseQuoteCommand.cpp \
     AI/ChatCommands/QuoteCommands/MainQuoteCommand.cpp \
@@ -94,7 +93,8 @@ SOURCES += main.cpp\
     AI/ChatCommands/CovenantCommands/AdminCovCmdDeleteCommand.cpp \
     Utils/Database/QuoteDBHelper.cpp \
     Twitch/KrakenClient.cpp \
-    Twitch/KrakenResponse.cpp
+    Twitch/KrakenResponse.cpp \
+    Utils/Database/UserDataDBHelper.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -102,7 +102,6 @@ HEADERS  += MainWindow.hpp \
     Chat/TwitchClient.hpp \
     Utils/Config/ConfigurationManager.hpp \
     Utils/Config/ConfigurationParameters.hpp \
-    Utils/UserData/UserData.hpp \
     AI/ChatCommands/CommandList.hpp \
     AI/ChatCommands/QuoteCommands/BaseQuoteCommand.hpp \
     AI/ChatCommands/QuoteCommands/MainQuoteCommand.hpp \
@@ -179,7 +178,8 @@ HEADERS  += MainWindow.hpp \
     AI/ChatCommands/CovenantCommands/AdminCovCmdDeleteCommand.hpp \
     Utils/Database/QuoteDBHelper.hpp \
     Twitch/KrakenClient.hpp \
-    Twitch/KrakenResponse.hpp
+    Twitch/KrakenResponse.hpp \
+    Utils/Database/UserDataDBHelper.hpp
 
 RESOURCES += \
     Resources.qrc

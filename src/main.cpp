@@ -20,7 +20,7 @@
 #include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
 #include "Utils/Database/QuoteDBHelper.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
 #include "Twitch/KrakenClient.hpp"
 #include "Utils/Logger.hpp"
@@ -35,13 +35,12 @@ int main(int argc, char *argv[])
 
     // Set seed for random generation
     qsrand(QTime::currentTime().second());
-    int returningCode(0);
-    QString error;
+    int returningCode(0);    
 
     QApplication a(argc, argv);
 
     // Try to initialize database manager
-    error = Utils::Database::DatabaseManager::Instance().Initialize();
+    QString error = Utils::Database::DatabaseManager::Instance().Initialize();
     if (error != "OK")
     {
         // Log
@@ -54,6 +53,11 @@ int main(int argc, char *argv[])
 
         // Return -1 as an error
         returningCode = -1;
+    }
+    else
+    {
+        // Log
+        LOG(Utils::LogInfo, "DatabaseManager loaded.");
     }
 
     // Try to initialize custom command db helper
@@ -71,6 +75,11 @@ int main(int argc, char *argv[])
         // Return -1 as an error
         returningCode = -1;
     }
+    else
+    {
+        // Log
+        LOG(Utils::LogInfo, "CustomCommandDBHelper loaded.");
+    }
 
     // Try to inititalize quote db helper
     error = Utils::Database::QuoteDBHelper::Instance().InitializeTables();
@@ -87,6 +96,32 @@ int main(int argc, char *argv[])
         // Return -1 as an error
         returningCode = -1;
     }
+    else
+    {
+        // Log
+        LOG(Utils::LogInfo, "QuoteDBHelper loaded.");
+    }
+    
+    // Try to initialize user data db helper
+    error = Utils::Database::UserDataDBHelper::Instance().InitializeTables();
+    if (error != "OK")
+    {
+        // Log
+        LOG(Utils::LogCritical, error);
+
+        // Message box
+        QMessageBox msgBox;
+        msgBox.setText(error);
+        msgBox.exec();
+
+        // Return -1 as an error
+        returningCode = -1;
+    }
+    else
+    {
+        // Log
+        LOG(Utils::LogInfo, "UserDataDBHelper loaded.");
+    }
 
     // Log
     LOG(Utils::LogInfo, "Database loaded.");
@@ -97,17 +132,6 @@ int main(int argc, char *argv[])
     {
         // Log
         LOG(Utils::LogInfo, "Configuration loaded.");
-
-        // Initialize user data
-        UserData::Instance().Initialize();
-        // Initialize real time user data
-        RealTimeUserData::Instance();
-        // Create main window
-        Ui::MainWindow mainWindow;
-        mainWindow.show();
-
-        // Log
-        LOG(Utils::LogInfo, "App started.");
 
         // Inititalize kraken client
         error = Twitch::KrakenClient::Instance().Initialize();
@@ -121,6 +145,19 @@ int main(int argc, char *argv[])
             msgBox.setText(error);
             msgBox.exec();
         }
+        else
+        {
+            LOG(Utils::LogInfo, "KrakenClient loaded.");
+        }
+        
+        // Initialize real time user data
+        RealTimeUserData::Instance();
+        // Create main window
+        Ui::MainWindow mainWindow;
+        mainWindow.show();
+
+        // Log
+        LOG(Utils::LogInfo, "App started.");        
 
         returningCode = a.exec();
     }

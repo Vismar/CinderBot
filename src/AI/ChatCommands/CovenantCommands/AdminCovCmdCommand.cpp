@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "AdminCovCmdCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
 
@@ -44,7 +44,7 @@ void AdminCovCmdCommand::Initialize()
 
 void AdminCovCmdCommand::_GetAnswer(const ChatMessage& message, ChatAnswer& answer)
 {
-    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+    QString covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
     if (covenant != "Viewer")
     {
         // Check if user is leader of its covenant

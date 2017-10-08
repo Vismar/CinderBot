@@ -4,10 +4,9 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "LeaveCovenantCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
-#include "Utils/Config/ConfigurationParameters.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
@@ -41,7 +40,7 @@ void LeaveCovenantCommand::Initialize()
 
 void LeaveCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
-    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+    QString covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
     if (covenant != "Viewer")
     {
         // Check if user is leader of its covenant
@@ -56,8 +55,7 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &an
                 if (startOfName > 0)
                 {
                     // Try to get name of new leader
-                    QString newLeader;
-                    newLeader = message.GetMessage().right(message.GetMessage().size() - startOfName - 1);
+                    QString newLeader = message.GetMessage().right(message.GetMessage().size() - startOfName - 1);
                     // If leader name was found, try to use it
                     if (!newLeader.isEmpty())
                     {
@@ -69,7 +67,7 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &an
                         // If user provided different name
                         if (answer.GetAnswers().isEmpty())
                         {
-                            if (_SetNewLeaderToCovenant(newLeader, message.GetRealName(), covenant))
+                            if (_SetNewLeaderToCovenant(newLeader, message.GetUserID(), covenant))
                             {
                                 answer.AddAnswer(_answers.at(MSG_LEFT_AND_NEW_LEADER));
                                 (*answer.GetAnswers().begin()).replace("COV_NAME", covenant);
@@ -94,10 +92,10 @@ void LeaveCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &an
                     answer.AddAnswer(_answers.at(MSG_USER_LEADER));
                 }
             }
-            // If user is not a leader of covenant, that just change its state
+            // If user is not the leader of covenant, that just change its state
             else
             {
-                UD_UPDATE(message.GetRealName(), UDP_Covenant, "Viewer");
+                UserDataDBHelper::UpdateUserParameter(UserDataParameter::Covenant, "Viewer", message.GetUserID());
                 answer.AddAnswer(_answers.at(MSG_LEFT_COV));
             }
         }
@@ -119,26 +117,22 @@ void LeaveCovenantCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnsw
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool LeaveCovenantCommand::_SetNewLeaderToCovenant(const QString &newLeader, const QString &oldLeader, const QString &covName)
+bool LeaveCovenantCommand::_SetNewLeaderToCovenant(const QString &newLeader, int oldLeaderID, const QString &covName)
 {
     bool result(false);
     // Check if provided user is member of covenant
-    DB_QUERY_PTR newLeaderQuery = DB_SELECT("UserData", "Name, Covenant",
-                                                        QString("Name='%1' OR Author='%1'").arg(newLeader));
-
-    if (newLeaderQuery != nullptr)
+    if (UserDataDBHelper::IsUserInCovenant(covName, newLeader))
     {
-        if (newLeaderQuery->first())
+        // Change covenant of user
+        UserDataDBHelper::UpdateUserParameter(UserDataParameter::Covenant, "Viewer", oldLeaderID);
+        // TODO: When CovenantDBHelper will be implemented, replace this direct database calls
+        DB_QUERY_PTR newLeaderQuery = DB_SELECT("UserData", "Name, Covenant", QString("Name='%1' OR Author='%1'").arg(newLeader));
+        if (newLeaderQuery != nullptr)
         {
-            // If user in covenant, set him as leader
-            if (newLeaderQuery->value("Covenant").toString() == covName)
+            if (newLeaderQuery->first())
             {
-                // Change covenant of user
-                UD_UPDATE(oldLeader, UDP_Covenant, "Viewer");
                 // Update leader name of covenant
-                DB_UPDATE("Covenants", QString("Leader = '%1'").arg(newLeaderQuery->value("Name").toString()),
-                                       QString("Name = '%1'").arg(covName));
-                result = true;
+                result = DB_UPDATE("Covenants", QString("Leader = '%1'").arg(newLeaderQuery->value("Name").toString()), QString("Name = '%1'").arg(covName));
             }
         }
     }

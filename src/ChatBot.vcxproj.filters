@@ -138,9 +138,6 @@
     <ClCompile Include="Utils\UserData\RealTimeUserData.cpp">
       <Filter>Sources\Utils\UserData</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\UserData\UserData.cpp">
-      <Filter>Sources\Utils\UserData</Filter>
-    </ClCompile>
     <ClCompile Include="MainWindow.cpp">
       <Filter>Sources\Widgets</Filter>
     </ClCompile>
@@ -382,9 +379,6 @@
     <ClCompile Include="Build\Release\moc_CustomCommandList.cpp">
       <Filter>Generated Files\MocFiles</Filter>
     </ClCompile>
-    <ClCompile Include="Build\Release\moc_DatabaseManager.cpp">
-      <Filter>Generated Files\MocFiles</Filter>
-    </ClCompile>
     <ClCompile Include="Build\Release\moc_EditCustomCommandWindow.cpp">
       <Filter>Generated Files\MocFiles</Filter>
     </ClCompile>
@@ -479,9 +473,6 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="Build\Debug\moc_EditSaveWidget.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Build\Debug\moc_DatabaseManager.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="AI\ChatCommands\CovenantCommands\AdminCovCmdCommand.cpp">
@@ -595,6 +586,21 @@
     <ClCompile Include="Twitch\KrakenResponse.cpp">
       <Filter>Sources\Twitch</Filter>
     </ClCompile>
+    <ClCompile Include="Build\Debug\moc_UserDataDBHelper.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_UserDataDBHelper.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Database\UserDataDBHelper.cpp">
+      <Filter>Sources\Utils\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_DatabaseManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_DatabaseManager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\TimerCommands\UserData\UserDataTimerCommandList.hpp">
@@ -605,9 +611,6 @@
     </ClInclude>
     <ClInclude Include="AI\ChatCommands\UserDataCommands\UserDataBaseCommand.hpp">
       <Filter>Sources\AI\ChatCommands\UserDataCommands</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\UserData\UserData.hpp">
-      <Filter>Sources\Utils\UserData</Filter>
     </ClInclude>
     <ClInclude Include="AI\TimerCommands\UserData\TimeInChatTimerCommand.hpp">
       <Filter>Sources\AI\TimerCommands\UserData</Filter>
@@ -841,6 +844,9 @@
     </CustomBuild>
     <CustomBuild Include="Twitch\KrakenClient.hpp">
       <Filter>Sources\Twitch</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Utils\Database\UserDataDBHelper.hpp">
+      <Filter>Sources\Utils\Database</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

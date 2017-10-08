@@ -46,13 +46,13 @@ public:
      * 
      * Initializes database table. Should be executed before running application.
      */
-    QString InitializeTables();
+    static QString InitializeTables();
 
     /*!
      * \brief Returns max quote number.
      * \return Selects last quote and returns its number.
      */
-    int GetMaxQuoteNumber() const;
+    static int GetMaxQuoteNumber();
     /*!
      * \brief Adds new quote to database.
      * \param quote - Text of quote that should be added.
@@ -76,7 +76,7 @@ public:
      * \brief Grabs all ids of all quotes.
      * \return Array of quote ids.
      */
-    QVector<int> GetQuoteIds() const;
+    static QVector<int> GetQuoteIds();
     /*!
      * \brief Grabs specified quote.
      * \param quoteNumber - Number of qutoe that should be grabed.
@@ -87,13 +87,13 @@ public:
      * \brief Grabs random quote.
      * \return Randomly selected quote. 
      */
-    QString GetRandomQuote() const;
+    static QString GetRandomQuote();
     /*!
      * \brief Grabs qutoe data by specified id.
      * \param id - Id of quote.
      * \return Quote data that contains quote number and quot itself.
      */
-    QuoteData GetQuoteData(int id) const;
+    static QuoteData GetQuoteData(int id);
 
 signals:
     /*!

@@ -6,6 +6,7 @@
 #include "InfoCovenantCommand.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
+#include "UserDataDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
@@ -54,16 +55,8 @@ void InfoCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
                 // Leader of covenant
                 temp.replace("COV_LEADER", query->value("Leader").toString());
                 // Number of members
-                DB_QUERY_PTR memberQuery = DB_SELECT("UserData", "COUNT(*)",
-                                                                 QString("Covenant = '%1'").arg(covenant));
-                if (memberQuery != nullptr)
-                {
-                    if (memberQuery->first())
-                    {
-                        temp.replace("COV_MEMBERS", (memberQuery->value(0).toString() +
-                                                     QString("/%1").arg(query->value("MaxMembers").toString())));
-                    }
-                }
+                temp.replace("COV_MEMBERS", (QString::number(UserDataDBHelper::GetUsersFromCovenant(covenant).size()) +
+                                             QString("/%1").arg(query->value("MaxMembers").toString())));
                 // Number of created commands
                 int covCmdNum = CustomCommandDBHelper::Instance().GetNumberOfCommands(CmdType::CovenantCmd, covenant);
                 temp.replace("COV_CMD_NUM", QString::number(covCmdNum));

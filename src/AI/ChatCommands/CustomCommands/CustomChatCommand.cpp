@@ -105,11 +105,11 @@ void CustomChatCommand::_GetRandomAnswer(const ChatMessage &message, ChatAnswer 
 {
     if (_CheckModerationFlag(message.IsModerator()) &&
         _CheckCooldown() &&
-        _CheckCurrency(message.GetRealName()) &&
-        _CheckCovenant(message.GetRealName()))
+        _CheckCurrency(message.GetUserID()) &&
+        _CheckCovenant(message.GetUserID()))
     {
         // Update user currency value
-        _TakeDefaultPriceFromUser(message.GetRealName());
+        _TakeDefaultPriceFromUser(message.GetUserID());
 
         // Get random answer
         QString longAnswer = CustomCommandDBHelper::Instance().GetRandomAnswer(_cmdType, _name);

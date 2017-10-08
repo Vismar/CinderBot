@@ -40,18 +40,18 @@ QRegularExpression ChatMessage::_regExpUnmode(":jtv MODE #.* -o (?<name>.*)\\r\\
 QRegularExpression ChatMessage::_regExpBits("@badges=.*;bits=(?<bits>.*);color=(?<color>.*);"
                                             "display-name=(?<author>.*);.*emotes=.*;id=.*;"
                                             "mod=(?<mod>\\d);room-id=.*;.*subscriber=(?<sub>\\d);"
-                                            ".*;turbo=\\d;user-id=.*;user-type=.* "
+                                            ".*;turbo=\\d;user-id=(?<userID>.*);user-type=.* "
                                             ":(?<name>.*)!.*@.*.tmi.twitch.tv PRIVMSG #.* :(?<msg>.*)\r\n");
 /*** PRIVMSG ***/
 QRegularExpression ChatMessage::_regExpPrivmsg("@badges=.*;color=(?<color>.*);display-name=(?<author>.*);.*"
                                                "emotes=.*;id=.*;mod=(?<mod>\\d);"
                                                "room-id=.*;.*subscriber=(?<sub>\\d);.*"
-                                               "turbo=\\d;user-id=.*;user-type=.* "
+                                               "turbo=\\d;user-id=(?<userID>.*);user-type=.* "
                                                ":(?<name>.*)!.*@.*.tmi.twitch.tv PRIVMSG #.* :(?<msg>.*)\\r\\n");
 /*** WHISPER ***/
 QRegularExpression ChatMessage::_regExpWhisper("@badges=.*;color=(?<color>.*);display-name=(?<author>.*);"
                                                "emotes=.*;message-id=.*;thread-id=.*;"
-                                               "turbo=\\d;user-id=.*;user-type=.* "
+                                               "turbo=\\d;user-id=(?<userID>.*);user-type=.* "
                                                ":(?<name>.*)!.*@.*.tmi.twitch.tv WHISPER .* :(?<msg>.*)\\r\\n");
 
 ///////////////////////////////////////////////////////////////////////////
@@ -66,6 +66,8 @@ ChatMessage::ChatMessage()
     _isModerator = false;
     _isSubscriber = false;
     _type = Undefined;
+    _bits = "0";
+    _userID = -1;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -143,6 +145,13 @@ bool ChatMessage::IsSubscriber() const
 }
 
 ///////////////////////////////////////////////////////////////////////////
+
+int ChatMessage::GetUserID() const
+{
+    return _userID;
+}
+
+///////////////////////////////////////////////////////////////////////////
 /************************* Manual set functions **************************/
 ///////////////////////////////////////////////////////////////////////////
 
@@ -199,6 +208,13 @@ void ChatMessage::SetBits(const QString &bits)
 void ChatMessage::SetSubscriber(bool subFlag)
 {
     _isSubscriber = subFlag;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ChatMessage::SetUserID(int userID)
+{
+    _userID = userID;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -470,6 +486,8 @@ bool ChatMessage::_IsBits(const QString &message)
         _isSubscriber = (match.captured("sub") == "1") ? true : false;
         // Bits
         _bits = match.captured("bits");
+        // UserID
+        _userID = match.captured("userID").toInt();
         // Message itself
         _message = match.captured("msg");
     }
@@ -512,6 +530,8 @@ bool ChatMessage::_IsPrivMsg(const QString &message)
         }
         // Sub flag
         _isSubscriber = (match.captured("sub") == "1") ? true : false;
+        // UserID
+        _userID = match.captured("userID").toInt();
         // Message itself
         _message = match.captured("msg");
     }
@@ -540,6 +560,8 @@ bool ChatMessage::_IsWhisper(const QString &message)
         // TODO: Add mod somehow!
         // Sub flag
         // TODO: Add sub somehow!
+        // UserID
+        _userID = match.captured("userID").toInt();
         // Message itself
         _message = match.captured("msg");
     }

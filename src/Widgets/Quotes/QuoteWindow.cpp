@@ -68,7 +68,7 @@ void QuoteWindow::UpdateQuotes(int quoteNumber)
 {
     Q_UNUSED(quoteNumber);
 
-    _quotesWidget->UpdateIds(QuoteDBHelper::Instance().GetQuoteIds());
+    _quotesWidget->UpdateIds(QuoteDBHelper::GetQuoteIds());
 }
 
 ///////////////////////////////////////////////////////////////////////////

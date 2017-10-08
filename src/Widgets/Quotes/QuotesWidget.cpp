@@ -33,7 +33,7 @@ void QuotesWidget::_UpdateEntry(QWidget *entry, int id)
     SingleQuoteWidget *entryWidget = static_cast<SingleQuoteWidget*>(entry);
     if (entryWidget != nullptr)
     {
-        QuoteData quoteData = QuoteDBHelper::Instance().GetQuoteData(id);
+        QuoteData quoteData = QuoteDBHelper::GetQuoteData(id);
         entryWidget->SetQuoteText(quoteData.Quote);
         entryWidget->SetQuoteNumber(QString::number(quoteData.QuoteNumber));
     }

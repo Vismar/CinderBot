@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "BotAI.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
 /*** Command lists ***/
@@ -17,13 +17,14 @@
 #include "AI/TimerCommands/UserData/UserDataTimerCommandList.hpp"
 
 using namespace Command;
-using namespace Command::UserDataCmd;
-using namespace Command::QuoteCmd;
-using namespace Command::CustomChatCmd;
-using namespace Command::CovenantCmd;
+using namespace UserDataCmd;
+using namespace QuoteCmd;
+using namespace CustomChatCmd;
+using namespace CovenantCmd;
 using namespace TimerCommand;
-using namespace TimerCommand::UserDataTimerCmd;
+using namespace UserDataTimerCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -144,61 +145,17 @@ void BotAI::_UpdateUserData(const ChatMessage &message)
     if (!(_CheckIgnoreList(message.GetAuthor()) || _CheckIgnoreList(message.GetRealName())))
     {
         QString tempString = "1";
-        _UpdateAuthor(message.GetRealName(), message.GetAuthor());
-        _IncrementMessageCounter(message.GetRealName());
+        UserDataDBHelper::UpdateUserParameter(UserDataParameter::Author, message.GetAuthor(), message.GetUserID());
+        UserDataDBHelper::IncrementUserMsgCounter(1, message.GetUserID());
         // Add currency for message
         ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerMsg, tempString);
-        _AddCurrency(message.GetRealName(), tempString.toInt());
+        UserDataDBHelper::GiveCurrencyToUser(tempString.toInt(), message.GetUserID());
         // Update bits number
         if (!message.GetBits().isEmpty())
         {
-            _AddBits(message.GetRealName(), message.GetBits().toInt());
+            UserDataDBHelper::GiveBitsToUser(message.GetBits().toInt(), message.GetUserID());
         }
     }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void BotAI::_UpdateAuthor(const QString &userName, const QString &author)
-{
-    UD_UPDATE(userName, UDP_Author, author);
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void BotAI::_IncrementMessageCounter(const QString &userName)
-{
-    QString param;
-    // Get message counter
-    param = UD_GET_PARAM(userName, UDP_Messages);
-    // Increment counter
-    param = QString::number(param.toInt() + 1);
-    // Set new value
-    UD_UPDATE(userName, UDP_Messages, param);
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void BotAI::_AddCurrency(const QString &userName, const int value)
-{
-    QString param;
-    // Get currency value
-    param = UD_GET_PARAM(userName, UDP_Currency);
-    // Update value
-    param = QString::number(param.toInt() + value);
-    // Set new value
-    UD_UPDATE(userName, UDP_Currency, param);
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void BotAI::_AddBits(const QString &userName, int bits)
-{
-    QString param;
-    // Get bits number
-    param = UD_GET_PARAM(userName, UDP_Bits);
-    param = QString::number(param.toInt() + bits);
-    UD_UPDATE(userName, UDP_Bits, param);
 }
 
 ///////////////////////////////////////////////////////////////////////////

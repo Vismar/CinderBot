@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "MembersCovenantCommand.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include <QRegularExpressionMatch>
 #include <QStringList>
 
@@ -48,11 +48,7 @@ void MembersCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &
     else
     {
         // If covenant was not specified, get users covenant
-        DB_QUERY_PTR userQuery = DB_SELECT("UserData", "Covenant", QString("Name='%1'").arg(message.GetRealName()));
-        if ((userQuery != nullptr) && (userQuery->first()))
-        {
-            covenant = userQuery->value("Covenant").toString();
-        }
+        covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
     }
 
     // If viewer not on covenant, notify him about it
@@ -63,62 +59,48 @@ void MembersCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &
     else
     {
         // Get all members of certain covenant
-        DB_QUERY_PTR covQuery = DB_SELECT("UserData", "Author", QString("Covenant='%1'").arg(covenant));
-        if (covQuery != nullptr)
-        {
-            // Get all members
-            QStringList covMembers;
-            while (covQuery->next())
-            {
-                covMembers.append(covQuery->value("Author").toString());
-            }
+        QStringList covMembers = UserDataDBHelper::GetAuthorsFromCovenant(covenant);
 
-            // If no members of specified covenant, that is mean that such covenant doesn't exist
-            if (covMembers.isEmpty())
-            {
-                answer.AddAnswer(_answers.at(MSG_WRONG_COV));
-            }
-            else
-            {
-                QString answerStr = _answers.at(MSG_MEMBERS);
-
-                // Append all members of covenant to string
-                for (int i = 0; i < covMembers.size(); ++i)
-                {
-                    // If number of members in specified covenant is too big,
-                    // split into spearate messages that will be sent to chat
-                    if ((answerStr.size() + covMembers.at(i).size()) >= 498)
-                    {
-                        answer.AddAnswer(answerStr);
-                        answerStr.clear();
-                    }
-                    answerStr.append(covMembers.at(i));
-                    // If this member was not the last, add ", "
-                    if (i < (covMembers.size() - 1))
-                    {
-                        answerStr.append(", ");
-                    }
-                    // If it was the last member, add "."
-                    else
-                    {
-                        answerStr.append(".");
-                    }
-                }
-
-                // Add last message to answer
-                if (!answerStr.isEmpty())
-                {
-                    answer.AddAnswer(answerStr);
-                }
-
-                // Replace cov name in first message
-                (*answer.GetAnswers().begin()).replace("COV_NAME", covenant);
-            }
-        }
-        // If query return nullptr somehowm display that such covenant is not exist
-        else
+        // If no members of specified covenant, that is mean that such covenant doesn't exist
+        if (covMembers.isEmpty())
         {
             answer.AddAnswer(_answers.at(MSG_WRONG_COV));
+        }
+        else
+        {
+            QString answerStr = _answers.at(MSG_MEMBERS);
+
+            // Append all members of covenant to string
+            for (int i = 0; i < covMembers.size(); ++i)
+            {
+                // If number of members in specified covenant is too big,
+                // split into spearate messages that will be sent to chat
+                if ((answerStr.size() + covMembers.at(i).size()) >= 498)
+                {
+                    answer.AddAnswer(answerStr);
+                    answerStr.clear();
+                }
+                answerStr.append(covMembers.at(i));
+                // If this member was not the last, add ", "
+                if (i < (covMembers.size() - 1))
+                {
+                    answerStr.append(", ");
+                }
+                // If it was the last member, add "."
+                else
+                {
+                    answerStr.append(".");
+                }
+            }
+
+            // Add last message to answer
+            if (!answerStr.isEmpty())
+            {
+                answer.AddAnswer(answerStr);
+            }
+
+            // Replace cov name in first message
+            (*answer.GetAnswers().begin()).replace("COV_NAME", covenant);
         }
     }
 }

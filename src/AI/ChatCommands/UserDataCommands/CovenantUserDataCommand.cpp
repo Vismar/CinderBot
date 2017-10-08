@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CovenantUserDataCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::UserDataCmd;
@@ -34,9 +34,9 @@ void CovenantUserDataCommand::Initialize()
 void CovenantUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     answer.AddAnswer(_answers.at(MSG_COVENANT));
-    QString covenant = UD_GET_PARAM(message.GetRealName() ,UDP_Covenant);
+    QString covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
     (*answer.GetAnswers().begin()).replace("MSG_COV", covenant);
-    DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
+    DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name='%1'").arg(covenant));
     if (query != nullptr)
     {
         if (query->first())

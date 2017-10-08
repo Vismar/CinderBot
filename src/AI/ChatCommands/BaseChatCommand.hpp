@@ -97,15 +97,15 @@ protected:
     void _AddAuthorName(QStringList &answer, const QString &author);
     /*!
      * Take default specififed price from user
-     * \param userName - name of user
+     * \param userID - id of user
      */
-    void _TakeDefaultPriceFromUser(const QString &userName) const;
+    void _TakeDefaultPriceFromUser(int userID) const;
     /*!
      * \brief Take specified price from user.
-     * \param userName - name of user
+     * \param userID - id of user
      * \param price - price which should be taken from user.
      */
-    void _TakePriceFromUser(const QString &userName, int price);
+    void _TakePriceFromUser(int userID, int price);
 
     /* Flag checkers */
     /*!
@@ -115,16 +115,16 @@ protected:
     bool _IsAnswerAllowed(MessageType msgType);
     /*!
      * \brief Checks if user can execute command if covenant restriction was specified
-     * \param userName - real name of user
+     * \param userID - id of user
      * \return true if user can use command
      */
-    bool _CheckCovenant(const QString &userName);
+    bool _CheckCovenant(int userID);
     /*!
      * \brief Checks if user have enough currency to use command.
-     * \param userName - real name of user.
+     * \param userID - id of user.
      * \return true if user can use command.
      */
-    bool _CheckCurrency(const QString &userName);
+    bool _CheckCurrency(int userID);
     /*!
      * \brief Checks if command cooldown was expired.
      * \return true if user can use command.
