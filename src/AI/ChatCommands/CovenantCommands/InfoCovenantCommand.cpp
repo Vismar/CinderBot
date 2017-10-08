@@ -6,7 +6,7 @@
 #include "InfoCovenantCommand.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
-#include "UserDataDBHelper.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
