@@ -4,10 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "BaseChatCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Command;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -96,26 +96,16 @@ void BaseChatCommand::_AddAuthorName(QStringList &answer, const QString &author)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseChatCommand::_TakeDefaultPriceFromUser(const QString &userName) const
+void BaseChatCommand::_TakeDefaultPriceFromUser(int userID) const
 {
-    // Get user currency value
-    int userCurrency = UD_GET_PARAM(userName, UDP_Currency).toInt();
-    // Change user currency value
-    userCurrency -= _price;
-    QString newUserCurrencyValue = QString::number(userCurrency);
-    UD_UPDATE(userName, UDP_Currency, newUserCurrencyValue);
+    UserDataDBHelper::GiveCurrencyToUser(-_price, userID);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BaseChatCommand::_TakePriceFromUser(const QString &userName, int price)
+void BaseChatCommand::_TakePriceFromUser(int userID, int price)
 {
-    // Get user currency value
-    int userCurrency = UD_GET_PARAM(userName, UDP_Currency).toInt();
-    // Change user currency value
-    userCurrency -= price;
-    QString newUserCurrencyValue = QString::number(userCurrency);
-    UD_UPDATE(userName, UDP_Currency, newUserCurrencyValue);
+    UserDataDBHelper::GiveCurrencyToUser(-price, userID);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -141,32 +131,18 @@ bool BaseChatCommand::_IsAnswerAllowed(MessageType msgType)
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BaseChatCommand::_CheckCovenant(const QString &userName)
+bool BaseChatCommand::_CheckCovenant(int userID)
 {
-    bool covenantIsOk(true);
-
-    // If covenant is specified, check covenant in which user in
-    if (_covenant != "Viewer")
-    {
-        QString userCovenantName = UD_GET_PARAM(userName, UDP_Covenant);
-        // If users covenant is not the same as specified, then command cannot be executed
-        if (_covenant != userCovenantName)
-        {
-            covenantIsOk = false;
-        }
-    }
-
-    return covenantIsOk;
+    return UserDataDBHelper::IsUserInCovenant(_covenant, userID);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BaseChatCommand::_CheckCurrency(const QString &userName)
+bool BaseChatCommand::_CheckCurrency(int userID)
 {
     bool currencyIsOk(true);
     // Get user currency value
-    QString tempUserCurrency = UD_GET_PARAM(userName, UDP_Currency);
-    int userCurrency = tempUserCurrency.toInt();
+    int userCurrency = UserDataDBHelper::GetUserParameter(UserDataParameter::Currency, userID).toInt();
     // Set user currency value to 0 if converting was failed
     if (userCurrency < 0)
     {

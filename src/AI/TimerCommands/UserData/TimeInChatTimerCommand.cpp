@@ -5,11 +5,12 @@
 **************************************************************************/
 #include "TimeInChatTimerCommand.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 
 using namespace Utils::Configuration;
 using namespace TimerCommand::UserDataTimerCmd;
+using namespace Utils::Database;
 
 #define MINUTE 60000
 
@@ -32,7 +33,7 @@ void TimeInChatTimerCommand::_TimerAction()
         if (!ignoreList.contains(userList[i]))
         {
             // Get time in chat
-            QString timeValue = UD_GET_PARAM(userList[i], UDP_TimeInChat);
+            QString timeValue = QString::number(UserDataDBHelper::GetUserParameter(UserDataParameter::TimeInChat, userList[i]).toInt());
             int timeNewValue = timeValue.toInt() + 1;
             if (timeNewValue < 0)
             {
@@ -43,7 +44,7 @@ void TimeInChatTimerCommand::_TimerAction()
             timeValue = QString::number(timeNewValue);
 
             // Set value
-            UD_UPDATE(userList[i], UDP_TimeInChat, timeValue);
+            UserDataDBHelper::UpdateUserParameter(UserDataParameter::TimeInChat, timeValue, userList[i]);
         }
     }
 }

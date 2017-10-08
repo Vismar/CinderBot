@@ -4,11 +4,11 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "RenameCovenantCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Configuration;
@@ -46,7 +46,7 @@ void RenameCovenantCommand::Initialize()
 
 void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
-    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+    QString covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
     // Check if user in covenant
     if (covenant != "Viewer")
     {
@@ -66,7 +66,7 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                         price = DEFAULT_PRICE_FOR_RENAME;
                     }
                     _price = price.toInt();
-                    if (_CheckCurrency(message.GetRealName()))
+                    if (_CheckCurrency(message.GetUserID()))
                     {
                         QString newCovenantName = message.GetMessage().mid(_name.size()+1);
                         newCovenantName.replace("'", "");
@@ -78,22 +78,13 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                         // If user provided covenant name, rename it
                         if (!newCovenantName.isEmpty())
                         {
-                            // If covenant was renamed, set covenant field to a new value
-                            // for all users who are in that covenant
                             if (DB_UPDATE("Covenants", QString("Name = '%1'").arg(newCovenantName),
                                                        QString("Leader = '%1'").arg(message.GetRealName())))
                             {
-                                DB_QUERY_PTR queryUpdate = DB_SELECT("UserData",
-                                                                     "Name",
-                                                                     QString("Covenant = '%1'").arg(covenant));
-                                if (queryUpdate != NULL)
-                                {
-                                    while (queryUpdate->next())
-                                    {
-                                        UD_UPDATE(queryUpdate->value("Name").toString(), UDP_Covenant, newCovenantName);
-                                    }
-                                }
+                                // If covenant was renamed, set covenant field to a new value for all users who are in that covenant
+                                UserDataDBHelper::UpdateCovenantName(covenant, newCovenantName);
 
+                                // TODO: Replace this loops in US-329
                                 // Update existing commands for covenant
                                 QStringList cmdNames = CustomCommandDBHelper::Instance().GetCommandNames(CmdType::CovenantCmd, covenant);
                                 for (int i = 0; i < cmdNames.size(); ++i)
@@ -102,6 +93,7 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                                 }
                                 cmdNames.clear();
 
+                                // TODO: Replace this loops in US-329
                                 // Update commands created by broadcaster for covenant
                                 cmdNames = CustomCommandDBHelper::Instance().GetCommandNames(CmdType::StreamerCmd, covenant);
                                 for (int i = 0; i < cmdNames.size(); ++i)
@@ -110,7 +102,7 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                                 }
 
                                 // Take price to rename covenant
-                                _TakeDefaultPriceFromUser(message.GetRealName());
+                                _TakeDefaultPriceFromUser(message.GetUserID());
                                 answer.AddAnswer(_answers.at(MSG_RENAMED));
                             }
                         }

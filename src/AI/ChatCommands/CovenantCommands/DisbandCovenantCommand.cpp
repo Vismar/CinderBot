@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "DisbandCovenantCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
 
@@ -36,7 +36,7 @@ void DisbandCovenantCommand::Initialize()
 
 void DisbandCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
-    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+    QString covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
     if (covenant != "Viewer")
     {
         // Check if user is leader of its covenant
@@ -50,14 +50,8 @@ void DisbandCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &
                 // If covenant was disbanded, set covenant field to viewer for all users who was in that covenant
                 if (DB_DELETE("Covenants", QString("Name = '%1'").arg(covenant)))
                 {
-                    DB_QUERY_PTR query = DB_SELECT("UserData", "Name", QString("Covenant = '%1'").arg(covenant));
-                    if (query != nullptr)
-                    {
-                        while (query->next())
-                        {
-                            UD_UPDATE(query->value("Name").toString(), UDP_Covenant, "Viewer");
-                        }
-                    }
+                    // Update covenant field for all users who was in covenant
+                    UserDataDBHelper::UpdateCovenantName(covenant, "Viewer");
                     answer.AddAnswer(_answers.at(MSG_DISBANDING));
 
                     // Also we need to delete all command that were created for this covenant

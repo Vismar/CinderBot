@@ -329,7 +329,7 @@ private:
      * 
      * Generates table name that will be used to do somthing with custom commands.
      */
-    QString _GetTableName(TableType tableType, CmdType cmdType);
+    static QString _GetTableName(TableType tableType, CmdType cmdType);
     /*!
      * \brief Initializes custom command table (list of commands and list of answers).
      * \param mainTableName - Main part of table name.
@@ -337,7 +337,7 @@ private:
      * 
      * Created needed database tables and previxes in there.
      */
-    QString _InititalizeCustomCommandTables(const QString &mainTableName, const QString &indexPrefix);
+    static QString _InititalizeCustomCommandTables(const QString &mainTableName, const QString &indexPrefix);
 };
 
 }

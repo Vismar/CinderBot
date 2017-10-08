@@ -7,6 +7,7 @@
 #include <QtSql>
 #include <memory>
 
+#define DB_MANAGER      DatabaseManager::Instance()
 #define DB_CREATE_INDEX DatabaseManager::Instance().CreateIndex
 #define DB_CREATE_TABLE DatabaseManager::Instance().CreateTable
 #define DB_INSERT       DatabaseManager::Instance().Insert
@@ -54,6 +55,17 @@ public:
      * If any error has appeared at any step, will return error. Otherwise - "OK"
      */
     QString Initialize();
+
+    /*!
+     * \brief Tries to start transaction for multiple queries.
+     * \return True if database has this feature and transaction was started. Otherwise - false.
+     */
+    bool StartTransaction();
+    /*!
+     * \brief Tries to end transaction and commits all queries to database.
+     * \return True if commit was successfull and previously transaction was started. Otherwise - false.
+     */
+    bool EndTransaction();
 
     /*!
      * \brieef Creates index on specified table (and columns if specified).
@@ -119,7 +131,9 @@ signals:
     void OnDeleteEvent(const QString &tableName);
 
 private:
-    /*! Database which is used to store all data */
+    /*! Flag to define when transaction is on. */
+    bool _transactionOn;
+    /*! Database which is used to store all data. */
     QSqlDatabase _database;
 };
 

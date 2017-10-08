@@ -44,7 +44,7 @@ void MainQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer
     // If quote was not acquired, get random quote
     if (quote.isEmpty())
     {
-        quote = QuoteDBHelper::Instance().GetRandomQuote();
+        quote = QuoteDBHelper::GetRandomQuote();
     }
 
     if (!quote.isEmpty())

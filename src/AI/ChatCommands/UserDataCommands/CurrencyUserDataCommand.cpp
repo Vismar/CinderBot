@@ -4,12 +4,13 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CurrencyUserDataCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 
 using namespace Command::UserDataCmd;
 using namespace Utils::Configuration;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +32,8 @@ void CurrencyUserDataCommand::Initialize()
 void CurrencyUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     answer.AddAnswer(_answers.first());
-    (*answer.GetAnswers().begin()).replace("MSG_CUR", UD_GET_PARAM(message.GetRealName(), UDP_Currency));
+    QString currency = QString::number(UserDataDBHelper::GetUserParameter(UserDataParameter::Currency, message.GetUserID()).toInt());
+    (*answer.GetAnswers().begin()).replace("MSG_CUR", currency);
     QString curName = "NomNom ";
     ConfigurationManager::Instance().GetStringParam(CfgParam::Currency, curName);
     (*answer.GetAnswers().begin()).replace("MSG_NAME_CUR", curName);

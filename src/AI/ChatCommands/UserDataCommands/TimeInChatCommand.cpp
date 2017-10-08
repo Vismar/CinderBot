@@ -4,9 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "TimeInChatCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Command::UserDataCmd;
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -29,7 +30,7 @@ void TimeInChatCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answe
 {
     answer.AddAnswer(_answers.first());
     // Time in chat
-    int minutes = UD_GET_PARAM(message.GetRealName(), UDP_TimeInChat).toInt();
+    int minutes = UserDataDBHelper::GetUserParameter(UserDataParameter::TimeInChat, message.GetUserID()).toInt();
     int hours = minutes / 60;
     minutes %= 60;
     (*answer.GetAnswers().begin()).replace("MSG_TIME_IN_CHAT", QString("%1h%2m").arg(hours).arg(minutes));

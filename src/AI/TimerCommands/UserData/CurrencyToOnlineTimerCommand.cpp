@@ -6,10 +6,11 @@
 #include "CurrencyToOnlineTimerCommand.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Utils::Configuration;
 using namespace TimerCommand::UserDataTimerCmd;
+using namespace Utils::Database;
 
 #define DEFAULT_TIMER_VALUE    60000
 #define DEFAULT_CURRENCY_VALUE "1"
@@ -62,7 +63,7 @@ void CurrencyToOnlineTimerCommand::_TimerAction()
         if (!ignoreList.contains(userList[i]))
         {
             // Get currency new value
-            QString currencyValue = UD_GET_PARAM(userList[i], UDP_Currency);
+            QString currencyValue = QString::number(UserDataDBHelper::GetUserParameter(UserDataParameter::Currency, userList[i]).toInt());
             int currencyNewValue = currencyValue.toInt() + currencyToGive.toInt();
             if (currencyNewValue < 0)
             {
@@ -73,7 +74,7 @@ void CurrencyToOnlineTimerCommand::_TimerAction()
             currencyValue = QString::number(currencyNewValue);
 
             // Set new value
-            UD_UPDATE(userList[i], UDP_Currency, currencyValue);
+            UserDataDBHelper::UpdateUserParameter(UserDataParameter::Currency, currencyValue, userList[i]);
         }
     }
 }

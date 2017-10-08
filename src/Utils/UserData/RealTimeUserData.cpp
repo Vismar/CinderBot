@@ -4,9 +4,11 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "RealTimeUserData.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include <QStringList>
 #include <QDateTime>
+
+using namespace Utils::Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -56,8 +58,8 @@ void RealTimeUserData::AddUserToList(const ChatMessage &chatMessage)
 {
     if (!_userList.contains(chatMessage.GetRealName()))
     {
-        UD_UPDATE(chatMessage.GetRealName(), UDP_LastTimeVisited,
-                                             QDateTime::currentDateTime().toString("d-M-yyyy h:m:s"));
+        UserDataDBHelper::UpdateUserParameter(UserDataParameter::LastTimeVisited, QDateTime::currentDateTime().toString("d-M-yyyy h:m:s"), chatMessage.GetRealName());
+        
         // Add user to list
         _userList.append(chatMessage.GetRealName());
         // Check max number of users

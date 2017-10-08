@@ -4,10 +4,10 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "JoinCovenantCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Configuration;
@@ -44,7 +44,7 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
 {
     QString price;
     ConfigurationManager &configMng = ConfigurationManager::Instance();
-    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+    QString covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
 
     // Check if user is leader of its covenant
     if (covenant != "Viewer")
@@ -73,7 +73,7 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
         }
         _price = priceToJoin;
         // If user have enough currency to join
-        if (_CheckCurrency(message.GetRealName()))
+        if (_CheckCurrency(message.GetUserID()))
         {
             // Get covenant list
             DB_QUERY_PTR query = DB_SELECT("Covenants", "Name");
@@ -91,32 +91,25 @@ void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
                     if (message.GetMessage().contains(*iter))
                     {
                         // Check if user already in this covenant
-                        if (UD_GET_PARAM(message.GetRealName(), UDP_Covenant) != *iter)
+                        if (covenant != *iter)
                         {
-                            // Number of members
-                            DB_QUERY_PTR memberQuery = DB_SELECT("UserData", "COUNT(*)",
-                                                                             QString("Covenant = '%1'").arg(*iter));
                             // Maximum of members in selected covenant
-                            DB_QUERY_PTR maxQuery = DB_SELECT("Covenants", "MaxMembers",
-                                                                           QString("Name='%1'").arg(*iter));
+                            DB_QUERY_PTR maxQuery = DB_SELECT("Covenants", "MaxMembers", QString("Name='%1'").arg(*iter));
                             // Check if covenant is not full
-                            if ((memberQuery != NULL) && (maxQuery != NULL))
+                            if ((maxQuery != nullptr) && maxQuery->first())
                             {
-                                if (memberQuery->first() && maxQuery->first())
+                                // If covenant full, notify about it
+                                if (maxQuery->value("MaxMembers").toInt() <= UserDataDBHelper::GetUsersFromCovenant(covenant).size())
                                 {
-                                    // If covenant full, notify about it
-                                    if (maxQuery->value("MaxMembers").toInt() <= memberQuery->value(0).toInt())
-                                    {
-                                        answer.AddAnswer(_answers.at(MSG_COVENANT_FULL));
-                                    }
-                                    else
-                                    {
-                                        // Join user to covenant and take currency for it
-                                        answer.AddAnswer(_answers.at(MSG_JOINING_COV));
-                                        (*answer.GetAnswers().begin()).replace("COV_NAME", *iter);
-                                        UD_UPDATE(message.GetRealName(), UDP_Covenant, *iter);
-                                        _TakeDefaultPriceFromUser(message.GetRealName());
-                                    }
+                                    answer.AddAnswer(_answers.at(MSG_COVENANT_FULL));
+                                }
+                                else
+                                {
+                                    // Join user to covenant and take currency for it
+                                    answer.AddAnswer(_answers.at(MSG_JOINING_COV));
+                                    (*answer.GetAnswers().begin()).replace("COV_NAME", *iter);
+                                    UserDataDBHelper::UpdateUserParameter(UserDataParameter::Covenant, *iter, message.GetUserID());
+                                    _TakeDefaultPriceFromUser(message.GetUserID());
                                 }
                             }
                         }

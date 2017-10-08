@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "DescriptionCovenantCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 
 using namespace Command::CovenantCmd;
@@ -35,7 +35,7 @@ void DescriptionCovenantCommand::Initialize()
 
 void DescriptionCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
-    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+    QString covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
     if (covenant != "Viewer")
     {
         // Check if user is leader of its covenant

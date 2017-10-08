@@ -35,7 +35,7 @@ QString QuoteDBHelper::InitializeTables()
 
 ///////////////////////////////////////////////////////////////////////////
 
-int QuoteDBHelper::GetMaxQuoteNumber() const
+int QuoteDBHelper::GetMaxQuoteNumber()
 {
     int quoteNumber(0);
 
@@ -144,7 +144,7 @@ bool QuoteDBHelper::EditQuote(int quoteNumber, const QString& newQuote)
 
 ///////////////////////////////////////////////////////////////////////////
 
-QVector<int> QuoteDBHelper::GetQuoteIds() const
+QVector<int> QuoteDBHelper::GetQuoteIds()
 {
     QVector<int> quoteIds;
 
@@ -185,7 +185,7 @@ QString QuoteDBHelper::GetQuote(int quoteNumber) const
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString QuoteDBHelper::GetRandomQuote() const
+QString QuoteDBHelper::GetRandomQuote()
 {
     QString quote;
 
@@ -202,7 +202,7 @@ QString QuoteDBHelper::GetRandomQuote() const
 
 ///////////////////////////////////////////////////////////////////////////
 
-QuoteData QuoteDBHelper::GetQuoteData(int id) const
+QuoteData QuoteDBHelper::GetQuoteData(int id)
 {
     QuoteData quoteData;
 
@@ -235,7 +235,7 @@ void QuoteDBHelper::_RefreshQuoteNumbersFrom(int quoteNumber) const
             if (!DB_UPDATE("Quotes", QString("Number=%1").arg(newNumber), QString("Id=%1").arg(id)))
             {
                 // Log error
-                LOG(LogError, this->metaObject()->className(), __func__, QString("Cannot update the quote #%1.").arg(newNumber));
+                LOG(LogError, "", Q_FUNC_INFO, QString("Cannot update the quote #%1.").arg(newNumber));
             }
         }
     }

@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "FullUserDataCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
@@ -41,8 +41,8 @@ void FullUserDataCommand::Initialize()
 
 void FullUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
-    QString covenant = UD_GET_PARAM(message.GetRealName() ,UDP_Covenant);
-    DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
+    UserDataParams userDataParams = UserDataDBHelper::GetUserParameters(message.GetUserID());
+    DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(userDataParams.Covenant));
     if (query != nullptr)
     {
         if (query->first())
@@ -55,7 +55,7 @@ void FullUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
     }
     if (answer.GetAnswers().isEmpty())
     {
-        if (covenant == "Viewer")
+        if (userDataParams.Covenant == "Viewer")
         {
             answer.AddAnswer(_answers.at(MSG_NO_COV));
         }
@@ -70,11 +70,11 @@ void FullUserDataCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
         QString curName = "NomNom ";
         ConfigurationManager::Instance().GetStringParam(CfgParam::Currency, curName);
         (*firstAnswer).replace("MSG_NAME_CUR", curName);
-        (*firstAnswer).replace("MSG_COUNT", UD_GET_PARAM(message.GetRealName() ,UDP_Messages));
-        (*firstAnswer).replace("MSG_CUR", UD_GET_PARAM(message.GetRealName() ,UDP_Currency));
-        (*firstAnswer).replace("MSG_COV", UD_GET_PARAM(message.GetRealName() ,UDP_Covenant));
+        (*firstAnswer).replace("MSG_COUNT", QString::number(userDataParams.Messages));
+        (*firstAnswer).replace("MSG_CUR", QString::number(userDataParams.Currency));
+        (*firstAnswer).replace("MSG_COV", userDataParams.Covenant);
         // Time in chat
-        int minutes = UD_GET_PARAM(message.GetRealName(), UDP_TimeInChat).toInt();
+        int minutes = userDataParams.MinutesInChat;
         int hours = minutes / 60;
         minutes %= 60;
         (*answer.GetAnswers().begin()).replace("MSG_TIME_IN_CHAT", QString("%1h%2m").arg(hours).arg(minutes));

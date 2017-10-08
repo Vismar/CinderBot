@@ -81,7 +81,7 @@ void Logger::Write(LogLevel logLevel, const QString &className, const QString &f
 {
     QString newMessage;
     QTextStream stream(&newMessage);
-    stream << "Source( ";
+    stream << "Source ( ";
     if (!className.isEmpty())
     {
         stream << className << "::";

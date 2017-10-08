@@ -19,13 +19,13 @@ class BotAI : public QObject
 {
     Q_OBJECT
 public:
-    explicit BotAI(QObject *parent = 0);
+    explicit BotAI(QObject *parent = nullptr);
     ~BotAI();
 
 signals:
     /*!
      * \brief Signal about new bot message.
-     * \param(IN) message - bot message.
+     * \param message - bot message.
      *
      * Signal about new bot message which should be rendered in chat.
      */
@@ -34,8 +34,8 @@ signals:
 public slots:
     /*!
      * \brief Read and process new message.
-     * \param(IN) message - chat message.
-     * \param(IN) botMessage - is it a bot or not?
+     * \param message - chat message.
+     * \param botMessage - is it a bot or not?
      *
      * Sends to chat commands and try to find command in message to execute it.
      */
@@ -57,7 +57,7 @@ private:
 
     /*!
      * \brief Checks if user is in ignore list.
-     * \param(IN) userName - name of a user.
+     * \param userName - name of a user.
      * \return true if user is in ignore list.
      *
      * Checks if specified user if in ignore list.
@@ -65,42 +65,11 @@ private:
     bool _CheckIgnoreList(const QString &userName);
     /*!
      * \brief Updates user data.
-     * \param(IN) message - chat message.
+     * \param message - chat message.
      *
      * Updates all user data: author, message counter and currency.
      */
     void _UpdateUserData(const ChatMessage &message);
-    /*!
-     * \brief Updates author field in database.
-     * \param userName - real name of a user.
-     * \param author - author name of a user.
-     *
-     * Updates author field in DB.
-     */
-    void _UpdateAuthor(const QString &userName, const QString &author);
-    /*!
-     * \brief Increments message counter.
-     * \param(IN) userName - name of a user.
-     *
-     * Updates message counter field in DB.
-     */
-    void _IncrementMessageCounter(const QString &userName);
-    /*!
-     * \brief Adds currency to a user.
-     * \param(IN) userName - name of a user.
-     * \param(IN) value - amount of currency that should be added.
-     *
-     * Add currency to user.
-     */
-    void _AddCurrency(const QString &userName, const int value);
-    /*!
-     * \brief Adds bits to user.
-     * \param userName - name of a user.
-     * \param bits - amoun of bits that hsould be added.
-     *
-     * Adds bits to specified user in DB.
-     */
-    void _AddBits(const QString &userName, int bits);
 
     /*! Array of commands */
     QVector<Command::CommandList*> _chatCommands;

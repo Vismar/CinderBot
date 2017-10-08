@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "CreateCovenantCommand.hpp"
-#include "Utils/UserData/UserData.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
 #include "Utils/Database/DatabaseManager.hpp"
@@ -45,7 +45,7 @@ void CreateCovenantCommand::Initialize()
 
 void CreateCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
-    QString covenant = UD_GET_PARAM(message.GetRealName(), UDP_Covenant);
+    QString covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
     // Check if user is leader of its covenant
     DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
     if (query->exec())
@@ -70,7 +70,7 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
             }
             _price = price.toInt();
             // Check if user have enough currency
-            if (_CheckCurrency(message.GetRealName()))
+            if (_CheckCurrency(message.GetUserID()))
             {
                 // Get covenant name
                 QString newCovenant;
@@ -109,9 +109,9 @@ void CreateCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                                                         "0,    10").arg(newCovenant).arg(message.GetRealName()))))
                     {
                         // Update covenant field for user
-                        UD_UPDATE(message.GetRealName(), UDP_Covenant, newCovenant);
+                        UserDataDBHelper::UpdateUserParameter(UserDataParameter::Covenant, newCovenant, message.GetUserID());
                         // Take price to create covenant
-                        _TakeDefaultPriceFromUser(message.GetRealName());
+                        _TakeDefaultPriceFromUser(message.GetUserID());
                         // Set answer
                         answer.AddAnswer(_answers.at(MSG_COVENANT_CREATED));
                         (*answer.GetAnswers().begin()).replace("COV_NAME", newCovenant);
