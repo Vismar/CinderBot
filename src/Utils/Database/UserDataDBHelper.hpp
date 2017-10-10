@@ -45,7 +45,8 @@ enum class UserDataParameter
     LastTimeVisited,
     TimeInChat,
     Bits,
-    Subscription
+    Subscription,
+    FollowDate
 };
 
 /*!
@@ -88,6 +89,8 @@ struct UserDataParams
     int Bits = 0;
     /*! Flag that defines if user is subscriber or not. */
     bool Subscription = false;
+    /*! Date when a user has followed the broadcaster. */
+    QString FollowDate = "";
 };
 
 #define UDHelper UserDataDBHelper::Instance()
