@@ -96,9 +96,9 @@ struct UserDataParams
 #define UDHelper UserDataDBHelper::Instance()
 
 /*!
- * \brief Helper class designed to facilitate the work with the database from user data.
+ * \brief Helper class designed to facilitate the work with the database for user data.
  * 
- * Handles createing database tables, provides simple interface to add user or mupltiple users at once,
+ * Handles creating database tables, provides simple interface to add user or mupltiple users at once,
  * get user paramter(s), update it, also provides functionality to grab/check special info about specific user(s).
  */
 class UserDataDBHelper : public QObject

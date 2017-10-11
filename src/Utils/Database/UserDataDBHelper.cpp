@@ -83,11 +83,15 @@ QString UserDataDBHelper::InitializeTables()
         // Create indexes
         if (!DB_CREATE_INDEX("UserData", "Covenant_Index", "Covenant"))
         {
-            result = "Indexes for covenants were not created for user data table.";
+            result = "Indexes for 'Covenant' column were not created for user data table.";
         }
         else if (!DB_CREATE_INDEX("UserData", "Subscription_Index", "Subscription"))
         {
-            result = "Indexes for subscriptions were not created for user data table.";
+            result = "Indexes for 'Subscription' column were not created for user data table.";
+        }
+        else if (!DB_CREATE_INDEX("UserData", "UserID_Index", "UserID", true))
+        {
+            result = "Indexes for 'UserID' column were not created for user data table.";
         }
     }
 

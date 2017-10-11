@@ -72,9 +72,10 @@ public:
      * \param tableName - name of table.
      * \param indexName - name of index.
      * \param columns - columns which should be indexed.
+     * \param unique - defines if index should be unique.
      * \return True if index successfully created.
      */
-    bool CreateIndex(const QString &tableName, const QString &indexName, const QString &columns = "") const;
+    bool CreateIndex(const QString &tableName, const QString &indexName, const QString &columns = "", bool unique = false) const;
     /*!
      * \brief Tries to create table if it not exist.
      * \param tableName - name of a table which should be created.
@@ -86,6 +87,7 @@ public:
      * \brief Inserts new record to the database.
      * \param tableName - name of a table in which new record should be added.
      * \param recordValues - values for a new record.
+     * \param ignore - defines if insertion problems should be ignored.
      * \return True if command was successful.
      */
     bool Insert(const QString &tableName, const QString &recordValues, bool ignore = false);

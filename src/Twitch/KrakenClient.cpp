@@ -5,13 +5,15 @@
 **************************************************************************/
 #include "KrakenClient.hpp"
 #include "Twitch/KrakenResponse.hpp"
+#include "Utils/Database/AnalyticsDBHelper.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Logger.hpp"
 #include <QJsonArray>
 
 using namespace Twitch;
-using namespace Utils::Configuration;
 using namespace Utils;
+using namespace Configuration;
+using namespace Database;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -47,9 +49,20 @@ KrakenClient& KrakenClient::Instance()
 QString KrakenClient::Initialize()
 {
     QString result("OK");
+
+    // Prevent firing signals
+    this->blockSignals(true);
+    
     // Add ClientID default value
     _SetParameter(KrakenParameter::ClientID, "we0qz5ot41crhkeo1w6mv9t769x1q5");
+    // Add first channel followers number
+    _SetParameter(KrakenParameter::ChannelFollowers, AnalyticsDBHelper::GetLastNumberOfFollowers());
+    // Add default value for stream flag
+    _SetParameter(KrakenParameter::StreamOn, false);
     
+    // Allow firing signals after needed assigns
+    this->blockSignals(false);
+
     //_InitializeParameters();
     _requestTimer->start(1000); // 1 sec
 
@@ -111,12 +124,12 @@ void KrakenClient::_ReadResponse(QNetworkReply *reply)
         break;
     default:
         // Log error
-        LOG(LogWarning, QString("Indefined response from Kraken API.\nMessage: %1").arg(response));
+        LOG(LogWarning, "", Q_FUNC_INFO, QString("Indefined response from Kraken API.\nMessage: %1").arg(response));
         break;
     }
 
     // Log info
-    LOG(LogInfo, QString("Response from Kraken API: %1").arg(response));
+    LOG(LogInfo, "", Q_FUNC_INFO, QString("Response from Kraken API: %1").arg(response));
 
     reply->deleteLater();
 }
@@ -147,7 +160,8 @@ void KrakenClient::_InitializeBotUserID()
         QString botUserName;
         if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, botUserName))
         {
-            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/users/%1?client_id=%2").arg(botUserName).arg(_krakenParameters[ClientID].toString()));
+            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/users/%1?client_id=%2")
+                               .arg(botUserName).arg(_krakenParameters[ClientID].toString()));
         }
     }
 }
@@ -163,7 +177,8 @@ void KrakenClient::_InitializeKnownBotStatus()
         QString botUserName;
         if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, botUserName))
         {
-            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/users/%1/chat?api_version=5&client_id=%2").arg(_krakenParameters[BotUserID].toString()).arg(botUserName));
+            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/users/%1/chat?api_version=5&client_id=%2")
+                               .arg(_krakenParameters[BotUserID].toString()).arg(_krakenParameters[ClientID].toString()));
         }
     }
 }
@@ -179,7 +194,8 @@ void KrakenClient::_InitializeChannelUserID()
         QString userName;
         if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginChannel, userName))
         {
-            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/users/%1?client_id=%2").arg(userName).arg(_krakenParameters[ClientID].toString()));
+            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/users/%1?client_id=%2")
+                               .arg(userName).arg(_krakenParameters[ClientID].toString()));
         }
     }
 }
@@ -192,7 +208,8 @@ void KrakenClient::_UpdateChannelInfo()
     {
         if (QDateTime::currentDateTime().toSecsSinceEpoch() % 30 == 0)
         {
-            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/channels/%1?api_version=5&client_id=%2").arg(_krakenParameters[ChannelUserID].toString()).arg(_krakenParameters[ClientID].toString()));
+            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/channels/%1?api_version=5&client_id=%2")
+                               .arg(_krakenParameters[ChannelUserID].toString()).arg(_krakenParameters[ClientID].toString()));
         }
     }
 }
@@ -205,7 +222,8 @@ void KrakenClient::_UpdateStreamInfo()
     {
         if (QDateTime::currentDateTime().toSecsSinceEpoch() % 30 == 0)
         {
-            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/streams?channel=%1&api_version=5&client_id=%2").arg(_krakenParameters[ChannelUserID].toString()).arg(_krakenParameters[ClientID].toString()));
+            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/streams?channel=%1&api_version=5&client_id=%2")
+                               .arg(_krakenParameters[ChannelUserID].toString()).arg(_krakenParameters[ClientID].toString()));
         }
     }
 }
@@ -239,7 +257,7 @@ void KrakenClient::_SendRequest(const QString &request) const
         _networkManager->get(QNetworkRequest(QUrl(request)));
 
         // Log info
-        LOG(LogInfo, QString("Request to Kraken API: %1").arg(request));
+        LOG(LogInfo, "", Q_FUNC_INFO, QString("Request to Kraken API: %1").arg(request));
     }
 }
 
@@ -248,9 +266,11 @@ void KrakenClient::_SendRequest(const QString &request) const
 void KrakenClient::_HandleErrorResponse(const KrakenResponse &response) const
 {
     // Log error
-    LOG(LogError, QString("Error in request. Response error: %1.\n"
-                          "Status: %2.\n"
-                          "Message: %3.").arg(response.GetParam("error").toString()).arg(response.GetParam("status").toString()).arg(response.GetParam("message").toString()));
+    LOG(LogError, "", Q_FUNC_INFO, QString("Error in request. Response error: %1.\n"
+                                           "Status: %2.\n"
+                                           "Message: %3.").arg(response.GetParam("error").toString())
+                                                          .arg(response.GetParam("status").toString())
+                                                          .arg(response.GetParam("message").toString()));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -306,13 +326,13 @@ void KrakenClient::_HandleStreamInfo(const KrakenResponse& response)
 {
     if (response.GetParam("_total").toInt() > 0)
     {
-        _SetParameter(KrakenParameter::StreamOn, true);
-
         QJsonObject values = response.GetParam("streams").toJsonArray().at(0).toObject();
         _SetParameter(KrakenParameter::StreamType, values.value("broadcast_platform").toVariant().toString());
         _SetParameter(KrakenParameter::StreamViewers, values.value("viewers").toVariant().toUInt());
         _SetParameter(KrakenParameter::StreamResolution, values.value("video_height").toVariant().toUInt());
         _SetParameter(KrakenParameter::StreamFPS, values.value("average_fps").toVariant().toDouble());
+
+        _SetParameter(KrakenParameter::StreamOn, true);
     }
     else
     {
