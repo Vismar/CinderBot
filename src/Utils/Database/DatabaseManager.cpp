@@ -107,7 +107,7 @@ bool DatabaseManager::EndTransaction()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool DatabaseManager::CreateIndex(const QString &tableName, const QString &indexName, const QString &columns) const
+bool DatabaseManager::CreateIndex(const QString &tableName, const QString &indexName, const QString &columns, bool unique) const
 {
     bool result = true;
 
@@ -117,11 +117,16 @@ bool DatabaseManager::CreateIndex(const QString &tableName, const QString &index
     // Prepare command for whole table or specified columns in specified table
     if (columns.isEmpty())
     {
-        command = QString("CREATE INDEX IF NOT EXISTS %2 ON %1;").arg(tableName).arg(indexName);
+        command = QString("CREATE UNIQUE INDEX IF NOT EXISTS %2 ON %1;").arg(tableName).arg(indexName);
     }
     else
     {
-        command = QString("CREATE INDEX IF NOT EXISTS %2 ON %1 (%3);").arg(tableName).arg(indexName).arg(columns);
+        command = QString("CREATE UNIQUE INDEX IF NOT EXISTS %2 ON %1 (%3);").arg(tableName).arg(indexName).arg(columns);
+    }
+
+    if (!unique)
+    {
+        command.replace("UNIQUE", "");
     }
 
     // If command failed. return error

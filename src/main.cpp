@@ -20,6 +20,7 @@
 #include "Utils/Database/DatabaseManager.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
 #include "Utils/Database/QuoteDBHelper.hpp"
+#include "Utils/Database/AnalyticsDBHelper.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
 #include "Twitch/KrakenClient.hpp"
@@ -123,8 +124,22 @@ int main(int argc, char *argv[])
         LOG(Utils::LogInfo, "UserDataDBHelper loaded.");
     }
 
-    // Log
-    LOG(Utils::LogInfo, "Database loaded.");
+    // Try to initialize analytics db helper
+    error = Utils::Database::AnalyticsDBHelper::Instance().InitializeTables();
+    if (error != "OK")
+    {
+        // Log
+        LOG(Utils::LogWarning, error);
+
+        // Message box
+        QMessageBox msgBox;
+        msgBox.setText(error);
+        msgBox.exec();
+    }
+    else
+    {
+        LOG(Utils::LogInfo, "AnalyticsDBHelper loaded.");
+    }
 
     // Try to initialize configuration manager
     error = Utils::Configuration::ConfigurationManager::Instance().Initialize();

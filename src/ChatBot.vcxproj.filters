@@ -601,6 +601,15 @@
     <ClCompile Include="Build\Release\moc_DatabaseManager.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\Database\AnalyticsDBHelper.cpp">
+      <Filter>Sources\Utils\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_AnalyticsDBHelper.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_AnalyticsDBHelper.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\TimerCommands\UserData\UserDataTimerCommandList.hpp">
@@ -846,6 +855,9 @@
       <Filter>Sources\Twitch</Filter>
     </CustomBuild>
     <CustomBuild Include="Utils\Database\UserDataDBHelper.hpp">
+      <Filter>Sources\Utils\Database</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Utils\Database\AnalyticsDBHelper.hpp">
       <Filter>Sources\Utils\Database</Filter>
     </CustomBuild>
   </ItemGroup>
