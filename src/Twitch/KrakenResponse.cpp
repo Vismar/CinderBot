@@ -17,19 +17,22 @@ using namespace Twitch;
 static QVariant EMPTY_VARIANT("");
 
 /* Error */
-QVector<QString> KrakenResponse::_jsonFieldsError = {"error", "status", "message"};
+QVector<QString> KrakenResponse::_jsonFieldsError = { "error", "status", "message" };
 
 /* User info */
-QVector<QString> KrakenResponse::_jsonFieldsUserInfo = {"display_name", "_id", "name", "type", "bio", "created_at", "updated_at", "logo"};
+QVector<QString> KrakenResponse::_jsonFieldsUserInfo = { "display_name", "_id", "name", "type", "bio", "created_at", "updated_at", "logo" };
 
 /* Bot status */
-QVector<QString> KrakenResponse::_jsonFieldsBotStatus = {"_id", "login", "display_name", "color", "is_verified_bot", "is_known_bot"};
+QVector<QString> KrakenResponse::_jsonFieldsBotStatus = { "_id", "login", "display_name", "color", "is_verified_bot", "is_known_bot" };
 
 /* Channel info */
-QVector<QString> KrakenResponse::_jsonFieldsChannelInfo = {"mature", "status", "game", "partner", "views", "followers", "broadcaster_type"};
+QVector<QString> KrakenResponse::_jsonFieldsChannelInfo = { "mature", "status", "game", "partner", "views", "followers", "broadcaster_type" };
 
 /* Stream info */
-QVector<QString> KrakenResponse::_jsonFieldsStreamInfo = {"_total", "streams"};
+QVector<QString> KrakenResponse::_jsonFieldsStreamInfo = { "_total", "streams" };
+
+/* Followers */
+QVector<QString> KrakenResponse::_jsonFieldsFollowers = { "_total", "_cursor", "follows" };
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -67,6 +70,10 @@ KrakenResponseType KrakenResponse::ParseResponse(const QString &response)
         else if (_ValidateStreamInfo(jsonObject))
         {
             responseType = KrakenResponseType::StreamInfo;
+        }
+        else if (_ValidateFollowers(jsonObject))
+        {
+            responseType = KrakenResponseType::Followers;
         }
     }
 
@@ -164,6 +171,13 @@ bool KrakenResponse::_ValidateChannelInfo(const QJsonObject &jsonObject)
 bool KrakenResponse::_ValidateStreamInfo(const QJsonObject &jsonObject)
 {
     return _ValidateParams(_jsonFieldsStreamInfo, jsonObject);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool KrakenResponse::_ValidateFollowers(const QJsonObject &jsonObject)
+{
+    return _ValidateParams(_jsonFieldsFollowers, jsonObject);
 }
 
 ///////////////////////////////////////////////////////////////////////////

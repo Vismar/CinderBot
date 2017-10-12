@@ -111,23 +111,41 @@ bool UserDataDBHelper::AddUsers(const QVector<UserDataParams> &dataParamsOfUsers
 {
     bool added(false);
 
-    // Try to start transaction
-    if (DB_MANAGER.StartTransaction())
+    // Only if we have at least 1 user to add we should start transaction
+    if (dataParamsOfUsers.size() > 0)
     {
-        for (int i = 0; i < dataParamsOfUsers.size(); ++i)
+        // Try to start transaction
+        if (DB_MANAGER.StartTransaction())
         {
-            DB_INSERT("UserData", dataParamsOfUsers[i].ToString(), true);
+            for (int i = 0; i < dataParamsOfUsers.size(); ++i)
+            {
+                // If user already in database, then we should only update specific values
+                if (IsUserFollower(dataParamsOfUsers[i].UserID))
+                {
+                    UpdateUserParameter(UserDataParameter::Author, dataParamsOfUsers[i].Author, dataParamsOfUsers[i].UserID);
+                    UpdateUserParameter(UserDataParameter::Name, dataParamsOfUsers[i].Name, dataParamsOfUsers[i].UserID);
+                    UpdateUserParameter(UserDataParameter::FollowDate, dataParamsOfUsers[i].FollowDate, dataParamsOfUsers[i].UserID);
+                }
+                // If user is not in database, then just add a record
+                else
+                {
+                    if (!DB_INSERT("UserData", dataParamsOfUsers[i].ToString(), true))
+                    {
+                        LOG(LogError, "", Q_FUNC_INFO, QString("User was not added!\nData: %1").arg(dataParamsOfUsers[i].ToString()));
+                    }
+                }
+            }
+
+            // End transaction
+            added = DB_MANAGER.EndTransaction();
         }
 
-        // End transaction
-        added = DB_MANAGER.EndTransaction();
-    }
-
-    // If transaction failed, log error
-    if (!added)
-    {
-        LOG(LogError, "", Q_FUNC_INFO, QString("Not able to add %1 user(s) to database.").arg(dataParamsOfUsers.size()));
-    }
+        // If transaction failed, log error
+        if (!added)
+        {
+            LOG(LogError, "", Q_FUNC_INFO, QString("Not able to add %1 user(s) to database.").arg(dataParamsOfUsers.size()));
+        }
+    }   
 
     return added;
 }

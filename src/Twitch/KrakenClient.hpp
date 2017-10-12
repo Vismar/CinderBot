@@ -128,8 +128,9 @@ private:
      * \brief Sets specified value to certain parameter.
      * \param param - parameter that should be updated.
      * \param value - new value for specified parameter.
+     * \return True if parameter was changed, otherwise, if new value for parameter was the same, will return false.
      */
-    void _SetParameter(KrakenParameter param, const QVariant &value);
+    bool _SetParameter(KrakenParameter param, const QVariant &value);
 
     /*!
      * \brief Adds request to queue.
@@ -142,6 +143,7 @@ private:
      */
     void _SendRequest(const QString &request) const;
 
+    /*** Handlers for responses ***/
     /*!
      * \brief Handles error message from Kraken API.
      * \param response - json object of response.
@@ -167,6 +169,20 @@ private:
      * \param response - json object of response.
      */
     void _HandleStreamInfo(const KrakenResponse &response);
+    /*!
+    * \brief Handles followers message from Kraken API.
+    * \param response - json object of response.
+    */
+    void _HandleFollowers(const KrakenResponse &response) const;
+
+    /*** Handlers for changing specific parameters ***/
+    /*!
+     * \brief Handles change of kraken parameter ChannelFollowers.
+     * \param newTotalFollowers - new value of parameter.
+     * 
+     * Defines the difference beetween old and new values, after that creates requests to grab needed users from KrakenAPI.
+     */
+    void _HandleParameterChangeChannelFollower(int newTotalFollowers);
 
     /*! Network manager which sends and receives messages to/from Kraken API. */
     QNetworkAccessManager *_networkManager;

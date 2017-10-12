@@ -93,7 +93,7 @@ bool DatabaseManager::EndTransaction()
     if (_transactionOn)
     {
         commited = _database.commit();
-        _transactionOn = commited;
+        _transactionOn = !commited; // If transaction succeeded we should turn off transaction flag, otherwise - turn on
     }
     
     // Log error
