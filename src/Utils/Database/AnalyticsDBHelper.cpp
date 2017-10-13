@@ -120,7 +120,7 @@ void AnalyticsDBHelper::_HandleChangeOfParameterStreamOn(bool streamOn) const
     else
     {
         if (!DB_UPDATE("Analytics", QString("EndOfTheStream='%1'").arg(QDateTime::currentDateTime().toString("d-M-yyyy h:m:s")),
-            "Id IN (SELECT Id FROM Analytics ORDER BY Id DESC LIMIT 1)"))
+                                    "Id IN (SELECT Id FROM Analytics ORDER BY Id DESC LIMIT 1)"))
         {
             LOG(LogError, "", Q_FUNC_INFO, "Last stream record field 'EndOfTheStream' was not updated!");
         }

@@ -6,6 +6,7 @@
 #include "KrakenClient.hpp"
 #include "Twitch/KrakenResponse.hpp"
 #include "Utils/Database/AnalyticsDBHelper.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Logger.hpp"
 #include <QJsonArray>
@@ -122,6 +123,9 @@ void KrakenClient::_ReadResponse(QNetworkReply *reply)
     case KrakenResponseType::StreamInfo:
         _HandleStreamInfo(krakenResponse);
         break;
+    case KrakenResponseType::Followers:
+        _HandleFollowers(krakenResponse);
+        break;
     default:
         // Log error
         LOG(LogWarning, "", Q_FUNC_INFO, QString("Indefined response from Kraken API.\nMessage: %1").arg(response));
@@ -230,15 +234,20 @@ void KrakenClient::_UpdateStreamInfo()
 
 ///////////////////////////////////////////////////////////////////////////
 
-void KrakenClient::_SetParameter(KrakenParameter param, const QVariant& value)
+bool KrakenClient::_SetParameter(KrakenParameter param, const QVariant& value)
 {
+    bool changed(false);
+
     QVariant oldValue = _krakenParameters[param];
     _krakenParameters.insert(param, value);
 
     if (oldValue != value)
     {
+        changed = true;
         emit ParameterChanged(param, value);
     }
+
+    return changed;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -316,8 +325,10 @@ void KrakenClient::_HandleChannelInfo(const KrakenResponse& response)
     _SetParameter(KrakenParameter::ChannelGame, response.GetParam("game").toString());
     _SetParameter(KrakenParameter::ChannelPartnerStatus, response.GetParam("partner").toBool());
     _SetParameter(KrakenParameter::ChannelViews, response.GetParam("views").toUInt());
-    _SetParameter(KrakenParameter::ChannelFollowers, response.GetParam("followers").toUInt());
     _SetParameter(KrakenParameter::ChannelBroadcasterType, response.GetParam("broadcaster_type").toString());
+
+    // Handle change of followers value
+    _HandleParameterChangeChannelFollower(response.GetParam("followers").toUInt());
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -337,6 +348,80 @@ void KrakenClient::_HandleStreamInfo(const KrakenResponse& response)
     else
     {
         _SetParameter(KrakenParameter::StreamOn, false);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void KrakenClient::_HandleFollowers(const KrakenResponse& response) const
+{
+    // Get users
+    QJsonArray users = response.GetParam("follows").toJsonArray();
+
+    QVector<UserDataParams> usersParams;
+
+    // Fill the data from response
+    for (int i = 0; i < users.size(); ++i)
+    {
+        QJsonObject userInfo = users.at(i).toObject();
+        QJsonObject user = userInfo.value("user").toObject();
+
+        UserDataParams userParams;
+
+        // Get display-name of user
+        userParams.Author = user.value("display_name").toString();
+        // Get id of user
+        userParams.UserID = user.value("_id").toString().toInt();
+        // Get real name of user
+        userParams.Name = user.value("name").toString();
+        // Get follow date
+        QDateTime followed = QDateTime::fromString(userInfo.value("created_at").toString().left(10), "yyyy-MM-dd");
+        userParams.FollowDate = followed.toString("d-M-yyyy");
+
+        // Add new user to array
+        usersParams.push_back(userParams);
+    }
+
+    // Try to add users
+    UserDataDBHelper::AddUsers(usersParams);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void KrakenClient::_HandleParameterChangeChannelFollower(int newTotalFollowers)
+{
+    int oldTotalFollowers = GetParameter(KrakenParameter::ChannelFollowers).toInt();
+
+    // If parameter was changed, then we should try to get new followers
+    if (_SetParameter(KrakenParameter::ChannelFollowers, newTotalFollowers))
+    {
+        // Get absolute difference
+        int diff = qAbs(newTotalFollowers - oldTotalFollowers);
+
+        // Calculate how many request should be created
+        diff = diff / 100;
+
+        // If diff is to high for new value, use new value as base
+        if (diff * 100 > newTotalFollowers)
+        {
+            diff = newTotalFollowers / 100;
+        }
+        // Unfortunately, KrakenAPI have limit in offset value for followers (to be exact, 1600)
+        else if (diff > 16)
+        {
+            diff = 16;
+        }
+
+        // Get channel user id and client if as string to use values in loop
+        QString channelUserID = _krakenParameters[ChannelUserID].toString();
+        QString clientID = _krakenParameters[ClientID].toString();
+
+        // Add all requests that are needed
+        for (int i = diff; i >= 0; --i)
+        {
+            _AddRequestToQueue(QString("https://api.twitch.tv/kraken/channels/%1/follows?limit=100&offset=%2&api_version=5&client_id=%3")
+                               .arg(channelUserID).arg(i*100).arg(clientID));
+        }
     }
 }
 
