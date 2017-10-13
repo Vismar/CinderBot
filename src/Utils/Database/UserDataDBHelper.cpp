@@ -119,12 +119,15 @@ bool UserDataDBHelper::AddUsers(const QVector<UserDataParams> &dataParamsOfUsers
         {
             for (int i = 0; i < dataParamsOfUsers.size(); ++i)
             {
+                UserDataParams userParams = GetUserParameters(dataParamsOfUsers[i].UserID);
+
                 // If user already in database, then we should only update specific values
-                if (IsUserFollower(dataParamsOfUsers[i].UserID))
+                if (userParams.UserID != -1)
                 {
-                    UpdateUserParameter(UserDataParameter::Author, dataParamsOfUsers[i].Author, dataParamsOfUsers[i].UserID);
-                    UpdateUserParameter(UserDataParameter::Name, dataParamsOfUsers[i].Name, dataParamsOfUsers[i].UserID);
-                    UpdateUserParameter(UserDataParameter::FollowDate, dataParamsOfUsers[i].FollowDate, dataParamsOfUsers[i].UserID);
+                    userParams.Name = dataParamsOfUsers[i].Name;
+                    userParams.Author = dataParamsOfUsers[i].Author;
+                    userParams.FollowDate = dataParamsOfUsers[i].FollowDate;
+                    SetUserParameters(userParams);
                 }
                 // If user is not in database, then just add a record
                 else
@@ -277,14 +280,15 @@ void UserDataDBHelper::SetUserParameters(UserDataParams userDataParams)
 {
     DB_UPDATE("UserData", QString("Name='%1', Author='%2', "
                                   "Messages=%3, Currency=%4, "
-                                  "Covenant='%5', LastTimerVisited='%6', "
+                                  "Covenant='%5', LastTimeVisited='%6', "
                                   "TimeInChat=%7, Bits=%8, "
                                   "Subscription='%9', FollowDate='%10'")
                                   .arg(userDataParams.Name).arg(userDataParams.Author)
                                   .arg(userDataParams.Messages).arg(userDataParams.Currency)
                                   .arg(userDataParams.Covenant).arg(userDataParams.LastTimeVisited)
                                   .arg(userDataParams.MinutesInChat).arg(userDataParams.Bits)
-                                  .arg(userDataParams.Subscription ? "true" : "false").arg(userDataParams.FollowDate));
+                                  .arg(userDataParams.Subscription ? "true" : "false").arg(userDataParams.FollowDate),
+                          QString("UserID=%1").arg(userDataParams.UserID));
 }
 
 ///////////////////////////////////////////////////////////////////////////
