@@ -57,7 +57,9 @@ QString KrakenClient::Initialize()
     // Add ClientID default value
     _SetParameter(KrakenParameter::ClientID, "we0qz5ot41crhkeo1w6mv9t769x1q5");
     // Add first channel followers number
-    _SetParameter(KrakenParameter::ChannelFollowers, AnalyticsDBHelper::GetLastNumberOfFollowers());
+    _SetParameter(KrakenParameter::ChannelFollowers, AnalyticsDBHelper::Instance().GetLastNumberOfFollowers());
+    // Add first channel subscribers number
+    _SetParameter(KrakenParameter::ChannelSubscribers, AnalyticsDBHelper::Instance().GetLastNumberOfSubscribers());
     // Add default value for stream flag
     _SetParameter(KrakenParameter::StreamOn, false);
     
@@ -126,6 +128,9 @@ void KrakenClient::_ReadResponse(QNetworkReply *reply)
     case KrakenResponseType::Followers:
         _HandleFollowers(krakenResponse);
         break;
+    case KrakenResponseType::Subscribers:
+        _HandleSubscribers(krakenResponse);
+        break;
     default:
         // Log error
         LOG(LogWarning, "", Q_FUNC_INFO, QString("Indefined response from Kraken API.\nMessage: %1").arg(response));
@@ -150,6 +155,7 @@ void KrakenClient::_InitializeParameters()
         _InitializeChannelUserID();
         _UpdateChannelInfo();
         _UpdateStreamInfo();
+        _UpdateSubscribers();
     }
 }
 
@@ -272,6 +278,25 @@ void KrakenClient::_UpdateStreamInfo()
 
 ///////////////////////////////////////////////////////////////////////////
 
+void KrakenClient::_UpdateSubscribers()
+{
+    // Check if broadcaster can have subscribers
+    if (!GetParameter(KrakenParameter::ChannelBroadcasterType).toString().isEmpty())
+    {
+        if (QDateTime::currentDateTime().toSecsSinceEpoch() % 30 == 0)
+        {
+            QString oathKey;
+            if (ConfigurationManager::Instance().GetStringParam(CfgParam::LoginChannelOauthKey, oathKey) && _krakenParameters.contains(ChannelUserID))
+            {
+                _AddRequestToQueue(QString("https://api.twitch.tv/kraken/channels/%1/subscriptions?limit=1&offset=999999999&api_version=5&client_id=%2&oauth_token=%3")
+                                   .arg(_krakenParameters[ChannelUserID].toString()).arg(_krakenParameters[ClientID].toString()).arg(oathKey));
+            }
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void KrakenClient::_HandleErrorResponse(const KrakenResponse &response) const
 {
     // Log error
@@ -388,6 +413,13 @@ void KrakenClient::_HandleFollowers(const KrakenResponse& response) const
 
 ///////////////////////////////////////////////////////////////////////////
 
+void KrakenClient::_HandleSubscribers(const KrakenResponse& response)
+{
+    _SetParameter(KrakenParameter::ChannelSubscribers, response.GetParam("_total").toInt());
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void KrakenClient::_HandleParameterChangeChannelFollower(int newTotalFollowers)
 {
     int oldTotalFollowers = GetParameter(KrakenParameter::ChannelFollowers).toInt();
@@ -420,7 +452,7 @@ void KrakenClient::_HandleParameterChangeChannelFollower(int newTotalFollowers)
         for (int i = diff; i >= 0; --i)
         {
             _AddRequestToQueue(QString("https://api.twitch.tv/kraken/channels/%1/follows?limit=100&offset=%2&api_version=5&client_id=%3")
-                               .arg(channelUserID).arg(i*100).arg(clientID));
+                               .arg(channelUserID).arg(i * 100).arg(clientID));
         }
     }
 }

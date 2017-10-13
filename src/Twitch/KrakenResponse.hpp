@@ -25,7 +25,8 @@ enum class KrakenResponseType
     BotStatus,
     ChannelInfo,
     StreamInfo,
-    Followers
+    Followers,
+    Subscribers
 };
 
 /*! Simple typedef to short name. */
@@ -101,6 +102,12 @@ private:
      * \return True if specified object contains followers fields.
      */
     bool _ValidateFollowers(const QJsonObject &jsonObject);
+    /*!
+     * \brief Check if specified object contains subscribers fields.
+     * \param jsonObject - object that should be checked.
+     * \return True if specified object contains subscribers fields.
+     */
+    bool _ValidateSubscribers(const QJsonObject &jsonObject);
 
     /*! Array of parameters that was found in response. */
     KRParams _params;
@@ -117,6 +124,8 @@ private:
     static QVector<QString> _jsonFieldsStreamInfo;
     /*! Static array of fields that should exist in followers response. */
     static QVector<QString> _jsonFieldsFollowers;
+    /*! Static array of fields that should exist in subscribers response. */
+    static QVector<QString> _jsonFieldsSubscribers;
 };
 
 }

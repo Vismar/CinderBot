@@ -29,6 +29,7 @@ enum KrakenParameter
     ChannelPartnerStatus,
     ChannelViews,
     ChannelFollowers,
+    ChannelSubscribers,
     ChannelBroadcasterType,
     StreamOn,
     StreamType,
@@ -139,9 +140,15 @@ private:
     /*!
      * \brief Tries to get stream info.
      *
-     * Tries to get stream info to know when stream is up and how many viewers currently watching the stream..
+     * Tries to get stream info to know when stream is up and how many viewers currently watching the stream.
      */
     void _UpdateStreamInfo();
+    /*!
+     * \brief Tries to get subscriber counter.
+     *
+     * Tries to get subscribers counter to know how many broadcaster have.
+     */
+    void _UpdateSubscribers();
     
     /*** Handlers for responses ***/
     /*!
@@ -174,6 +181,11 @@ private:
     * \param response - json object of response.
     */
     void _HandleFollowers(const KrakenResponse &response) const;
+    /*!
+     * \brief Handles subscribers message from KrakenAPI.
+     * \param response - json object of response.
+     */
+    void _HandleSubscribers(const KrakenResponse &response);
 
     /*** Handlers for changing specific parameters ***/
     /*!

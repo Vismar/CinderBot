@@ -45,7 +45,6 @@ enum class UserDataParameter
     LastTimeVisited,
     TimeInChat,
     Bits,
-    Subscription,
     FollowDate
 };
 
@@ -87,8 +86,6 @@ struct UserDataParams
     int MinutesInChat = 0;
     /*! Amount of bits that was donated by user to broadcaster. */
     int Bits = 0;
-    /*! Flag that defines if user is subscriber or not. */
-    bool Subscription = false;
     /*! Date when a user has followed the broadcaster. */
     QString FollowDate = "";
 };

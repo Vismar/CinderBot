@@ -38,7 +38,8 @@ QString AnalyticsDBHelper::InitializeTables()
                                      "RecordType       TEXT    NOT NULL DEFAULT 'Day',"
                                      "StartOfTheStream TEXT    NOT NULL DEFAULT '',"
                                      "EndOfTheStream   TEXT    NOT NULL DEFAULT '',"
-                                     "TotalFollowers   INTEGER NOT NULL DEFAULT 0"))
+                                     "TotalFollowers   INTEGER NOT NULL DEFAULT 0,"
+                                     "TotalSubscribers INTEGER NOT NULL DEFAULT 0"))
     {
         // Try to create indexes for created database table
         if (!DB_CREATE_INDEX("Analytics", "RecordType_Index", "RecordType"))
@@ -65,7 +66,7 @@ int AnalyticsDBHelper::GetLastNumberOfFollowers()
     if (KrakenClient::Instance().GetParameter(KrakenParameter::StreamOn).toBool())
     {
         // Try to get follower number from last record
-        DB_QUERY_PTR query = DB_SELECT("Analytics", "TotalFollowers", "Id IN (SELECT Id FROM Analytics ORDER BY Id DESC LIMIT 1)");
+        DB_QUERY_PTR query = DB_SELECT("Analytics", "TotalFollowers", "Id IN (SELECT MAX(Id) FROM Analytics WHERE RecordType IN ('VOD', 'Live'))");
         if ((query != nullptr) && query->first())
         {
             totalFollowers = query->value("TotalFollowers").toInt();
@@ -75,7 +76,7 @@ int AnalyticsDBHelper::GetLastNumberOfFollowers()
     else
     {
         // Try to get follower number from record for current day
-        DB_QUERY_PTR query = DB_SELECT("Analytics", "TotalFollowers", QString("StartOfTheStream='%1'").arg(QDateTime::currentDateTime().toString("d-M-yyyy")));
+        DB_QUERY_PTR query = DB_SELECT("Analytics", "TotalFollowers", "Id IN (SELECT MAX(Id) FROM Analytics WHERE RecordType='Day')");
         if ((query != nullptr) && query->first())
         {
             totalFollowers = query->value("TotalFollowers").toInt();
@@ -83,6 +84,36 @@ int AnalyticsDBHelper::GetLastNumberOfFollowers()
     }
 
     return totalFollowers;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+int AnalyticsDBHelper::GetLastNumberOfSubscribers()
+{
+    int totalSubs(0);
+
+    // If stream is on
+    if (KrakenClient::Instance().GetParameter(KrakenParameter::StreamOn).toBool())
+    {
+        // Try to get follower number from last stream record
+        DB_QUERY_PTR query = DB_SELECT("Analytics", "TotalSubscribers", "Id IN (SELECT MAX(Id) FROM Analytics WHERE RecordType IN ('VOD', 'Live'))");
+        if ((query != nullptr) && query->first())
+        {
+            totalSubs = query->value("TotalSubscribers").toInt();
+        }
+    }
+    // If stream is off
+    else
+    {
+        // Try to get follower number from last day record
+        DB_QUERY_PTR query = DB_SELECT("Analytics", "TotalSubscribers", "Id IN (SELECT MAX(Id) FROM Analytics WHERE RecordType='Day')");
+        if ((query != nullptr) && query->first())
+        {
+            totalSubs = query->value("TotalSubscribers").toInt();
+        }
+    }
+
+    return totalSubs;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -96,6 +127,9 @@ void AnalyticsDBHelper::_HandleKrakenParameterChange(KrakenParameter param, cons
         break;
     case KrakenParameter::ChannelFollowers:
         _HandleChangeOfParameterChannelFollowers(value.toInt());
+        break;
+    case KrakenParameter::ChannelSubscribers:
+        _HandleChangeOfParameterChannelSubscribers(value.toInt());
         break;
     default:
         break;
@@ -120,7 +154,7 @@ void AnalyticsDBHelper::_HandleChangeOfParameterStreamOn(bool streamOn) const
     else
     {
         if (!DB_UPDATE("Analytics", QString("EndOfTheStream='%1'").arg(QDateTime::currentDateTime().toString("d-M-yyyy h:m:s")),
-                                    "Id IN (SELECT Id FROM Analytics ORDER BY Id DESC LIMIT 1)"))
+                                    "Id IN (SELECT MAX(Id) FROM Analytics WHERE RecordType IN ('VOD', 'Live'))"))
         {
             LOG(LogError, "", Q_FUNC_INFO, "Last stream record field 'EndOfTheStream' was not updated!");
         }
@@ -131,41 +165,86 @@ void AnalyticsDBHelper::_HandleChangeOfParameterStreamOn(bool streamOn) const
 
 void AnalyticsDBHelper::_HandleChangeOfParameterChannelFollowers(int totalFollowers) const
 {
-    // If stream is on, just update value in last record
-    if (KrakenClient::Instance().GetParameter(KrakenParameter::StreamOn).toBool())
+    // Start transaction
+    if (DB_MANAGER.StartTransaction())
     {
-        if (!DB_UPDATE("Analytics", QString("TotalFollowers=%1").arg(totalFollowers), "Id IN (SELECT Id FROM Analytics ORDER BY Id DESC LIMIT 1)"))
+        // If stream is on, we need to update value in last record for stream
+        if (KrakenClient::Instance().GetParameter(KrakenParameter::StreamOn).toBool())
         {
-            LOG(LogError, "", Q_FUNC_INFO, "Last stream record field 'TotalFollowers' was not updated!");
-        }
-    }
-    // If stream is off and we detected change of followers, try to create new record with type 'Day' or update the last one
-    else
-    {
-        // Check if we already have record with current date
-        DB_QUERY_PTR query = DB_SELECT("Analytics", "Id", QString("StartOfTheStream='%1'").arg(QDateTime::currentDateTime().toString("d-M-yyyy")));
-        if (query != nullptr && query->first())
-        {
-            int id = query->value("Id").toInt();
-
-            // Try to update certain record from database
-            if (!DB_UPDATE("Analytics", QString("TotalFollowers=%1").arg(totalFollowers), QString("Id=%1").arg(id)))
-            {
-                LOG(LogError, "", Q_FUNC_INFO, QString("Stream record Id=%1 field 'TotalFollowers' was not updated!").arg(id));
-            }
-        }
-        else
-        {
-            // If no record for current day, then create it
-            _CreateRecord(AnalyticsRecordType::Day);
-
-            // Try to update field in last created record for current day
-            if (!DB_UPDATE("Analytics", QString("TotalFollowers=%1").arg(totalFollowers), "Id IN (SELECT Id FROM Analytics ORDER BY Id DESC LIMIT 1)"))
+            if (!DB_UPDATE("Analytics", QString("TotalFollowers=%1").arg(totalFollowers),
+                                        "Id=(SELECT MAX(Id) FROM Analytics WHERE RecordType IN ('VOD', 'Live'))"))
             {
                 LOG(LogError, "", Q_FUNC_INFO, "Last stream record field 'TotalFollowers' was not updated!");
             }
         }
+
+        // Create record if it not exist
+        if (!_IsRecordExistForCurrentDay())
+        {
+            _CreateRecord(AnalyticsRecordType::Day);
+        }
+
+        // Try to update certain record from database
+        if (!DB_UPDATE("Analytics", QString("TotalFollowers=%1").arg(totalFollowers), 
+                                    QString("StartOfTheStream='%1'").arg(QDateTime::currentDateTime().toString("d-M-yyyy"))))
+        {
+            LOG(LogError, "", Q_FUNC_INFO, "Stream record field 'TotalFollowers' was not updated!");
+        }
     }
+    // End transaction
+    DB_MANAGER.EndTransaction();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void AnalyticsDBHelper::_HandleChangeOfParameterChannelSubscribers(int totalSubscribers) const
+{
+    // Start transaction
+    if (DB_MANAGER.StartTransaction())
+    {
+        // If stream is on, we need to update value in last record for stream
+        if (KrakenClient::Instance().GetParameter(KrakenParameter::StreamOn).toBool())
+        {
+            if (!DB_UPDATE("Analytics", QString("TotalSubscribers=%1").arg(totalSubscribers),
+                                        "Id=(SELECT MAX(Id) FROM Analytics WHERE RecordType IN ('VOD', 'Live'))"))
+            {
+                LOG(LogError, "", Q_FUNC_INFO, "Last stream record field 'TotalSubscribers' was not updated!");
+            }
+        }
+
+        // Create record if it not exist
+        if (!_IsRecordExistForCurrentDay())
+        {
+            _CreateRecord(AnalyticsRecordType::Day);
+        }
+
+        // Try to update certain record from database
+        if (!DB_UPDATE("Analytics", QString("TotalSubscribers=%1").arg(totalSubscribers),
+                                    QString("StartOfTheStream='%1'").arg(QDateTime::currentDateTime().toString("d-M-yyyy"))))
+        {
+            LOG(LogError, "", Q_FUNC_INFO, "Stream record field 'TotalSubscribers' was not updated!");
+        }
+    }
+    // End transaction
+    DB_MANAGER.EndTransaction();
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool AnalyticsDBHelper::_IsRecordExistForCurrentDay()
+{
+    bool exist(false);
+
+    // Check if we already have record with current date
+    DB_QUERY_PTR query = DB_SELECT("Analytics", "Id", QString("StartOfTheStream='%1'").arg(QDateTime::currentDateTime().toString("d-M-yyyy")));
+
+    // If no record for current day, then we should create it
+    if (query != nullptr && query->first())
+    {
+        exist = true;
+    }
+
+    return exist;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -195,7 +274,11 @@ void AnalyticsDBHelper::_CreateRecord(AnalyticsRecordType recordType) const
     }
 
     // Try to create new record
-    if (!DB_INSERT("Analytics", QString("NULL, '%1', '%2', '%3', %4").arg(strRecordType).arg(dayTime).arg(dayTime).arg(GetLastNumberOfFollowers())))
+    if (!DB_INSERT("Analytics", QString("NULL, '%1', '%2', '%3', %4, %5").arg(strRecordType)
+                                                                         .arg(dayTime)
+                                                                         .arg(dayTime)
+                                                                         .arg(GetLastNumberOfFollowers())
+                                                                         .arg(GetLastNumberOfSubscribers())))
     {
         LOG(LogError, "", Q_FUNC_INFO, QString("Stream '%1' record cannot be created!").arg(strRecordType));
     }
