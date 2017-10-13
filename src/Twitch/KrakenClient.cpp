@@ -155,6 +155,44 @@ void KrakenClient::_InitializeParameters()
 
 ///////////////////////////////////////////////////////////////////////////
 
+bool KrakenClient::_SetParameter(KrakenParameter param, const QVariant& value)
+{
+    bool changed(false);
+
+    QVariant oldValue = _krakenParameters[param];
+    _krakenParameters.insert(param, value);
+
+    if (oldValue != value)
+    {
+        changed = true;
+        emit ParameterChanged(param, value);
+    }
+
+    return changed;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void KrakenClient::_AddRequestToQueue(const QString& request)
+{
+    _requests.enqueue(request);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void KrakenClient::_SendRequest(const QString &request) const
+{
+    if (_networkManager->networkAccessible() == QNetworkAccessManager::Accessible)
+    {
+        _networkManager->get(QNetworkRequest(QUrl(request)));
+
+        // Log info
+        LOG(LogInfo, "", Q_FUNC_INFO, QString("Request to Kraken API: %1").arg(request));
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 void KrakenClient::_InitializeBotUserID()
 {
     // BotUserID param
@@ -229,44 +267,6 @@ void KrakenClient::_UpdateStreamInfo()
             _AddRequestToQueue(QString("https://api.twitch.tv/kraken/streams?channel=%1&api_version=5&client_id=%2")
                                .arg(_krakenParameters[ChannelUserID].toString()).arg(_krakenParameters[ClientID].toString()));
         }
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-bool KrakenClient::_SetParameter(KrakenParameter param, const QVariant& value)
-{
-    bool changed(false);
-
-    QVariant oldValue = _krakenParameters[param];
-    _krakenParameters.insert(param, value);
-
-    if (oldValue != value)
-    {
-        changed = true;
-        emit ParameterChanged(param, value);
-    }
-
-    return changed;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void KrakenClient::_AddRequestToQueue(const QString& request)
-{
-    _requests.enqueue(request);
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void KrakenClient::_SendRequest(const QString &request) const
-{
-    if (_networkManager->networkAccessible() == QNetworkAccessManager::Accessible)
-    {
-        _networkManager->get(QNetworkRequest(QUrl(request)));
-
-        // Log info
-        LOG(LogInfo, "", Q_FUNC_INFO, QString("Request to Kraken API: %1").arg(request));
     }
 }
 

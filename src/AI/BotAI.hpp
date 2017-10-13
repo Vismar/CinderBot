@@ -62,14 +62,14 @@ private:
      *
      * Checks if specified user if in ignore list.
      */
-    bool _CheckIgnoreList(const QString &userName);
+    bool _CheckIgnoreList(const QString &userName) const;
     /*!
      * \brief Updates user data.
      * \param message - chat message.
      *
      * Updates all user data: author, message counter and currency.
      */
-    void _UpdateUserData(const ChatMessage &message);
+    void _UpdateUserData(const ChatMessage &message) const;
 
     /*! Array of commands */
     QVector<Command::CommandList*> _chatCommands;

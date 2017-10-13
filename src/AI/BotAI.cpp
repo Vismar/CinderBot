@@ -69,18 +69,7 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
     // If new message is not created by bot, parse it.
     if (!botMessage)
     {
-        // Update user data
-        switch (message.GetType())
-        {
-        case PRIVMSG:
-        case BITS:
-            _UpdateUserData(message);
-            break;
-        default:
-            break;
-        }
-
-        // If user is not in ignore list, try to find commands
+        // If user is not in ignore list, try to find commands and update user info
         if (!(_CheckIgnoreList(message.GetAuthor()) || _CheckIgnoreList(message.GetRealName())))
         {
             ChatAnswer answer;
@@ -93,6 +82,8 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
                 answer.SetType(Twitch_Whisper);
             }
             answer.SetRealName(message.GetRealName());
+
+            // Try to execute command
             for (int i = 0; i < _chatCommands.size(); ++i)
             {
                 // If we found a command, emit event with result and break the loop
@@ -101,6 +92,17 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
                     emit NewBotMessage(answer);
                     break;
                 }
+            }
+
+            // Update user data
+            switch (message.GetType())
+            {
+            case PRIVMSG:
+            case BITS:
+                _UpdateUserData(message);
+                break;
+            default:
+                break;
             }
         }
     }
@@ -132,28 +134,42 @@ void BotAI::LoadTimerCommands()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool BotAI::_CheckIgnoreList(const QString &userName)
+bool BotAI::_CheckIgnoreList(const QString &userName) const
 {
     return _ignoreList.contains(userName.toLower());
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void BotAI::_UpdateUserData(const ChatMessage &message)
+void BotAI::_UpdateUserData(const ChatMessage &message) const
 {
     // If user is not in ignore list, update info
     if (!(_CheckIgnoreList(message.GetAuthor()) || _CheckIgnoreList(message.GetRealName())))
     {
-        QString tempString = "1";
-        UserDataDBHelper::UpdateUserParameter(UserDataParameter::Author, message.GetAuthor(), message.GetUserID());
-        UserDataDBHelper::IncrementUserMsgCounter(1, message.GetUserID());
-        // Add currency for message
-        ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerMsg, tempString);
-        UserDataDBHelper::GiveCurrencyToUser(tempString.toInt(), message.GetUserID());
-        // Update bits number
-        if (!message.GetBits().isEmpty())
+        // Grab user params
+        UserDataParams userParams = UserDataDBHelper::GetUserParameters(message.GetUserID());
+
+        // If user exist, update data
+        if (userParams.UserID != -1)
         {
-            UserDataDBHelper::GiveBitsToUser(message.GetBits().toInt(), message.GetUserID());
+            // Get amount of currency that should be given to user
+            QString tempString = "1";
+            ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerMsg, tempString);
+
+            // Update params
+            userParams.Author = message.GetAuthor();   // Update display name
+            userParams.Name = message.GetRealName();   // Update real name
+            userParams.Messages++;                     // Add 1 to msg counter
+            userParams.Currency += tempString.toInt(); // Update currency
+
+            // Update bits if any
+            if (!message.GetBits().isEmpty())
+            {
+                userParams.Bits += message.GetBits().toInt();
+            }
+
+            // Update results
+            UserDataDBHelper::SetUserParameters(userParams);
         }
     }
 }

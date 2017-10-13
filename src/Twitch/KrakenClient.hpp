@@ -93,6 +93,26 @@ private slots:
 
 private:
     /*!
+    * \brief Sets specified value to certain parameter.
+    * \param param - parameter that should be updated.
+    * \param value - new value for specified parameter.
+    * \return True if parameter was changed, otherwise, if new value for parameter was the same, will return false.
+    */
+    bool _SetParameter(KrakenParameter param, const QVariant &value);
+
+    /*!
+    * \brief Adds request to queue.
+    * \param request - request that will be added to queue of requests.
+    */
+    void _AddRequestToQueue(const QString &request);
+    /*!
+    * \brief Sends request to Kraken API.
+    * \param request - request that will be sent.
+    */
+    void _SendRequest(const QString &request) const;
+
+    /*** KrakenAPI requests ***/
+    /*!
      * \brief Tries to get bot user id.
      * 
      * If bot user id is not gained, tries to get it.
@@ -122,27 +142,7 @@ private:
      * Tries to get stream info to know when stream is up and how many viewers currently watching the stream..
      */
     void _UpdateStreamInfo();
-
-
-    /*!
-     * \brief Sets specified value to certain parameter.
-     * \param param - parameter that should be updated.
-     * \param value - new value for specified parameter.
-     * \return True if parameter was changed, otherwise, if new value for parameter was the same, will return false.
-     */
-    bool _SetParameter(KrakenParameter param, const QVariant &value);
-
-    /*!
-     * \brief Adds request to queue.
-     * \param request - request that will be added to queue of requests.
-     */
-    void _AddRequestToQueue(const QString &request);
-    /*!
-     * \brief Sends request to Kraken API.
-     * \param request - request that will be sent.
-     */
-    void _SendRequest(const QString &request) const;
-
+    
     /*** Handlers for responses ***/
     /*!
      * \brief Handles error message from Kraken API.
