@@ -34,6 +34,9 @@ QVector<QString> KrakenResponse::_jsonFieldsStreamInfo = { "_total", "streams" }
 /* Followers */
 QVector<QString> KrakenResponse::_jsonFieldsFollowers = { "_total", "_cursor", "follows" };
 
+/* Subscribers */
+QVector<QString> KrakenResponse::_jsonFieldsSubscribers = { "_total", "subscriptions" };
+
 ///////////////////////////////////////////////////////////////////////////
 
 KrakenResponseType KrakenResponse::ParseResponse(const QString &response)
@@ -74,6 +77,10 @@ KrakenResponseType KrakenResponse::ParseResponse(const QString &response)
         else if (_ValidateFollowers(jsonObject))
         {
             responseType = KrakenResponseType::Followers;
+        }
+        else if (_ValidateSubscribers(jsonObject))
+        {
+            responseType = KrakenResponseType::Subscribers;
         }
     }
 
@@ -178,6 +185,13 @@ bool KrakenResponse::_ValidateStreamInfo(const QJsonObject &jsonObject)
 bool KrakenResponse::_ValidateFollowers(const QJsonObject &jsonObject)
 {
     return _ValidateParams(_jsonFieldsFollowers, jsonObject);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool KrakenResponse::_ValidateSubscribers(const QJsonObject &jsonObject)
+{
+    return _ValidateParams(_jsonFieldsSubscribers, jsonObject);
 }
 
 ///////////////////////////////////////////////////////////////////////////

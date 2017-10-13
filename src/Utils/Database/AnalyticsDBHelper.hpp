@@ -61,10 +61,18 @@ public:
      * \brief Grabs last total follower number.
      * \return Number of followers from database or 0, if no records were found.
      * 
-     * If no records in database about total followers, then will be rturned 0. 
-     * Otherwise - will be selected from last record if stream is on, or from record for current day.
+     * If no records in database about total followers, then will be returned 0. 
+     * Otherwise - will be selected from last record if stream is on, or from record for last day.
      */
     static int GetLastNumberOfFollowers();
+    /*!
+     * \brief Grabs last total susbcriber number.
+     * \return Number of subscribers from database or 0, if no records were found.
+     *
+     * If no records in database about total followers, then will be returned 0. 
+     * Otherwise - will be selected from last record if stream is on, or from record for last day.
+     */
+    static int GetLastNumberOfSubscribers();
 
 private slots:
     /*!
@@ -85,7 +93,17 @@ private:
      * \param totalFollowers - number of followers.
      */
     void _HandleChangeOfParameterChannelFollowers(int totalFollowers) const;
+    /*!
+     * \brief Handles change of parameter named 'ChannelSubscribers'.
+     * \param totalSubscribers - number of subscribers.
+     */
+    void _HandleChangeOfParameterChannelSubscribers(int totalSubscribers) const;
 
+    /*!
+     * \brief Checks if record for current day exists in database.
+     * \return True, if such record exist, otherwise - false.
+     */
+    static bool _IsRecordExistForCurrentDay();
     /*!
      * \brief Creates specified type of record.
      * \param recordType - type of record that should be created in database.

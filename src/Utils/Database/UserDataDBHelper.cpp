@@ -7,7 +7,7 @@
 #include "Utils/Logger.hpp"
 
 static QVector<QString> UserDataParamNames = { "UserID", "Name", "Author", "Messages", "Currency",
-                                               "Covenant", "LastTimeVisited", "TimeInChat", "Bits", "Subscription",
+                                               "Covenant", "LastTimeVisited", "TimeInChat", "Bits",
                                                "FollowDate" };
 
 using namespace Utils::Database;
@@ -28,7 +28,6 @@ void UserDataParams::FillDataFromQuery(DB_QUERY_PTR query)
     LastTimeVisited = query->value("LastTimeVisited").toString();
     MinutesInChat = query->value("TimeInChat").toInt();
     Bits = query->value("Bits").toInt();
-    Subscription = (query->value("Subscription").toString() == "true") ? true : false;
     FollowDate = query->value("FollowDate").toString();
 }
 
@@ -37,10 +36,9 @@ void UserDataParams::FillDataFromQuery(DB_QUERY_PTR query)
 QString UserDataParams::ToString() const
 {
     // Id-UserId-Name-Author-Messages-Currency-Covenant-LastTimeVisited-TimeInChat-Bits-Subscription
-    QString result = QString("NULL, %1, '%2', '%3', %4, %5, '%6', '%7', %8, %9, '%10', '%11'")
+    QString result = QString("NULL, %1, '%2', '%3', %4, %5, '%6', '%7', %8, %9, '%10'")
                             .arg(UserID).arg(Name).arg(Author).arg(Messages).arg(Currency)
-                            .arg(Covenant).arg(LastTimeVisited).arg(MinutesInChat).arg(Bits).arg(Subscription ? "true" : "false")
-                            .arg(FollowDate);
+                            .arg(Covenant).arg(LastTimeVisited).arg(MinutesInChat).arg(Bits).arg(FollowDate);
 
     return result;
 }
@@ -73,7 +71,6 @@ QString UserDataDBHelper::InitializeTables()
                                      "LastTimeVisited TEXT    DEFAULT '',"
                                      "TimeInChat      INTEGER DEFAULT 0,"
                                      "Bits            INTEGER DEFAULT 0,"
-                                     "Subscription    TEXT    DEFAULT 'false',"
                                      "FollowDate      TEXT    DEFAULT ''"))
     {
         result = "User data table was not created.";
@@ -84,10 +81,6 @@ QString UserDataDBHelper::InitializeTables()
         if (!DB_CREATE_INDEX("UserData", "Covenant_Index", "Covenant"))
         {
             result = "Indexes for 'Covenant' column were not created for user data table.";
-        }
-        else if (!DB_CREATE_INDEX("UserData", "Subscription_Index", "Subscription"))
-        {
-            result = "Indexes for 'Subscription' column were not created for user data table.";
         }
         else if (!DB_CREATE_INDEX("UserData", "UserID_Index", "UserID", true))
         {
@@ -282,12 +275,12 @@ void UserDataDBHelper::SetUserParameters(UserDataParams userDataParams)
                                   "Messages=%3, Currency=%4, "
                                   "Covenant='%5', LastTimeVisited='%6', "
                                   "TimeInChat=%7, Bits=%8, "
-                                  "Subscription='%9', FollowDate='%10'")
+                                  "FollowDate='%10'")
                                   .arg(userDataParams.Name).arg(userDataParams.Author)
                                   .arg(userDataParams.Messages).arg(userDataParams.Currency)
                                   .arg(userDataParams.Covenant).arg(userDataParams.LastTimeVisited)
                                   .arg(userDataParams.MinutesInChat).arg(userDataParams.Bits)
-                                  .arg(userDataParams.Subscription ? "true" : "false").arg(userDataParams.FollowDate),
+                                  .arg(userDataParams.FollowDate),
                           QString("UserID=%1").arg(userDataParams.UserID));
 }
 
