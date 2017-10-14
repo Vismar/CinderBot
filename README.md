@@ -1,43 +1,37 @@
-# CinderBot
-|Codacy|Travis|Latest Release|License|Taiga-project page|
-|:----:|:----:|:------------:|:-----:|:----------------:|
-|[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b200dceb1a7144ff86e663710ccfbb82)](https://www.codacy.com/app/exanimoteam/CinderBot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Vismar/CinderBot&amp;utm_campaign=Badge_Grade)|[![Build Status](https://travis-ci.org/Vismar/CinderBot.svg?branch=master)](https://travis-ci.org/Vismar/CinderBot)|[![Latest release](https://img.shields.io/badge/release-v0.9-blue.svg)](https://github.com/Vismar/CinderBot/releases/tag/v0.9)|<img src="https://fsfe.org/graphics/gplv3-logo-red.png" alt="GPLv3" width="67" height="27">|<a href="https://tree.taiga.io/project/vismar-cinderbot/backlog"><img src="https://taiga.io/images/logo-color.png" alt="Taiga.io project page" width="40" height="40"></a>|
+[![CinderBot](http://cinderbot.com/wp-content/uploads/CINDER_BOT.jpg)](http://cinderbot.com/en/)
+|Taiga-project page|License|Latest Release|Current Version|Codacy|Travis|
+|:----------------:|:-----:|:------------:|:-------------:|:----:|:----:|
+|<a href="https://tree.taiga.io/project/vismar-cinderbot/backlog"><img src="https://taiga.io/images/logo-color.png" alt="Taiga.io project page" width="40" height="40"></a>|<img src="https://fsfe.org/graphics/gplv3-logo-red.png" alt="GPLv3" width="67" height="27">|[![Latest release](https://img.shields.io/badge/release-v0.9-blue.svg)](https://github.com/Vismar/CinderBot/releases/tag/v0.9)|![Current version](https://img.shields.io/badge/release-v0.13-blue.svg)|[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b200dceb1a7144ff86e663710ccfbb82)](https://www.codacy.com/app/exanimoteam/CinderBot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Vismar/CinderBot&amp;utm_campaign=Badge_Grade)|[![Build Status](https://travis-ci.org/Vismar/CinderBot.svg?branch=master)](https://travis-ci.org/Vismar/CinderBot)|
 
 ## Description
-CinderBot is a program that includes many useful and entertaining features for your chat on Twitch.tv. Thanks to this program you can watch the statistics of your stream and each viewer separately in real time, create text rpg, commands, quotes and much more! CinderBot is still at an early stage of development, so everything can change at any time. However, if you decide to use the bot, then starting from version 0.5.5, you do not have to tune everything from scratch, as each new version will be released with a look at the previous ones.
+CinderBot is an actively developing open source Twitch bot that provides entertainment for viewers and a powerful tools for analytics and channel management for the streamers.
 
 ## Features
-
-### Custom commands
-CinderBot has a convenient interface for creating custom commands that have a lot of flexible settings, thanks to which you can create unique things.
+[Full list of features](http://cinderbot.com/en/features/)
 
 ### Quote system
-The quote system is already built into CinderBot, so you do not need to bother with external scripts or services. To manage quotes, you can use both chat commands, available to moderators as well as the graphical interface. More [here](https://tree.taiga.io/project/vismar-cinderbot/wiki/quote-system).
+The quote system allows you to save all the most ridiculous and important quotes in one place and display them in a chat with one command.
+[Check quote system page for more information](http://cinderbot.com/en/features/quote-system/)
 
-### Text RPG
-This functionality is still under development, but the ultimate goal of creating this system is to provide a tool for creating your own text-based RPGs for chat participants. Among the future opportunities will be the creation of covenants (which is already created and have the most functionality), PvP (duels, battles), PvE (quests, dungeons, raids), karma system and much more.
+### Custom commands
+The command system allows you to create your own commands, for which you can add an unlimited number of responses. In addition, the conditions for the operation of commands can be fully customized.
 
-### User data
-CinderBot collects a variety of data about the participants of your stream. How many messages they write, how much time they spend on streams when they were followed and much more. This functionality is also in constant development, so much will be realized in the near future.
+### Currency
+The currency system allows users in the chat to accumulate virtual points, which they can spend on the use of commands, as well as on everything related to the RPG system.
 
-### Stream analytics
-CinderBot is already able to keep statistics on the participants in the chat and its activity in real time. However, this system will be greatly reworked and refined in such a way that much more information about streams will be collected, it will be possible to store statistics and view it, and compare and output a general summary for all streams. This is one of the main features of CinderBot, so in the near future, it will be devoted to a lot of time.
+### RPG
+RPG system is planned to be really huge. It will allow you to create simple text role-playing games, in which there will be covenants, dungeons, tasks, battles against each other, and much more. But the system is very large, so its development is modular and slow.
 
-## Plans
-There are a lot of development plans and it's easiest to track what will be implemented soon [here](https://tree.taiga.io/project/vismar-cinderbot/backlog). However, many things are not yet formalized in the form of tasks, they will be discussed below.
+### Viewer Data
+This system allows you to track the number of followers, subscribers and everything associated with them.
 
-* **Improving the quote system**
+### Analytics
+The analytics system will allow you to track real-time statistics, which includes the number of viewers, the number of chat participants, the activity of the chat, and so on.
 
-  Quotes will have a textual key, according to which users will be able to call the quotes they need. This idea went from the fact that not everyone is comfortable and easy to remember the numbers of quotes, so this innovation will have to taste to many.
+In addition, all statistics of the streams will be saved, after which you can view it, as well as display the average values for a certain period.
 
-* **Modularity**
+### Chat
+Chat allows you to display, in fact, a Twitch chat. It will be possible to visually adjust to your liking.
 
-  The plans include the possibility of disabling unnecessary functionality. For example, you want to have only statistics of streams, then you will be free to disable everything else, as a result of which the bot will work only for one purpose.
-
-* **The implementation of the text RPG**
-
-  As it was written above, among the possibilities of the bot there will be a toolkit for creating text RPG. This tool will be developed in the future.
-
-* **Implementing analytics**
-
-  It will also be developed and processed in the near future. More detailed statistics about viewers, about the popularity of streams on games, days; Chat activity; Statistics on followers, subscribers; And much more.
+### Events
+The event system will allow you to track all the events on your channel. Whether it's new followers, subscribers, Bits and etc. - the system will tell you about it.
