@@ -450,6 +450,15 @@ void CustomCommandDBHelper::SetParameter(CmdType cmdType, const QString &cmdName
 
 ///////////////////////////////////////////////////////////////////////////
 
+void CustomCommandDBHelper::UpdateCovenantName(CmdType cmdType, const QString& currentCovenantName, const QString& newCovenantName)
+{
+    QString tableName = _GetTableName(TableType::Commands, cmdType);
+
+    DB_UPDATE(tableName, QString("Covenant='%1'").arg(newCovenantName), QString("Covenant='%1'").arg(currentCovenantName));
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 QVector<int> CustomCommandDBHelper::GetAnswers(CmdType cmdType, const QString &cmdName)
 {
     QString tableName = _GetTableName(TableType::Answers, cmdType);
