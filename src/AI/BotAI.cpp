@@ -7,6 +7,7 @@
 #include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
+#include "Twitch/KrakenClient.hpp"
 /*** Command lists ***/
 #include "AI/ChatCommands/CustomCommands/CustomCommandList.hpp"
 #include "AI/ChatCommands/CustomCommands/CustomCovCommandList.hpp"
@@ -25,6 +26,7 @@ using namespace TimerCommand;
 using namespace UserDataTimerCmd;
 using namespace Utils::Configuration;
 using namespace Utils::Database;
+using namespace Twitch;
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -152,15 +154,19 @@ void BotAI::_UpdateUserData(const ChatMessage &message) const
         // If user exist, update data
         if (userParams.UserID != -1)
         {
-            // Get amount of currency that should be given to user
-            QString tempString = "1";
-            ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerMsg, tempString);
-
             // Update params
             userParams.Author = message.GetAuthor();   // Update display name
             userParams.Name = message.GetRealName();   // Update real name
             userParams.Messages++;                     // Add 1 to msg counter
-            userParams.Currency += tempString.toInt(); // Update currency
+
+            // Only if stream is on user should be rewarded with currency
+            if (KrakenClient::Instance().GetParameter(KrakenParameter::StreamOn).toBool())
+            {
+                // Get amount of currency that should be given to user
+                QString tempString = "1";
+                ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerMsg, tempString);
+                userParams.Currency += tempString.toInt(); // Update currency
+            }
 
             // Update bits if any
             if (!message.GetBits().isEmpty())

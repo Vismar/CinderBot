@@ -7,10 +7,12 @@
 #include "Utils/UserData/RealTimeUserData.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
+#include "Twitch/KrakenClient.hpp"
 
 using namespace Utils::Configuration;
 using namespace TimerCommand::UserDataTimerCmd;
 using namespace Utils::Database;
+using namespace Twitch;
 
 #define MINUTE 60000
 
@@ -25,26 +27,30 @@ void TimeInChatTimerCommand::_UpdateTimer()
 
 void TimeInChatTimerCommand::_TimerAction()
 {
-    const QStringList &userList = RealTimeUserData::Instance()->GetUserList();
-    for (int i = 0; i < userList.count(); ++i)
+    // Only if stream is on we should update time counter
+    if (KrakenClient::Instance().GetParameter(KrakenParameter::StreamOn).toBool())
     {
-        QString ignoreList;
-        ConfigurationManager::Instance().GetStringParam(CfgParam::IgnoreList, ignoreList);
-        if (!ignoreList.contains(userList[i]))
+        const QStringList &userList = RealTimeUserData::Instance()->GetUserList();
+        for (int i = 0; i < userList.count(); ++i)
         {
-            // Get time in chat
-            QString timeValue = QString::number(UserDataDBHelper::GetUserParameter(UserDataParameter::TimeInChat, userList[i]).toInt());
-            int timeNewValue = timeValue.toInt() + 1;
-            if (timeNewValue < 0)
+            QString ignoreList;
+            ConfigurationManager::Instance().GetStringParam(CfgParam::IgnoreList, ignoreList);
+            if (!ignoreList.contains(userList[i]))
             {
-                timeNewValue = 0;
+                // Get time in chat
+                QString timeValue = QString::number(UserDataDBHelper::GetUserParameter(UserDataParameter::TimeInChat, userList[i]).toInt());
+                int timeNewValue = timeValue.toInt() + 1;
+                if (timeNewValue < 0)
+                {
+                    timeNewValue = 0;
+                }
+
+                // Update value
+                timeValue = QString::number(timeNewValue);
+
+                // Set value
+                UserDataDBHelper::UpdateUserParameter(UserDataParameter::TimeInChat, timeValue, userList[i]);
             }
-
-            // Update value
-            timeValue = QString::number(timeNewValue);
-
-            // Set value
-            UserDataDBHelper::UpdateUserParameter(UserDataParameter::TimeInChat, timeValue, userList[i]);
         }
     }
 }
