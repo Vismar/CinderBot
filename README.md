@@ -1,4 +1,5 @@
 [![CinderBot](http://cinderbot.com/wp-content/uploads/CINDER_BOT.jpg)](http://cinderbot.com/en/)
+
 |Taiga-project page|License|Latest Release|Current Version|Codacy|Travis|
 |:----------------:|:-----:|:------------:|:-------------:|:----:|:----:|
 |<a href="https://tree.taiga.io/project/vismar-cinderbot/backlog"><img src="https://taiga.io/images/logo-color.png" alt="Taiga.io project page" width="40" height="40"></a>|<img src="https://fsfe.org/graphics/gplv3-logo-red.png" alt="GPLv3" width="67" height="27">|[![Latest release](https://img.shields.io/badge/release-v0.9-blue.svg)](https://github.com/Vismar/CinderBot/releases/tag/v0.9)|![Current version](https://img.shields.io/badge/release-v0.13-blue.svg)|[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b200dceb1a7144ff86e663710ccfbb82)](https://www.codacy.com/app/exanimoteam/CinderBot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Vismar/CinderBot&amp;utm_campaign=Badge_Grade)|[![Build Status](https://travis-ci.org/Vismar/CinderBot.svg?branch=master)](https://travis-ci.org/Vismar/CinderBot)|
