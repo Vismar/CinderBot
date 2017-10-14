@@ -151,8 +151,6 @@ public:
      * \param userDataParam - parameter that should be updated.
      * \param value - new value for specified parameter.
      * \param userID - id of user.
-     *
-     *
      */
     static void UpdateUserParameter(UserDataParameter userDataParam, const QString &value, int userID);
     /*!

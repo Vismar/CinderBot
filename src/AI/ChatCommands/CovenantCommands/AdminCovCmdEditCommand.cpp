@@ -71,8 +71,7 @@ void AdminCovCmdEditCommand::_GetAnswer(const ChatMessage& message, ChatAnswer& 
                 QRegularExpressionMatch matchName = _regExpName.match(message.GetMessage());
                 QRegularExpressionMatch matchCooldown = _regExpCooldown.match(message.GetMessage());
                 QRegularExpressionMatch matchPrice = _regExpPrice.match(message.GetMessage());
-                CustomCommandDBHelper &DBHelper = CustomCommandDBHelper::Instance();
-                int numberOfCommands = DBHelper.GetNumberOfCommands(CmdType::CovenantCmd, covenant);
+                int numberOfCommands = CustomCommandDBHelper::GetNumberOfCommands(CmdType::CovenantCmd, covenant);
 
                 // If all parameters were specified
                 if (matchName.hasMatch() && matchCooldown.hasMatch() && matchPrice.hasMatch())
@@ -83,7 +82,7 @@ void AdminCovCmdEditCommand::_GetAnswer(const ChatMessage& message, ChatAnswer& 
                 // If not all params were specified
                 else if (matchName.hasMatch())
                 {
-                    bool cmdExist = DBHelper.CommandExist(matchName.captured("name"), covenant);
+                    bool cmdExist = CustomCommandDBHelper::CommandExist(matchName.captured("name"), covenant);
                     // Try to update cooldown value
                     if (matchCooldown.hasMatch())
                     {
@@ -145,9 +144,8 @@ void AdminCovCmdEditCommand::_HandleThreeParams(const QString &cmdName, const QS
                                                 ChatAnswer &answer, int numberOfCommands, int cmdLost)
 {
     QString temp;
-    CustomCommandDBHelper &DBHelper = CustomCommandDBHelper::Instance();
     // Check if command exist
-    if (DBHelper.CommandExist(cmdName, covenant))
+    if (CustomCommandDBHelper::CommandExist(cmdName, covenant))
     {
         // Update commands
         _UpdateCommand(cmdName, cooldown, price);
@@ -183,8 +181,7 @@ void AdminCovCmdEditCommand::_HandleCooldown(const QString& cmdName, const QStri
                                              ChatAnswer& answer, int numberOfCommands, int cmdSlots)
 {
     QString temp;
-    CustomCommandDBHelper &DBHelper = CustomCommandDBHelper::Instance();
-    bool cmdExist = DBHelper.CommandExist(cmdName, covenant);
+    bool cmdExist = CustomCommandDBHelper::CommandExist(cmdName, covenant);
 
     if (cmdExist)
     {
@@ -216,8 +213,7 @@ void AdminCovCmdEditCommand::_HandlePrice(const QString& cmdName, const QString&
                                           ChatAnswer& answer, int numberOfCommands, int cmdSlots)
 {
     QString temp;
-    CustomCommandDBHelper &DBHelper = CustomCommandDBHelper::Instance();
-    bool cmdExist = DBHelper.CommandExist(cmdName, covenant);
+    bool cmdExist = CustomCommandDBHelper::CommandExist(cmdName, covenant);
 
     // If command exist, update it
     if (cmdExist)

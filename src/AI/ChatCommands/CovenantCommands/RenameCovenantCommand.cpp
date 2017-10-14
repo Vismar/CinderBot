@@ -84,23 +84,12 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                                 // If covenant was renamed, set covenant field to a new value for all users who are in that covenant
                                 UserDataDBHelper::UpdateCovenantName(covenant, newCovenantName);
 
-                                // TODO: Replace this loops in US-329
                                 // Update existing commands for covenant
-                                QStringList cmdNames = CustomCommandDBHelper::Instance().GetCommandNames(CmdType::CovenantCmd, covenant);
-                                for (int i = 0; i < cmdNames.size(); ++i)
-                                {
-                                    CustomCommandDBHelper::Instance().SetParameter(CmdType::CovenantCmd, cmdNames.at(i), CustomCmdParameter::Covenant, newCovenantName);
-                                }
-                                cmdNames.clear();
+                                CustomCommandDBHelper::UpdateCovenantName(CmdType::CovenantCmd, covenant, newCovenantName);
 
-                                // TODO: Replace this loops in US-329
                                 // Update commands created by broadcaster for covenant
-                                cmdNames = CustomCommandDBHelper::Instance().GetCommandNames(CmdType::StreamerCmd, covenant);
-                                for (int i = 0; i < cmdNames.size(); ++i)
-                                {
-                                    CustomCommandDBHelper::Instance().SetParameter(CmdType::StreamerCmd, cmdNames.at(i), CustomCmdParameter::Covenant, newCovenantName);
-                                }
-
+                                CustomCommandDBHelper::UpdateCovenantName(CmdType::StreamerCmd, covenant, newCovenantName);
+                                
                                 // Take price to rename covenant
                                 _TakeDefaultPriceFromUser(message.GetUserID());
                                 answer.AddAnswer(_answers.at(MSG_RENAMED));

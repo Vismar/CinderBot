@@ -95,7 +95,7 @@ public:
      * 
      * Inititalizes all tables one by one. If something goes wrong in creation process, will return error. Otherwise - "OK".
      */
-    QString InititalizeTables();
+    static QString InititalizeTables();
 
     /*** Commands ***/
     /*!
@@ -103,7 +103,7 @@ public:
      * \param cmdName - Command name which should be checked.
      * \return True if command exist. Otherwise - false.
      */
-    bool CommandExist(const QString &cmdName, const QString &covenant = "");
+    static bool CommandExist(const QString &cmdName, const QString &covenant = "");
     /*!
      * \brief Tries to create custom command.
      * \param cmdType - Type of a new custom command.
@@ -128,7 +128,7 @@ public:
      * Returns all command ids of specified command type. 
      * If covenant was specified, will return commands only with such value.
      */
-    QVector<int> GetCommandIds(CmdType cmdType, const QString &covenant = "");
+    static QVector<int> GetCommandIds(CmdType cmdType, const QString &covenant = "");
     /*!
      * \brief Grabs all command names.
      * \param cmdType - Type of command that should be grabed.
@@ -138,7 +138,7 @@ public:
      * Returns all command names of specified command type. 
      * If covenant was specified, will return commands only with such value.
      */
-    QStringList GetCommandNames(CmdType cmdType, const QString &covenant = "");
+    static QStringList GetCommandNames(CmdType cmdType, const QString &covenant = "");
     /*!
      * \brief Grabs number of custom commands.
      * \param cmdType - Type of required commands.
@@ -146,7 +146,7 @@ public:
      * 
      * Returns number of commands that does exist in database.
      */
-    int GetNumberOfCommands(CmdType cmdType, const QString &covenant = "");
+    static int GetNumberOfCommands(CmdType cmdType, const QString &covenant = "");
 
     /*** Command parameters ***/
     /*!
@@ -157,7 +157,7 @@ public:
      * 
      * If id not exist then default params will be returned.
      */
-    CmdParams GetAllParams(CmdType cmdType, int id);
+    static CmdParams GetAllParams(CmdType cmdType, int id);
     /*!
      * \brief Gets all parameters of custom command by specified name.
      * \param cmdType - Type of command that should be grabed.
@@ -166,7 +166,7 @@ public:
      * 
      * If name not exist then default params will be returned.
      */
-    CmdParams GetAllParams(CmdType cmdType, const QString &cmdName);
+    static CmdParams GetAllParams(CmdType cmdType, const QString &cmdName);
     /*!
      * \brief Sets all params to specified command.
      * \param cmdType - Type of command that should be updated.
@@ -181,7 +181,7 @@ public:
      * \param cmdParam - CustomCmdParameter that should be returned.
      * \return Value of specified parameter. Will be empty if somethign goes wrong.
      */
-    QString GetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam);
+    static QString GetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam);
     /*!
      * \brief Gets specified parameter.
      * \param cmdType - Type of command that should be returned.
@@ -189,7 +189,7 @@ public:
      * \param cmdParam - CustomCmdParameter that should be returned.
      * \return Value of specified parameter. Will be empty if somethign goes wrong.
      */
-    QString GetParameter(CmdType cmdType, int id, CustomCmdParameter cmdParam);
+    static QString GetParameter(CmdType cmdType, int id, CustomCmdParameter cmdParam);
     /*!
      * \brief Sets new value to specified parameter.
      * \param cmdType - Type of command that should be updated.
@@ -198,6 +198,13 @@ public:
      * \param value - New value for specified parameter.
      */
     void SetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam, const QString &value);
+    /*!
+     * \brief Updates covenant field for all commands that have specified value.
+     * \param cmdType - Type of command that should be updated.
+     * \param currentCovenantName - covenant name that was changed.
+     * \param newCovenantName - new covenant name.
+     */
+    static void UpdateCovenantName(CmdType cmdType, const QString &currentCovenantName, const QString &newCovenantName);
 
     /*** Command answers ***/
     /*!
@@ -206,21 +213,21 @@ public:
      * \param cmdName - Name of command that should be returned.
      * \return Array of ids of answers for specified command.
      */
-    QVector<int> GetAnswers(CmdType cmdType, const QString &cmdName);
+    static QVector<int> GetAnswers(CmdType cmdType, const QString &cmdName);
     /*!
      * \brief Gets random answer for specified command.
      * \param cmdType - Type of command that should be returned.
      * \param cmdName - Name of command that should be returned.
      * \return Random answer from specified command.
      */
-    QString GetRandomAnswer(CmdType cmdType, const QString &cmdName);
+    static QString GetRandomAnswer(CmdType cmdType, const QString &cmdName);
     /*!
      * \brief Gets specified answer.
      * \param cmdType - Type of command that should be returned.
      * \param id - Id of command that should be returned.
      * \return Specified answer.
      */
-    QString GetAnswer(CmdType cmdType, int id);
+    static QString GetAnswer(CmdType cmdType, int id);
     /*!
      * \brief Adds new answer to specified command.
      * \param cmdType - Type of command that should be updated.
