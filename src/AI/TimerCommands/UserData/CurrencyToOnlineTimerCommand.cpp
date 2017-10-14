@@ -7,10 +7,12 @@
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
+#include "Twitch/KrakenClient.hpp"
 
 using namespace Utils::Configuration;
 using namespace TimerCommand::UserDataTimerCmd;
 using namespace Utils::Database;
+using namespace Twitch;
 
 #define DEFAULT_TIMER_VALUE    60000
 #define DEFAULT_CURRENCY_VALUE "1"
@@ -51,30 +53,34 @@ void CurrencyToOnlineTimerCommand::_UpdateTimer()
 
 void CurrencyToOnlineTimerCommand::_TimerAction()
 {
-    // Set value of currency to give
-    QString currencyToGive = DEFAULT_CURRENCY_VALUE;
-    ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyOverTime, currencyToGive);
-
-    const QStringList &userList = RealTimeUserData::Instance()->GetUserList();
-    for (int i = 0; i < userList.count(); ++i)
+    // Only if stream is on we should reward user with currency
+    if (KrakenClient::Instance().GetParameter(KrakenParameter::StreamOn).toBool())
     {
-        QString ignoreList;
-        ConfigurationManager::Instance().GetStringParam(CfgParam::IgnoreList, ignoreList);
-        if (!ignoreList.contains(userList[i]))
+        // Set value of currency to give
+        QString currencyToGive = DEFAULT_CURRENCY_VALUE;
+        ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyOverTime, currencyToGive);
+
+        const QStringList &userList = RealTimeUserData::Instance()->GetUserList();
+        for (int i = 0; i < userList.count(); ++i)
         {
-            // Get currency new value
-            QString currencyValue = QString::number(UserDataDBHelper::GetUserParameter(UserDataParameter::Currency, userList[i]).toInt());
-            int currencyNewValue = currencyValue.toInt() + currencyToGive.toInt();
-            if (currencyNewValue < 0)
+            QString ignoreList;
+            ConfigurationManager::Instance().GetStringParam(CfgParam::IgnoreList, ignoreList);
+            if (!ignoreList.contains(userList[i]))
             {
-                currencyNewValue  = 0;
+                // Get currency new value
+                QString currencyValue = QString::number(UserDataDBHelper::GetUserParameter(UserDataParameter::Currency, userList[i]).toInt());
+                int currencyNewValue = currencyValue.toInt() + currencyToGive.toInt();
+                if (currencyNewValue < 0)
+                {
+                    currencyNewValue = 0;
+                }
+
+                // Update value
+                currencyValue = QString::number(currencyNewValue);
+
+                // Set new value
+                UserDataDBHelper::UpdateUserParameter(UserDataParameter::Currency, currencyValue, userList[i]);
             }
-
-            // Update value
-            currencyValue = QString::number(currencyNewValue);
-
-            // Set new value
-            UserDataDBHelper::UpdateUserParameter(UserDataParameter::Currency, currencyValue, userList[i]);
         }
     }
 }
