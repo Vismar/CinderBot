@@ -5,10 +5,8 @@
 **************************************************************************/
 #include "ConfigurationManager.hpp"
 #include "Utils/Logger.hpp"
-#include <QFile>
 #include <QDir>
 #include <QVector>
-#include <QTextStream>
 
 #include <QDebug>
 
@@ -29,6 +27,7 @@ CfgStrParam = { // Login params
                 "CurrencyPerMsg",
                 "CurrencyOverTime",
                 "CurrencyTimer",
+                "CurrencyPerBit",
                 // Covenant params
                 "CovJoinPrice",
                 "CovCreatePrice",
@@ -123,7 +122,7 @@ QString ConfigurationManager::Initialize()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ConfigurationManager::GetStringParam(CfgParam cfgParam, QString &value)
+bool ConfigurationManager::GetStringParam(CfgParam cfgParam, QString &value) const
 {
     // If manager contains requested paramter, get it and return true
     bool result = _params.contains(CfgStrParam[static_cast<int>(cfgParam)]);
@@ -151,7 +150,7 @@ void ConfigurationManager::SetStringParam(CfgParam cfgParam, const QString &valu
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool ConfigurationManager::_CreateFolders(QString &error)
+bool ConfigurationManager::_CreateFolders(QString &error) const
 {
     bool result(false);
 
@@ -344,6 +343,9 @@ void ConfigurationManager::_AddParamsThatDoNotExist()
             case CfgParam::CurrencyTimer:
                 value = "60000";
                 break;
+            case CfgParam::CurrencyPerBit:
+                value = "2";
+                break;
             }
             // Covenant params
             {
@@ -460,29 +462,37 @@ void ConfigurationManager::_WriteLoginData()
     GetStringParam(CfgParam::LoginName, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginName)], value);
     value.clear();
+
     // LoginDisplayName
     _xmlWriter.writeComment("Login display name of your bot");
     GetStringParam(CfgParam::LoginDisplayName, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginDisplayName)], value);
     value.clear();
+
     // LoginNameColor
     _xmlWriter.writeComment("Login name color of your bot");
     GetStringParam(CfgParam::LoginNameColor, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginNameColor)], value);
     value.clear();
+
     // LoginOauthKey
     _xmlWriter.writeComment("Oauth key which required to login on twitch");
     GetStringParam(CfgParam::LoginOauthKey, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginOauthKey)], value);
     value.clear();
+
     // LoginChannel
     _xmlWriter.writeComment("Channel to connect");
     GetStringParam(CfgParam::LoginChannel, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginChannel)], value);
+    value.clear();
+
     // LoginChannelOauthKey
     _xmlWriter.writeComment("Channel oauth key which required to get stream info");
     GetStringParam(CfgParam::LoginChannelOauthKey, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::LoginChannelOauthKey)], value);
+    value.clear();
+
     // LoginAuto
     _xmlWriter.writeComment("Should bot try to connect automatically?");
     GetStringParam(CfgParam::LoginAuto, value);
@@ -524,6 +534,7 @@ void ConfigurationManager::_WriteConfigCurrencyData()
     GetStringParam(CfgParam::Currency, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::Currency)], value);
     value.clear();
+
     // Currency per msg
     _xmlWriter.writeComment("Parameter: Currency per message\n\t\t"
                             "Description: Set value (integer) which will represent\n\t\t"
@@ -531,6 +542,7 @@ void ConfigurationManager::_WriteConfigCurrencyData()
     GetStringParam(CfgParam::CurrencyPerMsg, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CurrencyPerMsg)], value);
     value.clear();
+
     // Currency over time
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Currency per timer\n\t\t"
@@ -539,6 +551,7 @@ void ConfigurationManager::_WriteConfigCurrencyData()
     GetStringParam(CfgParam::CurrencyOverTime, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CurrencyOverTime)], value);
     value.clear();
+
     // Currency timer
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Currency timer\n\t\t"
@@ -546,6 +559,15 @@ void ConfigurationManager::_WriteConfigCurrencyData()
                             "             Should be in milliseconds, bigger than 0.");
     GetStringParam(CfgParam::CurrencyTimer, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CurrencyTimer)], value);
+    value.clear();
+
+    // Currency per bit
+    _xmlWriter.writeComment("\n\t\t"
+                            "Parameter: Currency per bit\n\t\t"
+                            "Description: Set value (integer) which will represent\n\t\t"
+                            "             how many currency will be given to user per every donated bit.");
+    GetStringParam(CfgParam::CurrencyPerBit, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CurrencyPerBit)], value);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -561,6 +583,7 @@ void ConfigurationManager::_WriteConfigCovenantData()
     GetStringParam(CfgParam::CovJoinPrice, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovJoinPrice)], value);
     value.clear();
+
     // Covenant create price
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Covenant create price\n\t\t"
@@ -569,6 +592,7 @@ void ConfigurationManager::_WriteConfigCovenantData()
     GetStringParam(CfgParam::CovCreatePrice, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovCreatePrice)], value);
     value.clear();
+
     // Covenant rename price
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Covenant rename price\n\t\t"
@@ -591,6 +615,7 @@ void ConfigurationManager::_WriteConfigAnalyticsData()
     GetStringParam(CfgParam::ViewerGraphUpdateTime, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::ViewerGraphUpdateTime)], value);
     value.clear();
+
     // Analytics message graph update time
     _xmlWriter.writeComment("\n\t\t"
                             "Parameter: Analytics message graph update time\n\t\t"
