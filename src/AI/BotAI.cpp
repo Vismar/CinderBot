@@ -163,7 +163,7 @@ void BotAI::_UpdateUserData(const ChatMessage &message) const
             if (KrakenClient::Instance().GetParameter(KrakenParameter::StreamOn).toBool())
             {
                 // Get amount of currency that should be given to user
-                QString tempString = "1";
+                QString tempString = "1"; // Default value
                 ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerMsg, tempString);
                 userParams.Currency += tempString.toInt(); // Update currency
             }
@@ -171,7 +171,13 @@ void BotAI::_UpdateUserData(const ChatMessage &message) const
             // Update bits if any
             if (!message.GetBits().isEmpty())
             {
-                userParams.Bits += message.GetBits().toInt();
+                int bits = message.GetBits().toInt();
+                userParams.Bits += bits;
+
+                // Give currency to user
+                QString currencyPerBit = "2"; // Default value
+                ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerBit, currencyPerBit);
+                userParams.Currency += currencyPerBit.toInt() * bits; // Update currency
             }
 
             // Update results

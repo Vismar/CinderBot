@@ -38,14 +38,14 @@ public:
 
     /*!
      * \brief Makes an instace of manager.
-     * \return static reference to a manager.
+     * \return Static reference to a manager.
      *
      * Creates and returns static instance of ConfigurationManager.
      */
     static ConfigurationManager &Instance();
     /*!
      * \brief Initializes manager, read config file.
-     * \return error string if something goes wrong.
+     * \return Error string if something goes wrong.
      *
      * Initializes manager:
      * - Checks if needed folders exist and create them if they are not.
@@ -55,17 +55,17 @@ public:
     QString Initialize();
     /*!
      * \brief Returns config parameter in string.
-     * \param(IN) parameter - parameter that user seek for.
-     * \param(OUT) value - returning value of parameter.
-     * \return true if parameter was found.
+     * \param cfgParam - parameter that user seek for.
+     * \param value - returning value of parameter.
+     * \return True if parameter was found.
      *
      * Copies parameter value to specified variable if such parameter exist.
      */
-    bool GetStringParam(CfgParam cfgParam, QString &value);
+    bool GetStringParam(CfgParam cfgParam, QString &value) const;
     /*!
      * \brief Sets new value to specified parameter, or create new parameter and set specified value to it.
-     * \param(IN) parameter - parameter that user seek for.
-     * \param(IN) value - value that should be setted to specified parameter.
+     * \param cfgParam - parameter that user seek for.
+     * \param value - value that should be setted to specified parameter.
      *
      * Updates specified configuration parameter. Does nothing if the parameter does not exist.
      */
@@ -88,7 +88,7 @@ private:
      *
      * Checks if needed folders exist and create them if they are not.
      */
-    bool _CreateFolders(QString &error);
+    bool _CreateFolders(QString &error) const;
 
     /*** Read XML data ***/
     /*!

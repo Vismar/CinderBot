@@ -36,6 +36,7 @@ enum class CfgParam
     CurrencyPerMsg,
     CurrencyOverTime,
     CurrencyTimer,
+    CurrencyPerBit,
     // Covenant params
     CovJoinPrice,
     CovCreatePrice,
