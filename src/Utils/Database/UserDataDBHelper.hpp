@@ -102,13 +102,15 @@ class UserDataDBHelper : public QObject
 {
     Q_OBJECT
 public:
+    UserDataDBHelper();
     static UserDataDBHelper &Instance();
 
+    /*** Users and parameters ***/
     /*!
      * \brief Initialiazes database tables.
      * \return String that contains error message if something goes wrong. Otherwise - "OK".
      */
-    static QString InitializeTables();
+    QString InitializeTables() const;
     /*!
      * \brief Adds user with specified param to database.
      * \param userDataParams - Parameters of user that should be added.
@@ -166,6 +168,8 @@ public:
      */
     static void SetUserParameters(UserDataParams userDataParams);
 
+
+    /*** Special functions ***/
     /*!
      * \brief Check is specified user is follower.
      * \param userID - id of user.
@@ -240,6 +244,33 @@ public:
      * \param userID - id of user.
      */
     static void IncrementUserMsgCounter(int numberOfMsg, int userID);
+
+
+    /*** RealTimeUserData functions ***/
+    /*!
+     * \brief Add user to queue which will be used to add users to real time user data table.
+     * \param userName - name of user that should be added.
+     */
+    void AddRealTimeUser(const QString &userName);
+    /*!
+     * \brief Add user to queue which will be used to delete users from real time user data table.
+     * \param userName - name of user that should be added.
+     */
+    void RemoveRealTimeUser(const QString &userName);
+
+private slots:
+    /*!
+     * \brief Add users from _queueIn and remove users from _queueOut to update real time user data table.
+     */
+    void _UpdateTable();
+
+private:
+    /*! Simple timer to update real time user data table. */
+    QTimer *_timer;
+    /*! Queue which will be used to add users to real time user data table. */
+    QQueue<QString> _queueIn;
+    /*! Queue which will be used to remove users from real time user data table. */
+    QQueue<QString> _queueOut;
 };
     
 }

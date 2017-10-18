@@ -313,6 +313,7 @@ bool DatabaseManager::Delete(const QString &tableName, const QString &conditions
     bool result = true;
     QSqlQuery query;
     QString command;
+
     // Prepare command
     if (conditions.isEmpty())
     {
@@ -322,6 +323,7 @@ bool DatabaseManager::Delete(const QString &tableName, const QString &conditions
     {
         command = QString("DELETE FROM %1 WHERE %2;").arg(tableName).arg(conditions);
     }
+
     query.prepare(command);
     if (!query.exec())
     {
