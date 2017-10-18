@@ -5,6 +5,7 @@
 **************************************************************************/
 #include "UserDataDBHelper.hpp"
 #include "Utils/Logger.hpp"
+#include <QQueue>
 
 static QVector<QString> UserDataParamNames = { "UserID", "Name", "Author", "Messages", "Currency",
                                                "Covenant", "LastTimeVisited", "TimeInChat", "Bits",
@@ -46,6 +47,14 @@ QString UserDataParams::ToString() const
 ///////////////////////////////////////////////////////////////////////////
 //                          UserDataDBHelper                            //
 ///////////////////////////////////////////////////////////////////////////
+
+UserDataDBHelper::UserDataDBHelper() : QObject(nullptr)
+{
+    _timer = new QTimer(this);
+    connect(_timer, &QTimer::timeout,
+            this, &UserDataDBHelper::_UpdateTable);
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
 UserDataDBHelper& UserDataDBHelper::Instance()
@@ -56,7 +65,7 @@ UserDataDBHelper& UserDataDBHelper::Instance()
 
 ///////////////////////////////////////////////////////////////////////////
 
-QString UserDataDBHelper::InitializeTables()
+QString UserDataDBHelper::InitializeTables() const
 {
     QString result = "OK";
 
@@ -85,6 +94,23 @@ QString UserDataDBHelper::InitializeTables()
         else if (!DB_CREATE_INDEX("UserData", "UserID_Index", "UserID", true))
         {
             result = "Indexes for 'UserID' column were not created for user data table.";
+        }
+    }
+
+    if (result == "OK")
+    {
+        if (DB_CREATE_TABLE("RealTimeUserData", "Id   INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                                  "Name TEXT NOT NULL UNIQUE"))
+        {
+            // We MUST clear this table at launch to make sure that old data will not affect new session
+            DB_DELETE("RealTimeUserData");
+
+            // Every 20 secs we should update table
+            _timer->start(20000);
+        }
+        else
+        {
+            result = "Real time user data table was no created.";
         }
     }
 
@@ -450,6 +476,68 @@ void UserDataDBHelper::IncrementUserMsgCounter(int numberOfMsg, int userID)
 {
     int msg = GetUserParameter(UserDataParameter::Messages, userID).toInt() + numberOfMsg;
     DB_UPDATE("UserData", QString("Messages=%1").arg(msg), QString("UserID=%1").arg(userID));
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void UserDataDBHelper::AddRealTimeUser(const QString& userName)
+{
+    _queueIn.push_back(userName);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void UserDataDBHelper::RemoveRealTimeUser(const QString& userName)
+{
+    _queueOut.push_back(userName);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void UserDataDBHelper::_UpdateTable()
+{
+    // If queues are not empty, then we should to update table
+    if (!_queueIn.isEmpty() || !_queueOut.isEmpty())
+    {
+        // Start transaction
+        if (DB_MANAGER.StartTransaction())
+        {
+            // Add every user to table
+            while (!_queueIn.isEmpty())
+            {
+                if (!DB_INSERT("RealTimeUserData", QString("NULL, '%1'").arg(_queueIn.dequeue()), true))
+                {
+                    LOG(LogError, "", Q_FUNC_INFO, "User was not added to real time user data table.");
+                }
+            }
+
+            // Get all user names in 1 string to delete in one request
+            QString fullNameList;
+            while (!_queueOut.isEmpty())
+            {
+                // Between names we should put a comma
+                if (!fullNameList.isEmpty())
+                {
+                    fullNameList.append(",");
+                }
+
+                // Every name should be in single quotes
+                fullNameList.append("'" + _queueOut.dequeue() + "'");
+            }
+
+            // If we have at least one user to delete, delete
+            if (!fullNameList.isEmpty())
+            {
+                if (!DB_DELETE("RealTimeUserData", QString("Name IN (%1)").arg(fullNameList)))
+                {
+                    LOG(LogError, "", Q_FUNC_INFO, QString("Users (%1) was not deleted.").arg(fullNameList));
+                }
+            }
+
+            // End transaction
+            DB_MANAGER.EndTransaction();
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
