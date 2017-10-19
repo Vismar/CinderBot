@@ -6,7 +6,6 @@
 #include "BotAI.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
-#include "Utils/UserData/RealTimeUserData.hpp"
 #include "Twitch/KrakenClient.hpp"
 /*** Command lists ***/
 #include "AI/ChatCommands/CustomCommands/CustomCommandList.hpp"

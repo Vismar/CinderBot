@@ -5,7 +5,6 @@
 **************************************************************************/
 #include "CurrencyToOnlineTimerCommand.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
-#include "Utils/UserData/RealTimeUserData.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
 #include "Twitch/KrakenClient.hpp"
 
@@ -60,28 +59,7 @@ void CurrencyToOnlineTimerCommand::_TimerAction()
         QString currencyToGive = DEFAULT_CURRENCY_VALUE;
         ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyOverTime, currencyToGive);
 
-        const QStringList &userList = RealTimeUserData::Instance()->GetUserList();
-        for (int i = 0; i < userList.count(); ++i)
-        {
-            QString ignoreList;
-            ConfigurationManager::Instance().GetStringParam(CfgParam::IgnoreList, ignoreList);
-            if (!ignoreList.contains(userList[i]))
-            {
-                // Get currency new value
-                QString currencyValue = QString::number(UserDataDBHelper::GetUserParameter(UserDataParameter::Currency, userList[i]).toInt());
-                int currencyNewValue = currencyValue.toInt() + currencyToGive.toInt();
-                if (currencyNewValue < 0)
-                {
-                    currencyNewValue = 0;
-                }
-
-                // Update value
-                currencyValue = QString::number(currencyNewValue);
-
-                // Set new value
-                UserDataDBHelper::UpdateUserParameter(UserDataParameter::Currency, currencyValue, userList[i]);
-            }
-        }
+        UserDataDBHelper::GiveCurrencyToOnlineUsers(currencyToGive.toInt());
     }
 }
 

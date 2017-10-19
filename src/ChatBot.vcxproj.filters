@@ -586,12 +586,6 @@
     <ClCompile Include="Twitch\KrakenResponse.cpp">
       <Filter>Sources\Twitch</Filter>
     </ClCompile>
-    <ClCompile Include="Build\Debug\moc_UserDataDBHelper.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Build\Release\moc_UserDataDBHelper.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\Database\UserDataDBHelper.cpp">
       <Filter>Sources\Utils\Database</Filter>
     </ClCompile>
@@ -608,6 +602,12 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="Build\Release\moc_AnalyticsDBHelper.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_UserDataDBHelper.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_UserDataDBHelper.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>

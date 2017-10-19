@@ -450,32 +450,28 @@ void UserDataDBHelper::UpdateCovenantName(const QString& currentCovenantName, co
 
 void UserDataDBHelper::GiveCurrencyToUser(int amountOfCurrency, int userID)
 {
-    int currency = GetUserParameter(UserDataParameter::Currency, userID).toInt() + amountOfCurrency;
-    DB_UPDATE("UserData", QString("Currency=%1").arg(currency), QString("UserID=%1").arg(userID));
+    DB_UPDATE("UserData", QString("Currency=Currency+%1").arg(amountOfCurrency), QString("UserID=%1").arg(userID));
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void UserDataDBHelper::GiveCurrencyToUser(int amountOfCurrency, const QString &userName)
 {
-    int currency = GetUserParameter(UserDataParameter::Currency, userName).toInt() + amountOfCurrency;
-    DB_UPDATE("UserData", QString("Currency=%1").arg(currency), QString("Name='%1' OR Author='%1'").arg(userName));
+    DB_UPDATE("UserData", QString("Currency=Currency+%1").arg(amountOfCurrency), QString("Name='%1' OR Author='%1'").arg(userName));
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void UserDataDBHelper::GiveBitsToUser(int amountOfBits, int userID)
 {
-    int bits = GetUserParameter(UserDataParameter::Bits, userID).toInt() + amountOfBits;
-    DB_UPDATE("UserData", QString("Bits=%1").arg(bits), QString("UserID=%1").arg(userID));
+    DB_UPDATE("UserData", QString("Bits=Bits+%1").arg(amountOfBits), QString("UserID=%1").arg(userID));
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void UserDataDBHelper::IncrementUserMsgCounter(int numberOfMsg, int userID)
 {
-    int msg = GetUserParameter(UserDataParameter::Messages, userID).toInt() + numberOfMsg;
-    DB_UPDATE("UserData", QString("Messages=%1").arg(msg), QString("UserID=%1").arg(userID));
+    DB_UPDATE("UserData", QString("Messages=Messages+%1").arg(numberOfMsg), QString("UserID=%1").arg(userID));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -538,6 +534,60 @@ void UserDataDBHelper::_UpdateTable()
             DB_MANAGER.EndTransaction();
         }
     }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void UserDataDBHelper::AddModerator(const QString& moderatorName)
+{
+    if (!_moderatorList.contains(moderatorName))
+    {
+        _moderatorList.append(moderatorName);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void UserDataDBHelper::RemoveModerator(const QString& moderatorName)
+{
+    _moderatorList.removeOne(moderatorName);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool UserDataDBHelper::IsUserInChat(const QString& userName)
+{
+    bool inChat(false);
+
+    // Check if specified user name is in database
+    DB_QUERY_PTR query = DB_SELECT("RealTimeUserData", "*", QString("Name='%1'").arg(userName));
+    if (query != nullptr && query->first())
+    {
+        inChat = true;
+    }
+
+    return inChat;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+bool UserDataDBHelper::IsUserModerator(const QString& userName) const
+{
+    return _moderatorList.contains(userName);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void UserDataDBHelper::GiveCurrencyToOnlineUsers(int amountOfCurrency)
+{
+    DB_UPDATE("UserData", QString("Currency=Currency+%1").arg(amountOfCurrency), "Name IN (SELECT Name FROM RealTimeUserData)");
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void UserDataDBHelper::UpdateTimeInChat(int minutes)
+{
+    DB_UPDATE("UserData", QString("TimeInChat=TimeInChat+%1").arg(minutes), "Name IN (SELECT Name FROM RealTimeUserData)");
 }
 
 ///////////////////////////////////////////////////////////////////////////
