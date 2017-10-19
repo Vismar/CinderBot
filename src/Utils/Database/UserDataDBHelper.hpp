@@ -257,6 +257,38 @@ public:
      * \param userName - name of user that should be added.
      */
     void RemoveRealTimeUser(const QString &userName);
+    /*!
+     * \brief Add moderator name to moderator list.
+     * \param moderatorName - name of moderator.
+     */
+    void AddModerator(const QString &moderatorName);
+    /*!
+     * \brief Remove moderator name from moderator list.
+     * \param moderatorName - name of moderator.
+     */
+    void RemoveModerator(const QString &moderatorName);
+    /*!
+     * \brief Checks if user currently in chat.
+     * \param userName - name of user.
+     * \return True if specified user found in database. Otherwise - false.
+     */
+    static bool IsUserInChat(const QString &userName);
+    /*!
+     * \brief Checks if user is moderator.
+     * \param userName - name of user.
+     * \return True if specified user in moderator list. Otherwise - false.
+     */
+    bool IsUserModerator(const QString &userName) const;
+    /*!
+     * \brief Gives specified amount of currency to all users who is in the chat.
+     * \param amountOfCurrency - amount of currency that will be give to all users in chat.
+     */
+    static void GiveCurrencyToOnlineUsers(int amountOfCurrency);
+    /*!
+     * \brief Add specified number of minutes to all users who is in the chat.
+     * \param minutes - number of minutes that will be added to all users in chat.
+     */
+    static void UpdateTimeInChat(int minutes);
 
 private slots:
     /*!
@@ -271,6 +303,8 @@ private:
     QQueue<QString> _queueIn;
     /*! Queue which will be used to remove users from real time user data table. */
     QQueue<QString> _queueOut;
+    /*! Simple list of moderator who currently in chat. */
+    QStringList _moderatorList;
 };
     
 }

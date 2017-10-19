@@ -6,7 +6,6 @@
 #include "TwitchClient.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
-#include "Utils/UserData/RealTimeUserData.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Utils::Configuration;
@@ -144,17 +143,13 @@ void TwitchClient::ReadLine()
             ConnectionStateChanged(Connected);
             break;
         case JOIN:
-            // TODO: Remove this function when everything will work on new real time user data functions
-            RealTimeUserData::Instance()->AddUserToList(message);
             UserDataDBHelper::Instance().AddRealTimeUser(message.GetRealName());
             break;
         case PART:
-            // TODO: Remove this function when everything will work on new real time user data functions
-            RealTimeUserData::Instance()->RemoveUserFromList(message);
             UserDataDBHelper::Instance().RemoveRealTimeUser(message.GetRealName());
             break;
         case MODE:
-            RealTimeUserData::Instance()->AddModeToList(message);
+            UserDataDBHelper::Instance().AddModerator(message.GetRealName());
             ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, line);
             if (message.GetRealName() == line)
             {
@@ -162,7 +157,7 @@ void TwitchClient::ReadLine()
             }
             break;
         case UNMODE:
-            RealTimeUserData::Instance()->RemoveModeFromList(message);
+            UserDataDBHelper::Instance().RemoveModerator(message.GetRealName());
             ConfigurationManager::Instance().GetStringParam(CfgParam::LoginName, line);
             if (message.GetRealName() == line)
             {
@@ -170,11 +165,11 @@ void TwitchClient::ReadLine()
             }
             break;
         case PRIVMSG:
-            RealTimeUserData::Instance()->IncrementMsgCounter();
+            // TODO: Increment total msg counter if it will be needed sometime
             emit NewMessage(message, false);
             break;
         case BITS:
-            RealTimeUserData::Instance()->IncrementMsgCounter();
+            // TODO: Increment total msg counter if it will be needed sometime
             emit NewMessage(message, false);
             break;
         case WHISPER:
