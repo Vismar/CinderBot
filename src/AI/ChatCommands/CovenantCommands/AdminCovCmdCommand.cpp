@@ -5,29 +5,25 @@
 **************************************************************************/
 #include "AdminCovCmdCommand.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/RPG/CovenantDBHelper.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
 
-#define MSG_CMD_INFO    0
-#define MSG_CMD_LIST    1
-#define MSG_CMD_NO_CMD  2
-#define MSG_NOT_LEADER  3
-#define MSG_NO_COVENANT 4
-#define MSG_NO_SUCH_CMD 5
+enum
+{
+    MsgCmdInfo = 0,
+    MsgCmdList,
+    MsgCmdNoCmd,
+    MsgNotLeader,
+    MsgNoCovenant,
+    MsgNoSuchCmd
+};
 
 ///////////////////////////////////////////////////////////////////////////
 
 AdminCovCmdCommand::AdminCovCmdCommand()
-{
-    Initialize();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void AdminCovCmdCommand::Initialize()
 {
     _name = "!cov_cmd";
     _regExpName.setPattern("name=(?<name>.+);");
@@ -48,80 +44,75 @@ void AdminCovCmdCommand::_GetAnswer(const ChatMessage& message, ChatAnswer& answ
     if (covenant != "Viewer")
     {
         // Check if user is leader of its covenant
-        DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
-        if ((query != nullptr) && (query->first()))
+        if (CovenantDBHelper::CheckLeadership(message.GetUserID()))
         {
-            // If user is leader
-            if (query->value("Leader").toString() == message.GetRealName())
+            QString temp;
+            // Check match with regular expression
+            QRegularExpressionMatch match = _regExpName.match(message.GetMessage());
+            // If parameter was specified, display info about command.
+            if (match.hasMatch())
             {
-                QString temp;
-                // Check match with regular expression
-                QRegularExpressionMatch match = _regExpName.match(message.GetMessage());
-                // If parameter was specified, display info about command.
-                if (match.hasMatch())
+                // Check if command exist
+                if (CustomCommandDBHelper::Instance().CommandExist(match.captured("name")))
                 {
-                    // Check if command exist
-                    if (CustomCommandDBHelper::Instance().CommandExist(match.captured("name")))
-                    {
-                        // Get number of answers
-                        int numberOfAnswers = CustomCommandDBHelper::Instance().GetAnswers(CmdType::CovenantCmd, match.captured("name")).size();
-                        // Get params
-                        CmdParams params = CustomCommandDBHelper::Instance().GetAllParams(CmdType::CovenantCmd, match.captured("name"));
-                        temp = _answers.at(MSG_CMD_INFO);
-                        // replace placeholders
-                        temp.replace("CMD_NAME", match.captured("name"));
-                        temp.replace("COOLDOWN", params.Cooldown.toString("h:m:s"));
-                        temp.replace("PRICE", QString::number(params.Price));
-                        temp.replace("ANSWERS", QString::number(numberOfAnswers));
-                        answer.AddAnswer(temp);
-                    }
-                    // If command do not exist, notify user about it
-                    else
-                    {
-                        answer.AddAnswer(_answers.at(MSG_NO_SUCH_CMD));
-                    }
+                    // Get number of answers
+                    int numberOfAnswers = CustomCommandDBHelper::Instance().GetAnswers(CmdType::CovenantCmd, match.captured("name")).size();
+                    // Get params
+                    CmdParams params = CustomCommandDBHelper::Instance().GetAllParams(CmdType::CovenantCmd, match.captured("name"));
+                    temp = _answers.at(MsgCmdInfo);
+                    // replace placeholders
+                    temp.replace("CMD_NAME", match.captured("name"));
+                    temp.replace("COOLDOWN", params.Cooldown.toString("h:m:s"));
+                    temp.replace("PRICE", QString::number(params.Price));
+                    temp.replace("ANSWERS", QString::number(numberOfAnswers));
+                    answer.AddAnswer(temp);
                 }
-                // If parameter "name" was not specified, display command list.
+                // If command do not exist, notify user about it
                 else
-                {       
-                    // Get command list
-                    QStringList commandList = CustomCommandDBHelper::Instance().GetCommandNames(CmdType::CovenantCmd, covenant);
-                    if (commandList.size() > 0)
-                    {
-                        temp = _answers.at(MSG_CMD_LIST);
-                        temp.replace("COV_NAME", covenant);
-                        QString commands;
-                        for (int i = 0; i < commandList.size(); ++i)
-                        {
-                            if (i > 0)
-                            {
-                                commands.append(", ");
-                            }
-                            commands.append(commandList.at(i));
-                        }
-                        temp.replace("COMMAND_LIST", commands);
-                        answer.AddAnswer(temp);
-                    }
-                    // If covenant do not have any command yet
-                    else
-                    {
-                        temp = _answers.at(MSG_CMD_NO_CMD);
-                        temp.replace("COV_NAME", covenant);
-                        answer.AddAnswer(temp);
-                    }
+                {
+                    answer.AddAnswer(_answers.at(MsgNoSuchCmd));
                 }
             }
-            // If user not leader, say it
+            // If parameter "name" was not specified, display command list.
             else
             {
-                answer.AddAnswer(_answers.at(MSG_NOT_LEADER));
+                // Get command list
+                QStringList commandList = CustomCommandDBHelper::Instance().GetCommandNames(CmdType::CovenantCmd, covenant);
+                if (commandList.size() > 0)
+                {
+                    temp = _answers.at(MsgCmdList);
+                    temp.replace("COV_NAME", covenant);
+                    QString commands;
+                    for (int i = 0; i < commandList.size(); ++i)
+                    {
+                        if (i > 0)
+                        {
+                            commands.append(", ");
+                        }
+                        commands.append(commandList.at(i));
+                    }
+                    temp.replace("COMMAND_LIST", commands);
+                    answer.AddAnswer(temp);
+                }
+                // If covenant do not have any command yet
+                else
+                {
+                    temp = _answers.at(MsgCmdNoCmd);
+                    temp.replace("COV_NAME", covenant);
+                    answer.AddAnswer(temp);
+                }
             }
+        }
+        // If user not leader, say it
+        else
+        {
+            answer.AddAnswer(_answers.at(MsgNotLeader));
         }
     }
     // If user is not a member of any covenant
     else
     {
-        answer.AddAnswer(_answers.at(MSG_NO_COVENANT));
+        answer.AddAnswer(_answers.at(MsgNoCovenant));
     }
 }
 

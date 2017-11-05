@@ -18,8 +18,7 @@ namespace CovenantCmd
 {
 
 /*!
- * class LeaveCovenantCommand
- * Handles user's leaving from covenant
+ * \brief Handles user's leaving from covenant.
  */
 class LeaveCovenantCommand : public CovenantBaseCommand
 {
@@ -27,11 +26,23 @@ public:
     LeaveCovenantCommand();
 
 protected:
-    ////////////////////////////////
-    /// BaseChatCommand overrides
-    void Initialize();
-    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer);
-    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
+    /*///////////////////////////////*/
+    /* BaseChatCommand overrides     */
+    /*///////////////////////////////*/
+    /*!
+     * \brief Empty function.
+     */
+    void Initialize() override {}
+    /*!
+     * \brief Gets specified answer.
+     * \param message - chat message.
+     * \param answer - reference to variable which will store answer.
+     */
+    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer) override;
+    /*!
+     * \brief Empty function.
+     */
+    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer) override;
 
 private:
     /*!
@@ -41,7 +52,7 @@ private:
      * \param covName - covenant name
      * \return True if new leader was set, false of specified user is not member of covenant or something faild
      */
-    bool _SetNewLeaderToCovenant(const QString &newLeader, int oldLeaderID, const QString &covName);
+    bool _SetNewLeaderToCovenant(const QString &newLeader, int oldLeaderID, const QString &covName) const;
 };
 
 }

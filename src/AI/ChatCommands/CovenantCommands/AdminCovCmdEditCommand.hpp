@@ -34,9 +34,9 @@ public:
     AdminCovCmdEditCommand();
 
     /*!
-     * \brief Initialize command parameters.
+     * \brief Empty function.
      */
-    void Initialize() override;
+    void Initialize() override {}
 
 protected:
     /*///////////////////////////////*/
@@ -67,7 +67,7 @@ private:
      * \param cmdSlots - Number of command slots that are available.
      */
     void _HandleThreeParams(const QString &cmdName, const QString &cooldown, const QString &price, const QString &covenant, 
-                            ChatAnswer &answer, int numberOfCommands, int cmdSlots);
+                            ChatAnswer &answer, int numberOfCommands, int cmdSlots) const;
     /*!
      * \brief Handle the updating/creating command with two params: name and cooldown.
      * \param cmdName - Name of command that will be updated/created.
@@ -78,7 +78,7 @@ private:
      * \param cmdSlots - Number of command slots that are available.
      */
     void _HandleCooldown(const QString &cmdName, const QString &cooldown, const QString &covenant,
-                         ChatAnswer &answer, int numberOfCommands, int cmdSlots);
+                         ChatAnswer &answer, int numberOfCommands, int cmdSlots) const;
     /*!
      * \brief Handle the updating/creating command with two params: name and price.
      * \param cmdName - Name of command that will be updated/created.
@@ -89,7 +89,7 @@ private:
      * \param cmdSlots - Number of command slots that are available.
      */
     void _HandlePrice(const QString &cmdName, const QString &price, const QString &covenant,
-                         ChatAnswer &answer, int numberOfCommands, int cmdSlots);
+                      ChatAnswer &answer, int numberOfCommands, int cmdSlots) const;
 
     /*!
      * \brief Updates command.
@@ -97,7 +97,7 @@ private:
      * \param cooldown - Cooldown that will be setted to updated command.
      * \param price - Price that will be setted to updated command.
      */
-    void _UpdateCommand(const QString &cmdName, const QString &cooldown = "", const QString &price = "");
+    static void _UpdateCommand(const QString &cmdName, const QString &cooldown = "", const QString &price = "");
     /*!
      * \brief Creates command.
      * \param cmdName - Name of command that will be created.

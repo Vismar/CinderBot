@@ -18,8 +18,7 @@ namespace CovenantCmd
 {
 
 /*!
- * class InfoCovenantCommand
- * Display info about specified covenant
+ * \brief Display info about specified covenant.
  */
 class InfoCovenantCommand : public CovenantBaseCommand
 {
@@ -27,11 +26,23 @@ public:
     InfoCovenantCommand();
 
 protected:
-    ////////////////////////////////
-    /// BaseChatCommand overrides
-    void Initialize();
-    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer);
-    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
+    /*///////////////////////////////*/
+    /* BaseChatCommand overrides     */
+    /*///////////////////////////////*/
+    /*!
+     * \brief Empty function.
+     */
+    void Initialize() override {}
+    /*!
+     * \brief Gets specified answer.
+     * \param message - chat message.
+     * \param answer - reference to variable which will store answer.
+     */
+    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer) override;
+    /*!
+     * \brief Empty function.
+     */
+    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer) override;
 };
 
 }

@@ -22,6 +22,7 @@
 #include "Utils/Database/QuoteDBHelper.hpp"
 #include "Utils/Database/AnalyticsDBHelper.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
+#include "Utils/Database/RPG/CovenantDBHelper.hpp"
 #include "Utils/UserData/RealTimeUserData.hpp"
 #include "Twitch/KrakenClient.hpp"
 #include "Utils/Logger.hpp"
@@ -139,6 +140,23 @@ int main(int argc, char *argv[])
     else
     {
         LOG(Utils::LogInfo, "AnalyticsDBHelper loaded.");
+    }
+
+    // Try to intiialize covenan db helper
+    error = Utils::Database::CovenantDBHelper::Instance().InitializeTables();
+    if (error != "OK")
+    {
+        // Log
+        LOG(Utils::LogWarning, error);
+
+        // Message box
+        QMessageBox msgBox;
+        msgBox.setText(error);
+        msgBox.exec();
+    }
+    else
+    {
+        LOG(Utils::LogInfo, "CovenantDBHelper loaded.");
     }
 
     // Try to initialize configuration manager

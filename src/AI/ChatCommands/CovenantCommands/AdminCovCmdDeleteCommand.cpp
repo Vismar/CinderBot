@@ -5,7 +5,7 @@
 **************************************************************************/
 #include "AdminCovCmdDeleteCommand.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/RPG/CovenantDBHelper.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
@@ -25,13 +25,6 @@ enum AnswersId
 ///////////////////////////////////////////////////////////////////////////
 
 AdminCovCmdDeleteCommand::AdminCovCmdDeleteCommand()
-{
-    Initialize();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void AdminCovCmdDeleteCommand::Initialize()
 {
     _name = "!cov_cmd_delete";
     _regExpName.setPattern("name=(?<name>.+?);");
@@ -60,77 +53,72 @@ void AdminCovCmdDeleteCommand::_GetAnswer(const ChatMessage& message, ChatAnswer
     if (covenant != "Viewer")
     {
         // Check if user is leader of its covenant
-        DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader, CmdSlots", QString("Name = '%1'").arg(covenant));
-        if ((query != nullptr) && (query->first()))
+        if (CovenantDBHelper::CheckLeadership(message.GetUserID()))
         {
-            // If user is leader, than proceed
-            if (query->value("Leader").toString() == message.GetRealName())
+            QRegularExpressionMatch matchName = _regExpName.match(message.GetMessage());
+            QRegularExpressionMatch matchId = _regExpId.match(message.GetMessage());
+            CustomCommandDBHelper &DBHelper = CustomCommandDBHelper::Instance();
+
+            // If user specified "name" parameter try to find command and "id" param
+            if (matchName.hasMatch())
             {
-                QRegularExpressionMatch matchName = _regExpName.match(message.GetMessage());
-                QRegularExpressionMatch matchId = _regExpId.match(message.GetMessage());
-                CustomCommandDBHelper &DBHelper = CustomCommandDBHelper::Instance();
-
-                // If user specified "name" parameter try to find command and "id" param
-                if (matchName.hasMatch())
+                QString cmdName = matchName.captured("name");
+                // Check if that command exist
+                // If command exist, check if "id" param was specified
+                if (DBHelper.CommandExist(cmdName, covenant))
                 {
-                    QString cmdName = matchName.captured("name");
-                    // Check if that command exist
-                    // If command exist, check if "id" param was specified
-                    if (DBHelper.CommandExist(cmdName, covenant))
+                    // If paramater "id" was specified, try to find this id in list of ids of answers of specified command
+                    if (matchId.hasMatch())
                     {
-                        // If paramater "id" was specified, try to find this id in list of ids of answers of specified command
-                        if (matchId.hasMatch())
-                        {
-                            // Get array of command answer ids and check if specified id is in that array
-                            QVector<int> cmdAnswerIds = DBHelper.GetAnswers(CmdType::CovenantCmd, cmdName);
-                            int cmdId = matchId.captured("id").toInt();
+                        // Get array of command answer ids and check if specified id is in that array
+                        QVector<int> cmdAnswerIds = DBHelper.GetAnswers(CmdType::CovenantCmd, cmdName);
+                        int cmdId = matchId.captured("id").toInt();
 
-                            // If specified id exist, then proceed
-                            if (cmdAnswerIds.contains(cmdId))
-                            {
-                                // Delete answer
-                                DBHelper.DeleteAnswer(CmdType::CovenantCmd, cmdId);
-
-                                // Set answer
-                                QString temp = _answers.at(AnswerDeleted);
-                                temp.replace("ANSWER_ID", QString::number(cmdId));
-                                temp.replace("CMD_NAME", cmdName);
-                                answer.AddAnswer(temp);
-                            }
-                            else
-                            {
-                                answer.AddAnswer(_answers.at(NoAnswer));
-                            }
-                        }
-                        // If parameter "id" was not specified, just delete command
-                        else
+                        // If specified id exist, then proceed
+                        if (cmdAnswerIds.contains(cmdId))
                         {
-                            // Delete command
-                            DBHelper.DeleteCommand(CmdType::CovenantCmd, cmdName);
+                            // Delete answer
+                            DBHelper.DeleteAnswer(CmdType::CovenantCmd, cmdId);
 
                             // Set answer
-                            QString temp = _answers.at(CmdDeleted);
+                            QString temp = _answers.at(AnswerDeleted);
+                            temp.replace("ANSWER_ID", QString::number(cmdId));
                             temp.replace("CMD_NAME", cmdName);
                             answer.AddAnswer(temp);
                         }
+                        else
+                        {
+                            answer.AddAnswer(_answers.at(NoAnswer));
+                        }
                     }
-                    // If command was not found, notify user about it
+                    // If parameter "id" was not specified, just delete command
                     else
                     {
-                        answer.AddAnswer(_answers.at(NoCmd));
+                        // Delete command
+                        DBHelper.DeleteCommand(CmdType::CovenantCmd, cmdName);
+
+                        // Set answer
+                        QString temp = _answers.at(CmdDeleted);
+                        temp.replace("CMD_NAME", cmdName);
+                        answer.AddAnswer(temp);
                     }
                 }
-                // If parameter "name" was not specified, display info about command
+                // If command was not found, notify user about it
                 else
                 {
-                    answer.AddAnswer(_answers.at(Description));
+                    answer.AddAnswer(_answers.at(NoCmd));
                 }
             }
-            // If user not leader, say it
+            // If parameter "name" was not specified, display info about command
             else
             {
-                answer.AddAnswer(_answers.at(NotLeader));
+                answer.AddAnswer(_answers.at(Description));
             }
+        }
+        // If user not leader, say it
+        else
+        {
+            answer.AddAnswer(_answers.at(NotLeader));
         }
     }
     // If user is not a member of any covenant

@@ -106,6 +106,9 @@
     <Filter Include="Sources\Twitch">
       <UniqueIdentifier>{794931c8-dd25-40c4-9239-9b760e8286f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Utils\Database\RPG">
+      <UniqueIdentifier>{b0c5cb0a-0016-46e3-b281-e5243ff3b3a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\qrc_Resources.cpp">
@@ -610,6 +613,15 @@
     <ClCompile Include="Build\Release\moc_UserDataDBHelper.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Build\Debug\moc_CovenantDBHelper.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_CovenantDBHelper.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Database\RPG\CovenantDBHelper.cpp">
+      <Filter>Sources\Utils\Database\RPG</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\TimerCommands\UserData\UserDataTimerCommandList.hpp">
@@ -859,6 +871,9 @@
     </CustomBuild>
     <CustomBuild Include="Utils\Database\AnalyticsDBHelper.hpp">
       <Filter>Sources\Utils\Database</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Utils\Database\RPG\CovenantDBHelper.hpp">
+      <Filter>Sources\Utils\Database\RPG</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

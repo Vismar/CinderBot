@@ -98,14 +98,20 @@ void BaseChatCommand::_AddAuthorName(QStringList &answer, const QString &author)
 
 void BaseChatCommand::_TakeDefaultPriceFromUser(int userID) const
 {
-    UserDataDBHelper::GiveCurrencyToUser(-_price, userID);
+    if (_price != 0)
+    {
+        UserDataDBHelper::GiveCurrencyToUser(-_price, userID);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void BaseChatCommand::_TakePriceFromUser(int userID, int price)
 {
-    UserDataDBHelper::GiveCurrencyToUser(-price, userID);
+    if (price != 0)
+    {
+        UserDataDBHelper::GiveCurrencyToUser(-price, userID);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

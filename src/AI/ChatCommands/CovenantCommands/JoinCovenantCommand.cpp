@@ -6,128 +6,124 @@
 #include "JoinCovenantCommand.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/RPG/CovenantDBHelper.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Configuration;
 using namespace Utils::Database;
 
-#define MSG_JOINING_COV    0
-#define MSG_ALREADY_IN_COV 1
-#define MSG_NO_CURRENCY    2
-#define MSG_USER_IS_LEADER 3
-#define MSG_COVENANT_FULL  4
+enum
+{
+    MsgJoiningCov = 0,
+    MsgAlreadyInCov,
+    MsgNoCurrency,
+    MsgUserIsLeader,
+    MsgCovenantFull,
+    MsgCovenantNotExist,
+    MsgCovNotSpecified
+};
 
 ///////////////////////////////////////////////////////////////////////////
 
 JoinCovenantCommand::JoinCovenantCommand()
 {
-    Initialize();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void JoinCovenantCommand::Initialize()
-{
+    _covNameExpression.setPattern("!cov_join (?<covenant>.*)");
     _name = "!cov_join";
     _answers.push_back("You are joining 'COV_NAME', @.");
-    _answers.push_back("You are already in that covenant, @!");
-    _answers.push_back("Not enough currency, @!");
+    _answers.push_back("You are already in that covenant, @.");
+    _answers.push_back("Not enough currency, @.");
     _answers.push_back("You are leader of your covenant, @! Please leave before trying to join.");
-    _answers.push_back("Covenant is full, @!");
+    _answers.push_back("Covenant is full, @.");
+    _answers.push_back("Such covenant do not exist, @.");
+    _answers.push_back("You do not specified a covenant to join in, @.");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void JoinCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
-    QString price;
-    ConfigurationManager &configMng = ConfigurationManager::Instance();
-    QString covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
-
-    // Check if user is leader of its covenant
-    if (covenant != "Viewer")
+    // Try to find the specified covenant
+    QRegularExpressionMatch match = _covNameExpression.match(message.GetMessage());
+    if (match.hasMatch())
     {
-        DB_QUERY_PTR queryLeader = DB_SELECT("Covenants", "Leader", QString("Name='%1'").arg(covenant));
-        if (queryLeader->exec())
+        // Save covenant if it was specified
+        QString specifiedCovenant = match.captured("covenant");
+
+        QString price;
+        ConfigurationManager &configMng = ConfigurationManager::Instance();
+        QString covenant = UserDataDBHelper::GetUserParameter(UserDataParameter::Covenant, message.GetUserID()).toString();
+
+        // Check if user is leader of its covenant
+        if (covenant != "Viewer")
         {
-            queryLeader->first();
             // If user is leader, notify him about it
-            if (queryLeader->value("Leader").toString() == message.GetRealName())
+            if (CovenantDBHelper::CheckLeadership(message.GetUserID()))
             {
-                answer.AddAnswer(_answers.at(MSG_USER_IS_LEADER));
+                answer.AddAnswer(_answers.at(MsgUserIsLeader));
             }
         }
-    }
-    // If user Viewer or not a leader of its covenant
-    if (answer.GetAnswers().isEmpty())
-    {
-        // Set default price value
-        int priceToJoin(100);
-        // Try to get param from config manager
-        if (configMng.GetStringParam(CfgParam::CovJoinPrice,price))
+        // If user Viewer or not a leader of its covenant
+        if (answer.GetAnswers().isEmpty())
         {
-            priceToJoin = price.toInt();
+            // Set default price value
+            int priceToJoin(100);
 
-        }
-        _price = priceToJoin;
-        // If user have enough currency to join
-        if (_CheckCurrency(message.GetUserID()))
-        {
-            // Get covenant list
-            DB_QUERY_PTR query = DB_SELECT("Covenants", "Name");
-            if (query != nullptr)
+            // Try to get param from config manager
+            if (configMng.GetStringParam(CfgParam::CovJoinPrice, price))
             {
-                QStringList covenants;
-                while (query->next())
+                priceToJoin = price.toInt();
+
+            }
+            _price = priceToJoin;
+
+            // If user have enough currency to join
+            if (_CheckCurrency(message.GetUserID()))
+            {
+                // Check if specified covenant exist
+                if (CovenantDBHelper::IsCovenantExist(specifiedCovenant))
                 {
-                    covenants.append(query->value("Name").toString());
-                }
-                // Try to find specified covenant from list of covenants
-                for (auto iter = covenants.begin(); iter != covenants.end(); ++iter)
-                {
-                    // Found an overlap
-                    if (message.GetMessage().contains(*iter))
+                    // Check if user already in this covenant
+                    if (covenant != specifiedCovenant)
                     {
-                        // Check if user already in this covenant
-                        if (covenant != *iter)
+                        // Maximum of members in selected covenant
+                        int maxMembers = CovenantDBHelper::GetParameter(CovenantParameter::MaxMembers, specifiedCovenant).toInt();
+
+                        // If covenant full, notify about it
+                        if (maxMembers <= UserDataDBHelper::GetUsersFromCovenant(specifiedCovenant).size())
                         {
-                            // Maximum of members in selected covenant
-                            DB_QUERY_PTR maxQuery = DB_SELECT("Covenants", "MaxMembers", QString("Name='%1'").arg(*iter));
-                            // Check if covenant is not full
-                            if ((maxQuery != nullptr) && maxQuery->first())
-                            {
-                                // If covenant full, notify about it
-                                if (maxQuery->value("MaxMembers").toInt() <= UserDataDBHelper::GetUsersFromCovenant(covenant).size())
-                                {
-                                    answer.AddAnswer(_answers.at(MSG_COVENANT_FULL));
-                                }
-                                else
-                                {
-                                    // Join user to covenant and take currency for it
-                                    answer.AddAnswer(_answers.at(MSG_JOINING_COV));
-                                    (*answer.GetAnswers().begin()).replace("COV_NAME", *iter);
-                                    UserDataDBHelper::UpdateUserParameter(UserDataParameter::Covenant, *iter, message.GetUserID());
-                                    _TakeDefaultPriceFromUser(message.GetUserID());
-                                }
-                            }
+                            answer.AddAnswer(_answers.at(MsgCovenantFull));
                         }
-                        // User is already in that covenant
                         else
                         {
-                            // Second answer
-                            answer.AddAnswer(_answers.at(MSG_ALREADY_IN_COV));
+                            // Join user to covenant and take currency for it
+                            answer.AddAnswer(_answers.at(MsgJoiningCov));
+                            (*answer.GetAnswers().begin()).replace("COV_NAME", specifiedCovenant);
+                            UserDataDBHelper::UpdateUserParameter(UserDataParameter::Covenant, specifiedCovenant, message.GetUserID());
+                            _TakeDefaultPriceFromUser(message.GetUserID());
                         }
-                        break;
+                    }
+                    // User is already in that covenant
+                    else
+                    {
+                        // Second answer
+                        answer.AddAnswer(_answers.at(MsgAlreadyInCov));
                     }
                 }
+            }
+            else
+            {
+                answer.AddAnswer(_answers.at(MsgCovenantNotExist));
             }
         }
         else
         {
-            answer.AddAnswer(_answers.at(MSG_NO_CURRENCY));
+            answer.AddAnswer(_answers.at(MsgNoCurrency));
         }
+    }
+    else
+    {
+        answer.AddAnswer(_answers.at(MsgCovNotSpecified));
     }
 }
 

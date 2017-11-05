@@ -95,7 +95,8 @@ SOURCES += main.cpp\
     Twitch/KrakenClient.cpp \
     Twitch/KrakenResponse.cpp \
     Utils/Database/UserDataDBHelper.cpp \
-    Utils/Database/AnalyticsDBHelper.cpp
+    Utils/Database/AnalyticsDBHelper.cpp \
+    Utils/Database/RPG/CovenantDBHelper.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -181,7 +182,8 @@ HEADERS  += MainWindow.hpp \
     Twitch/KrakenClient.hpp \
     Twitch/KrakenResponse.hpp \
     Utils/Database/UserDataDBHelper.hpp \
-    Utils/Database/AnalyticsDBHelper.hpp
+    Utils/Database/AnalyticsDBHelper.hpp \
+    Utils/Database/RPG/CovenantDBHelper.hpp
 
 RESOURCES += \
     Resources.qrc
