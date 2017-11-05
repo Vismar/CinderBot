@@ -6,7 +6,7 @@
 #include "RenameCovenantCommand.hpp"
 #include "Utils/Config/ConfigurationManager.hpp"
 #include "Utils/Config/ConfigurationParameters.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/RPG/CovenantDBHelper.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
 
@@ -14,11 +14,14 @@ using namespace Command::CovenantCmd;
 using namespace Utils::Configuration;
 using namespace Utils::Database;
 
-#define MSG_NOT_LEADER  0
-#define MSG_RENAMED     1
-#define MSG_NO_COVENANT 2
-#define MSG_NO_NAME     3
-#define MSG_NO_CURRENCY 4
+enum
+{
+    MsgNotLeader = 0,
+    MsgRenamed,
+    MsgNoCovenant,
+    MsgNoName,
+    MsgNoCurrency
+};
 
 #define MAX_COVENANT_NAME_LENGTH 50
 #define DEFAULT_PRICE_FOR_RENAME "500"
@@ -26,13 +29,6 @@ using namespace Utils::Database;
 ///////////////////////////////////////////////////////////////////////////
 
 RenameCovenantCommand::RenameCovenantCommand()
-{
-    Initialize();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void RenameCovenantCommand::Initialize()
 {
     _name = "!cov_rename";
     _answers.push_back("You are not leader of your covenant, @!");
@@ -51,74 +47,66 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
     if (covenant != "Viewer")
     {
         // Check if user is leader of its covenant
-        DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
-        if (query->exec())
+        if (CovenantDBHelper::CheckLeadership(message.GetUserID()))
         {
-            // If user is in covenant, check its leader
-            if (query->first())
+            // Get amount currency which is needed to rename covenant
+            QString price;
+            if (!ConfigurationManager::Instance().GetStringParam(CfgParam::CovRenamePrice, price))
             {
-                if (query->value("Leader").toString() == message.GetRealName())
+                price = DEFAULT_PRICE_FOR_RENAME;
+            }
+            _price = price.toInt();
+            if (_CheckCurrency(message.GetUserID()))
+            {
+                QString newCovenantName = message.GetMessage().mid(_name.size() + 1);
+                newCovenantName.replace("'", "");
+                // If covenant name too long, just make it shorter
+                if (newCovenantName.size() > MAX_COVENANT_NAME_LENGTH)
                 {
-                    // Get amount currency which is needed to rename covenant
-                    QString price;
-                    if (!ConfigurationManager::Instance().GetStringParam(CfgParam::CovRenamePrice, price))
+                    newCovenantName.left(MAX_COVENANT_NAME_LENGTH);
+                }
+                // If user provided covenant name, rename it
+                if (!newCovenantName.isEmpty())
+                {
+                    // Try to rename covenant
+                    if (CovenantDBHelper::RenameCovenant(covenant, newCovenantName))
                     {
-                        price = DEFAULT_PRICE_FOR_RENAME;
-                    }
-                    _price = price.toInt();
-                    if (_CheckCurrency(message.GetUserID()))
-                    {
-                        QString newCovenantName = message.GetMessage().mid(_name.size()+1);
-                        newCovenantName.replace("'", "");
-                        // If covenant name too long, just make it shorter
-                        if (newCovenantName.size() > MAX_COVENANT_NAME_LENGTH)
-                        {
-                            newCovenantName.left(MAX_COVENANT_NAME_LENGTH);
-                        }
-                        // If user provided covenant name, rename it
-                        if (!newCovenantName.isEmpty())
-                        {
-                            if (DB_UPDATE("Covenants", QString("Name = '%1'").arg(newCovenantName),
-                                                       QString("Leader = '%1'").arg(message.GetRealName())))
-                            {
-                                // If covenant was renamed, set covenant field to a new value for all users who are in that covenant
-                                UserDataDBHelper::UpdateCovenantName(covenant, newCovenantName);
+                        // If covenant was renamed, set covenant field to a new value for all users who are in that covenant
+                        UserDataDBHelper::UpdateCovenantName(covenant, newCovenantName);
 
-                                // Update existing commands for covenant
-                                CustomCommandDBHelper::UpdateCovenantName(CmdType::CovenantCmd, covenant, newCovenantName);
+                        // Update existing commands for covenant
+                        CustomCommandDBHelper::UpdateCovenantName(CmdType::CovenantCmd, covenant, newCovenantName);
 
-                                // Update commands created by broadcaster for covenant
-                                CustomCommandDBHelper::UpdateCovenantName(CmdType::StreamerCmd, covenant, newCovenantName);
-                                
-                                // Take price to rename covenant
-                                _TakeDefaultPriceFromUser(message.GetUserID());
-                                answer.AddAnswer(_answers.at(MSG_RENAMED));
-                            }
-                        }
-                        // If name was not provided
-                        else
-                        {
-                            answer.AddAnswer(_answers.at(MSG_NO_NAME));
-                        }
-                    }
-                    // If user do not have enought currency
-                    else
-                    {
-                        answer.AddAnswer(_answers.at(MSG_NO_CURRENCY));
+                        // Update commands created by broadcaster for covenant
+                        CustomCommandDBHelper::UpdateCovenantName(CmdType::StreamerCmd, covenant, newCovenantName);
+
+                        // Take price to rename covenant
+                        _TakeDefaultPriceFromUser(message.GetUserID());
+                        answer.AddAnswer(_answers.at(MsgRenamed));
                     }
                 }
-                // If user is not leader
+                // If name was not provided
                 else
                 {
-                    answer.AddAnswer(_answers.at(MSG_NOT_LEADER));
+                    answer.AddAnswer(_answers.at(MsgNoName));
                 }
             }
+            // If user do not have enought currency
+            else
+            {
+                answer.AddAnswer(_answers.at(MsgNoCurrency));
+            }
+        }
+        // If user is not leader
+        else
+        {
+            answer.AddAnswer(_answers.at(MsgNotLeader));
         }
     }
     // If user is not in any covenant
     else
     {
-        answer.AddAnswer(_answers.at(MSG_NO_COVENANT));
+        answer.AddAnswer(_answers.at(MsgNoCovenant));
     }
 }
 

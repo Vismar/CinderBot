@@ -4,7 +4,7 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "ListCovenantCommand.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/RPG/CovenantDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
@@ -12,13 +12,6 @@ using namespace Utils::Database;
 ///////////////////////////////////////////////////////////////////////////
 
 ListCovenantCommand::ListCovenantCommand()
-{
-    Initialize();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void ListCovenantCommand::Initialize()
 {
     // 1 min cooldown
     _cooldown.setHMS(0, 1, 0, 0);
@@ -32,22 +25,8 @@ void ListCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
 {
     Q_UNUSED(message);
 
-    QString covList;
-    // Get covenant list
-    DB_QUERY_PTR query = DB_SELECT("Covenants", "Name");
-    if (query->exec())
-    {
-        answer.AddAnswer(_answers.first());
-        while (query->next())
-        {
-            covList.append(query->value("Name").toString() + ", ");
-        }
-        if (covList.size() > 0)
-        {
-            covList = covList.left(covList.size() - 2);
-        }
-    }
-    (*answer.GetAnswers().begin()).replace("COV_LIST", covList);
+    answer.AddAnswer(_answers.first());
+    (*answer.GetAnswers().begin()).replace("COV_LIST", CovenantDBHelper::GetCovenants().join(", "));
 }
 
 ///////////////////////////////////////////////////////////////////////////

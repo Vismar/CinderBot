@@ -116,6 +116,7 @@ void BotAI::LoadCommands()
     // Predefined commands
     _chatCommands.push_back(new UserDataCommandList());
     _chatCommands.push_back(new CovenantCommandList());
+    _chatCommands.last()->Initialize();
     _chatCommands.push_back(new QuoteCommandList());
     // Custom commands for all users and covenants
     _chatCommands.push_back(new CustomCommandList());

@@ -7,6 +7,7 @@
 #include "Utils/Logger.hpp"
 #include <QQueue>
 
+/*! Names for user data parameters */
 static QVector<QString> UserDataParamNames = { "UserID", "Name", "Author", "Messages", "Currency",
                                                "Covenant", "LastTimeVisited", "TimeInChat", "Bits",
                                                "FollowDate" };
@@ -350,13 +351,20 @@ bool UserDataDBHelper::IsUserInCovenant(const QString& covenant, int userID)
 {
     bool inCovenant(false);
 
-    DB_QUERY_PTR query = DB_SELECT("UserData", "Covenant", QString("UserID=%1").arg(userID));
-    if (query != nullptr && query->first())
+    if (covenant == "Viewer")
     {
-        // If user in covenant, set returning value to true
-        if (query->value("Covenant").toString() == covenant)
+        inCovenant = true;
+    }
+    else
+    {
+        DB_QUERY_PTR query = DB_SELECT("UserData", "Covenant", QString("UserID=%1").arg(userID));
+        if (query != nullptr && query->first())
         {
-            inCovenant = true;
+            // If user in covenant, set returning value to true
+            if (query->value("Covenant").toString() == covenant)
+            {
+                inCovenant = true;
+            }
         }
     }
 
@@ -369,13 +377,20 @@ bool UserDataDBHelper::IsUserInCovenant(const QString& covenant, const QString& 
 {
     bool inCovenant(false);
 
-    DB_QUERY_PTR query = DB_SELECT("UserData", "Covenant", QString("Name='%1' OR Author='%1'").arg(userName));
-    if (query != nullptr && query->first())
+    if (covenant == "Viewer")
     {
-        // If user in covenant, set returning value to true
-        if (query->value("Covenant").toString() == covenant)
+        inCovenant = true;
+    }
+    else
+    {
+        DB_QUERY_PTR query = DB_SELECT("UserData", "Covenant", QString("Name='%1' OR Author='%1'").arg(userName));
+        if (query != nullptr && query->first())
         {
-            inCovenant = true;
+            // If user in covenant, set returning value to true
+            if (query->value("Covenant").toString() == covenant)
+            {
+                inCovenant = true;
+            }
         }
     }
 

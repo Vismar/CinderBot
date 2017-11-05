@@ -18,8 +18,7 @@ namespace CovenantCmd
 {
 
 /*!
- * class JoinCovenantCommand
- * Handle joining users to covenants
+ * \brief Handles joining users to covenants.
  */
 class JoinCovenantCommand : public CovenantBaseCommand
 {
@@ -27,11 +26,27 @@ public:
     JoinCovenantCommand();
 
 protected:
-    ////////////////////////////////
-    /// BaseChatCommand overrides
-    void Initialize();
-    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer);
-    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer);
+    /*///////////////////////////////*/
+    /* BaseChatCommand overrides     */
+    /*///////////////////////////////*/
+    /*!
+     * \brief Empty function.
+     */
+    void Initialize() override {}
+    /*!
+     * \brief Gets specified answer.
+     * \param message - chat message.
+     * \param answer - reference to variable which will store answer.
+     */
+    void _GetAnswer(const ChatMessage &message, ChatAnswer &answer) override;
+    /*!
+     * \brief Empty function.
+     */
+    void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer) override;
+
+private:
+    /*! Regular expression to get covenant name */
+    QRegularExpression _covNameExpression;
 };
 
 }

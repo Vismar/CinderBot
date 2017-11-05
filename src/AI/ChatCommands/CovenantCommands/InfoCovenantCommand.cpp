@@ -4,27 +4,23 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "InfoCovenantCommand.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/RPG/CovenantDBHelper.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
 
-#define MSG_BASE_INFO    0
-#define MSG_DESCRIPTION  1
-#define MSG_NOT_PROVIDED 2
+enum
+{
+    MsgBaseInfo = 0,
+    MsgDescription,
+    MsgNotProvided
+};
 
 ///////////////////////////////////////////////////////////////////////////
 
 InfoCovenantCommand::InfoCovenantCommand()
-{
-    Initialize();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void InfoCovenantCommand::Initialize()
 {
     _name = "!cov_info";
     _answers.push_back("Covenant: COV_NAME; Leader: COV_LEADER; "
@@ -44,45 +40,52 @@ void InfoCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
     // If user provided covenant name, try to find that covenant
     if (!covenant.isEmpty())
     {
-        DB_QUERY_PTR query = DB_SELECT("Covenants", "*", QString("Name = '%1'").arg(covenant));
-        if (query != nullptr)
+        CovParams covParams = CovenantDBHelper::GetParams(covenant);
+        // If covenant exist
+        if (!covParams.Name.isEmpty())
         {
-            if (query->first())
-            {
-                QString temp = _answers.at(MSG_BASE_INFO);
-                // Covenant name
-                temp.replace("COV_NAME", covenant);
-                // Leader of covenant
-                temp.replace("COV_LEADER", query->value("Leader").toString());
-                // Number of members
-                temp.replace("COV_MEMBERS", (QString::number(UserDataDBHelper::GetUsersFromCovenant(covenant).size()) +
-                                             QString("/%1").arg(query->value("MaxMembers").toString())));
-                // Number of created commands
-                int covCmdNum = CustomCommandDBHelper::Instance().GetNumberOfCommands(CmdType::CovenantCmd, covenant);
-                temp.replace("COV_CMD_NUM", QString::number(covCmdNum));
-                // Number of available command slots
-                temp.replace("COV_CMD_SLOTS", query->value("CmdSlots").toString());
-                // Covenant level
-                temp.replace("COV_LEVEL", query->value("Level").toString());
-                // Covenant current exp
-                temp.replace("COV_EXP", query->value("Exp").toString());
-                // Covenant needed exp
-                temp.replace("COV_NEED_EXP", QString::number(query->value("Level").toInt()*1000));
+            QString temp = _answers.at(MsgBaseInfo);
 
-                // Add result to answer
-                answer.AddAnswer(temp);
-                // Get description
-                temp = query->value("Description").toString();
-                if (!temp.isEmpty())
-                {
-                    answer.AddAnswer(_answers.at(MSG_DESCRIPTION)+temp);
-                }
+            // Covenant name
+            temp.replace("COV_NAME", covenant);
+
+            // Leader of covenant
+            temp.replace("COV_LEADER", covParams.Leader);
+
+            // Number of members
+            temp.replace("COV_MEMBERS", QString::number(UserDataDBHelper::GetUsersFromCovenant(covenant).size()) +
+                                        QString("/%1").arg(covParams.MaxMembers));
+
+            // Number of created commands
+            int covCmdNum = CustomCommandDBHelper::Instance().GetNumberOfCommands(CmdType::CovenantCmd, covenant);
+            temp.replace("COV_CMD_NUM", QString::number(covCmdNum));
+
+            // Number of available command slots
+            temp.replace("COV_CMD_SLOTS", QString::number(covParams.CmdSlots));
+
+            // Covenant level
+            temp.replace("COV_LEVEL", QString::number(covParams.Level));
+
+            // Covenant current exp
+            temp.replace("COV_EXP", QString::number(covParams.Exp));
+
+            // Covenant needed exp
+            temp.replace("COV_NEED_EXP", QString::number(covParams.Level * 1000));
+
+            // Add result to answer
+            answer.AddAnswer(temp);
+
+            // Get description
+            temp = covParams.Description;
+            if (!temp.isEmpty())
+            {
+                answer.AddAnswer(_answers.at(MsgDescription) + temp);
             }
         }
     }
     else
     {
-        answer.AddAnswer(_answers.at(MSG_NOT_PROVIDED));
+        answer.AddAnswer(_answers.at(MsgNotProvided));
     }
 }
 

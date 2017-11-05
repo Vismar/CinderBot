@@ -18,20 +18,25 @@ namespace CovenantCmd
 {
 
 /*!
- * class CovenantCommandList
- * Store all covenant commands
+ * \brief Stores all covenant commands.
  */
 class CovenantCommandList : public CommandList
 {
 public:
-    /*! Constructor */
     CovenantCommandList();
 
 protected:
-    ////////////////////////////////
-    /// CommandList override
-    void Initialize();
-    void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam);
+    /*///////////////////////////////*/
+    /* CommandList overrides         */
+    /*///////////////////////////////*/
+    /*!
+     * \brief Calls OnCfgParamChanged to update flag.
+     */
+    void Initialize() override;
+    /*!
+     * \brief Check if CfgParam::CovenantCmdModule is turned 'on' or 'off'.
+     */
+    void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam) override;
 };
 
 }

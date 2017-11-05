@@ -4,8 +4,8 @@
 ********         Check full copyright header in main.cpp          ********
 **************************************************************************/
 #include "AdminCovCmdEditCommand.hpp"
-#include "Utils//Database/UserDataDBHelper.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/UserDataDBHelper.hpp"
+#include "Utils/Database/RPG/CovenantDBHelper.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
@@ -25,13 +25,6 @@ enum Answer
 ///////////////////////////////////////////////////////////////////////////
 
 AdminCovCmdEditCommand::AdminCovCmdEditCommand()
-{
-    Initialize();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void AdminCovCmdEditCommand::Initialize()
 {
     _name = "!cov_cmd_edit";
     _regExpName.setPattern("name=(?<name>.+?);");
@@ -62,60 +55,53 @@ void AdminCovCmdEditCommand::_GetAnswer(const ChatMessage& message, ChatAnswer& 
     if (covenant != "Viewer")
     {
         // Check if user is leader of its covenant
-        DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader, CmdSlots", QString("Name = '%1'").arg(covenant));
-        if ((query != nullptr) && (query->first()))
+        if (CovenantDBHelper::CheckLeadership(message.GetUserID()))
         {
-            // If user is leader, than proceed
-            if (query->value("Leader").toString() == message.GetRealName())
-            {
-                QRegularExpressionMatch matchName = _regExpName.match(message.GetMessage());
-                QRegularExpressionMatch matchCooldown = _regExpCooldown.match(message.GetMessage());
-                QRegularExpressionMatch matchPrice = _regExpPrice.match(message.GetMessage());
-                int numberOfCommands = CustomCommandDBHelper::GetNumberOfCommands(CmdType::CovenantCmd, covenant);
+            QRegularExpressionMatch matchName = _regExpName.match(message.GetMessage());
+            QRegularExpressionMatch matchCooldown = _regExpCooldown.match(message.GetMessage());
+            QRegularExpressionMatch matchPrice = _regExpPrice.match(message.GetMessage());
+            int numberOfCommands = CustomCommandDBHelper::GetNumberOfCommands(CmdType::CovenantCmd, covenant);
+            int cmdSlots = CovenantDBHelper::GetParameter(CovenantParameter::CmdSlots, covenant).toInt();
 
-                // If all parameters were specified
-                if (matchName.hasMatch() && matchCooldown.hasMatch() && matchPrice.hasMatch())
+            // If all parameters were specified
+            if (matchName.hasMatch() && matchCooldown.hasMatch() && matchPrice.hasMatch())
+            {
+                _HandleThreeParams(matchName.captured("name"), matchCooldown.captured("cooldown"), matchPrice.captured("price"), covenant, answer, numberOfCommands, cmdSlots);
+            }
+            // If not all params were specified
+            else if (matchName.hasMatch())
+            {
+                bool cmdExist = CustomCommandDBHelper::CommandExist(matchName.captured("name"), covenant);
+                // Try to update cooldown value
+                if (matchCooldown.hasMatch())
                 {
-                    _HandleThreeParams(matchName.captured("name"), matchCooldown.captured("cooldown"), matchPrice.captured("price"),
-                                       covenant, answer, numberOfCommands, query->value("CmdSlots").toInt());
+                    _HandleCooldown(matchName.captured("name"), matchCooldown.captured("cooldown"), covenant, answer, numberOfCommands, cmdSlots);
                 }
-                // If not all params were specified
-                else if (matchName.hasMatch())
+                // Try to update price value
+                else if (matchPrice.hasMatch())
                 {
-                    bool cmdExist = CustomCommandDBHelper::CommandExist(matchName.captured("name"), covenant);
-                    // Try to update cooldown value
-                    if (matchCooldown.hasMatch())
-                    {
-                        _HandleCooldown(matchName.captured("name"), matchCooldown.captured("cooldown"),
-                                        covenant, answer, numberOfCommands, query->value("CmdSlots").toInt());
-                    }
-                    // Try to update price value
-                    else if (matchPrice.hasMatch())
-                    {
-                        _HandlePrice(matchName.captured("name"), matchPrice.captured("price"),
-                                     covenant, answer, numberOfCommands, query->value("CmdSlots").toInt());
-                    }
-                    else if (!cmdExist && (numberOfCommands < query->value("CmdSlots").toInt()))
-                    {
-                        if (_CreateCommand(matchName.captured("name"), covenant))
-                        {
-                            QString temp = _answers.at(CmdCreated);
-                            temp.replace("CMD_NAME", matchName.captured("name"));
-                            answer.AddAnswer(temp);
-                        }
-                    }
+                    _HandlePrice(matchName.captured("name"), matchPrice.captured("price"), covenant, answer, numberOfCommands, cmdSlots);
                 }
-                // If "name" parameter was not specified, display info about command
-                else
+                else if (!cmdExist && (numberOfCommands < cmdSlots))
                 {
-                    answer.AddAnswer(_answers.at(Description));
+                    if (_CreateCommand(matchName.captured("name"), covenant))
+                    {
+                        QString temp = _answers.at(CmdCreated);
+                        temp.replace("CMD_NAME", matchName.captured("name"));
+                        answer.AddAnswer(temp);
+                    }
                 }
             }
-            // If user not leader, say it
+            // If "name" parameter was not specified, display info about command
             else
             {
-                answer.AddAnswer(_answers.at(NotLeader));
+                answer.AddAnswer(_answers.at(Description));
             }
+        }
+        // If user not leader, say it
+        else
+        {
+            answer.AddAnswer(_answers.at(NotLeader));
         }
     }
     // If user is not a member of any covenant
@@ -141,7 +127,7 @@ void AdminCovCmdEditCommand::_GetRandomAnswer(const ChatMessage& message, ChatAn
 ///////////////////////////////////////////////////////////////////////////
 
 void AdminCovCmdEditCommand::_HandleThreeParams(const QString &cmdName, const QString &cooldown, const QString &price, const QString &covenant, 
-                                                ChatAnswer &answer, int numberOfCommands, int cmdLost)
+                                                ChatAnswer &answer, int numberOfCommands, int cmdLost) const
 {
     QString temp;
     // Check if command exist
@@ -178,7 +164,7 @@ void AdminCovCmdEditCommand::_HandleThreeParams(const QString &cmdName, const QS
 ///////////////////////////////////////////////////////////////////////////
 
 void AdminCovCmdEditCommand::_HandleCooldown(const QString& cmdName, const QString& cooldown, const QString& covenant, 
-                                             ChatAnswer& answer, int numberOfCommands, int cmdSlots)
+                                             ChatAnswer& answer, int numberOfCommands, int cmdSlots) const
 {
     QString temp;
     bool cmdExist = CustomCommandDBHelper::CommandExist(cmdName, covenant);
@@ -210,7 +196,7 @@ void AdminCovCmdEditCommand::_HandleCooldown(const QString& cmdName, const QStri
 ///////////////////////////////////////////////////////////////////////////
 
 void AdminCovCmdEditCommand::_HandlePrice(const QString& cmdName, const QString& price, const QString& covenant,
-                                          ChatAnswer& answer, int numberOfCommands, int cmdSlots)
+                                          ChatAnswer& answer, int numberOfCommands, int cmdSlots) const
 {
     QString temp;
     bool cmdExist = CustomCommandDBHelper::CommandExist(cmdName, covenant);

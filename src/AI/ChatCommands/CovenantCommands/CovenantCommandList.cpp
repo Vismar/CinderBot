@@ -42,24 +42,13 @@ CovenantCommandList::CovenantCommandList()
     _commands.push_back(new AdminCovCmdEditCommand());
     _commands.push_back(new AdminCovCmdDeleteCommand());
     _commands.push_back(new AdminCovCmdAnswerCommand());
-
-    Initialize();
-    OnCfgParamChanged(CfgParam::CovenantCmdModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void CovenantCommandList::Initialize()
 {
-    // Initialize data table in database
-    DB_CREATE_TABLE("Covenants", "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                 "Name TEXT NOT NULL UNIQUE,"
-                                 "Leader TEXT NOT NULL,"
-                                 "Description TEXT NOT NULL,"
-                                 "CmdSlots INTEGER NOT NULL,"
-                                 "Level INTEGER NOT NULL,"
-                                 "Exp INTEGER NOT NULL,"
-                                 "MaxMembers INTEGER DEFAULT 10");
+    OnCfgParamChanged(CfgParam::CovenantCmdModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////

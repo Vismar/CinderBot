@@ -5,25 +5,21 @@
 **************************************************************************/
 #include "DescriptionCovenantCommand.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
-#include "Utils/Database/DatabaseManager.hpp"
+#include "Utils/Database/RPG/CovenantDBHelper.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
 
-#define MSG_DESCRIPTION_CHANGED 0
-#define MSG_USER_NOT_LEADER     1
-#define MSG_NOT_IN_COVENANT     2
+enum
+{
+    MsgDescriptionChanged = 0,
+    MsgIserNotLeader,
+    MsgNotInCovenant
+};
 
 ///////////////////////////////////////////////////////////////////////////
 
 DescriptionCovenantCommand::DescriptionCovenantCommand()
-{
-    Initialize();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void DescriptionCovenantCommand::Initialize()
 {
     _name = "!cov_description";
     _answers.push_back("Covenant description was changed, @!");
@@ -39,52 +35,44 @@ void DescriptionCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnsw
     if (covenant != "Viewer")
     {
         // Check if user is leader of its covenant
-        DB_QUERY_PTR query = DB_SELECT("Covenants", "Leader", QString("Name = '%1'").arg(covenant));
-        if (query->exec())
+        if (CovenantDBHelper::CheckLeadership(message.GetUserID()))
         {
-            if (query->first())
+
+            // If description not provided, just make it empty
+            if (message.GetMessage().size() <= _name.size() + 2)
             {
-                // If user leader of its covenant, try to get description
-                if (query->value("Leader").toString() == message.GetRealName())
+                if (CovenantDBHelper::SetParameter(CovenantParameter::Description, "", covenant))
                 {
-                    // If description not provided, just make it empty
-                    if (message.GetMessage().size() <= _name.size() + 2)
-                    {
-                        DB_UPDATE("Covenants", "Description = ''", QString("Name = '%1'").arg(covenant));
-                        answer.AddAnswer(_answers.at(MSG_DESCRIPTION_CHANGED));
-                    }
-                    // User provided something, get it and save as description
-                    else
-                    {
-                        int lengthOfDescription = message.GetMessage().size()-_name.size()-1;
-                        // Description of covenant should not contain more than 400 symbols
-                        if (lengthOfDescription > 400)
-                        {
-                            lengthOfDescription = 400;
-                        }
-                        QString description = message.GetMessage().mid(_name.size()+1, lengthOfDescription);
-                        description.replace("'", "");
-                        DB_UPDATE("Covenants", QString("Description = '%1'").arg(description),
-                                               QString("Name = '%1'").arg(covenant));
-                        answer.AddAnswer(_answers.at(MSG_DESCRIPTION_CHANGED));
-                    }
-                }
-                // If user not leader of its covenant, notify
-                else
-                {
-                    answer.AddAnswer(_answers.at(MSG_USER_NOT_LEADER));
+                    answer.AddAnswer(_answers.at(MsgDescriptionChanged));
                 }
             }
-            // If user is a leader, he is allowed to create/edit covenant description
-            if (answer.GetAnswers().isEmpty())
+            // User provided something, get it and save as description
+            else
             {
+                int lengthOfDescription = message.GetMessage().size() - _name.size() - 1;
+                // Description of covenant should not contain more than 400 symbols
+                if (lengthOfDescription > 400)
+                {
+                    lengthOfDescription = 400;
+                }
+                QString description = message.GetMessage().mid(_name.size() + 1, lengthOfDescription);
+                description.replace("'", "");
+                if (CovenantDBHelper::SetParameter(CovenantParameter::Description, description, covenant))
+                {
+                    answer.AddAnswer(_answers.at(MsgDescriptionChanged));
+                }
             }
+        }
+        // If user not leader of its covenant, notify
+        else
+        {
+            answer.AddAnswer(_answers.at(MsgIserNotLeader));
         }
     }
     // If user not in covenant, notify
     else
     {
-        answer.AddAnswer(_answers.at(MSG_NOT_IN_COVENANT));
+        answer.AddAnswer(_answers.at(MsgNotInCovenant));
     }
 }
 

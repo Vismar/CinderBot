@@ -33,9 +33,9 @@ public:
     AdminCovCmdAnswerCommand();
 
     /*!
-     * \brief Initialize command parameters.
+     * \brief Empty function.
      */
-    void Initialize() override;
+    void Initialize() override {}
 
 protected:
     /*///////////////////////////////*/

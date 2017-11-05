@@ -11,22 +11,18 @@
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
 
-#define MSG_MEMBERS    0
-#define MSG_NOT_IN_COV 1
-#define MSG_WRONG_COV  2
+enum
+{
+    MsgMembers = 0,
+    MsgNotInCov,
+    MsgWrongCov
+};
 
 ///////////////////////////////////////////////////////////////////////////
 
 MembersCovenantCommand::MembersCovenantCommand()
 {
     _covNameExpression.setPattern("!cov_members (?<covenant>.*)");
-    Initialize();
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-void MembersCovenantCommand::Initialize()
-{
     _name = "!cov_members";
     _answers.push_back("Members of 'COV_NAME': ");
     _answers.push_back("@, you are not in covenant yet. Please specify covenant name.");
@@ -54,7 +50,7 @@ void MembersCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &
     // If viewer not on covenant, notify him about it
     if (covenant == "Viewer")
     {
-        answer.AddAnswer(_answers.at(MSG_NOT_IN_COV));
+        answer.AddAnswer(_answers.at(MsgNotInCov));
     }
     else
     {
@@ -64,11 +60,11 @@ void MembersCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &
         // If no members of specified covenant, that is mean that such covenant doesn't exist
         if (covMembers.isEmpty())
         {
-            answer.AddAnswer(_answers.at(MSG_WRONG_COV));
+            answer.AddAnswer(_answers.at(MsgWrongCov));
         }
         else
         {
-            QString answerStr = _answers.at(MSG_MEMBERS);
+            QString answerStr = _answers.at(MsgMembers);
 
             // Append all members of covenant to string
             for (int i = 0; i < covMembers.size(); ++i)
