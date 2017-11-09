@@ -109,6 +109,9 @@
     <Filter Include="Sources\Utils\Database\RPG">
       <UniqueIdentifier>{b0c5cb0a-0016-46e3-b281-e5243ff3b3a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\AI\TimerCommands\CovenantData">
+      <UniqueIdentifier>{09b4ba08-a541-443a-a0ef-c1b61aa47fcb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\qrc_Resources.cpp">
@@ -622,6 +625,18 @@
     <ClCompile Include="Utils\Database\RPG\CovenantDBHelper.cpp">
       <Filter>Sources\Utils\Database\RPG</Filter>
     </ClCompile>
+    <ClCompile Include="AI\TimerCommands\CovenantData\CovenantExpTimerCommand.cpp">
+      <Filter>Sources\AI\TimerCommands\CovenantData</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Debug\moc_CovenantExpTimerCommand.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Build\Release\moc_CovenantExpTimerCommand.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\TimerCommands\CovenantData\CovenantDataTimerCommandList.cpp">
+      <Filter>Sources\AI\TimerCommands\CovenantData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\TimerCommands\UserData\UserDataTimerCommandList.hpp">
@@ -771,6 +786,9 @@
     <ClInclude Include="Twitch\KrakenResponse.hpp">
       <Filter>Sources\Twitch</Filter>
     </ClInclude>
+    <ClInclude Include="AI\TimerCommands\CovenantData\CovenantDataTimerCommandList.hpp">
+      <Filter>Sources\AI\TimerCommands\CovenantData</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Widgets\Statistics\ViewerStatisticsWidget.hpp">
@@ -874,6 +892,9 @@
     </CustomBuild>
     <CustomBuild Include="Utils\Database\RPG\CovenantDBHelper.hpp">
       <Filter>Sources\Utils\Database\RPG</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AI\TimerCommands\CovenantData\CovenantExpTimerCommand.hpp">
+      <Filter>Sources\AI\TimerCommands\CovenantData</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

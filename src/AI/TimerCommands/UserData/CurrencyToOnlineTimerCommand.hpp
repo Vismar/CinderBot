@@ -39,10 +39,17 @@ public slots:
     void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam);
 
 protected:
-    ////////////////////////////////
-    /// BaseTimerCommand override
-    void _UpdateTimer();
-    void _TimerAction();
+    /*///////////////////////////////*/
+    /* BaseTimerCommand overrides    */
+    /*///////////////////////////////*/
+    /*!
+     * \brief Starts timer anew.
+     */
+    void _UpdateTimer() override;
+    /*!
+     * \brief Adds currency for all users in chat if stream in live.
+     */
+    void _TimerAction() override;
 };
 
 }

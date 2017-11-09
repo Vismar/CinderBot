@@ -32,6 +32,15 @@ CfgStrParam = { // Login params
                 "CovJoinPrice",
                 "CovCreatePrice",
                 "CovRenamePrice",
+                "CovExpToLvl",
+                "CovExpTimer",
+                "CovExpGain",
+                "CovMembersDefault",
+                "CovMembersPerUp",
+                "CovMembersLvlRequirement",
+                "CovCmdSlotsDefault",
+                "CovCmdSlotsPerUp",
+                "CovCmdSlotsLvlRequirement",
                 // Analytics params
                 "ViewerGraphUpdateTime",
                 "MessageGraphUpdateTime",
@@ -49,13 +58,18 @@ CfgStrParam = { // Login params
               };
 
 // Section names
-#define CFGS_CONFIG_ROOT "Configuration"
-#define CFGS_LOGIN       "LoginData"
-#define CFGS_CONFIG      "ConfigData"
-#define CFGS_IGNORE      "IgnoreList"
-#define CFGS_USER        "User"
-#define CFGS_COVENANT    "Covenant"
-#define CFGS_CMD_MODULES "CmdModules"
+#define CFGS_CONFIG_ROOT   "Configuration"
+#define CFGS_LOGIN         "LoginData"
+#define CFGS_CONFIG        "ConfigData"
+#define CFGS_IGNORE        "IgnoreList"
+#define CFGS_USER          "User"
+#define CFGS_RPG           "RPG"
+#define CFGS_COVENANTS     "Covenants"
+#define CFGS_COV_PRICES    "CovenantPrices"
+#define CFGS_COV_EXP       "CovenantExp"
+#define CFGS_COV_MEMBERS   "CovenantMembers"
+#define CFGS_COV_CMD_SLOTS "CovenantCmdSlots"
+#define CFGS_CMD_MODULES   "CmdModules"
 
 // Folders and files
 #define CFG_FOLDER    "data/config"
@@ -217,6 +231,10 @@ void ConfigurationManager::_ReadConfigData()
             {
                 _ReadIgnoreList();
             }
+            else if (_xmlReader.name() == CFGS_RPG)
+            {
+                _ReadRPG();
+            }
             else if (_xmlReader.name() == CFGS_CMD_MODULES)
             {
                 _ReadCmdModules();
@@ -264,6 +282,33 @@ void ConfigurationManager::_ReadIgnoreList()
         }
     }
     _params.insert(CFGS_IGNORE, ignoreList);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void ConfigurationManager::_ReadRPG()
+{
+    while (!_xmlReader.atEnd())
+    {
+        _xmlReader.readNext();
+        // If we reach end of RPG section, break the loop
+        if (_xmlReader.isEndElement() && _xmlReader.name() == CFGS_RPG)
+        {
+            break;
+        }
+        if (_xmlReader.isStartElement())
+        {
+            // If it is not start of a sub section, save parameter
+            if ((_xmlReader.name() != CFGS_COVENANTS) &&
+                (_xmlReader.name() != CFGS_COV_PRICES) &&
+                (_xmlReader.name() != CFGS_COV_EXP) &&
+                (_xmlReader.name() != CFGS_COV_MEMBERS) &&
+                (_xmlReader.name() != CFGS_COV_CMD_SLOTS))
+            {
+                _params.insert(_xmlReader.name().toString(), _xmlReader.readElementText());
+            }
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -357,6 +402,33 @@ void ConfigurationManager::_AddParamsThatDoNotExist()
                 break;
             case CfgParam::CovRenamePrice:
                 value = "500";
+                break;
+            case CfgParam::CovExpToLvl:
+                value = "5000";
+                break;
+            case CfgParam::CovExpTimer:
+                value = "300000";
+                break;
+            case CfgParam::CovExpGain:
+                value = "10";
+                break;
+            case CfgParam::CovMembersDefault:
+                value = "10";
+                break;
+            case CfgParam::CovMembersPerUp:
+                value = "1";
+                break;
+            case CfgParam::CovMembersLvlRequirement:
+                value = "1";
+                break;
+            case CfgParam::CovCmdSlotsDefault:
+                value = "1";
+                break;
+            case CfgParam::CovCmdSlotsPerUp:
+                value = "1";
+                break;
+            case CfgParam::CovCmdSlotsLvlRequirement:
+                value = "2";
                 break;
             }
             // Analytics params
@@ -575,31 +647,165 @@ void ConfigurationManager::_WriteConfigCurrencyData()
 void ConfigurationManager::_WriteConfigCovenantData()
 {
     QString value;
-    // Covenant join price
+
+    // RPG section 
     _xmlWriter.writeComment("\n\t\t"
-                            "Parameter: Covenant join price\n\t\t"
-                            "Description: Price for joining any covenant.\n\t\t"
+                            "RPG section that contains all paramters for RPG system.");
+    _xmlWriter.writeStartElement(CFGS_RPG);
+
+    // Covenants section
+    _xmlWriter.writeComment("\n\t\t\t"
+                            "Covenants section that contains all covenant parameters for RPG system.");
+    _xmlWriter.writeStartElement(CFGS_COVENANTS);
+
+    /****************************/
+    /**** Covenant prices ****/
+    /****************************/
+    // Covenant prices section
+    _xmlWriter.writeComment("\n\t\t\t\t"
+                            "Covenant prices section that contains all price parameters for covenants.");
+    _xmlWriter.writeStartElement(CFGS_COV_PRICES);
+
+    // Covenant join price
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant join price\n\t\t\t\t\t"
+                            "Description: Price for joining any covenant.\n\t\t\t\t\t"
                             "             Any integer number, bigger than -1.");
     GetStringParam(CfgParam::CovJoinPrice, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovJoinPrice)], value);
     value.clear();
 
     // Covenant create price
-    _xmlWriter.writeComment("\n\t\t"
-                            "Parameter: Covenant create price\n\t\t"
-                            "Description: Price for creating covenant.\n\t\t"
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant create price\n\t\t\t\t\t"
+                            "Description: Price for creating covenant.\n\t\t\t\t\t"
                             "             Any integer number, bigger than -1.");
     GetStringParam(CfgParam::CovCreatePrice, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovCreatePrice)], value);
     value.clear();
 
     // Covenant rename price
-    _xmlWriter.writeComment("\n\t\t"
-                            "Parameter: Covenant rename price\n\t\t"
-                            "Description: Price for renaming covenant.\n\t\t"
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant rename price\n\t\t\t\t\t"
+                            "Description: Price for renaming covenant.\n\t\t\t\t\t"
                             "             Any integer number, bigger than -1.");
     GetStringParam(CfgParam::CovRenamePrice, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovRenamePrice)], value);
+    value.clear();
+
+    _xmlWriter.writeEndElement(); // Covenant prices section end
+
+    /****************************/
+    /******* Covenant exp *******/
+    /****************************/
+    _xmlWriter.writeComment("\n\t\t\t\t"
+                            "Covenant exp section that contains all exp parameters for covenants.");
+    _xmlWriter.writeStartElement(CFGS_COV_EXP);
+
+    // Covenant experience required to lvl up
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant experience required to lvl up\n\t\t\t\t\t"
+                            "Description: Amount of experience to lvl up covenant from first level to second.\n\t\t\t\t\t"
+                            "             Required number for all other leveles will be calculated as LEVEL * VALUE.\n\t\t\t\t\t"
+                            "             Value should be any integer number, bigger than 0.");
+    GetStringParam(CfgParam::CovExpToLvl, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovExpToLvl)], value);
+    value.clear();
+
+    // Covenant exp gain timer
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant exp gain timer\n\t\t\t\t\t"
+                            "Description: Timer, which specified how often covenants will gain exp.\n\t\t\t\t\t"
+                            "             In milliseconds, bigger than 0.");
+    GetStringParam(CfgParam::CovExpTimer, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovExpTimer)], value);
+    value.clear();
+
+    // Covenant exp gain value
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant exp gain value\n\t\t\t\t\t"
+                            "Description: Amount of experience that will be give to covenant over time.\n\t\t\t\t\t"
+                            "             Final number depends on number of covenant members in chat(VALUE * SQRT4(MEMBERS_IN_CHAT)).\n\t\t\t\t\t"
+                            "             Any integer number, bigger than 0.");
+    GetStringParam(CfgParam::CovExpGain, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovExpGain)], value);
+    value.clear();
+
+    _xmlWriter.writeEndElement(); // Covenant exp section end
+
+    /****************************/
+    /** Covenant members slots **/
+    /****************************/
+    _xmlWriter.writeComment("\n\t\t\t\t"
+                            "Covenant members section that contains all members parameters for covenants.");
+    _xmlWriter.writeStartElement(CFGS_COV_MEMBERS);
+
+    // Covenant default members number
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant default members number\n\t\t\t\t\t"
+                            "Description: Number of members that can be in covenant on level 1.\n\t\t\t\t\t"
+                            "             Any integer number, bigger than 0.");
+    GetStringParam(CfgParam::CovMembersDefault, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovMembersDefault)], value);
+    value.clear();
+    
+    // Covenant members number per up
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant members number per up\n\t\t\t\t\t"
+                            "Description: Number of members slots that will be added per required up.\n\t\t\t\t\t"
+                            "             Any integer number.");
+    GetStringParam(CfgParam::CovMembersPerUp, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovMembersPerUp)], value);
+    value.clear();
+    
+    // Covenant memerbs level requirement
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant memerbs level requirement\n\t\t\t\t\t"
+                            "Description: Every N levels number of members will be increased.\n\t\t\t\t\t"
+                            "             Any integer number, bigger than 0.");
+    GetStringParam(CfgParam::CovMembersLvlRequirement, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovMembersLvlRequirement)], value);
+    value.clear();
+
+    _xmlWriter.writeEndElement(); // Covenant members section end
+    
+    /****************************/
+    /**** Covenant cmd slots ****/
+    /****************************/
+    _xmlWriter.writeComment("\n\t\t\t\t"
+                            "Covenant cmd slots section that contains all cmd slots parameters for covenants.");
+    _xmlWriter.writeStartElement(CFGS_COV_CMD_SLOTS);
+
+    // Covenant default command slots number
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant default command slots number\n\t\t\t\t\t"
+                            "Description: Number of command slots that is available at level 1 of covenant.\n\t\t\t\t\t"
+                            "             Any integer number.");
+    GetStringParam(CfgParam::CovCmdSlotsDefault, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovCmdSlotsDefault)], value);
+    value.clear();
+    
+    // Covenant command slots per up
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant command slots per up\n\t\t\t\t\t"
+                            "Description: Number of command slots that will be added per required up.\n\t\t\t\t\t"
+                            "             Any integer number.");
+    GetStringParam(CfgParam::CovCmdSlotsPerUp, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovCmdSlotsPerUp)], value);
+    value.clear();
+    
+    // Covenant command slots requirement
+    _xmlWriter.writeComment("\n\t\t\t\t\t"
+                            "Parameter: Covenant command slots requirement\n\t\t\t\t\t"
+                            "Description: Every N levels number of command slots will increased.\n\t\t\t\t\t"
+                            "             Any integer number, bigger than 0.");
+    GetStringParam(CfgParam::CovCmdSlotsLvlRequirement, value);
+    _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovCmdSlotsLvlRequirement)], value);
+
+    _xmlWriter.writeEndElement(); // Covenant cmd slots section end
+
+    _xmlWriter.writeEndElement(); // Covenants section end
+    _xmlWriter.writeEndElement(); // RPG section end
 }
 
 ///////////////////////////////////////////////////////////////////////////
