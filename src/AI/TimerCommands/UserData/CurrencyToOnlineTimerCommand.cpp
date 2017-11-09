@@ -38,13 +38,18 @@ void CurrencyToOnlineTimerCommand::OnCfgParamChanged(Utils::Configuration::CfgPa
 
 void CurrencyToOnlineTimerCommand::_UpdateTimer()
 {
+    // Get tiemr value from configuration manager
     QString param;
     ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyTimer, param);
     int timerValue = param.toInt();
+
+    // Check value
     if (timerValue <= 0)
     {
         timerValue = DEFAULT_TIMER_VALUE;
     }
+
+    // Start timer anew
     _timer.start(timerValue);
 }
 

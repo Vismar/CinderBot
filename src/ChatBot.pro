@@ -96,7 +96,9 @@ SOURCES += main.cpp\
     Twitch/KrakenResponse.cpp \
     Utils/Database/UserDataDBHelper.cpp \
     Utils/Database/AnalyticsDBHelper.cpp \
-    Utils/Database/RPG/CovenantDBHelper.cpp
+    Utils/Database/RPG/CovenantDBHelper.cpp \
+    AI/TimerCommands/CovenantData/CovenantDataTimerCommandList.cpp \
+    AI/TimerCommands/CovenantData/CovenantExpTimerCommand.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -183,7 +185,9 @@ HEADERS  += MainWindow.hpp \
     Twitch/KrakenResponse.hpp \
     Utils/Database/UserDataDBHelper.hpp \
     Utils/Database/AnalyticsDBHelper.hpp \
-    Utils/Database/RPG/CovenantDBHelper.hpp
+    Utils/Database/RPG/CovenantDBHelper.hpp \
+    AI/TimerCommands/CovenantData/CovenantDataTimerCommandList.hpp \
+    AI/TimerCommands/CovenantData/CovenantExpTimerCommand.hpp
 
 RESOURCES += \
     Resources.qrc

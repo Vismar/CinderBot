@@ -141,6 +141,12 @@ public:
      * \return True if covenant exist, Otherwise - false.
      */
     static bool IsCovenantExist(const QString &covenantName);
+    /*!
+     * \brief Tries to add specified amount of experience to certain covenant.
+     * \param expValue - amount of experience that should be added to covenant.
+     * \param covenantName - name of covenant.
+     */
+    static void GainExpToCovenant(int expValue, const QString &covenantName);
 };
 
 }

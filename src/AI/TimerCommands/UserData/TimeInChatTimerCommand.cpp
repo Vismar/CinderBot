@@ -29,8 +29,7 @@ void TimeInChatTimerCommand::_TimerAction()
     // Only if stream is on we should update time counter
     if (KrakenClient::Instance().GetParameter(KrakenParameter::StreamOn).toBool())
     {
-        UserDataDBHelper::UpdateTimeInChat(1);
-        
+        UserDataDBHelper::UpdateTimeInChat(1);        
     }
 }
 

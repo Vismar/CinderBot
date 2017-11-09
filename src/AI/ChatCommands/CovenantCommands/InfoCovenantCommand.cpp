@@ -7,9 +7,11 @@
 #include "Utils/Database/RPG/CovenantDBHelper.hpp"
 #include "Utils/Database/CustomCommandDBHelper.hpp"
 #include "Utils/Database/UserDataDBHelper.hpp"
+#include "Utils/Config/ConfigurationManager.hpp"
 
 using namespace Command::CovenantCmd;
 using namespace Utils::Database;
+using namespace Utils::Configuration;
 
 enum
 {
@@ -70,7 +72,9 @@ void InfoCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &ans
             temp.replace("COV_EXP", QString::number(covParams.Exp));
 
             // Covenant needed exp
-            temp.replace("COV_NEED_EXP", QString::number(covParams.Level * 1000));
+            QString covExpToLvl;
+            ConfigurationManager::Instance().GetStringParam(CfgParam::CovExpToLvl, covExpToLvl);
+            temp.replace("COV_NEED_EXP", QString::number(covParams.Level * covExpToLvl.toInt()));
 
             // Add result to answer
             answer.AddAnswer(temp);

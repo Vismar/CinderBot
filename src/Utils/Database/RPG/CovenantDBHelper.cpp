@@ -171,7 +171,7 @@ bool CovenantDBHelper::SetParameter(CovenantParameter param, const QString &valu
                                            .arg(CovenantParamsNames[static_cast<int>(param)]).arg(value).arg(covenantName));
         }
         break;
-    // If parameter is no text based
+    // If parameter is not text based
     default:
         if (DB_UPDATE("Covenants", QString("%1=%2").arg(CovenantParamsNames[static_cast<int>(param)]).arg(value),
                                    QString("Name='%1'").arg(covenantName)))
@@ -196,7 +196,7 @@ CovParams CovenantDBHelper::GetParams(const QString &covenantName)
     CovParams covParams;
 
     // Try to get params fro specified covenant
-    DB_QUERY_PTR query = DB_SELECT("Covenants", "*", QString("Name=%1").arg(covenantName));
+    DB_QUERY_PTR query = DB_SELECT("Covenants", "*", QString("Name='%1'").arg(covenantName));
     if (query != nullptr && query->first())
     {
         covParams.FillDataFromQuery(query);
@@ -301,3 +301,16 @@ bool CovenantDBHelper::IsCovenantExist(const QString& covenantName)
 }
 
 ///////////////////////////////////////////////////////////////////////////
+
+void CovenantDBHelper::GainExpToCovenant(int expValue, const QString& covenantName)
+{
+    if (expValue > 0)
+    {
+        if (!DB_UPDATE("Covenants", QString("Exp=Exp+%1").arg(expValue), QString("Name='%1'").arg(covenantName)))
+        {
+            LOG(LogError, "", Q_FUNC_INFO, QString("Covenant '%1' was not received exp(%2).").arg(covenantName).arg(expValue));
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////

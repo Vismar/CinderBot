@@ -25,10 +25,17 @@ namespace UserDataTimerCmd
 class TimeInChatTimerCommand : public BaseTimerCommand
 {
 protected:
-    ////////////////////////////////
-    /// BaseTimerCommand override
-    void _UpdateTimer();
-    void _TimerAction();
+    /*///////////////////////////////*/
+    /* BaseTimerCommand overrides    */
+    /*///////////////////////////////*/
+    /*!
+     * \brief Starts timer anew.
+     */
+    void _UpdateTimer() override;
+    /*!
+     * \brief Updates timer counter for all users in chat if stream is live.
+     */
+    void _TimerAction() override;
 };
 
 }

@@ -15,6 +15,7 @@
 #include "AI/ChatCommands/QuoteCommands/QuoteCommandList.hpp"
 /*** Timer command lists ***/
 #include "AI/TimerCommands/UserData/UserDataTimerCommandList.hpp"
+#include "AI/TimerCommands/CovenantData/CovenantDataTimerCommandList.hpp"
 
 using namespace Command;
 using namespace UserDataCmd;
@@ -23,6 +24,7 @@ using namespace CustomChatCmd;
 using namespace CovenantCmd;
 using namespace TimerCommand;
 using namespace UserDataTimerCmd;
+using namespace CovenantDataTimerCmd;
 using namespace Utils::Configuration;
 using namespace Utils::Database;
 using namespace Twitch;
@@ -131,6 +133,8 @@ void BotAI::LoadTimerCommands()
 {
     // Predefined timer commands
     _timerCommands.push_back(new UserDataTimerCommandList());
+    _timerCommands.last()->StartTimerCommands();
+    _timerCommands.push_back(new CovenantDataTimerCommandList);
     _timerCommands.last()->StartTimerCommands();
 }
 

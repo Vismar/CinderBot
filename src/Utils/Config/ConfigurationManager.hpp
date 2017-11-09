@@ -110,6 +110,12 @@ private:
      */
     void _ReadIgnoreList();
     /*!
+     * \brief Read RPG section from xml file.
+     * 
+     * Reads whole RPG section from xml configuration file that contains multiple sub section for every sub system.
+     */
+    void _ReadRPG();
+    /*!
      * \brief Reads cmd modules section from xml file.
      *
      * Read whole cmd modules section from xml configuration file.
