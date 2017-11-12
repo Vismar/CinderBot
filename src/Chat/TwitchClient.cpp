@@ -165,11 +165,9 @@ void TwitchClient::ReadLine()
             }
             break;
         case PRIVMSG:
-            // TODO: Increment total msg counter if it will be needed sometime
             emit NewMessage(message, false);
             break;
         case BITS:
-            // TODO: Increment total msg counter if it will be needed sometime
             emit NewMessage(message, false);
             break;
         case WHISPER:
