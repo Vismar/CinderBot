@@ -38,21 +38,21 @@ QRegularExpression ChatMessage::_regExpMode(":jtv MODE #.* \\+o (?<name>.*)\\r\\
 QRegularExpression ChatMessage::_regExpUnmode(":jtv MODE #.* -o (?<name>.*)\\r\\n");
 /*** BITS ***/
 QRegularExpression ChatMessage::_regExpBits("@badges=.*;bits=(?<bits>.*);color=(?<color>.*);"
-                                            "display-name=(?<author>.*);.*emotes=.*;id=.*;"
+                                            "display-name=(?<author>.*?);.*emotes=.*;id=.*;"
                                             "mod=(?<mod>\\d);room-id=.*;.*subscriber=(?<sub>\\d);"
                                             ".*;turbo=\\d;user-id=(?<userID>.*);user-type=.* "
-                                            ":(?<name>.*)!.*@.*.tmi.twitch.tv PRIVMSG #.* :(?<msg>.*)\r\n");
+                                            ":(?<name>.*)!.*@.*.tmi.twitch.tv PRIVMSG #.*? :(?<msg>.*)\r\n");
 /*** PRIVMSG ***/
-QRegularExpression ChatMessage::_regExpPrivmsg("@badges=.*;color=(?<color>.*);display-name=(?<author>.*);.*"
+QRegularExpression ChatMessage::_regExpPrivmsg("@badges=.*;color=(?<color>.*);display-name=(?<author>.*?);.*"
                                                "emotes=.*;id=.*;mod=(?<mod>\\d);"
                                                "room-id=.*;.*subscriber=(?<sub>\\d);.*"
                                                "turbo=\\d;user-id=(?<userID>.*);user-type=.* "
-                                               ":(?<name>.*)!.*@.*.tmi.twitch.tv PRIVMSG #.* :(?<msg>.*)\\r\\n");
+                                               ":(?<name>.*)!.*@.*.tmi.twitch.tv PRIVMSG #.*? :(?<msg>.*)\\r\\n");
 /*** WHISPER ***/
-QRegularExpression ChatMessage::_regExpWhisper("@badges=.*;color=(?<color>.*);display-name=(?<author>.*);"
+QRegularExpression ChatMessage::_regExpWhisper("@badges=.*;color=(?<color>.*);display-name=(?<author>.*?);"
                                                "emotes=.*;message-id=.*;thread-id=.*;"
                                                "turbo=\\d;user-id=(?<userID>.*);user-type=.* "
-                                               ":(?<name>.*)!.*@.*.tmi.twitch.tv WHISPER .* :(?<msg>.*)\\r\\n");
+                                               ":(?<name>.*)!.*@.*.tmi.twitch.tv WHISPER .*? :(?<msg>.*)\\r\\n");
 
 ///////////////////////////////////////////////////////////////////////////
 
