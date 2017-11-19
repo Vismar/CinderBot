@@ -323,7 +323,18 @@ void KrakenClient::_HandleUserInforesponse(const KrakenResponse &response)
         {
             if (value == response.GetParam("name").toString())
             {
-                _SetParameter(KrakenParameter::ChannelUserID, response.GetParam("_id").toUInt());
+                int id = response.GetParam("_id").toUInt();
+                _SetParameter(KrakenParameter::ChannelUserID, id);
+
+                // If user was not added, add him
+                if (!UserDataDBHelper::IsUserFollower(id))
+                {
+                    UserDataParams params;
+                    params.UserID = id;
+                    params.Name = value;
+                    params.Author = response.GetParam("display_name").toString();
+                    UserDataDBHelper::AddUser(params);
+                }
             }
             // If it is another user
             else
