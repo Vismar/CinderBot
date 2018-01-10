@@ -72,7 +72,7 @@ QString KrakenClient::Initialize()
     // If network in unaccessible, return error
     if (_networkManager->networkAccessible() != QNetworkAccessManager::Accessible)
     {
-        result = "Kraken API could not be retrieved via internet connection.";
+        result = "Kraken API could not be retrieved via Internet connection.";
     }
 
     return result;
@@ -133,7 +133,7 @@ void KrakenClient::_ReadResponse(QNetworkReply *reply)
         break;
     default:
         // Log error
-        LOG(LogWarning, "", Q_FUNC_INFO, QString("Indefined response from Kraken API.\nMessage: %1").arg(response));
+        LOG(LogWarning, "", Q_FUNC_INFO, QString("Undefined response from Kraken API.\nMessage: %1").arg(response));
         break;
     }
 

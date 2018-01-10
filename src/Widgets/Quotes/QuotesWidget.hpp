@@ -31,7 +31,7 @@ protected:
     /*   PageListWidget overrides   */
     /*///////////////////////////////*/
     /*!
-     * \brief Ñreates specific widget.
+     * \brief creates specific widget.
      */
     void _CreateAndAddWidget() override;
     /*!

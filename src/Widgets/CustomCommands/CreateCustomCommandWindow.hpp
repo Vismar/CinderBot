@@ -14,7 +14,7 @@
 namespace Ui
 {
 /*!
- * \brief All wigets related to custom commands.
+ * \brief All widgets related to custom commands.
  */
 namespace CustomCommand
 {
@@ -52,7 +52,7 @@ private slots:
     /*!
      * \brief Handles "Create" button.
      *
-     * Sets params and tries to create customm command in database.
+     * Sets params and tries to create custom command in database.
      */
     void _OnCreateButton();
 

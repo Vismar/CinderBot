@@ -60,7 +60,7 @@ struct UserDataParams
      * \brief Fill data fields from specified database query.
      * \param query - database query, that contains all required fields.
      * 
-     * Specified query should contain all requered fields, or it will crash.
+     * Specified query should contain all required fields, or it will crash.
      */
     void FillDataFromQuery(DB_QUERY_PTR query);
     /*!
@@ -80,7 +80,7 @@ struct UserDataParams
     int Currency = 0;
     /*! Covenant in which user is. */
     QString Covenant = "Viewer";
-    /*! Timestamp when user last time has visited the chat. */
+    /*! Time-stamp when user last time has visited the chat. */
     QString LastTimeVisited = "";
     /*! Number of minutes that were spent in chat by user. */
     int MinutesInChat = 0;
@@ -95,8 +95,8 @@ struct UserDataParams
 /*!
  * \brief Helper class designed to facilitate the work with the database for user data.
  * 
- * Handles creating database tables, provides simple interface to add user or mupltiple users at once,
- * get user paramter(s), update it, also provides functionality to grab/check special info about specific user(s).
+ * Handles creating database tables, provides simple interface to add user or multiple users at once,
+ * get user parameter(s), update it, also provides functionality to grab/check special info about specific user(s).
  */
 class UserDataDBHelper : public QObject
 {
@@ -107,7 +107,7 @@ public:
 
     /*** Users and parameters ***/
     /*!
-     * \brief Initialiazes database tables.
+     * \brief Initializes database tables.
      * \return String that contains error message if something goes wrong. Otherwise - "OK".
      */
     QString InitializeTables() const;
@@ -135,15 +135,15 @@ public:
      */
     static UserDataParams GetUserParameters(const QString &userName);
     /*!
-     * \brief Hrabs specified user parameter by specified user id.
-     * \param userDataParam - parameter that should be grabed.
+     * \brief Grabs specified user parameter by specified user id.
+     * \param userDataParam - parameter that should be grabbed.
      * \param userID - id of user.
      * \return Variable that contains requested parameter. If user to not exist, variable will be empty.
      */
     static QVariant GetUserParameter(UserDataParameter userDataParam, int userID);
     /*!
-     * \brief Hrabs specified user parameter by specified user name.
-     * \param userDataParam - parameter that should be grabed.
+     * \brief Grabs specified user parameter by specified user name.
+     * \param userDataParam - parameter that should be grabbed.
      * \param userName - real name or display name of user.
      * \return Variable that contains requested parameter. If user to not exist, variable will be empty.
      */
@@ -164,7 +164,7 @@ public:
     static void UpdateUserParameter(UserDataParameter userDataParam, const QString &value, const QString &userName);
     /*!
      * \brief Sets all specified parameters to user.
-     * \param userDataParams - Parameters of user that should be setted.
+     * \param userDataParams - Parameters of user that should be set.
      */
     static void SetUserParameters(UserDataParams userDataParams);
 
@@ -183,14 +183,14 @@ public:
      */
     static bool IsUserFollower(const QString &userName);
     /*!
-     * \brief Cheks if suer in specified covenant.
+     * \brief Checks if suer in specified covenant.
      * \param covenant - covenant to check.
      * \param userID - id of user.
      * \return True if specified user in requested covenant. Otherwise - false.
      */
     static bool IsUserInCovenant(const QString &covenant, int userID);
     /*!
-     * \brief Cheks if suer in specified covenant.
+     * \brief Checks if suer in specified covenant.
      * \param covenant - covenant to check.
      * \param userName - real name or display name of user.
      * \return True if specified user in requested covenant. Otherwise - false.
@@ -198,19 +198,19 @@ public:
     static bool IsUserInCovenant(const QString &covenant, const QString &userName);
     /*!
      * \brief Grabs real names from specified covenant.
-     * \param covenant - covenant from which data will be grabed.
+     * \param covenant - covenant from which data will be grabbed.
      * \return String list which contains requested data.
      */
     static QStringList GetUsersFromCovenant(const QString &covenant);
     /*!
      * \brief Grabs display names from specified covenant.
-     * \param covenant - covenant from which data will be grabed.
+     * \param covenant - covenant from which data will be grabbed.
      * \return String list which contains requested data.
      */
     static QStringList GetAuthorsFromCovenant(const QString &covenant);
     /*!
      * \brief Grabs user ids from specified covenant.
-     * \param covenant - covenant from which data will be grabed.
+     * \param covenant - covenant from which data will be grabbed.
      * \return String list which contains requested data.
      */
     static QVector<int> GetUserIdsFromCovenant(const QString &covenant);

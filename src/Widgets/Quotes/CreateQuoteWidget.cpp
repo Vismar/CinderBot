@@ -17,7 +17,7 @@ using namespace Utils::Database;
 
 CreateQuoteWidget::CreateQuoteWidget(QWidget* parent) : QFrame(parent)
 {
-    // Inititalize layout
+    // Initialize layout
     QWidget* container = new QWidget;
     _layout = new QHBoxLayout(container);
     _layout->setMargin(10);
@@ -32,7 +32,7 @@ CreateQuoteWidget::CreateQuoteWidget(QWidget* parent) : QFrame(parent)
     connect(_addButton, &QPushButton::clicked,
             this, &CreateQuoteWidget::_AddQuote);
 
-    // Inititalize text field
+    // Initialize text field
     _quoteText = new EnhTextEdit(this);
     _layout->addWidget(_quoteText);
 

@@ -71,14 +71,14 @@ public:
      */
     const QString &GetColor() const;
     /*!
-     * \brief Returns timestamp of message.
-     * \return timestamp.
+     * \brief Returns time-stamp of message.
+     * \return time-stamp.
      *
-     * Returns timestamp for this message
+     * Returns time-stamp for this message
      */
     const QString &GetTimeStamp() const;
     /*!
-     * \brief Returns messsage.
+     * \brief Returns message.
      * \return message.
      *
      * Returns message which sent.
@@ -102,7 +102,7 @@ public:
      * \brief Returns type of message.
      * \return type of message that was assigned during the parsing.
      *
-     * Returns type of message that was setted after parsing raw data.
+     * Returns type of message that was set after parsing raw data.
      */
     MessageType GetType() const;
     /*!
@@ -163,7 +163,7 @@ public:
     void SetModFlag(bool modFlag);
     /*!
      * \brief Sets type of message.
-     * \param type - type which will be setted.
+     * \param type - type which will be set.
      *
      * Sets manually type to this message.
      */
@@ -193,7 +193,7 @@ public:
      * \param message - raw message data.
      * \return message type.
      *
-     * Parse raw message data that was getted from twitch.tv and store needed params.
+     * Parse raw message data that was got from twitch.tv and store needed params.
      */
     MessageType ParseRawMessage(const QString &message);
 
@@ -229,7 +229,7 @@ private:
      * \param message - message to check.
      * \return IRC code.
      *
-     * Cheks if raw message is irc command from twitch.tv.
+     * Checks if raw message is irc command from twitch.tv.
      */
     int  _IsIrcComand(const QString &message) const;
     /*!
@@ -246,11 +246,11 @@ private:
      * \return true, if it is a userstate message.
      *
      * Checks if current message matches userstate regular expression,
-     * saves bot display name, moderation status and name color that was setted on twitch.
+     * saves bot display name, moderation status and name color that was set on twitch.
      */
     bool _IsUserState(const QString &message);
     /*!
-     * \brief Chechs if current message is a roomstate message.
+     * \brief Checks if current message is a roomstate message.
      * \param message - message to check.
      * \return true, if it is a roomstate message.
      *
@@ -275,7 +275,7 @@ private:
 
     bool _IsPartMsg(const QString &message);
     /*!
-     * \brief Check if message means that someone was setted as moderator in the chat.
+     * \brief Check if message means that someone was set as moderator in the chat.
      * \param message - message to check.
      * \return true, if it is a mode message.
      *
@@ -317,9 +317,9 @@ private:
 
     /*** Set functions ***/
     /*!
-     * \brief Set timestamp.
+     * \brief Set time-stamp.
      *
-     * Sets current timstamp to this message.
+     * Sets current time-stamp to this message.
      */
     void _SetTimeStamp();    
 
@@ -330,7 +330,7 @@ private:
     QString _realName;
     /*! Custom name color of author if it was set */
     QString _color;
-    /*! Timestamp of a moment when message was received */
+    /*! Time-stamp of a moment when message was received */
     QString _timeStamp;
     /*! Message itself */
     QString _message;

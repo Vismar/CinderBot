@@ -67,7 +67,7 @@ void AdminCovCmdDeleteCommand::_GetAnswer(const ChatMessage& message, ChatAnswer
                 // If command exist, check if "id" param was specified
                 if (DBHelper.CommandExist(cmdName, covenant))
                 {
-                    // If paramater "id" was specified, try to find this id in list of ids of answers of specified command
+                    // If parameter "id" was specified, try to find this id in list of ids of answers of specified command
                     if (matchId.hasMatch())
                     {
                         // Get array of command answer ids and check if specified id is in that array

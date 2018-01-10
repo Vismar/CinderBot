@@ -49,7 +49,7 @@ public:
 
     /*!
      * \brief Sets current log level.
-     * \param logLevel - log level that will be setted.
+     * \param logLevel - log level that will be set.
      *
      * Sets log level to current session. Can be changed whenever it needed.
      */
@@ -58,7 +58,7 @@ public:
      * \brief Gets current log level.
      * \return current log level.
      *
-     * Returns currently setted log level.
+     * Returns currently set log level.
      */
     static LogLevel GetLogLevel();
     /*!
@@ -88,15 +88,15 @@ public:
 
 private:
     /*!
-     * \brief Gets timestamp.
-     * \return timestamp string
+     * \brief Gets time-stamp.
+     * \return time-stamp string
      *
-     * Returns timestamp as a formatted string.
+     * Returns time-stamp as a formatted string.
      */
     static QString _GetTimestamp();
     /*!
      * \brief Gets specified log level as string.
-     * \param logLevel - specific log leve.
+     * \param logLevel - specific log level.
      * \return log level as string.
      *
      * Returns specified log level as formatted string.
@@ -115,9 +115,9 @@ private:
      */
     static void _Erase();
 
-    /*! Current log leve. */
+    /*! Current log level. */
     static LogLevel _logLevel;
-    /*! Mux number of entries to store before save to file. */
+    /*! Max number of entries to store before save to file. */
     static unsigned char _maxNumberOfEntries;
     /*! Simple storage of log entries. */
     static QVector<QString> _logEntries;

@@ -72,7 +72,7 @@ public:
     /*!
      * \brief Creates covenant with specified name and leader.
      * \param covenantName - name of covenant that should be created.
-     * \param leaderName - name of a creater.
+     * \param leaderName - name of a creator.
      * \return True if covenant was created. Otherwise - false.
      */
     static bool CreateCovenant(const QString &covenantName, const QString &leaderName);
@@ -98,23 +98,23 @@ public:
      */
     static QVariant GetParameter(CovenantParameter param, const QString &covenantName);
     /*!
-     * \brief Sets covenant paramter to the specified value.
+     * \brief Sets covenant parameter to the specified value.
      * \param param - parameter name.
      * \param value - new value for specified parameter.
      * \param covenantName - name of covenant.
-     * \return True if paramter was setted. Otherwise - false.
+     * \return True if parameter was set. Otherwise - false.
      */
     static bool SetParameter(CovenantParameter param, const QString &value, const QString &covenantName);
     /*!
      * \brief Grabs all parameters from specified covenant.
      * \param covenantName - name of covenant.
-     * \return Container that stores all covenant paramters.
+     * \return Container that stores all covenant parameters.
      */
     static CovParams GetParams(const QString &covenantName);
     /*!
      * \brief Sets all parameters to specified covenant.
-     * \param params - covenant paramters.
-     * \return True if parameters was setted. Otherwise - false.
+     * \param params - covenant parameters.
+     * \return True if parameters was set. Otherwise - false.
      */
     static bool SetParams(CovParams params);
 

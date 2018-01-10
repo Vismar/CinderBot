@@ -39,7 +39,7 @@ public:
     void Initialize() override;
 
     /*!
-     * \brief Inititalizes command from database by specified name.
+     * \brief Initializes command from database by specified name.
      * \param commandName - name of command
      * 
      * Resets all params to default state and calls Initialize(). For initialization should be used only this function.
@@ -62,7 +62,7 @@ protected:
     /* BaseChatCommand overrides  */
     /*////////////////////////////*/
     /*!
-     * \brief Empty finction, do nothing.
+     * \brief Empty function, do nothing.
      */
     void _GetAnswer(const ChatMessage &message, ChatAnswer &answer) override;
     /*!

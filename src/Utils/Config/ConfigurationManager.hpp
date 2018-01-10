@@ -37,7 +37,7 @@ public:
     void operator=(ConfigurationManager const&) =delete;
 
     /*!
-     * \brief Makes an instace of manager.
+     * \brief Makes an instance of manager.
      * \return Static reference to a manager.
      *
      * Creates and returns static instance of ConfigurationManager.
@@ -65,7 +65,7 @@ public:
     /*!
      * \brief Sets new value to specified parameter, or create new parameter and set specified value to it.
      * \param cfgParam - parameter that user seek for.
-     * \param value - value that should be setted to specified parameter.
+     * \param value - value that should be set to specified parameter.
      *
      * Updates specified configuration parameter. Does nothing if the parameter does not exist.
      */
@@ -74,7 +74,7 @@ public:
 signals:
     /*!
      * \brief Notify subscribers about changing any configuration parameter.
-     * \param cfgParam - parameter that was chagned.
+     * \param cfgParam - parameter that was changed.
      *
      * If any parameter was changed during the execution of application,
      * ConfigurationManager will notify all subscribers about change and will send param that was changed.

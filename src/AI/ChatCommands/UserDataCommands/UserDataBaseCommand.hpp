@@ -21,7 +21,7 @@ namespace UserDataCmd
 /*!
  * \brief Base class for all user data commands.
  *
- * Contains connnection to configuration manager to update chat and whisper flags.
+ * Contains connection to configuration manager to update chat and whisper flags.
  */
 class UserDataBaseCommand : public InbuiltChatCommand
 {

@@ -59,8 +59,8 @@ private:
     /*!
      * \brief Handle the updating/creating command with three params: name, cooldown and price.
      * \param cmdName - Name of command that will be updated/created.
-     * \param cooldown - Cooldown that will be setted to command.
-     * \param price - Price that will be setted to command.
+     * \param cooldown - Cooldown that will be set to command.
+     * \param price - Price that will be set to command.
      * \param covenant - Covenant for which command should be updated/created.
      * \param answer - Reference to answer that will be used.
      * \param numberOfCommands - Number of commands that was already created for covenant.
@@ -71,7 +71,7 @@ private:
     /*!
      * \brief Handle the updating/creating command with two params: name and cooldown.
      * \param cmdName - Name of command that will be updated/created.
-     * \param cooldown - Cooldown that will be setted to command.
+     * \param cooldown - Cooldown that will be set to command.
      * \param covenant - Covenant for which command should be updated/created.
      * \param answer - Reference to answer that will be used.
      * \param numberOfCommands - Number of commands that was already created for covenant.
@@ -82,7 +82,7 @@ private:
     /*!
      * \brief Handle the updating/creating command with two params: name and price.
      * \param cmdName - Name of command that will be updated/created.
-     * \param price - Price that will be setted to command.
+     * \param price - Price that will be set to command.
      * \param covenant - Covenant for which command should be updated/created.
      * \param answer - Reference to answer that will be used.
      * \param numberOfCommands - Number of commands that was already created for covenant.
@@ -94,16 +94,16 @@ private:
     /*!
      * \brief Updates command.
      * \param cmdName - Name of command that will be updated.
-     * \param cooldown - Cooldown that will be setted to updated command.
-     * \param price - Price that will be setted to updated command.
+     * \param cooldown - Cooldown that will be set to updated command.
+     * \param price - Price that will be set to updated command.
      */
     static void _UpdateCommand(const QString &cmdName, const QString &cooldown = "", const QString &price = "");
     /*!
      * \brief Creates command.
      * \param cmdName - Name of command that will be created.
      * \param covenant - Covenant for which command should be created.
-     * \param cooldown - Cooldown that will be setted to created command.
-     * \param price - Price that will be setted to created command.
+     * \param cooldown - Cooldown that will be set to created command.
+     * \param price - Price that will be set to created command.
      */
     bool _CreateCommand(const QString &cmdName, const QString &covenant, const QString &cooldown = "", const QString &price = "") const;
 

@@ -11,7 +11,7 @@
 using namespace Chat;
 
 /*!
- * Singleton class that stores user list and other stuff fpr real time things, like statistics and etc.
+ * Singleton class that stores user list and other stuff for real time things, like statistics and etc.
  */
 class RealTimeUserData : public QObject
 {
@@ -21,7 +21,7 @@ public:
     virtual ~RealTimeUserData();
 
     /*!
-     * Create static instance adn return pointer to it.
+     * Create static instance and return pointer to it.
      * \return pointer to a static instance
      */
     static RealTimeUserData* Instance();
@@ -79,7 +79,7 @@ signals:
 private:
     /*! List of users that are in the chat */
     QStringList _userList;
-    /*! List of mdoerators that are in the chat */
+    /*! List of moderators that are in the chat */
     QStringList _modeList;
     /*! Max number of users in chat */
     int _maxUserNumber;

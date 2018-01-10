@@ -11,7 +11,7 @@ using namespace Ui::Chat;
 
 ChatWindow::ChatWindow(QWidget *parent) : QWidget(parent, Qt::Window)
 {
-    // Inititalize title and size
+    // Initialize title and size
     this->setWindowTitle("Chat");
     this->setMinimumSize(300, 370);
 

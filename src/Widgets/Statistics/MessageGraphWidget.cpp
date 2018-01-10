@@ -18,7 +18,7 @@ MessageGraphWidget::MessageGraphWidget(QWidget* parent) : QGroupBox(parent)
 {
     _startingTime = QDateTime::currentDateTime();
     this->setTitle("Message graph");
-    // Inititalize chart
+    // Initialize chart
     _series = new QLineSeries();
     _chart = new QChart();
     _chart->addSeries(_series);

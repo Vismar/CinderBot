@@ -39,7 +39,7 @@ protected:
     /*!
      * \brief Initializes custom command list.
      *
-     * Intializes needed parameters and data. Connects events from CustomCommandDBHelper.
+     * Initializes needed parameters and data. Connects events from CustomCommandDBHelper.
      */
     void Initialize() override;
     /*!

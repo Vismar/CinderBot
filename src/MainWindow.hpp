@@ -31,7 +31,7 @@ public:
     ~MainWindow();
 
 private slots:
-    /*** Creatign windows ***/
+    /*** Creating windows ***/
     /*!
      * \brief Create and initialize chat window.
      *
@@ -40,7 +40,7 @@ private slots:
      */
     void _CreateChatWindow();
     /*!
-     * \brief Create and inititalize custom command window
+     * \brief Create and initialize custom command window
      *
      * Public slot, which triggered by clicking on _customCommandButton.
      * Initializes window for custom commands, will be deleted automatically on close.
@@ -65,7 +65,7 @@ private:
     /*!
      * \brief Initialize UI.
      *
-     * Initialize title, icon and size of window, creating buttons in grid layout. Main initalize function.
+     * Initialize title, icon and size of window, creating buttons in grid layout. Main initialize function.
      */
     void _InitUi();
 
@@ -92,7 +92,7 @@ private:
     /*!
      * \brief Initialize and setup custom commands button.
      *
-     * Creates custom coomands buttons, setting up tooltip, icon, size and connecting with slot _CreateCustomCommandWindow.
+     * Creates custom commands buttons, setting up tooltip, icon, size and connecting with slot _CreateCustomCommandWindow.
      */
     void _CustomCommandsButton();
     /*!
@@ -109,7 +109,7 @@ private:
     Login::ConnectWidget *_connectWidget;
     /*! Chat button which will open chat window */
     QPushButton *_chatButton;
-    /*! Analyutics button which will open analytics window */
+    /*! Analytics button which will open analytics window */
     QPushButton *_analyticsButton;
     /*! CustomCommand button which will open custom command window */
     QPushButton *_customCommandButton;

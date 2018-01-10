@@ -53,7 +53,7 @@ void CovenantExpTimerCommand::OnCfgParamChanged(CfgParam cfgParam)
 
 void CovenantExpTimerCommand::_UpdateTimer()
 {
-    // Get tiemr value from configuration manager
+    // Get timer value from configuration manager
     QString paramValue;
     ConfigurationManager::Instance().GetStringParam(CfgParam::CovExpTimer, paramValue);
     int timerValue = paramValue.toInt();

@@ -20,7 +20,7 @@
 namespace Ui
 {
 /*!
- * \brief All wigets related to custom commands.
+ * \brief All widgets related to custom commands.
  */
 namespace CustomCommand
 {
@@ -29,7 +29,7 @@ namespace CustomCommand
  * \brief Widget which handles storing and changing parameters for custom commands.
  * 
  * Contains all needed params for custom command and displays it via widgets. 
- * Everything can setted and goten throught setters and getters.
+ * Everything can be set and grabbed through setters and getters.
  */
 class ParametersCustomCommandWidget : public QFrame
 {
@@ -42,7 +42,7 @@ public:
      * \brief Sets ability for command name field to be changeable.
      * \param state - new state. If true - _commandName can be edited. If false - cannot.
      * 
-     * Chanes state of _commandName depends on specified parameter.
+     * Changes state of _commandName depends on specified parameter.
      */
     void SetCommandNameChangeable(bool state) const;
     /*!
@@ -61,14 +61,14 @@ public:
     void SetCommandName(const QString& cmdName) const;
     /*!
      * \brief Gets cooldown.
-     * \return stored time ib _cooldown.
+     * \return stored time in _cooldown.
      * 
-     * Returns cooldown which was setted for current command in _cooldown.
+     * Returns cooldown which was set for current command in _cooldown.
      */
     QTime GetCooldown() const;
     /*!
      * \brief Sets cooldown.
-     * \param cooldown - time value which will be setted.
+     * \param cooldown - time value which will be set.
      * 
      * Set specified cooldown value to _cooldown.
      */
@@ -89,7 +89,7 @@ public:
     void SetModOnly(bool modOnly) const;
     /*!
      * \brief Gets price.
-     * \return value which was setted in _price.
+     * \return value which was set in _price.
      * 
      * Return price which will be taken from users when they will use this command.
      */
@@ -152,7 +152,7 @@ signals:
 
 private slots:
     /*!
-     * \brief Simple slot tp emit OnCommandNameFieldChanged().
+     * \brief Simple slot to emit OnCommandNameFieldChanged().
      * \param text - new value of _commandName.
      * 
      * Only emits signal OnCommandNameFieldChanged().
@@ -167,7 +167,7 @@ private:
      */
     void _Initialize();
     /*!
-     * \brief Intitializes command name widgets.
+     * \brief Initializes command name widgets.
      * 
      * Creates label and text edit field to display/edit command name. Adds them to layout in 0 line.
      * Connects textChanged signal from _commandName with _OnCmdNameChanged slot.
@@ -192,7 +192,7 @@ private:
      */
     void _InitializePrice();
     /*!
-     * \brief Inititalize covenant widgets.
+     * \brief Initialize covenant widgets.
      * 
      * Creates label and combo box widget to display/edit covenant. Adds them to layout in 4 line.
      */
@@ -235,7 +235,7 @@ private:
     
     /*! Label for covenant */
     QLabel *_covenantLabel;
-    /*! Covenant combox box widget */
+    /*! Covenant combo box widget */
     QComboBox *_covenant;
     
     /*! Label for Work in whisper */

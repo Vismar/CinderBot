@@ -40,7 +40,7 @@ protected:
     bool _GetNumberAfterCommand(const QString &message, QString &value) const;
 
 private:
-    /*! Refular expression to find number after command */
+    /*! Regular expression to find number after command */
     QRegularExpression _regExpNumber;
 };
 

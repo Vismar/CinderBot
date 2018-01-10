@@ -55,7 +55,7 @@ CustomChatCommand* CustomCommandList::_CreateCommand() const
 
 void CustomCommandList::_InitializeCommands()
 {
-    // Update value before intializing
+    // Update value before initializing
     OnCfgParamChanged(_cmdModule);
     // Clear all commands that was already created
     for (int i = 0; i < _commands.size(); ++i)

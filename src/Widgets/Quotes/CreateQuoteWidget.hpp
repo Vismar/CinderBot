@@ -20,7 +20,7 @@ namespace Quote
 {
 
 /*!
- * \brief Simple widget that provides functional;ity to add quotes to database.
+ * \brief Simple widget that provides functionality to add quotes to database.
  */
 class CreateQuoteWidget : public QFrame
 {

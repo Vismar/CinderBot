@@ -32,7 +32,7 @@ public:
 
     /*!
      * \brief Sets number field for quote.
-     * \param number - number that should be setted.
+     * \param number - number that should be set.
      */
     void SetQuoteNumber(const QString &number) const;
     /*!

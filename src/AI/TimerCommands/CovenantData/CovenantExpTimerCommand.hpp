@@ -41,9 +41,7 @@ public:
 public slots:
     /*!
      * \brief Updates timer if cfgParam == CovExpTimer.
-     * \param cfgParam - configuration paramter.
-     * 
-     * Get new value of CovExpTimer nad use it to restart timer.
+     * \param cfgParam - configuration parameter.
      */
     void OnCfgParamChanged(Utils::Configuration::CfgParam cfgParam);
 
@@ -56,7 +54,7 @@ protected:
      */
     void _UpdateTimer() override;
     /*!
-     * \brief Check how many covenant members currently in chat and gains expirience to covenant if stream is live.
+     * \brief Check how many covenant members currently in chat and gains experience to covenant if stream is live.
      */
     void _TimerAction() override;
 

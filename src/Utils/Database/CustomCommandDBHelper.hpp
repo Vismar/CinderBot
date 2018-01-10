@@ -59,7 +59,7 @@ struct CmdParams
     QString ToAddString() const;
 
     /*!
-     * \brief Check if values of CmdParams are guarded (for exmaple, if price value is < 0 then it should be setted to 0).
+     * \brief Check if values of CmdParams are guarded (for example, if price value is < 0 then it should be set to 0).
      */
     void GuardParams();
 
@@ -93,7 +93,7 @@ public:
      * \brief Tries to create all custom command tables.
      * \return "OK" or error text if something goes wrong.
      * 
-     * Inititalizes all tables one by one. If something goes wrong in creation process, will return error. Otherwise - "OK".
+     * Initializes all tables one by one. If something goes wrong in creation process, will return error. Otherwise - "OK".
      */
     static QString InititalizeTables();
 
@@ -121,7 +121,7 @@ public:
     bool DeleteCommand(CmdType cmdType, const QString &cmdName);
     /*!
      * \brief Grabs all command ids.
-     * \param cmdType - Type of command that should be grabed.
+     * \param cmdType - Type of command that should be grabbed.
      * \param covenant - Covenant name that should be searched in all commands.
      * \return Array of command ids.
      *
@@ -131,7 +131,7 @@ public:
     static QVector<int> GetCommandIds(CmdType cmdType, const QString &covenant = "");
     /*!
      * \brief Grabs all command names.
-     * \param cmdType - Type of command that should be grabed.
+     * \param cmdType - Type of command that should be grabbed.
      * \param covenant - Covenant name that should be searched in all commands.
      * \return Array of command names.
      *
@@ -151,18 +151,18 @@ public:
     /*** Command parameters ***/
     /*!
      * \brief Gets all parameters of custom command by specified id.
-     * \param cmdType - Type of command that should be grabed.
+     * \param cmdType - Type of command that should be grabbed.
      * \param id - Id of command that should be searched to return params.
-     * \return CmdParams filles by command parameters.
+     * \return CmdParams fills by command parameters.
      * 
      * If id not exist then default params will be returned.
      */
     static CmdParams GetAllParams(CmdType cmdType, int id);
     /*!
      * \brief Gets all parameters of custom command by specified name.
-     * \param cmdType - Type of command that should be grabed.
+     * \param cmdType - Type of command that should be grabbed.
      * \param cmdName - Name of command that should be searched to return params.
-     * \return CmdParams filles by command parameters.
+     * \return CmdParams fills by command parameters.
      * 
      * If name not exist then default params will be returned.
      */
@@ -179,7 +179,7 @@ public:
      * \param cmdType - Type of command that should be returned.
      * \param cmdName - Name of command that should be returned.
      * \param cmdParam - CustomCmdParameter that should be returned.
-     * \return Value of specified parameter. Will be empty if somethign goes wrong.
+     * \return Value of specified parameter. Will be empty if something goes wrong.
      */
     static QString GetParameter(CmdType cmdType, const QString &cmdName, CustomCmdParameter cmdParam);
     /*!
@@ -187,7 +187,7 @@ public:
      * \param cmdType - Type of command that should be returned.
      * \param id - Id of command that should be returned.
      * \param cmdParam - CustomCmdParameter that should be returned.
-     * \return Value of specified parameter. Will be empty if somethign goes wrong.
+     * \return Value of specified parameter. Will be empty if something goes wrong.
      */
     static QString GetParameter(CmdType cmdType, int id, CustomCmdParameter cmdParam);
     /*!
@@ -286,7 +286,7 @@ signals:
      */
     void CustomCmdAnswerEdited(const QString &cmdName, int id);
     /*!
-     * \brief Signal tp notify about deletion of custom command answer.
+     * \brief Signal to notify about deletion of custom command answer.
      * \param cmdName - Name of command that was updated.
      * \param id - Id of custom command answer that was deleted.
      */
@@ -312,7 +312,7 @@ signals:
      */
     void CustomCovCmdAnswerEdited(const QString &cmdName, int id);
     /*!
-     * \brief Signal tp notify about deletion of custom covenant command answer.
+     * \brief Signal to notify about deletion of custom covenant command answer.
      * \param cmdName - Name of command that was updated.
      * \param id - Id of custom covenant command answer that was deleted.
      */
@@ -332,9 +332,9 @@ private:
      * \brief Gets table name that depends on table type and command type.
      * \param tableType - Type of table.
      * \param cmdType - Type of command.
-     * \return Table name that was genereated.
+     * \return Table name that was generated.
      * 
-     * Generates table name that will be used to do somthing with custom commands.
+     * Generates table name that will be used to do something with custom commands.
      */
     static QString _GetTableName(TableType tableType, CmdType cmdType);
     /*!
@@ -342,7 +342,7 @@ private:
      * \param mainTableName - Main part of table name.
      * \param indexPrefix - Prefix for index names.
      * 
-     * Created needed database tables and previxes in there.
+     * Created needed database tables and prefixes in there.
      */
     static QString _InititalizeCustomCommandTables(const QString &mainTableName, const QString &indexPrefix);
 };

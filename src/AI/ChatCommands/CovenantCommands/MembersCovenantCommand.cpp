@@ -70,7 +70,7 @@ void MembersCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &
             for (int i = 0; i < covMembers.size(); ++i)
             {
                 // If number of members in specified covenant is too big,
-                // split into spearate messages that will be sent to chat
+                // split into separate messages that will be sent to chat
                 if ((answerStr.size() + covMembers.at(i).size()) >= 498)
                 {
                     answer.AddAnswer(answerStr);

@@ -178,7 +178,7 @@ bool DatabaseManager::CreateTable(const QString &tableName, const QString &colum
                 QStringList columnList = columns.split(",");
                 bool *columnsExists = new bool[columnList.size()];
                 // We have to initialize this array in that way
-                // because gcc do not allow to inititalize array with value which do not known in compile time
+                // because gcc do not allow to initialize array with value which do not known in compile time
                 for (int i = 0; i < columnList.size(); ++i)
                 {
                     columnsExists[i] = false;
@@ -225,7 +225,7 @@ bool DatabaseManager::Insert(const QString &tableName, const QString &recordValu
 {
     bool result = true;
     QSqlQuery query;
-    // Insert IGNORE if it was specififed
+    // Insert IGNORE if it was specified
     QString orIgnore = ignore ? "OR IGNORE" : "";
     // Prepare command
     query.prepare(QString("INSERT %1 INTO %2 VALUES (%3);").arg(orIgnore).arg(tableName).arg(recordValues));

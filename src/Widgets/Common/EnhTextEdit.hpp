@@ -33,7 +33,7 @@ public:
      * \brief Set editable mode to specific state.
      * \param state - flag that turns editable mode on or off.
      *
-     * Turns on/off readl only mode and changes stylesheet.
+     * Turns on/off read only mode and changes style-sheet.
      */
     void SetEditable(bool state);
 };

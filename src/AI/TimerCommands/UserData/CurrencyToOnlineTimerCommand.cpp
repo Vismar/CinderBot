@@ -38,7 +38,7 @@ void CurrencyToOnlineTimerCommand::OnCfgParamChanged(Utils::Configuration::CfgPa
 
 void CurrencyToOnlineTimerCommand::_UpdateTimer()
 {
-    // Get tiemr value from configuration manager
+    // Get timer value from configuration manager
     QString param;
     ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyTimer, param);
     int timerValue = param.toInt();

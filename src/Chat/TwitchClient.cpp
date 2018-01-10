@@ -92,7 +92,7 @@ void TwitchClient::ReadLine()
 {
     ChatMessage chatMessage;
 
-    // If message was received, timer should be stoped
+    // If message was received, timer should be stopped
     _msgTimer->stop();
     QString line;
     while (_socket->canReadLine())
@@ -271,7 +271,7 @@ void TwitchClient::_Login()
            _SendIrcMessage(line);
             line = "USER " + param + " 8 * :" + param + "\r\n";
             _SendIrcMessage(line);
-            // Requst useful things
+            // Request useful things
             _SendIrcMessage("CAP REQ :twitch.tv/membership\r\n");
             _SendIrcMessage("CAP REQ :twitch.tv/tags\r\n");
             _SendIrcMessage("CAP REQ :twitch.tv/commands\r\n");

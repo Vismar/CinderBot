@@ -14,7 +14,7 @@
 namespace Ui
 {
 /*!
- * \brief All wigets related to custom commands.
+ * \brief All widgets related to custom commands.
  */
 namespace CustomCommand
 {

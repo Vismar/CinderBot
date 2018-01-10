@@ -18,7 +18,7 @@
 namespace Ui
 {
  /*!
-  * \brief All wigets related to custom commands.
+  * \brief All widgets related to custom commands.
   */
 namespace CustomCommand
 {
@@ -39,7 +39,7 @@ public:
      * \brief Loads data related to specified command.
      * \param cmdName - name of command.
      * 
-     * Gets all params fomr CustomCommandDBHelper, sets it to widget 
+     * Gets all params form CustomCommandDBHelper, sets it to widget 
      * and generates answer ids to populate them in AnswersCustomCommandWidget.
      */
     void LoadCommandData(const QString& cmdName);

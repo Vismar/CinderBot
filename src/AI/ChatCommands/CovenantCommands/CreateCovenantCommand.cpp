@@ -30,7 +30,7 @@ enum
 CreateCovenantCommand::CreateCovenantCommand()
 {
     _name = "!cov_create";
-    _answers.push_back("You do not have enought currency, @.");
+    _answers.push_back("You do not have enough currency, @.");
     _answers.push_back("You are leader of another covenant, @! Leave or disband it and try again.");
     _answers.push_back("Covenant 'COV_NAME' was created. @! Now you are leader of it.");
     _answers.push_back("Please provide name of new covenant, @.");

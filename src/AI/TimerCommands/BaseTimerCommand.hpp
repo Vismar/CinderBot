@@ -41,9 +41,9 @@ protected:
      */
     virtual void _UpdateTimer() = 0;
     /*!
-     * \brief Action to perfom on timer event.
+     * \brief Action to perform on timer event.
      *
-     * Perfoms certain action on timer event. Should be implemented by inherited class.
+     * Performs certain action on timer event. Should be implemented by inherited class.
      */
     virtual void _TimerAction() = 0;
 
@@ -51,7 +51,7 @@ private slots:
     /*!
      * \brief Executes command on a timer and starts timer anew.
      *
-     * Calls _TimerAction to perfom certain action and start timer anew through UpdateTimer.
+     * Calls _TimerAction to perform certain action and start timer anew through UpdateTimer.
      */
     void _OnTimerEnds();
 

@@ -32,7 +32,7 @@ void AddQuoteCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &answer)
 {
     if (_CheckModerationFlag(message.IsModerator()))
     {        
-        // Get quote that should ba added
+        // Get quote that should be added
         int id = message.GetMessage().indexOf(_name);
         QString msg = message.GetMessage().right(message.GetMessage().size() - id - _name.size() - 1);
         // If message not empty add quote to the list

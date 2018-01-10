@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
         LOG(Utils::LogInfo, "CustomCommandDBHelper loaded.");
     }
 
-    // Try to inititalize quote db helper
+    // Try to initialize quote db helper
     error = Utils::Database::QuoteDBHelper::Instance().InitializeTables();
     if (error != "OK")
     {
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
         LOG(Utils::LogInfo, "AnalyticsDBHelper loaded.");
     }
 
-    // Try to intiialize covenan db helper
+    // Try to initialize covenant db helper
     error = Utils::Database::CovenantDBHelper::Instance().InitializeTables();
     if (error != "OK")
     {
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
         // Log
         LOG(Utils::LogInfo, "Configuration loaded.");
 
-        // Inititalize kraken client
+        // Initialize kraken client
         error = Twitch::KrakenClient::Instance().Initialize();
         if (error != "OK")
         {

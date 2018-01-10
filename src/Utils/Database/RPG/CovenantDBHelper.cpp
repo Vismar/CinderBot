@@ -211,7 +211,7 @@ bool CovenantDBHelper::SetParams(CovParams params)
 {
     bool executed(false);
 
-    // Try to to update covenant params
+    // Try to update covenant params
     if (DB_UPDATE("Covenants", QString("Leader='%1', Description='%2', CmdSlots=%3, Level=%4, Exp=%5, MaxMembers=%6")
                                .arg(params.Leader).arg(params.Description).arg(params.CmdSlots)
                                .arg(params.Level).arg(params.Exp).arg(params.MaxMembers), 
@@ -221,7 +221,7 @@ bool CovenantDBHelper::SetParams(CovParams params)
     }
     else
     {
-        LOG(LogError, "", Q_FUNC_INFO, QString("Parameters was not setted for covenant '%1'").arg(params.Name));
+        LOG(LogError, "", Q_FUNC_INFO, QString("Parameters was not set for covenant '%1'").arg(params.Name));
     }
 
     return executed;

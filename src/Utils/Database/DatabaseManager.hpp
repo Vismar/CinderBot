@@ -31,7 +31,7 @@ namespace Database
 /*!
  * \brief Manager that holds all work with database and provide functionality to work directly with it.
  * 
- * Manager inititalizes database, creates everything that are needed for correct work. 
+ * Manager initializes database, creates everything that are needed for correct work. 
  * Provide functionality to create tables and indexes; insert, update, delete and select to/from tables.
  */
 class DatabaseManager : public QObject
@@ -42,7 +42,7 @@ public:
     ~DatabaseManager();
 
     /*!
-     * \brief Initializes and creates instance of database manaager
+     * \brief Initializes and creates instance of database manager
      * \return reference to static database manager
      */
     static DatabaseManager &Instance();
@@ -63,12 +63,12 @@ public:
     bool StartTransaction();
     /*!
      * \brief Tries to end transaction and commits all queries to database.
-     * \return True if commit was successfull and previously transaction was started. Otherwise - false.
+     * \return True if commit was successful and previously transaction was started. Otherwise - false.
      */
     bool EndTransaction();
 
     /*!
-     * \brieef Creates index on specified table (and columns if specified).
+     * \brief Creates index on specified table (and columns if specified).
      * \param tableName - name of table.
      * \param indexName - name of index.
      * \param columns - columns which should be indexed.
@@ -102,14 +102,14 @@ public:
     /*!
      * \brief Updates existing record.
      * \param tableName - name of a table in which new record should be added.
-     * \param columnValues - values which will be assigned to specififed record.
+     * \param columnValues - values which will be assigned to specified record.
      * \param conditions - conditions for selection from the table.
      * \return True if command was successful.
      */
     bool Update(const QString &tableName, const QString &columnValues, const QString &conditions = "");
     /*!
      * \brief Deletes existing record from database.
-     * \param tableName - name of a table in which record should be deelted.
+     * \param tableName - name of a table in which record should be deleted.
      * \param conditions - conditions for selection from the table.
      * \return True if command was successful.
      */
@@ -117,17 +117,17 @@ public:
 
 signals:
     /*!
-     * \brief Event for any succesfull insert command.
+     * \brief Event for any successful insert command.
      * \param tableName - name of table for which operation was executed.
      */
     void OnInsertEvent(const QString &tableName);
     /*!
-     * \brief Event for any succesfull update command.
+     * \brief Event for any successful update command.
      * \param tableName - name of table for which operation was executed.
      */
     void OnUpdateEvent(const QString &tableName);
     /*!
-     * \brief Event for any succesfull delete command.
+     * \brief Event for any successful delete command.
      * \param tableName - name of table for which operation was executed.
      */
     void OnDeleteEvent(const QString &tableName);

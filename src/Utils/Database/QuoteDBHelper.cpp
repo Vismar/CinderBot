@@ -61,7 +61,7 @@ int QuoteDBHelper::AddQuote(const QString& quote)
     // Try to insert quote
     if (DB_INSERT("Quotes", QString("NULL, '%1', %2").arg(quote).arg(newQuoteNumber)))
     {
-        // If quote was added, we need to get it od to notify listeners
+        // If quote was added, we need to get it id to notify listeners
         DB_QUERY_PTR query = DB_SELECT("Quotes", "Id", QString("Number=%1").arg(newQuoteNumber));
         if ((query != nullptr) && (query->first()))
         {
@@ -226,7 +226,7 @@ void QuoteDBHelper::_RefreshQuoteNumbersFrom(int quoteNumber) const
     if (query != nullptr)
     {
         // For every quote we need update number value.
-        // As this function only used when quote was deleted, that means we should decriment number value and nothing more
+        // As this function only used when quote was deleted, that means we should decrement number value and nothing more
         while (query->next())
         {
             int newNumber = query->value("Number").toInt() - 1;

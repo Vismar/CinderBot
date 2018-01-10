@@ -81,7 +81,7 @@ void LoginWindow::_CheckReply(QNetworkReply* reply)
         _SetHeaderWidgetsActive(true);
         _ShowError();
     }
-    // If user exist, check room or load athorization window
+    // If user exist, check room or load authorization window
     else if (replyString.startsWith("{\"display_name\":"))
     {
         if (_lastRequestType == LoginRequest)
@@ -105,7 +105,7 @@ void LoginWindow::_CheckReply(QNetworkReply* reply)
             {
                 _CloseSuccess();
             }
-            // If at least 1 oath key do not exist, start authorizatin process
+            // If at least 1 oath key do not exist, start authorization process
             else
             {
                 _LoadWebView();
@@ -183,7 +183,7 @@ void LoginWindow::_InitializeLayout()
     // Init layout
     _layout = new QGridLayout(this);
 
-    // Inititalize widget sections
+    // Initialize widget sections
     _InitErrorSection();
     _InitLoginSection();
     _InitRoomSection();
@@ -403,7 +403,7 @@ void LoginWindow::_CloseSuccess()
     //Save auto login param
     QString autoLogin = (_autoLogin->checkState() == Qt::Checked) ? "true" : "false";
     ConfigurationManager::Instance().SetStringParam(CfgParam::LoginAuto, autoLogin);
-    // Notify about cussess athorization process
+    // Notify about success authorization process
     emit LoginSuccess();
     // Close dialog window
     this->close();

@@ -18,7 +18,7 @@ ViewerGraphWidget::ViewerGraphWidget(QWidget* parent) : QGroupBox(parent)
 {
     _startingTime = QDateTime::currentDateTime();
     this->setTitle("Viewer graph");
-    // Inititalize chart
+    // Initialize chart
     _series = new QLineSeries();
     _chart = new QChart();
     _chart->addSeries(_series);

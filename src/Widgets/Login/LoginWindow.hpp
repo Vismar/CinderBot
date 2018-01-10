@@ -45,9 +45,9 @@ public:
 
 signals:
     /*!
-     * \brief Notify that logi-in process was successful.
+     * \brief Notify that log-in process was successful.
      *
-     * This signal will be emited only when token was received from twitch.tv.
+     * This signal will be emitted only when token was received from twitch.tv.
      */
     void LoginSuccess();
 
@@ -70,7 +70,7 @@ private slots:
      *
      * When network manager receives new reply, this function checks what kind of request it is
      * and then, depending on it, decides to what to do next. If request about login was successful,
-     * launches check for room field. If request about room was successful, opens webview to start
+     * launches check for room field. If request about room was successful, opens web view to start
      * authorization process.
      */
     void _CheckReply(QNetworkReply* reply);
@@ -78,14 +78,14 @@ private slots:
      * \brief Resets log-in error.
      * \param text - not used, but contains what text now contains in log-in field.
      *
-     * Returns log-in field stylesheet to its default value.
+     * Returns log-in field style-sheet to its default value.
      */
     void _ResetLoginError(const QString &text);
     /*!
      * \brief Resets room error.
      * \param text - not used, but contains what text now contains in channel field.
      *
-     * Returns channel field stylesheet to its default value.
+     * Returns channel field style-sheet to its default value.
      */
     void _ResetRoomError(const QString &text);
     /*!
@@ -173,7 +173,7 @@ private:
      */
     void _LoadWebView();
     /*!
-     * \brief Close window and emit succes event.
+     * \brief Close window and emit success event.
      *
      * Save auto login param, emit success event and close dialog window.
      */
@@ -194,7 +194,7 @@ private:
     QLabel *_roomLabel;
     /*! Room field which stores channel to which bot should connect. */
     Common::EnhLineEdit *_room;
-    /*! Check bot to try auto logi-in procces on the next start of bot, */
+    /*! Check bot to try auto log-in process on the next start of bot, */
     QCheckBox *_autoLogin;
     /*! Push button start log-in process. */
     QPushButton *_loginButton;

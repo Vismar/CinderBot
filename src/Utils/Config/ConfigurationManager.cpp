@@ -138,7 +138,7 @@ QString ConfigurationManager::Initialize()
 
 bool ConfigurationManager::GetStringParam(CfgParam cfgParam, QString &value) const
 {
-    // If manager contains requested paramter, get it and return true
+    // If manager contains requested parameter, get it and return true
     bool result = _params.contains(CfgStrParam[static_cast<int>(cfgParam)]);
     if (result)
     {
@@ -650,7 +650,7 @@ void ConfigurationManager::_WriteConfigCovenantData()
 
     // RPG section 
     _xmlWriter.writeComment("\n\t\t"
-                            "RPG section that contains all paramters for RPG system.");
+                            "RPG section that contains all parameters for RPG system.");
     _xmlWriter.writeStartElement(CFGS_RPG);
 
     // Covenants section
@@ -758,9 +758,9 @@ void ConfigurationManager::_WriteConfigCovenantData()
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovMembersPerUp)], value);
     value.clear();
     
-    // Covenant memerbs level requirement
+    // Covenant members level requirement
     _xmlWriter.writeComment("\n\t\t\t\t\t"
-                            "Parameter: Covenant memerbs level requirement\n\t\t\t\t\t"
+                            "Parameter: Covenant members level requirement\n\t\t\t\t\t"
                             "Description: Every N levels number of members will be increased.\n\t\t\t\t\t"
                             "             Any integer number, bigger than 0.");
     GetStringParam(CfgParam::CovMembersLvlRequirement, value);
@@ -867,7 +867,7 @@ void ConfigurationManager::_WriteModulesData()
     _xmlWriter.writeComment("\n\t\t\t"
                             "Parameter: User data command module\n\t\t\t"
                             "Description: Value of this parameter turning on and off commands related to user data.\n\t\t\t"
-                            "             Should be setted to \"true\" or \"false\"");
+                            "             Should be set to \"true\" or \"false\"");
     GetStringParam(CfgParam::UserDataCmdModule, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::UserDataCmdModule)], value);
     value.clear();
@@ -876,7 +876,7 @@ void ConfigurationManager::_WriteModulesData()
                             "Parameter: User data command receive whisper\n\t\t\t"
                             "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
                             "             through whispers.\n\t\t\t"
-                            "             Should be setted to \"true\" or \"false\"");
+                            "             Should be set to \"true\" or \"false\"");
     GetStringParam(CfgParam::UserDataCmdRcvWhisper, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::UserDataCmdRcvWhisper)], value);
     value.clear();
@@ -885,7 +885,7 @@ void ConfigurationManager::_WriteModulesData()
                             "Parameter: User data command receive chat\n\t\t\t"
                             "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
                             "             through chat.\n\t\t\t"
-                            "             Should be setted to \"true\" or \"false\"");
+                            "             Should be set to \"true\" or \"false\"");
     GetStringParam(CfgParam::UserDataCmdRcvChat, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::UserDataCmdRcvChat)], value);
     value.clear();
@@ -898,7 +898,7 @@ void ConfigurationManager::_WriteModulesData()
     _xmlWriter.writeComment("\n\t\t\t"
                             "Parameter: Quotes command module\n\t\t\t"
                             "Description: Value of this parameter turning on and off commands related to quotes.\n\t\t\t"
-                            "             Should be setted to \"true\" or \"false\"");
+                            "             Should be set to \"true\" or \"false\"");
     GetStringParam(CfgParam::QuotesCmdModule, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::QuotesCmdModule)], value);
     value.clear();
@@ -911,7 +911,7 @@ void ConfigurationManager::_WriteModulesData()
     _xmlWriter.writeComment("\n\t\t\t"
                             "Parameter: Covenant command module\n\t\t\t"
                             "Description: Value of this parameter turning on and off commands related to covenants.\n\t\t\t"
-                            "             Should be setted to \"true\" or \"false\"");
+                            "             Should be set to \"true\" or \"false\"");
     GetStringParam(CfgParam::CovenantCmdModule, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovenantCmdModule)], value);
     value.clear();
@@ -920,7 +920,7 @@ void ConfigurationManager::_WriteModulesData()
                             "Parameter: Covenant command receive whisper\n\t\t\t"
                             "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
                             "             through whispers.\n\t\t\t"
-                            "             Should be setted to \"true\" or \"false\"");
+                            "             Should be set to \"true\" or \"false\"");
     GetStringParam(CfgParam::CovenantCmdRcvWhisper, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovenantCmdRcvWhisper)], value);
     value.clear();
@@ -929,7 +929,7 @@ void ConfigurationManager::_WriteModulesData()
                             "Parameter: Covenant command receive chat\n\t\t\t"
                             "Description: Value of this parameter turning on and off execution for UD commands\n\t\t\t"
                             "             through chat.\n\t\t\t"
-                            "             Should be setted to \"true\" or \"false\"");
+                            "             Should be set to \"true\" or \"false\"");
     GetStringParam(CfgParam::CovenantCmdRcvChat, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CovenantCmdRcvChat)], value);
     value.clear();
@@ -942,7 +942,7 @@ void ConfigurationManager::_WriteModulesData()
     _xmlWriter.writeComment("\n\t\t\t"
                             "Parameter: Custom command module\n\t\t\t"
                             "Description: Value of this parameter turning on and off custom commands.\n\t\t\t"
-                            "             Should be setted to \"true\" or \"false\"");
+                            "             Should be set to \"true\" or \"false\"");
     GetStringParam(CfgParam::CustomCmdModule, value);
     _xmlWriter.writeTextElement(CfgStrParam[static_cast<int>(CfgParam::CustomCmdModule)], value);
 

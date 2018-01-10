@@ -126,7 +126,7 @@ void MainWindow::_ConnectWidget()
 
 void MainWindow::_ChatButton()
 {
-    // Inititalize
+    // Initialize
     _chatButton = new QPushButton(this);
     _chatButton->setToolTip("Chat");
     _chatButton->setIcon(QIcon(":/Resources/Icons/ChatIcon.ico"));
@@ -142,7 +142,7 @@ void MainWindow::_ChatButton()
 
 void MainWindow::_AnalyticsButton()
 {
-    // Inititalize
+    // Initialize
     _analyticsButton = new QPushButton(this);
     _analyticsButton->setToolTip("Analytics");
     _analyticsButton->setIcon(QIcon(":/Resources/Icons/StatisticsIcon.ico"));
@@ -158,7 +158,7 @@ void MainWindow::_AnalyticsButton()
 
 void MainWindow::_CustomCommandsButton()
 {
-    // Inititalize
+    // Initialize
     _customCommandButton = new QPushButton(this);
     _customCommandButton->setToolTip("Custom commands");
     _customCommandButton->setIcon(QIcon(":/Resources/Icons/CustomCommandsIcon.ico"));
@@ -174,7 +174,7 @@ void MainWindow::_CustomCommandsButton()
 
 void MainWindow::_QuotesButton()
 {
-    // Inititalize
+    // Initialize
     _quoteButton = new QPushButton(this);
     _quoteButton->setToolTip("Quotes");
     _quoteButton->setIcon(QIcon(":/Resources/Icons/QuotesIcon.ico"));

@@ -44,7 +44,7 @@ public:
      * \return true if command was executed.
      * 
      * Checks every base thing before execution and then tries ti get answer. 
-     * If command was executed, reaplaces all placeholders.
+     * If command was executed, replaces all placeholders.
      */
     bool Execute(const ChatMessage &message, ChatAnswer &answer);
 
@@ -61,7 +61,7 @@ protected:
      * \param answer - reference to variable which will store answer.
      * 
      * Should be implemented by inherited class to provide needed answer. 
-     * This function called only if _isRandom setted to "false".
+     * This function called only if _isRandom set to "false".
      */
     virtual void _GetAnswer(const ChatMessage &message, ChatAnswer &answer) = 0;
     /*!
@@ -70,7 +70,7 @@ protected:
      * \param answer - reference to variable which will store answer
      * 
      * Should be implemented by inherited class to provide needed answer. 
-     * This function called only if _isRandom setted to "true".
+     * This function called only if _isRandom set to "true".
      */
     virtual void _GetRandomAnswer(const ChatMessage &message, ChatAnswer &answer) = 0;
 
@@ -96,7 +96,7 @@ protected:
      */
     void _AddAuthorName(QStringList &answer, const QString &author);
     /*!
-     * Take default specififed price from user
+     * Take default specified price from user
      * \param userID - id of user
      */
     void _TakeDefaultPriceFromUser(int userID) const;
@@ -132,18 +132,18 @@ protected:
     bool _CheckCooldown();
     /*!
      * \brief Checks if user can execute command depends on moderator only flag.
-     * \param userIsModerator - falg which indicates if user moderator or not.
+     * \param userIsModerator - flag which indicates if user moderator or not.
      * \return true if user can use command.
      * 
-     * If flag _modOnly flag setted to "true" and user is moderator, then command will be executed.
+     * If flag _modOnly flag set to "true" and user is moderator, then command will be executed.
      * Otherwise - will not. Same goes to vice versa.
      */
     bool _CheckModerationFlag(bool userIsModerator);
 
     /* Variables */
-    /*! Flag which represnts possibility of execution command via whisper message */
+    /*! Flag which represents possibility of execution command via whisper message */
     bool _workInWhisper;
-    /*! Flag which represnts possibility of execution command via chat message */
+    /*! Flag which represents possibility of execution command via chat message */
     bool _workInChat;
     /*! Flag which represents should command return random answer or not */
     bool _isRandom;

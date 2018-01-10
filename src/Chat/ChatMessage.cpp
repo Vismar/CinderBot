@@ -300,7 +300,7 @@ MessageType ChatMessage::ParseRawMessage(const QString &message)
             //_GetAndSetModeratorFlag();
         }
     }
-    // Set timestamp
+    // Set time-stamp
     _SetTimeStamp();
     _type = msgType;
 

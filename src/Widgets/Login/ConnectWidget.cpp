@@ -58,7 +58,7 @@ void ConnectWidget::CheckAndRunAutoLogin()
     cfgMng.GetStringParam(CfgParam::LoginOauthKey, paramOAuth);
     cfgMng.GetStringParam(CfgParam::LoginChannel, paramChannel);
 
-    // Wee ned to check that login, channel and oauth key exist in config file
+    // Wee need to check that login, channel and oauth key exist in config file
     if (!paramLogin.isEmpty() && !paramChannel.isEmpty() && !paramOAuth.isEmpty())
     {
         cfgMng.GetStringParam(CfgParam::LoginAuto, paramAuto);

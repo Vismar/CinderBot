@@ -41,7 +41,7 @@ public:
     static QuoteDBHelper &Instance();
 
     /*!
-     * \brief Intitializes database table.
+     * \brief Initializes database table.
      * \return "OK" if everything went good, otherwise error message.
      * 
      * Initializes database table. Should be executed before running application.
@@ -66,7 +66,7 @@ public:
      */
     bool DeleteQuote(int quoteNumber);
     /*!
-     * \brief Replaces qutoe text by new data.
+     * \brief Replaces quote text by new data.
      * \param quoteNumber - Number of quote that should be updated.
      * \param newQuote - New quote text data.
      * \return True, if quote edited.
@@ -79,8 +79,8 @@ public:
     static QVector<int> GetQuoteIds();
     /*!
      * \brief Grabs specified quote.
-     * \param quoteNumber - Number of qutoe that should be grabed.
-     * \return Quote text data if such qutoe exists. Otherwise empty string will be returned.
+     * \param quoteNumber - Number of quote that should be grabbed.
+     * \return Quote text data if such quote exists. Otherwise empty string will be returned.
      */
     QString GetQuote(int quoteNumber) const;
     /*!
@@ -89,7 +89,7 @@ public:
      */
     static QString GetRandomQuote();
     /*!
-     * \brief Grabs qutoe data by specified id.
+     * \brief Grabs quote data by specified id.
      * \param id - Id of quote.
      * \return Quote data that contains quote number and quot itself.
      */

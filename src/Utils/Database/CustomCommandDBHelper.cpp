@@ -118,7 +118,7 @@ CustomCommandDBHelper &CustomCommandDBHelper::Instance()
 
 QString CustomCommandDBHelper::InititalizeTables()
 {
-    // Intitialize tables for custom commands
+    // Initialize tables for custom commands
     QString error = _InititalizeCustomCommandTables(CUSTOM_COMMAND, "");
 
     // If everything is okay, initialize tables for custom covenant commands

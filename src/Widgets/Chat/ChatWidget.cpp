@@ -53,7 +53,7 @@ void ChatWidget::AddEntry(ChatMessage message, bool botMessage)
     // Check if author of message is moderator
     if (message.IsModerator())
     {
-        // Get font size and multiplay by 2 to change image size
+        // Get font size and multiply by 2 to change image size
         QString stringFontSize = QString::number(newEntry->font().pointSize() * 2);
         // Append moderator icon before author name
         QString resourceName;
@@ -83,7 +83,7 @@ void ChatWidget::AddEntry(ChatMessage message, bool botMessage)
 
 void ChatWidget::_AutoScrollDown()
 {
-    // Scroll to the botton of scroll area
+    // Scroll to the bottom of scroll area
     verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 

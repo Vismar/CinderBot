@@ -21,7 +21,7 @@ namespace CustomChatCmd
  * \brief Small class for custom covenant commands.
  * 
  * This class almost the same as CustomChatCommand. 
- * Only differences - different _cmdType and connection with different ype of events from CustomCommandDBHelper.
+ * Only differences - different _cmdType and connection with different type of events from CustomCommandDBHelper.
  */
 class CustomCovChatCommand : public CustomChatCommand
 {

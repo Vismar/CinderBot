@@ -90,12 +90,12 @@ protected:
      * \param id - data id.
      *
      * This function should be implemented by inherited class.
-     * Tiis function is called when PagedListWidget need to update value of specified entry.
+     * This function is called when PagedListWidget need to update value of specified entry.
      */
     virtual void _UpdateEntry(QWidget *entry, int id) = 0;
     /*!
      * \brief Add widget to content area.
-     * \param widget - pointer to widget which will be added to conent area.
+     * \param widget - pointer to widget which will be added to content area.
      *
      * Add specific widget to content area.
      */
@@ -133,13 +133,13 @@ private:
     /*!
      * \brief Initializes widgets which placed in header.
      *
-     * Inititalizes widgets which were placed in header such is QComboBox, QSlider and two labels.
+     * Initializes widgets which were placed in header such is QComboBox, QSlider and two labels.
      */
     void _InitializeHeader();
     /*!
      * \brief Initialize widgets that placed in content area.
      *
-     *  Initializes conten widgets. Calls virtual functions that should be implemented.
+     *  Initializes content widgets. Calls virtual functions that should be implemented.
      */
     void _InitializeContent();
 
@@ -159,7 +159,7 @@ private:
     /*!
      * \brief Update content area.
      *
-     * Updates all widgets in conten area.
+     * Updates all widgets in content area.
      */
     void _UpdateContent();
 

@@ -22,7 +22,7 @@ namespace Common
 /*!
  * \brief Simple class which have text field and two buttons: edit/save and delete.
  * 
- * Creates specifally for places where we need to dusplay simeple text field and 2 buttons.
+ * Created specifically for places where we need to display simple text field and 2 buttons.
  * If edit was clicked, then button will be switched to "save" state.
  */
 class EditSaveWidget : public QFrame

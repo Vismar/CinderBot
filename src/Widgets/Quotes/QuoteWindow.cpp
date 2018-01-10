@@ -24,7 +24,7 @@ QuoteWindow::QuoteWindow(QWidget* parent) : QWidget(parent, Qt::Window)
     _layout->setMargin(10);
     _layout->setAlignment(Qt::AlignTop);
 
-    // Initialize create quote iwdget
+    // Initialize create quote widget
     _createQuoteWidget = new CreateQuoteWidget(this);
     _layout->addWidget(_createQuoteWidget);
 

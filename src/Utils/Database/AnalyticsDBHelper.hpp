@@ -52,7 +52,7 @@ public:
     static AnalyticsDBHelper &Instance();
 
     /*!
-     * \brief Initialiazes database tables.
+     * \brief Initializes database tables.
      * \return String that contains error message if something goes wrong. Otherwise - "OK".
      */
     static QString InitializeTables();
@@ -66,7 +66,7 @@ public:
      */
     static int GetLastNumberOfFollowers();
     /*!
-     * \brief Grabs last total susbcriber number.
+     * \brief Grabs last total subscriber number.
      * \return Number of subscribers from database or 0, if no records were found.
      *
      * If no records in database about total followers, then will be returned 0. 
@@ -76,7 +76,7 @@ public:
 
 private slots:
     /*!
-     * \brief Simple hadnles change of certain kraken parameters.
+     * \brief Simple handles change of certain kraken parameters.
      * \param param - parameter type.
      * value - value of parameter.
      */

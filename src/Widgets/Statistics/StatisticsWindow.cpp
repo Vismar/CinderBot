@@ -19,7 +19,7 @@ StatisticsWindow::StatisticsWindow(QWidget *parent) : QWidget(parent, Qt::Window
     _layout->setMargin(0);
     _layout->setAlignment(Qt::AlignTop);
 
-    // Initialize create quote iwdget
+    // Initialize create quote widget
     _statisticsWidget = new StatisticsWidget(this);
     _layout->addWidget(_statisticsWidget);
 }

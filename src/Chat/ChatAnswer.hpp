@@ -30,7 +30,7 @@ public:
      */
     ChatAnswer();
     /*!
-     * Desctructor
+     * Destructor
      */
     ~ChatAnswer();
 
@@ -50,7 +50,7 @@ public:
     const QString& GetRealName() const;
     /*!
      * Set real name of user for whom answer should be sent if it was a whisper
-     * \param realName - real name which will be setted
+     * \param realName - real name which will be set
      */
     void SetRealName(const QString &realName);
     /*!

@@ -44,7 +44,7 @@ private slots:
 private:
     /*! Vertical layout */
     QVBoxLayout *_layout;
-    /*! Simple container to store scrol layout */
+    /*! Simple container to store scroll layout */
     QWidget     *_container;
 };
 

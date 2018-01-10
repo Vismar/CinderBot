@@ -40,7 +40,7 @@ void ViewerCounterWidget::UpdateLabels()
 
 void ViewerCounterWidget::_AddViewerLabels()
 {
-    // Add and initialize curretn viewer label
+    // Add and initialize current viewer label
     _curViewers = new QLabel(this);
     _maxViewers = new QLabel(this);
     _layout->addWidget(_curViewers);

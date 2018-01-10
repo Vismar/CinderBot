@@ -33,13 +33,13 @@ public:
      * \param answer - returning answer.
      * \return true if one of commands from command list was executed.
      *
-     * Check all commands to find one which should be executed. Can be iverriden if it is needed.
+     * Check all commands to find one which should be executed. Can be overridden if it is needed.
      */
     virtual bool TryExecute(const ChatMessage &message, ChatAnswer &answer);
     /*!
      * \brief Initialize command list.
      *
-     * Intialize needed parameters and data. Should be implemented by derived class.
+     * Initialize needed parameters and data. Should be implemented by derived class.
      */
     virtual void Initialize() = 0;
 

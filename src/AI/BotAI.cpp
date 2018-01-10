@@ -43,7 +43,7 @@ BotAI::BotAI(QObject *parent) : QObject(parent)
     }
     if (configMng.GetStringParam(CfgParam::LoginName, param))
     {
-        // If botname not added to the list, add it
+        // If bot name not added to the list, add it
         if (!_ignoreList.contains(param))
         {
             _ignoreList += param;

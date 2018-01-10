@@ -35,7 +35,7 @@ RenameCovenantCommand::RenameCovenantCommand()
     _answers.push_back("Your covenant has been renamed, @.");
     _answers.push_back("You are not in any covenant yet, @.");
     _answers.push_back("Please provide a new name of covenant, @.");
-    _answers.push_back("You do not have enought currency, @.");
+    _answers.push_back("You do not have enough currency, @.");
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ void RenameCovenantCommand::_GetAnswer(const ChatMessage &message, ChatAnswer &a
                     answer.AddAnswer(_answers.at(MsgNoName));
                 }
             }
-            // If user do not have enought currency
+            // If user do not have enough currency
             else
             {
                 answer.AddAnswer(_answers.at(MsgNoCurrency));

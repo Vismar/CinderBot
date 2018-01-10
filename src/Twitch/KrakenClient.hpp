@@ -42,7 +42,7 @@ enum KrakenParameter
 class KrakenResponse;
 
 /*!
- * \brief Client that thrying to obtain all kind of information from Kraken API that are required for bot.
+ * \brief Client that trying to obtain all kind of information from Kraken API that are required for bot.
  */
 class KrakenClient : public QObject
 {
@@ -57,7 +57,7 @@ public:
     static KrakenClient &Instance();
     /*!
      * \brief Initialize default values and some other things.
-     * \return "OK" if everythings goes right. Otherwise will return error message.
+     * \return "OK" if everything goes right. Otherwise will return error message.
      */
     QString Initialize();
 
@@ -192,7 +192,7 @@ private:
      * \brief Handles change of kraken parameter ChannelFollowers.
      * \param newTotalFollowers - new value of parameter.
      * 
-     * Defines the difference beetween old and new values, after that creates requests to grab needed users from KrakenAPI.
+     * Defines the difference between old and new values, after that creates requests to grab needed users from KrakenAPI.
      */
     void _HandleParameterChangeChannelFollower(int newTotalFollowers);
 

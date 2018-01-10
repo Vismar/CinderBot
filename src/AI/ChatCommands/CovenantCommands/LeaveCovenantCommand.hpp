@@ -50,7 +50,7 @@ private:
      * \param newLeader - name of new leader
      * \param oldLeaderID - id of old leader
      * \param covName - covenant name
-     * \return True if new leader was set, false of specified user is not member of covenant or something faild
+     * \return True if new leader was set, false of specified user is not member of covenant or something failed
      */
     bool _SetNewLeaderToCovenant(const QString &newLeader, int oldLeaderID, const QString &covName) const;
 };
