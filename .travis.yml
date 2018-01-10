@@ -8,6 +8,7 @@ before_install:
 
 install:
   - sudo apt-get -y install qt59[QTPACKAGE]
+  - sudo apt-get -y install libqt5webkit5-dev
 
 script:
   - source /opt/qt59/bin/qt59-env.sh
