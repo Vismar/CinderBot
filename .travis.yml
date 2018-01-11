@@ -3,12 +3,11 @@ sudo: required
 dist: trusty
 
 before_install:
-  - sudo add-apt-repository --yes ppa:beineri/opt-qt591-trusty
+  - sudo add-apt-repository --yes ppa:beineri/opt-qt593-trusty
   - sudo apt-get update -qq
 
 install:
   - sudo apt-get -y install qt59[QTPACKAGE]
-  - sudo apt-get -y install libqt5webkit5-dev
 
 script:
   - source /opt/qt59/bin/qt59-env.sh

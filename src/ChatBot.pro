@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui network charts sql widgets webkitwidgets
+QT += core gui network charts sql widgets webengine
 
 TARGET = ChatBot
 TEMPLATE = app
