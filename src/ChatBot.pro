@@ -98,7 +98,9 @@ SOURCES += main.cpp\
     Utils/Database/AnalyticsDBHelper.cpp \
     Utils/Database/RPG/CovenantDBHelper.cpp \
     AI/TimerCommands/CovenantData/CovenantDataTimerCommandList.cpp \
-    AI/TimerCommands/CovenantData/CovenantExpTimerCommand.cpp
+    AI/TimerCommands/CovenantData/CovenantExpTimerCommand.cpp \
+    AI/ChatCommands/UtilityCommands/FollowersChatCommand.cpp \
+    AI/ChatCommands/UtilityCommands/UtilityCommandList.cpp
 
 HEADERS  += MainWindow.hpp \
     AI/BotAI.hpp \
@@ -187,7 +189,9 @@ HEADERS  += MainWindow.hpp \
     Utils/Database/AnalyticsDBHelper.hpp \
     Utils/Database/RPG/CovenantDBHelper.hpp \
     AI/TimerCommands/CovenantData/CovenantDataTimerCommandList.hpp \
-    AI/TimerCommands/CovenantData/CovenantExpTimerCommand.hpp
+    AI/TimerCommands/CovenantData/CovenantExpTimerCommand.hpp \
+    AI/ChatCommands/UtilityCommands/FollowersChatCommand.hpp \
+    AI/ChatCommands/UtilityCommands/UtilityCommandList.hpp
 
 RESOURCES += \
     Resources.qrc

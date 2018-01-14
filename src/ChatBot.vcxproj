@@ -144,6 +144,8 @@
     <ClCompile Include="AI\ChatCommands\CovenantCommands\AdminCovCmdDeleteCommand.cpp" />
     <ClCompile Include="AI\ChatCommands\CovenantCommands\AdminCovCmdEditCommand.cpp" />
     <ClCompile Include="AI\ChatCommands\QuoteCommands\AddQuoteCommand.cpp" />
+    <ClCompile Include="AI\ChatCommands\UtilityCommands\FollowersChatCommand.cpp" />
+    <ClCompile Include="AI\ChatCommands\UtilityCommands\UtilityCommandList.cpp" />
     <ClCompile Include="AI\TimerCommands\CovenantData\CovenantDataTimerCommandList.cpp" />
     <ClCompile Include="AI\TimerCommands\CovenantData\CovenantExpTimerCommand.cpp" />
     <ClCompile Include="Build\Debug\moc_AnalyticsDBHelper.cpp">
@@ -552,6 +554,8 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
     </CustomBuild>
+    <ClInclude Include="AI\ChatCommands\UtilityCommands\FollowersChatCommand.hpp" />
+    <ClInclude Include="AI\ChatCommands\UtilityCommands\UtilityCommandList.hpp" />
     <ClInclude Include="AI\TimerCommands\CovenantData\CovenantDataTimerCommandList.hpp" />
     <ClInclude Include="Twitch\KrakenResponse.hpp" />
     <CustomBuild Include="Utils\Database\UserDataDBHelper.hpp">

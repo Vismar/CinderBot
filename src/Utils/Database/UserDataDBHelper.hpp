@@ -90,8 +90,6 @@ struct UserDataParams
     QString FollowDate = "";
 };
 
-#define UDHelper UserDataDBHelper::Instance()
-
 /*!
  * \brief Helper class designed to facilitate the work with the database for user data.
  * 
@@ -306,6 +304,8 @@ private:
     /*! Simple list of moderator who currently in chat. */
     QStringList _moderatorList;
 };
-    
+
+#define UDHelper UserDataDBHelper::Instance()
+
 }
 }

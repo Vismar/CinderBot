@@ -16,12 +16,15 @@
 /*** Timer command lists ***/
 #include "AI/TimerCommands/UserData/UserDataTimerCommandList.hpp"
 #include "AI/TimerCommands/CovenantData/CovenantDataTimerCommandList.hpp"
+/*** Utility command list ***/
+#include "AI/ChatCommands/UtilityCommands/UtilityCommandList.hpp"
 
 using namespace Command;
 using namespace UserDataCmd;
 using namespace QuoteCmd;
 using namespace CustomChatCmd;
 using namespace CovenantCmd;
+using namespace UtilityCmd;
 using namespace TimerCommand;
 using namespace UserDataTimerCmd;
 using namespace CovenantDataTimerCmd;
@@ -87,10 +90,10 @@ void BotAI::ReadNewMessage(ChatMessage message, bool botMessage)
             answer.SetRealName(message.GetRealName());
 
             // Try to execute command
-            for (int i = 0; i < _chatCommands.size(); ++i)
+            for (auto chatCommand : _chatCommands)
             {
                 // If we found a command, emit event with result and break the loop
-                if (_chatCommands[i]->TryExecute(message, answer))
+                if (chatCommand->TryExecute(message, answer))
                 {
                     emit NewBotMessage(answer);
                     break;
@@ -120,6 +123,7 @@ void BotAI::LoadCommands()
     _chatCommands.push_back(new CovenantCommandList());
     _chatCommands.last()->Initialize();
     _chatCommands.push_back(new QuoteCommandList());
+    _chatCommands.push_back(new UtilityCommandList());
     // Custom commands for all users and covenants
     _chatCommands.push_back(new CustomCommandList());
     _chatCommands.last()->Initialize();
@@ -168,7 +172,7 @@ void BotAI::_UpdateUserData(const ChatMessage &message) const
             {
                 // Get amount of currency that should be given to user
                 QString tempString = "1"; // Default value
-                ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerMsg, tempString);
+                (void)ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerMsg, tempString);
                 userParams.Currency += tempString.toInt(); // Update currency
             }
 
@@ -180,7 +184,7 @@ void BotAI::_UpdateUserData(const ChatMessage &message) const
 
                 // Give currency to user
                 QString currencyPerBit = "2"; // Default value
-                ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerBit, currencyPerBit);
+                (void)ConfigurationManager::Instance().GetStringParam(CfgParam::CurrencyPerBit, currencyPerBit);
                 userParams.Currency += currencyPerBit.toInt() * bits; // Update currency
             }
 
